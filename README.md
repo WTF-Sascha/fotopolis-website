@@ -13,7 +13,7 @@ Die freigegebene Wort-/Bildmarke darf **nicht** neu gezeichnet oder verändert w
 
 ## PWA
 - Manifest, Service Worker, Offline-Fallback vorhanden.
-- Echte App-Icons aus der **unveränderten Originaldatei** stehen noch aus. Das Manifest führt deshalb bewusst noch keine Icons; die PWA ist **noch nicht vollständig installierbar**.
+- Echte App-Icons aus der **unveränderten Originaldatei** stehen noch aus. Die Icons sind im Manifest bereits referenziert, aber müssen noch als Originaldatei-Derivate nach `site/icons/` hochgeladen werden; bis dahin ist die PWA **noch nicht vollständig installierbar**.
 - Nur GETs der eigenen Informationsseiten werden offline gecacht; keine Anfrage- oder Admin-Endpunkte.
 
 ## Netlify
