@@ -1,5 +1,5 @@
 {
-  "version": "3.0",
+  "version": "3.1",
   "status": "preview-only",
   "pages": [
     {
@@ -666,8 +666,8 @@
       "slug": "faq",
       "title": "Häufige Fragen",
       "eyebrow": "WISSENSWERTES · GUT GEPLANT",
-      "headline": "Die wichtigsten Fragen vor deinem Event.",
-      "lead": "Klare Orientierung für die Planung. Konkrete Leistungen und Verfügbarkeiten müssen vor einer Buchung persönlich bestätigt werden.",
+      "headline": "Gut zu wissen. Einfach erklärt.",
+      "lead": "Antworten auf die wichtigsten Fragen rund um Fotoerlebnisse, Ablauf und Anfrage. Für Details stimmen wir uns persönlich ab.",
       "faqs": [
         [
           "Was ist der Unterschied zwischen den drei Systemen?",
@@ -699,8 +699,8 @@
       "slug": "kontakt",
       "title": "Kontakt & Eventanfrage",
       "eyebrow": "EVENTANFRAGE · PERSÖNLICH & UNVERBINDLICH",
-      "headline": "Jede gute Geschichte beginnt mit einer Idee.",
-      "lead": "Teile uns die wichtigsten Eckdaten zu deinem Event mit. Die Angaben werden in dieser Preview nur lokal verarbeitet und als E-Mail-Entwurf vorbereitet – nicht automatisch versendet.",
+      "headline": "Dein Event beginnt hier.",
+      "lead": "Drei kurze Schritte zu deiner unverbindlichen Anfrage. Du entscheidest selbst, ob du den vorbereiteten E-Mail-Entwurf versendest.",
       "blocks": [
         {
           "heading": "Direkt per E-Mail",
@@ -712,9 +712,9 @@
         }
       ],
       "contactFlow": {
-        "title": "Erzähl uns von deinem Event.",
+        "title": "Erzähl uns, was du vorhast.",
         "eyebrow": "ANFRAGE VORBEREITEN",
-        "intro": "In wenigen Schritten entsteht ein unverbindlicher E-Mail-Entwurf. Die Vorschau überträgt keine Daten an FOTOPOLIS und speichert keine Eingaben.",
+        "intro": "Anlass, Kontaktdaten und Wünsche – mehr brauchen wir für einen ersten Überblick nicht.",
         "productOptions": [
           "Noch offen",
           "Fotobox",
