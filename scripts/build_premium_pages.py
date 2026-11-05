@@ -408,7 +408,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 'aria-label="Fotogalerie Großansicht">'
                 '<button type="button" class="gallery-dialog-close" data-gallery-close '
                 'aria-label="Großansicht schließen">×</button>'
-                '<div class="gallery-dialog-media"><img data-gallery-large alt=""></div>'
+                '<div class="gallery-dialog-media"><img data-gallery-large src="/assets/images/LEG-060.webp" alt="Interne Eventaufnahme"></div>'
                 '<div class="gallery-dialog-foot"><div>'
                 '<strong data-gallery-dialog-title></strong>'
                 '<small data-gallery-dialog-note></small>'
