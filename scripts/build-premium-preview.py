@@ -2,7 +2,7 @@
 """Build a self-contained, review-only FOTOPOLIS V2 deploy from the approved development branch.
 No secrets, API calls, extra tracking, or deployment to the production website."""
 from pathlib import Path
-import re, shutil
+import re, shutil, hashlib
 
 root = Path(__file__).resolve().parents[1]
 source = root / "concepts/premium-v2"
@@ -22,6 +22,9 @@ for name in photos:
                  target / "assets/images" / name)
 shutil.copy2(source / "assets/fotospiegel-hero-lossless.webp",
              target / "assets/images/fotospiegel-hero-lossless.webp")
+expected = "c9a493de7b479b13253e1c7ba91da6d8fc5cd775f918c84c5881a71efe640241"
+actual = hashlib.sha256((target / "assets/images/fotospiegel-hero-lossless.webp").read_bytes()).hexdigest()
+assert actual == expected, "User image checksum changed unexpectedly"
 html = (source / "index.html").read_text(encoding="utf-8")
 html = html.replace("../../site/assets/fotopolis-logo-original.png",
                     "/assets/fotopolis-logo-original.png")
