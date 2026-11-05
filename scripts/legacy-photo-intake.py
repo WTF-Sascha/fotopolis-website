@@ -66,6 +66,11 @@ for img in soup.find_all("img"):
     root=original(possibilities[0])
     candidates.setdefault(root,{"source_url":root,"fallback_url":possibilities[0],"name":Path(urlparse(root).path).name,"section":section_of(img),"alt":img.get("alt","")})
 candidates=list(candidates.values())[:100]
+print("SOURCE_HTTP",response.status_code,"URL",response.url,"HTML_BYTES",len(response.content),"DISCOVERED",len(candidates),flush=True)
+if len(candidates)<5:
+    seeds=json.loads(Path("scripts/legacy-photo-seeds.json").read_text(encoding="utf-8"))["links"]
+    candidates=[{"source_url":original(x["url"]),"fallback_url":x["url"],"name":Path(urlparse(x["url"]).path).name,"section":x["section"],"alt":""} for x in seeds if allowed(x["url"])]
+    print("FALLBACK_PUBLIC_LINKS",len(candidates),flush=True)
 if len(candidates)<5:raise RuntimeError("Too few images discovered: "+str(len(candidates)))
 rows=[];thumbnails=[];sha_seen=set()
 for n,item in enumerate(candidates,1):
