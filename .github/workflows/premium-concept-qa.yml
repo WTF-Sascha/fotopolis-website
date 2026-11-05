@@ -12,6 +12,7 @@ on:
       - "scripts/premium-package-qa.mjs"
       - "scripts/premium-step4-qa.mjs"
       - "scripts/premium-step5-qa.mjs"
+      - "scripts/premium-studio3-qa.mjs"
       - "scripts/premium-concept-contact.py"
       - ".github/workflows/premium-concept-qa.yml"
   workflow_dispatch:
@@ -70,6 +71,10 @@ jobs:
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
         run: node scripts/premium-step5-qa.mjs
+      - name: Studio 3.0 premium UX gate - eight viewports and full journeys
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-studio3-qa.mjs
       - name: Render visual contact sheet
         if: always()
         run: python3 scripts/premium-concept-contact.py
