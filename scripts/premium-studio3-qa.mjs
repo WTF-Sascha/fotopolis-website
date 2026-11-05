@@ -39,6 +39,12 @@ for(const width of widths){
    };
  });
  let res=await visit("");
+ // A full-page visual audit must decode the existing lazy-loaded legacy gallery
+ // thumbnails before assessing image integrity, including below-fold images.
+ await page.evaluate(async()=>{
+   for(const image of document.images)image.loading="eager";
+   await Promise.all([...document.images].map(image=>image.decode().catch(()=>{})));
+ });
  let d=await facts();
  check(width+" home 200",res.status()===200);
  check(width+" accessible hero and brand",d.h1===1&&d.logo==="/assets/fotopolis-logo-original.png");
