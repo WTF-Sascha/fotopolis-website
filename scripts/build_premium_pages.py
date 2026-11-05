@@ -155,7 +155,10 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     '</ul><div class="package-card-footer">'
                     '<span>Preis &amp; Verfügbarkeit: auf Anfrage</span>'
                     f'<a class="editorial-link" href="/{e(card["slug"])}/">'
-                    f'{e(card["cta"])} <span aria-hidden="true">↗</span></a></div></article>'
+                    f'{e(card["cta"])} <span aria-hidden="true">↗</span></a>'
+                    f'<a class="package-select" href="#paketfinder" data-package-choice="{e(card["title"])}">'
+                    'Für meine Anfrage auswählen <span aria-hidden="true">↗</span></a>'
+                    '</div></article>'
                 )
             rich_sections += (
                 '</div><div class="compare-block">'
