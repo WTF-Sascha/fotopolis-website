@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     button.setAttribute("aria-label",open?"Menü schließen":"Menü öffnen");
   });
   nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",close));
-  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&nav.classList.contains("open")){close();button.focus();}});
+  window.addEventListener("resize",()=>{if(window.innerWidth>900&&nav.classList.contains("open"))close();});
   document.addEventListener("click",e=>{if(!nav.contains(e.target)&&!button.contains(e.target))close()});
 });

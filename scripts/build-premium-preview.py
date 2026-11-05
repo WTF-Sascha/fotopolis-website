@@ -48,7 +48,10 @@ html = html.replace('<script defer src="./site.js"></script>',
 assert "../../" not in html
 assert html.count("<h1") == 1
 assert all(("/assets/images/" + name) in html for name in photos)
-assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 4  # preload, mobile, desktop, card
+assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 1  # product card only
+assert '<section class="hero hero-editorial"' in html and '<nav class="hero-guide"' in html, "Missing photo-free editorial hero"
+assert "<img" not in html.split('<section class="hero hero-editorial"',1)[1].split("</section>",1)[0], "No images allowed in hero"
+assert all('href="#'+a+'"' in html and 'id="'+a+'"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Hero guide anchors must match products"
 assert "LEG-019.webp" not in html and "LEG-014.webp" not in html, "No misleading legacy product visuals"
 assert "pending-approved-file" not in html and "legacy-reference" not in html, "Outdated placeholder"
 assert html.count('data-asset-status="approved-user-upload"') == 2, "Both approved scenes needed"
@@ -65,4 +68,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print("FOTOPOLIS V2.3: approved Fotospiegel and logo unchanged; Fotobox and Camper correctly mapped to responsive WebP; three legacy gallery review photos")
+print("FOTOPOLIS V2.4: image-free editorial hero, semantic product shortcuts; approved logo and all product images remain unchanged")

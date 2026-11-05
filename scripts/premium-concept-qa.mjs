@@ -41,13 +41,14 @@ for(const [label,width,height] of sizes){
     allImages:[...document.images].map(x=>({src:x.getAttribute("src"),ok:x.complete&&x.naturalWidth>0})),
     headingCount:document.querySelectorAll("main h1").length,
     headline:document.querySelector("h1")?.innerText,
-    heroImg:document.querySelector(".hero-photo img")?.getAttribute("src"),
+    heroImageCount:document.querySelectorAll(".hero img").length,
+    heroGuideLinks:[...document.querySelectorAll(".hero-guide-link")].map(x=>x.getAttribute("href")),
+    heroCTAs:[...document.querySelectorAll(".hero-buttons a")].map(x=>x.getAttribute("href")),
+    heroStyle:getComputedStyle(document.querySelector(".hero")).backgroundImage,
     logo:document.querySelector(".identity img")?.getAttribute("src"),
     fonts:document.fonts.status,
     navWidth:document.querySelector(".nav-shell")?.getBoundingClientRect().width,
     heroHeight:document.querySelector(".hero")?.getBoundingClientRect().height,
-    heroObjectFit:getComputedStyle(document.querySelector(".hero-photo img")).objectFit,
-    mobileObjectFit:getComputedStyle(document.querySelector(".mobile-hero-photo img")).objectFit,
     mirrorObjectFit:getComputedStyle(document.querySelector(".mirror-card-photo img")).objectFit,
     mirrorFilter:getComputedStyle(document.querySelector(".mirror-card-photo img")).filter,
     wohnwagenObjectFit:getComputedStyle(document.querySelector(".spotlight-image img")).objectFit,
@@ -78,8 +79,11 @@ for(const [label,width,height] of sizes){
   check(label+" no horizontal overflow",info.pageWidth<=width+2,info.pageWidth+" / "+width);
   check(label+" real images loaded",info.allImages.every(x=>x.ok),info.allImages.filter(x=>!x.ok).map(x=>x.src).join(", "));
   check(label+" approved logo",["../../site/assets/fotopolis-logo-original.png","/assets/fotopolis-logo-original.png"].includes(info.logo),info.logo);
-  check(label+" new Fotospiegel hero",info.heroImg?.endsWith("fotospiegel-hero-lossless.webp"),info.heroImg);
-  check(label+" preserve full Fotospiegel frame",info.heroObjectFit==="contain"&&info.mobileObjectFit==="contain"&&info.mirrorObjectFit==="contain",info.heroObjectFit+"/"+info.mobileObjectFit+"/"+info.mirrorObjectFit);
+  check(label+" hero contains no photo",info.heroImageCount===0,String(info.heroImageCount));
+  check(label+" text-only hero with CSS color treatment",info.heroStyle.includes("gradient"),info.heroStyle.slice(0,75));
+  check(label+" hero three working product shortcuts",JSON.stringify(info.heroGuideLinks)===JSON.stringify(["#fotobox","#fotospiegel","#fotowohnwagen"]),JSON.stringify(info.heroGuideLinks));
+  check(label+" primary and secondary CTAs",JSON.stringify(info.heroCTAs)===JSON.stringify(["#erlebnisse","#kontakt"]),JSON.stringify(info.heroCTAs));
+  check(label+" preserve full Fotospiegel product",info.mirrorObjectFit==="contain",info.mirrorObjectFit);
   check(label+" Fotospiegel no CSS colour filter",info.mirrorFilter==="none",info.mirrorFilter);
   check(label+" Wohnwagen original full image",info.wohnwagenObjectFit==="contain"&&info.wohnwagenFilter==="none",info.wohnwagenObjectFit+"/"+info.wohnwagenFilter);
   check(label+" Wohnwagen approved upload",info.wohnwagenStatus==="approved-user-upload"&&info.wohnwagenSrc?.endsWith("fotowohnwagen-gartenparty-1448.webp"),info.wohnwagenSrc);
@@ -90,9 +94,11 @@ for(const [label,width,height] of sizes){
   check(label+" Fotobox descriptive alt",info.fotoboxAlt?.includes("Fotobox")&&info.fotoboxAlt?.includes("Touchscreen"),info.fotoboxAlt);
   check(label+" product images have rendered bounds",info.productRenderMetrics.length===3&&info.productRenderMetrics.every(p=>p.width>100&&p.height>100&&p.naturalWidth>0&&p.naturalHeight>0&&p.visible),JSON.stringify(info.productRenderMetrics));
   check(label+" no broken internal anchors",info.brokenAnchors.length===0,info.brokenAnchors.join(", "));
-  if(width>=1024)check(label+" compact hero",info.heroHeight<=620,String(Math.round(info.heroHeight))+"px");
+  if(width>=1024)check(label+" balanced hero height",info.heroHeight<=790,String(Math.round(info.heroHeight))+"px");
   check(label+" one H1",info.headingCount===1,String(info.headingCount));
   check(label+" JS runtime",errors.length===0,errors.join(" | "));
+  await page.locator(".hero-guide-link").first().click();
+  check(label+" hero Fotobox shortcut works",new URL(page.url()).hash==="#fotobox",page.url());
   if(width<=768){
     const toggle=page.locator("[data-menu-toggle]");
     check(label+" mobile toggle visible",await toggle.isVisible());
@@ -100,6 +106,7 @@ for(const [label,width,height] of sizes){
     check(label+" menu opens",await toggle.getAttribute("aria-expanded")==="true");
     await page.keyboard.press("Escape");
     check(label+" menu escape",await toggle.getAttribute("aria-expanded")==="false");
+    check(label+" menu keyboard focus restored",await toggle.evaluate(el=>el===document.activeElement));
   }
   await page.close();
 }
