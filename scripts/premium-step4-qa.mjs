@@ -116,7 +116,7 @@ for(const width of widths){
  check(width+" home trust strip",await page.locator(".home-trust-grid article").count()===3);
  check(width+" home occasion and about crosslinks",
    await page.locator('.home-trust-links a[href="/anlaesse/"]').count()===1&&
-   await page.locator('.home-trust-links a[href="/ueber-uns/"]').count()===1);
+   await page.locator('.home-trust-links a[href="/kontakt/"]').count()===1);
  check(width+" hero remains image-free",await page.locator(".hero.hero-editorial img").count()===0);
  check(width+" home stable",!data.overflow&&!data.brokenImages.length&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" no unexpected data writes",writes.length===0,writes.join("|"));
