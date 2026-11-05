@@ -50,3 +50,33 @@ ident.save(payload,format="JPEG",quality=78,optimize=True)
 print("FOTOPOLIS_INCOMING_CONTACT_START")
 print(base64.b64encode(payload.getvalue()).decode("ascii"))
 print("FOTOPOLIS_INCOMING_CONTACT_END")
+
+# Temporary export of production-quality responsive, proportionally scaled WebP encodes.
+# Original PNGs in incoming/ remain byte-for-byte unchanged.
+for file_key,output_name,width_target in (
+  ("upload-b.png","fotobox-event-1672.webp",1672),
+  ("upload-b.png","fotobox-event-800.webp",800),
+  ("upload-c.png","fotowohnwagen-gartenparty-1448.webp",1448),
+  ("upload-c.png","fotowohnwagen-gartenparty-760.webp",760),
+):
+    with Image.open(sources/file_key) as loaded:
+        photo=loaded.convert("RGB")
+        if photo.width!=width_target:
+            height_target=round(photo.height*width_target/photo.width)
+            photo=photo.resize((width_target,height_target),Image.Resampling.LANCZOS)
+        outbuf=io.BytesIO()
+        photo.save(outbuf,format="WEBP",quality=94,method=6,exact=True)
+        payload=outbuf.getvalue()
+        digest=sha256(payload).hexdigest()
+        print("FOTOPOLIS_WEBP_START",output_name,photo.width,photo.height,len(payload),digest)
+        encoded=base64.b64encode(payload).decode("ascii")
+        for offset in range(0,len(encoded),5000):
+            print("FOTOPOLIS_WEBP_CHUNK",encoded[offset:offset+5000])
+        print("FOTOPOLIS_WEBP_END",output_name)
+# Confirm original Fotospiegel render corresponds to incoming source after a proportional resize.
+with Image.open(sources/"upload-a.png") as original,Image.open("concepts/premium-v2/assets/fotospiegel-hero-lossless.webp") as established:
+    reference=original.convert("RGB").resize(established.size,Image.Resampling.LANCZOS)
+    from PIL import ImageChops,ImageStat
+    delta=ImageChops.difference(reference,established.convert("RGB"))
+    statistics=ImageStat.Stat(delta)
+    print("FOTOPOLIS_MIRROR_PIXEL_DELTA",reference.size,established.size,[round(x,4) for x in statistics.mean])
