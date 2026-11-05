@@ -25,3 +25,28 @@ buf=io.BytesIO();preview.save(buf,format="JPEG",quality=65,optimize=True)
 print("PREMIUM_CONTACT_SHEET_START")
 print(base64.b64encode(buf.getvalue()).decode("ascii"))
 print("PREMIUM_CONTACT_SHEET_END")
+
+# Temporary source identification contact sheet for three verbatim GitHub uploads.
+# Filenames are deliberately neutral until their visual identity is confirmed.
+from PIL import ImageFont
+from hashlib import sha256
+sources = Path("concepts/premium-v2/assets/incoming")
+ident = Image.new("RGB",(1440,600),"#f5f2ed")
+draw = ImageDraw.Draw(ident)
+for i,name in enumerate(("upload-a.png","upload-b.png","upload-c.png")):
+    p=sources/name
+    pic=Image.open(p).convert("RGB")
+    width,height=pic.size
+    digest=sha256(p.read_bytes()).hexdigest()
+    print("FOTOPOLIS_UPLOAD_INFO",name,width,height,p.stat().st_size,digest)
+    pic.thumbnail((450,505),Image.Resampling.LANCZOS)
+    x=480*i+(480-pic.width)//2
+    y=65+(505-pic.height)//2
+    ident.paste(pic,(x,y))
+    draw.text((480*i+16,18),name,fill="#102f49")
+ident.save(root/"incoming-contact-sheet.jpg",quality=88,optimize=True)
+payload=io.BytesIO()
+ident.save(payload,format="JPEG",quality=78,optimize=True)
+print("FOTOPOLIS_INCOMING_CONTACT_START")
+print(base64.b64encode(payload.getvalue()).decode("ascii"))
+print("FOTOPOLIS_INCOMING_CONTACT_END")
