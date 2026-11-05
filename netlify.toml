@@ -1,6 +1,14 @@
 [build]
   publish = "site"
 
+[context.deploy-preview]
+  command = "python3 scripts/build-premium-preview.py"
+  publish = "preview-build"
+
+[context.branch-deploy]
+  command = "python3 scripts/build-premium-preview.py"
+  publish = "preview-build"
+
 [[headers]]
   for = "/*"
   [headers.values]
