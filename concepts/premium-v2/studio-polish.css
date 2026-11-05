@@ -234,3 +234,48 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
+
+
+/* Studio 3.0 progressive enquiry: one clear decision per step. */
+.contact-progress{margin:0 0 24px}
+.contact-progress ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;list-style:none;margin:0;padding:0}
+.contact-progress li{display:flex;align-items:center;gap:11px;min-width:0;border-bottom:2px solid #d4cbbd;padding:13px 10px 14px;color:#6a7b86;line-height:1.4}
+.contact-progress li>span{display:grid;place-items:center;width:31px;height:31px;flex:0 0 31px;border:1px solid #cfc2ab;border-radius:100%;font-size:10px;font-weight:800;color:#83683f}
+.contact-progress li strong{font-size:12px;font-weight:730}
+.contact-progress li[aria-current="step"]{color:#092b45;border-bottom-color:#a67b3f}
+.contact-progress li[aria-current="step"]>span{color:#071b30;background:#d7b77a;border-color:#d7b77a}
+.contact-progress li.is-complete{color:#36596d;border-bottom-color:#6d9c8b}
+.contact-progress li.is-complete>span{background:#e5eee6;border-color:#9aaf9f;color:#315643}
+.contact-form [data-contact-step][hidden]{display:none!important}
+.contact-step-controls{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.contact-step-controls button{min-height:50px;border-radius:3px;padding:12px 17px;font-size:12px;line-height:1.4;font-weight:770}
+.contact-next{background:#d7b77a;color:#071b30;border:1px solid #a5824e;flex:1}
+.contact-next:hover{background:#ebcc98}
+.contact-prev{background:transparent;color:#183b51;border:1px solid #aeaeaa;flex:0 1 auto}
+.contact-prev:hover{background:#ece4d7}
+.contact-step-controls button[hidden]{display:none!important}
+.contact-inline-status{min-height:18px;color:#a04431;font-size:12px;line-height:1.6}
+.route-kontakt .page-grid{grid-template-columns:1fr}
+.route-kontakt .page-aside{display:none}
+.route-kontakt .page-article{max-width:920px}
+.route-kontakt .page-body{padding-block:45px}
+/* The FAQ is the reassurance layer, not a wall of text. */
+.page-faq{display:grid;gap:9px}
+.page-faq details{background:#fff;border:1px solid #ddd6ca;border-radius:3px;padding:0;overflow:hidden}
+.page-faq details:last-child{border-bottom:1px solid #ddd6ca}
+.page-faq summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:62px;padding:16px 19px;font-size:15px;line-height:1.42;color:#153349}
+.page-faq summary::after{content:"+";font-size:24px;color:#986f3b;font-weight:400;flex:0 0 20px;text-align:center}
+.page-faq details[open] summary::after{content:"−"}
+.page-faq details[open]{border-color:#bca172}
+.page-faq details p{padding:0 19px 21px;margin:0;color:#556a77;font-size:14px}
+@media(max-width:1100px){body.menu-open{overflow:hidden}}
+@media(max-width:720px){
+ .contact-progress{margin-bottom:19px}
+ .contact-progress ol{gap:5px}
+ .contact-progress li{padding:9px 2px 11px;gap:6px}
+ .contact-progress li strong{font-size:11px}
+ .contact-progress li>span{width:25px;height:25px;flex-basis:25px;font-size:9px}
+ .contact-step-controls button{padding:11px 13px}
+ .contact-step-controls .contact-next{flex:1}
+ .contact-inline-status{margin-top:5px}
+}
