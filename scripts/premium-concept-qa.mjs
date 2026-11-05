@@ -23,6 +23,8 @@ for(const [label,width,height] of sizes){
   }
   await page.evaluate(async()=>{await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})))});
   await page.evaluate(()=>window.scrollTo(0,0));
+  // Capture the first viewport before fullPage screenshot scrolls the browser internally.
+  await page.screenshot({path:path.join(out,label+"-fold.png"),fullPage:false,animations:"disabled"});
   await page.screenshot({path:path.join(out,label+".png"),fullPage:true,animations:"disabled"});
   if(width===1440){
     for(const [name,selector] of [
@@ -32,7 +34,7 @@ for(const [label,width,height] of sizes){
       await page.locator(selector).screenshot({path:path.join(out,name+".png"),animations:"disabled"});
     }
   }
-  await page.screenshot({path:path.join(out,label+"-fold.png"),fullPage:false,animations:"disabled"});
+
   const info=await page.evaluate(()=>({
     pageWidth:document.documentElement.scrollWidth,
     viewport:window.innerWidth,
