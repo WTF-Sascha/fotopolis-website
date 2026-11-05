@@ -484,7 +484,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<strong>Kontakt</strong></li>'
                 '<li data-contact-progress-step="3"><span>03</span>'
                 '<strong>Wünsche</strong></li></ol></nav>'
-                '<div class="contact-layout"><form class="contact-form" 
+                '<div class="contact-layout"><form class="contact-form" '
                 'data-contact-flow novalidate>'
                 '<fieldset data-contact-step="1"><legend><span>01</span> Das Event</legend>'
                 '<div class="contact-fields">'
