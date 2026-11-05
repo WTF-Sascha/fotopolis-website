@@ -4,16 +4,16 @@ Quelle: https://fotopolis-mieten.de/
 Status: nur gesonderte Bildbibliothek zur Sichtung. Keine produktive Verwendung oder Veröffentlichung genehmigt.
 
 ## Zahlen
-- identified: 19
-- imported: 19
+- identified: 73
+- imported: 73
 - failed: 0
 - duplicates: 0
 - under800px_shorter_side: 2
 
 ## Vorläufige Rubriken
 - Fotobox: 5
-- Fotowohnwagen: 5
-- Galerie: 1
+- Fotowohnwagen: 12
+- Galerie: 48
 - Sonstige: 8
 
 ## Dateien
