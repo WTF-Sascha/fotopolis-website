@@ -22,6 +22,7 @@ for(const [label,width,height] of sizes){
     await page.locator(target).scrollIntoViewIfNeeded();
   }
   await page.evaluate(async()=>{await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})))});
+  await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:path.join(out,label+".png"),fullPage:true,animations:"disabled"});
   if(width===1440){
     for(const [name,selector] of [
