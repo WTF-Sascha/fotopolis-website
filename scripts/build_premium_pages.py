@@ -14,7 +14,7 @@ def e(value: str) -> str:
 def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
-    assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9", "3.0")
+    assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9", "3.0", "3.1")
     header = re.search(r'<header class="site-header">.*?</header>', home_html, re.S)
     footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
@@ -530,9 +530,12 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<div><label for="contact-email">E-Mail <span aria-hidden="true">*</span></label>'
                 '<input id="contact-email" name="email" type="email" maxlength="150" '
                 'autocomplete="email" required placeholder="name@beispiel.de"></div>'
-                '<div><label for="contact-phone">Telefon (optional)</label>'
+                '<div><label for="contact-phone">Telefon <span data-contact-phone-optional>(optional)</span></label>'
                 '<input id="contact-phone" name="telefon" type="tel" maxlength="45" '
-                'autocomplete="tel" placeholder="+49 ..."></div>'
+                'autocomplete="tel" aria-describedby="contact-phone-hint" '
+                'placeholder="+49 ...">'
+                '<small class="contact-field-hint" id="contact-phone-hint" data-contact-phone-hint>'
+                'Nur nötig, wenn du einen Rückruf wünschst.</small></div>'
                 '<div><label for="contact-way">Bevorzugter Kontaktweg</label>'
                 '<select id="contact-way" name="kontaktweg">'
             )
@@ -610,7 +613,6 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 ("#trust-title", "Das ist FOTOPOLIS"), ("#trust-flow-title", "Ablauf"),
                 ("/kontakt/", "Anfragen")
             ],
-            "kontakt": [("#contact-flow-title", "Anfrageformular"), ("/pakete/", "Erlebnisse vergleichen")],
         }
         route_jumps = ""
         if slug in quick_nav:
@@ -626,6 +628,26 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'/kontakt/?produkt={e(p["title"])}'
             if slug in ("fotobox", "fotospiegel", "fotowohnwagen")
             else '/kontakt/'
+        )
+        # Repeated sidebars/closing CTAs are useful on product-detail pages,
+        # but distract from the enquiry and repeat questions on service routes.
+        show_side_panel = slug in ("fotobox", "fotospiegel", "fotowohnwagen")
+        side_panel = (
+            '<aside class="page-aside"><span class="kicker">UNVERBINDLICH PLANEN</span>'
+            '<h2>Dein Event. Dein Moment.</h2>'
+            '<p>Welches Erlebnis passt zu deinem Anlass? Schicke uns die Eckdaten, '
+            'wir klären das individuell. Kein Live-Kalender und keine Sofortbuchung.</p>'
+            f'<a class="button gold" href="{aside_contact}">Event anfragen '
+            '<span aria-hidden="true">↗</span></a></aside>'
+            if show_side_panel else ""
+        )
+        closing_cta = (
+            '<section class="page-end"><div class="inner"><div>'
+            '<h2>Erinnerungen beginnen mit einer Idee.</h2>'
+            '<p>FOTOPOLIS · Fotobox · Fotospiegel · Fotowohnwagen</p>'
+            '</div><a class="button gold" href="/pakete/">Leistungen ansehen ↗</a>'
+            '</div></section>'
+            if slug in ("fotobox", "fotospiegel", "fotowohnwagen") else ""
         )
         seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
         page_html = (
@@ -651,16 +673,8 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
             f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>'
             '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
-            f'<div class="page-article">{content}</div>'
-            '<aside class="page-aside"><span class="kicker">UNVERBINDLICH PLANEN</span>'
-            '<h2>Dein Event. Dein Moment.</h2>'
-            '<p>Welches Erlebnis passt zu deinem Anlass? Schicke uns die Eckdaten, '
-            'wir klären das individuell. Kein Live-Kalender und keine Sofortbuchung.</p>'
-            f'<a class="button gold" href="{aside_contact}">Event anfragen '
-            '<span aria-hidden="true">↗</span></a></aside></div></div>'
-            '<section class="page-end"><div class="inner"><div><h2>Erinnerungen beginnen mit einer Idee.</h2>'
-            '<p>FOTOPOLIS · Fotobox · Fotospiegel · Fotowohnwagen</p></div>'
-            '<a class="button gold" href="/pakete/">Leistungen ansehen ↗</a></div></section>'
+            f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
+            + closing_cta
             '</main>' + footer.group(0) + '</body></html>'
         )
         assert page_html.count("<h1>") == 1, slug
