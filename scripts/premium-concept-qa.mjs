@@ -1,8 +1,8 @@
 import { chromium } from "playwright";
 import fs from "node:fs/promises";
 import path from "node:path";
-const base="http://127.0.0.1:8765/concepts/premium-v2/";
-const out="concepts/premium-v2/qa-screenshots";
+const base=process.env.SITE_BASE_URL || "http://127.0.0.1:8765/concepts/premium-v2/";
+const out=process.env.QA_OUT_DIR || "concepts/premium-v2/qa-screenshots";
 await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 const sizes=[["mobile-320",320,700],["mobile-375",375,812],["tablet-768",768,1024],["laptop-1024",1024,768],["desktop-1440",1440,900]];
@@ -26,12 +26,19 @@ for(const [label,width,height] of sizes){
     heroImg:document.querySelector(".hero-photo img")?.getAttribute("src"),
     logo:document.querySelector(".identity img")?.getAttribute("src"),
     fonts:document.fonts.status,
-    navWidth:document.querySelector(".nav-shell")?.getBoundingClientRect().width
+    navWidth:document.querySelector(".nav-shell")?.getBoundingClientRect().width,
+    heroHeight:document.querySelector(".hero")?.getBoundingClientRect().height,
+    heroObjectFit:getComputedStyle(document.querySelector(".hero-photo img")).objectFit,
+    mobileObjectFit:getComputedStyle(document.querySelector(".mobile-hero-photo img")).objectFit,
+    mirrorObjectFit:getComputedStyle(document.querySelector(".mirror-card-photo img")).objectFit
   }));
   check(label+" HTTP",res?.status()===200,String(res?.status()));
   check(label+" no horizontal overflow",info.pageWidth<=width+2,info.pageWidth+" / "+width);
   check(label+" real images loaded",info.allImages.every(x=>x.ok),info.allImages.filter(x=>!x.ok).map(x=>x.src).join(", "));
-  check(label+" approved logo",info.logo==="../../site/assets/fotopolis-logo-original.png",info.logo);
+  check(label+" approved logo",["../../site/assets/fotopolis-logo-original.png","/assets/fotopolis-logo-original.png"].includes(info.logo),info.logo);
+  check(label+" new Fotospiegel hero",info.heroImg?.endsWith("fotospiegel-hero-lossless.webp"),info.heroImg);
+  check(label+" preserve full Fotospiegel frame",info.heroObjectFit==="contain"&&info.mobileObjectFit==="contain"&&info.mirrorObjectFit==="contain",info.heroObjectFit+"/"+info.mobileObjectFit+"/"+info.mirrorObjectFit);
+  if(width>=1024)check(label+" compact hero",info.heroHeight<=620,String(Math.round(info.heroHeight))+"px");
   check(label+" one H1",info.headingCount===1,String(info.headingCount));
   check(label+" JS runtime",errors.length===0,errors.join(" | "));
   if(width<=768){
