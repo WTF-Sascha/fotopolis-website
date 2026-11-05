@@ -81,7 +81,7 @@ for(const [label,width,height] of sizes){
   check(label+" approved logo",["../../site/assets/fotopolis-logo-original.png","/assets/fotopolis-logo-original.png"].includes(info.logo),info.logo);
   check(label+" hero contains no photo",info.heroImageCount===0,String(info.heroImageCount));
   check(label+" text-only hero with CSS color treatment",info.heroStyle.includes("gradient"),info.heroStyle.slice(0,75));
-  check(label+" hero three working product shortcuts",JSON.stringify(info.heroGuideLinks)===JSON.stringify(["#fotobox","#fotospiegel","#fotowohnwagen"]),JSON.stringify(info.heroGuideLinks));
+  check(label+" hero three working product shortcuts",JSON.stringify(info.heroGuideLinks)===JSON.stringify(["#fotowohnwagen","#fotobox","#fotospiegel"]),JSON.stringify(info.heroGuideLinks));
   check(label+" primary and secondary CTAs",JSON.stringify(info.heroCTAs)===JSON.stringify(["#erlebnisse","#kontakt"]),JSON.stringify(info.heroCTAs));
   check(label+" preserve full Fotospiegel product",info.mirrorObjectFit==="contain",info.mirrorObjectFit);
   check(label+" Fotospiegel no CSS colour filter",info.mirrorFilter==="none",info.mirrorFilter);
@@ -98,7 +98,7 @@ for(const [label,width,height] of sizes){
   check(label+" one H1",info.headingCount===1,String(info.headingCount));
   check(label+" JS runtime",errors.length===0,errors.join(" | "));
   await page.locator(".hero-guide-link").first().click();
-  check(label+" hero Fotobox shortcut works",new URL(page.url()).hash==="#fotobox",page.url());
+  check(label+" hero Wohnwagen shortcut works",new URL(page.url()).hash==="#fotowohnwagen",page.url());
   if(width<=768){
     const toggle=page.locator("[data-menu-toggle]");
     check(label+" mobile toggle visible",await toggle.isVisible());
