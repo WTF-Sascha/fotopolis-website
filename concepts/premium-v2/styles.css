@@ -195,3 +195,16 @@ a:focus-visible,button:focus-visible{outline:3px solid #73bcf0;outline-offset:4p
  .footer-grid{flex-direction:column;align-items:flex-start;gap:22px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+/* Studio QA 2.0: photography visible in the first mobile screen */
+.mobile-hero-photo{display:none}
+@media(max-width:630px){
+ .hero-photo{display:none}
+ .mobile-hero-photo{display:block;position:relative;overflow:hidden;height:224px;margin:25px 0 2px;background:#1c3444}
+ .mobile-hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 40%}
+ .hero-copy{padding-top:43px;padding-bottom:45px}
+ .hero h1{font-size:clamp(42px,10vw,57px);margin-top:22px}
+ .hero-copy>p{margin-top:19px}
+ .hero-bottom{display:none}
+ .hero-buttons{margin-top:25px}
+}
