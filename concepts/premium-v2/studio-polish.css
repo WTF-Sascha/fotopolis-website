@@ -279,3 +279,84 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
  .contact-step-controls .contact-next{flex:1}
  .contact-inline-status{margin-top:5px}
 }
+
+
+/* STUDIO 3.1 · completion pass
+   Optimize first-use comprehension and remove redundant conversion barriers.
+   Existing navy/gold CI and original approved media remain unchanged. */
+.advisor-result{scroll-margin-top:104px}
+.advisor-result:focus-visible{outline:3px solid #d7b77a;outline-offset:4px}
+.contact-field-hint{display:block;color:#62717a;font-size:11px;line-height:1.6;margin-top:6px}
+.contact-form input[aria-required="true"]{border-color:#94713f}
+.contact-form .contact-step-controls{margin-top:2px}
+.contact-privacy{font-size:11px;padding:13px 16px;line-height:1.62}
+.contact-small{font-size:11px;line-height:1.5}
+.contact-progress li{transition:border-color .15s,color .15s}
+:where(.route-pakete,.route-galerie,.route-anlaesse,.route-ueber-uns,.route-faq,.route-impressum,.route-datenschutz,.route-kontakt) .page-grid{
+ display:block;
+ max-width:1070px
+}
+:where(.route-pakete,.route-galerie,.route-anlaesse,.route-ueber-uns,.route-faq,.route-impressum,.route-datenschutz,.route-kontakt) .page-article{
+ max-width:100%
+}
+:where(.route-pakete,.route-galerie,.route-anlaesse,.route-ueber-uns,.route-faq,.route-impressum,.route-datenschutz,.route-kontakt) .page-body{
+ padding-block:clamp(28px,4.4vw,64px)
+}
+.route-kontakt .page-hero{
+ padding-block:clamp(24px,3.2vw,43px);
+ background:linear-gradient(108deg,#071b30 8%,#123b5c 100%)
+}
+.route-kontakt .page-hero .kicker{display:none}
+.route-kontakt .page-hero .page-breadcrumbs{margin-bottom:8px;font-size:11px}
+.route-kontakt .page-hero h1{
+ margin:6px 0 9px;
+ font-size:clamp(30px,4.4vw,54px);
+ line-height:1.12;
+ letter-spacing:-.042em
+}
+.route-kontakt .page-hero p{max-width:790px;font-size:clamp(12px,1.1vw,15px);line-height:1.63}
+.route-kontakt .contact-flow.section{padding-block:clamp(23px,3.5vw,48px) clamp(42px,5vw,67px)}
+.route-kontakt .contact-intro{margin-bottom:17px;max-width:790px}
+.route-kontakt .contact-intro .kicker{display:none}
+.route-kontakt .contact-intro h2{
+ font-size:clamp(23px,3.3vw,40px);
+ padding-block:.025em;
+ margin:0;
+ line-height:1.15
+}
+.route-kontakt .contact-intro p{font-size:13px;line-height:1.6;margin-top:8px}
+.route-kontakt .contact-progress{margin-bottom:15px}
+.route-kontakt .contact-progress li{padding-top:7px;padding-bottom:10px}
+.route-kontakt .contact-form{gap:12px}
+.route-kontakt .contact-form fieldset{padding:clamp(17px,2.2vw,26px)}
+.route-kontakt .contact-recap{top:94px}
+.route-kontakt .contact-step-controls{padding-top:0}
+.route-kontakt .contact-step-controls .contact-next{min-height:53px}
+.route-kontakt .contact-privacy{max-width:740px}
+.route-kontakt .contact-small{margin-top:0}
+.route-kontakt .contact-inline-status:empty{display:none}
+.route-faq .page-body{padding-top:clamp(30px,4vw,55px)}
+.route-faq .page-article{max-width:890px}
+.route-faq .page-end{display:none}
+@media(max-width:900px){
+ .advisor-result{scroll-margin-top:90px}
+}
+@media(max-width:720px){
+ .route-kontakt .page-hero{padding-block:20px 23px}
+ .route-kontakt .page-hero h1{font-size:clamp(30px,9vw,41px);margin:4px 0 8px}
+ .route-kontakt .page-hero p{font-size:12px;line-height:1.55}
+ .route-kontakt .contact-flow.section{padding-block:22px 47px}
+ .route-kontakt .contact-intro h2{font-size:clamp(22px,6.5vw,29px)}
+ .route-kontakt .contact-intro p{font-size:12px;margin-top:6px}
+ .route-kontakt .contact-intro{margin-bottom:13px}
+ .route-kontakt .contact-progress{margin-bottom:12px}
+ .route-kontakt .contact-form fieldset{padding:16px}
+ .route-kontakt .contact-form legend{font-size:13px}
+ .route-kontakt .contact-form{gap:10px}
+ .route-kontakt .contact-fields{gap:11px}
+ .route-kontakt .contact-progress li strong{font-size:11px}
+ .route-kontakt .contact-privacy{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .contact-progress li{transition:none}
+}
