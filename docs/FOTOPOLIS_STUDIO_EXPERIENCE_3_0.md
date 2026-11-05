@@ -71,3 +71,38 @@ Die Website 2.9 besaß bereits ein konsistentes Farbsystem und eine funktioniere
 - Insbesondere Mobile 320/375/430, Tablet 768 und Desktop 1440/1920 px müssen vollständig getestet werden.
 - Screenshot-Vorher-Nachher-Vergleich anhand bestehender 2.9- und neuer 3.0-Artifakte, nicht nur per automatischem HTML-Test.
 - Der Gesamtumfang der zehnteiligen Website-Roadmap bleibt separat offen: Kalenderbackend, Admin-Kalender, echte Buchungen und Produktivfreigaben sind nicht Gegenstand dieser reinen UX-Studioversion.
+
+
+## QA-Abschluss — technischer Stand
+
+**Geprüfter Commit:** `f37da971f85ca98972b2071f06bbe9353fab11d1`.
+
+**Ergebnis:** [GitHub Actions 42123176987](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42123176987) erfolgreich; **2.835/2.835 automatisierte Einzelprüfungen** ohne Fehler.
+
+| Prüfgruppe | Bestanden |
+| --- | ---: |
+| Homepage-Source, fünf Viewports | 124/124 |
+| Gebauter Netlify-Output, fünf Viewports | 124/124 |
+| Route/Nav/Focus | 147/147 |
+| Alle 12 Seiten × 9 Viewports (Layout) | 1.188/1.188 |
+| Paketfinder | 108/108 |
+| Galerie, Anlässe, Vertrauen | 252/252 |
+| Kontakt-Wizard inkl. Vor/Zurück/Validierung | 168/168 |
+| Studio 3.0, acht Viewports und Nutzerpfade | 724/724 |
+| **Gesamt** | **2.835/2.835** |
+
+Die Bild- und Logo-Hashes des bestehenden Build-Prozesses bleiben durchgehend aktiv. Der neue Studio-Code enthält keine externen API-Calls, Tracking-, Kalender- oder Backend-Verbindungen. 33 neue gezielte Vollseiten-/Fold-Screenshots wurden zusätzlich zu den bestehenden Browser-Screenshots erzeugt (15 Layout, 3 Paket, 9 Anlässe/Galerie/Über uns, 3 Kontakt, 6 Studio = 36; hiervon 3 Studio-Fold zusätzlich und nicht als FullPage gezählt).
+
+### Manuelle visuelle Stichproben nach Bildexport
+
+Aus dem GitHub-Actions-Artefakt wurden insbesondere der Hero bei **320/1440 px**, der Kontakt-Wizard bei **320/1440 px**, die Galerie bei **320 px** sowie die Desktop-Unterseiten für Pakete und Fotospiegel geöffnet und auf Lesbarkeit, Bilddarstellung, Header, Spaltenaufteilung, Überlagerungen und Textbeschnitt geprüft. Die geprüften Ansichten zeigen eine schlüssige neue Designhierarchie; der mobile CTA bleibt auf Kontaktseiten ausgeblendet.
+
+### Vorher/Nachher: nur Screenshot-Höhen, keine Performance-Messung
+
+- Home bei 1440 px: von ca. **6.932 px** Gesamthöhe (Version 2.9) auf ca. **6.032 px** (Studio 3.0).
+- Home bei 320 px: von ca. **9.329 px** auf ca. **8.990 px**.
+- Kontakt bei 320 px: von ca. **5.989 px** (alle Felder zugleich) auf ca. **4.354 px** in der geprüften Wizard-Ansicht nach Schritt 3.
+
+Die Höhen sind Vergleichswerte der jeweiligen Screenshots; sie sind **keine gemessenen Lighthouse- oder Core-Web-Vitals-Ergebnisse**. Der UX-Gewinn ergibt sich zusätzlich aus sofort sichtbaren Entscheidungen und weniger offenen Feldern.
+
+**Freigabegrenzen bleiben bestehen:** Kein abschließender Rechts-/Rechte-/Security-/Produktiv-Livegang ohne weitere Freigabe. Die zehnteilige Gesamt-Roadmap ist noch nicht abgeschlossen.
