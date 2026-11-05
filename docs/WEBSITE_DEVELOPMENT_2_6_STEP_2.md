@@ -37,3 +37,15 @@ Kein Merge, kein Produktiv-Deploy, keine Änderung an `main`, `site/`, `fotopoli
 
 ## Weiterhin offen vor Livegang
 Schriftlizenz-/Font-Einbindung, finaler Leistungs- und Preisabgleich, Bild-/Personenrechte, rechtskonforme Impressums-/Datenschutzseiten, funktionierendes Eventbuchungssystem und explizite Live-Freigabe.
+
+### Abschließende Bestätigung für Version 2.6 (inklusive Versionskennzeichnung)
+
+[GitHub Actions Lauf 42069688046](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42069688046), geprüfter Code-Commit `66bd25e3e6f3339ad20c246b5a020ef4be23fffc`, Status **success**:
+
+- Quellkonzept: **124/124 PASS**.
+- Gleiches Publish-Verzeichnis wie Netlify: **124/124 PASS**.
+- Unterseiten und Navigation: **147/147 PASS**.
+- Verpflichtendes Layout-Gate (12 Seiten × 9 Größen): **1.188/1.188 PASS**, **15 Screenshots** archiviert.
+- Netlify Deploy Preview: **ready**, exakter Commit `66bd25e`, kein Produktiv-Publish.
+
+Automatische QA einschließlich Screenshot-Erzeugung ist erfolgreich. Eine rein maschinelle Prüfung ersetzt keine endgültige menschliche Sichtabnahme der Screenshots.
