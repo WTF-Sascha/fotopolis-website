@@ -5,6 +5,7 @@ on:
     paths:
       - "concepts/premium-v2/**"
       - "scripts/premium-concept-qa.mjs"
+      - "scripts/build-premium-preview.py"
       - "scripts/premium-concept-contact.py"
       - ".github/workflows/premium-concept-qa.yml"
   workflow_dispatch:
@@ -30,6 +31,18 @@ jobs:
           sleep 2
           curl --fail --silent --show-error http://127.0.0.1:8765/concepts/premium-v2/ >/dev/null
       - name: Verify rendered website at five widths
+        run: node scripts/premium-concept-qa.mjs
+      - name: Build the exact Netlify preview
+        run: python3 scripts/build-premium-preview.py
+      - name: Serve Netlify build output
+        run: |
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-preview-server.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8766/ >/dev/null
+      - name: QA the actual deploy output on five screen sizes
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+          QA_OUT_DIR: concepts/premium-v2/qa-screenshots/deploy-output
         run: node scripts/premium-concept-qa.mjs
       - name: Render visual contact sheet
         if: always()
