@@ -12,7 +12,7 @@ product_photos = ["fotobox-event-1672.webp","fotobox-event-800.webp","fotowohnwa
 if target.exists():
     shutil.rmtree(target)
 (target / "assets/images").mkdir(parents=True)
-for name in ("styles.css", "site.js"):
+for name in ("styles.css", "site.js", "package-planner.js"):
     shutil.copy2(source / name, target / name)
 shutil.copy2(root / "site/assets/fotopolis-logo-original.png",
              target / "assets/fotopolis-logo-original.png")
@@ -77,4 +77,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print(f"FOTOPOLIS V2.6: {len(routes)} editorial pages and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
+print(f"FOTOPOLIS V2.7: {len(routes)} editorial pages and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
