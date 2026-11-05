@@ -38,3 +38,22 @@ Durchlauf über Netlify Deploy Preview (GitHub Actions) mit den vorherigen 1.943
 
 ## Schutz
 Keine Änderungen an `main`, der bisherigen Website, dem Original-Logo oder vorhandenen Produktbildern. PR #2 bleibt Draft, kein Merge, keine kostenpflichtigen externen Dienste und keine produktiven Supabase-Daten.
+
+## Finaler technischer QA-Nachweis
+
+[GitHub Actions Lauf 42081370163](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42081370163), geprüfter Code-Commit `5ddb446c88d59b91fb4abd667c58c2372e8935e8`, Status **success**:
+
+| Prüfsuite | Bestanden |
+| --- | ---: |
+| Startseite im Quellkonzept | 124/124 |
+| Startseite im Netlify-Publish-Build | 124/124 |
+| Navigation und alle Unterseiten | 147/147 |
+| Vollständiges Layout (12 Routen, 9 Breiten) | 1.188/1.188 |
+| Paketfinder-Regression | 108/108 |
+| Anlässe, Galerie, Vertrauen | 252/252 |
+| Kontakt-/Anfrageformular (7 Breiten) | 126/126 |
+| **Gesamt** | **2.069/2.069** |
+
+Die Kontakt-QA hat 320, 768 und 1440 px als Vollseiten-Screenshots archiviert. Die drei Aufnahmen wurden nach Download des Artefakts in einer visuellen Gegenüberstellung geprüft: keine erkennbaren Überlappungen oder abgeschnittenen Inhalte, mobile Anordnung untereinander und Desktop-Anordnung in zwei Spalten sind konsistent. Frühere Galerie- und Produktbildprüfungen bleiben im Regressionstest aktiv.
+
+**Abgrenzung:** Der echte servergestützte Versand, die sichere Verarbeitung personenbezogener Anfragen und die verbindliche Kalenderreservierung sind noch **nicht implementiert**. Punkt 5 ist als lokale Vorschau mit vom Nutzer eigenständig zu versendendem E-Mail-Entwurf abgeschlossen, aber noch **keine fertig freigegebene Produktivfunktion**.
