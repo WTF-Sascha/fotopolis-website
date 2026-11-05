@@ -47,6 +47,10 @@ for(const width of widths){
   check(prefix+" page shell",data.h1===1&&data.form&&data.recap&&data.script);
   check(prefix+" form only local",data.formAction===null&&data.passive&&data.noindex);
   check(prefix+" content grid",data.totalFields>=9&&data.wishes===6);
+  check(prefix+" three progressive steps",await page.locator("[data-contact-step]").count()===3&&
+    await page.locator("[data-contact-progress-step]").count()===3);
+  check(prefix+" initially first step",await page.locator('[data-contact-step="1"]').isVisible()&&
+    !(await page.locator('[data-contact-step="2"]').isVisible()));
   check(prefix+" required fields",JSON.stringify(data.required)===JSON.stringify(["anlass","email","name"]));
   check(prefix+" initial preview",data.summary.includes("keine Reservierung")||data.summary.includes("keine Reservierung".toLowerCase())||data.summary.includes("Buchung: keine Reservierung"));
   check(prefix+" no overflow / image errors",!data.overflow&&!data.badImages.length,JSON.stringify(data));
@@ -61,9 +65,25 @@ for(const width of widths){
   await page.locator('select[name="tageszeit"]').selectOption("Abend");
   await page.locator('input[name="ort"]').fill("Ahlen");
   await page.locator('input[name="gaeste"]').fill("120");
+  check(prefix+" wizard only event step visible",
+    await page.locator('[data-contact-step="1"]').isVisible()&&
+    !(await page.locator('[data-contact-step="2"]').isVisible()));
+  await page.locator("[data-contact-next]").click();
+  check(prefix+" advances to contact step",
+    await page.locator('[data-contact-step="2"]').isVisible()&&
+    await page.locator('[data-contact-progress-step="2"]').getAttribute("aria-current")==="step");
   await page.locator('input[name="name"]').fill("Beispiel Gast");
   await page.locator('input[name="email"]').fill("gast@example.com");
   await page.locator('input[name="telefon"]').fill("012345678");
+  await page.locator("[data-contact-next]").click();
+  check(prefix+" advances to wishes step",
+    await page.locator('[data-contact-step="3"]').isVisible()&&
+    await page.locator('[data-contact-progress-step="3"]').getAttribute("aria-current")==="step");
+  await page.locator("[data-contact-back]").click();
+  check(prefix+" back to contacts preserves data",
+    await page.locator('[data-contact-step="2"]').isVisible()&&
+    await page.locator('input[name="email"]').inputValue()==="gast@example.com");
+  await page.locator("[data-contact-next]").click();
   await page.locator('input[name="wunsch"][value="Individuelles Fotolayout"]').check();
   await page.locator('textarea[name="details"]').fill("Bitte die Aufbauzeit vorher abstimmen.");
   check(prefix+" valid fields",await page.locator("[data-contact-flow]").evaluate(x=>x.checkValidity()));
