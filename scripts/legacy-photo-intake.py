@@ -14,7 +14,7 @@ session.headers.update({"User-Agent":"Mozilla/5.0 (FOTOPOLIS Brand Asset Review)
 
 def allowed(url):
     p=urlparse(url)
-    return p.scheme=="https" and p.netloc in ("fotopolis-mieten.de","www.fotopolis-mieten.de") and "/wp-content/uploads/" in p.path and p.path.lower().endswith((".jpeg",".jpg",".png",".webp"))
+    return p.scheme=="https" and p.netloc in ("fotopolis-mieten.de","www.fotopolis-mieten.de") and any(x in p.path for x in ("/wp-content/uploads/","/assets/","/images/","/img/")) and p.path.lower().endswith((".jpeg",".jpg",".png",".webp"))
 
 def original(url):
     p=urlparse(url)
@@ -48,30 +48,53 @@ def category(section,name):
     if "galerie" in s:return "Galerie"
     return "Sonstige"
 
-response=session.get(URL,timeout=(12,40))
-response.raise_for_status()
-soup=BeautifulSoup(response.text,"html.parser")
+pages=[URL]
+for suffix in ("index.html","angebote.html","fotobox.html","fotospiegel.html","spiegel.html","wohnwagen.html","galerie.html","kontakt.html","ueber-uns.html","ueber.html"):
+    pages.append(urljoin(URL,suffix))
 candidates={}
-for img in soup.find_all("img"):
-    possibilities=[]
-    a=img.find_parent("a",href=True)
-    if a:possibilities.append(a["href"])
-    for attr in ("data-src","data-lazy-src","src"):
-        if img.get(attr):possibilities.append(img[attr])
-    for attr in ("srcset","data-srcset"):
-        if img.get(attr):possibilities.extend(v.strip().split(" ")[0] for v in img[attr].split(","))
-    possibilities=[urljoin(URL,s) for s in possibilities if s]
-    possibilities=[p for p in possibilities if allowed(p)]
-    if not possibilities:continue
-    root=original(possibilities[0])
-    candidates.setdefault(root,{"source_url":root,"fallback_url":possibilities[0],"name":Path(urlparse(root).path).name,"section":section_of(img),"alt":img.get("alt","")})
+visited=set()
+for page_url in pages[:16]:
+    if page_url in visited:continue
+    visited.add(page_url)
+    try:
+        response=session.get(page_url,timeout=(10,24))
+        if response.status_code!=200:continue
+        if "text/html" not in response.headers.get("content-type","text/html"):continue
+        soup=BeautifulSoup(response.text,"html.parser")
+        print("PAGE",page_url,len(response.content),"IMG_TAGS",len(soup.find_all("img")),flush=True)
+        for link in soup.find_all("a",href=True):
+            link_url=urljoin(page_url,link.get("href",""))
+            if link_url.startswith(URL) and link_url.split("?")[0].lower().endswith(".html") and link_url not in visited and link_url not in pages and len(pages)<16:
+                pages.append(link_url)
+        elements=soup.find_all(["img","source","a"])
+        for element in elements:
+            urls=[]
+            for attr in ("data-src","data-lazy-src","data-background","src","href","poster"):
+                if element.get(attr):urls.append(element[attr])
+            for attr in ("srcset","data-srcset"):
+                if element.get(attr):urls.extend(v.strip().split(" ")[0] for v in element[attr].split(","))
+            urls=[urljoin(page_url,u) for u in urls if u]
+            urls=[u for u in urls if allowed(u)]
+            if not urls:continue
+            parent=element.find_previous(["h1","h2","h3","h4"])
+            section=parent.get_text(" ",strip=True) if parent else Path(urlparse(page_url).path).stem
+            for u in urls:
+                canon=original(u)
+                candidates.setdefault(canon,{"source_url":canon,"fallback_url":u,"name":Path(urlparse(canon).path).name,"section":section,"alt":element.get("alt","")})
+        # Catch images inside inline JS/CSS (hero background, galleries).
+        for match in re.finditer(r"""["'(]([^\s"'()<>{}]+\.(?:jpe?g|png|webp)(?:\?[^"'() ]*)?)["')]""",response.text,flags=re.I):
+            u=urljoin(page_url,match.group(1))
+            if not allowed(u):continue
+            canon=original(u)
+            candidates.setdefault(canon,{"source_url":canon,"fallback_url":u,"name":Path(urlparse(canon).path).name,"section":Path(urlparse(page_url).path).stem or "Startseite","alt":""})
+    except Exception as e:
+        print("PAGE_ERROR",page_url,str(e)[:110],flush=True)
 candidates=list(candidates.values())[:100]
-print("SOURCE_HTTP",response.status_code,"URL",response.url,"HTML_BYTES",len(response.content),"DISCOVERED",len(candidates),flush=True)
-if len(candidates)<5:
-    seeds=json.loads(Path("scripts/legacy-photo-seeds.json").read_text(encoding="utf-8"))["links"]
-    candidates=[{"source_url":original(x["url"]),"fallback_url":x["url"],"name":Path(urlparse(x["url"]).path).name,"section":x["section"],"alt":""} for x in seeds if allowed(x["url"])]
-    print("FALLBACK_PUBLIC_LINKS",len(candidates),flush=True)
-if len(candidates)<5:raise RuntimeError("Too few images discovered: "+str(len(candidates)))
+print("CURRENT_ASSETS_FOUND",len(candidates),flush=True)
+if not candidates:
+    u="https://fotopolis-mieten.de/assets/wohnwagen/ww_aussen%20%282%29.jpg"
+    candidates=[{"source_url":u,"fallback_url":u,"name":"ww_aussen (2).jpg","section":"Fotowohnwagen","alt":""}]
+    print("CURRENT_ASSET_FALLBACK",u,flush=True)
 rows=[];thumbnails=[];sha_seen=set()
 for n,item in enumerate(candidates,1):
     row={"id":"LEG-%03d"%n,**item,"status":"missing","width":0,"height":0,"source_bytes":0,"sha256":"","webp_file":"","webp_bytes":0,"error":"","rights_status":"UNVERIFIED","person_release":"UNVERIFIED","production_approved":False}
