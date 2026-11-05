@@ -82,7 +82,7 @@ for(const [label,width,height] of sizes){
   check(label+" hero contains no photo",info.heroImageCount===0,String(info.heroImageCount));
   check(label+" text-only hero with CSS color treatment",info.heroStyle.includes("gradient"),info.heroStyle.slice(0,75));
   check(label+" hero three working product shortcuts",JSON.stringify(info.heroGuideLinks)===JSON.stringify(["#fotowohnwagen","#fotobox","#fotospiegel"]),JSON.stringify(info.heroGuideLinks));
-  check(label+" primary and secondary CTAs",JSON.stringify(info.heroCTAs)===JSON.stringify(["#erlebnisse","#kontakt"]),JSON.stringify(info.heroCTAs));
+  check(label+" primary and secondary CTAs",JSON.stringify(info.heroCTAs)===JSON.stringify(["#erlebnisse","/kontakt/"]),JSON.stringify(info.heroCTAs));
   check(label+" preserve full Fotospiegel product",info.mirrorObjectFit==="contain",info.mirrorObjectFit);
   check(label+" Fotospiegel no CSS colour filter",info.mirrorFilter==="none",info.mirrorFilter);
   check(label+" Wohnwagen original full image",info.wohnwagenObjectFit==="contain"&&info.wohnwagenFilter==="none",info.wohnwagenObjectFit+"/"+info.wohnwagenFilter);
