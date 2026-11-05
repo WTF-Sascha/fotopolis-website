@@ -1,5 +1,5 @@
 {
-  "version": "2.6",
+  "version": "2.7",
   "status": "preview-only",
   "pages": [
     {
@@ -197,25 +197,17 @@
     {
       "slug": "pakete",
       "title": "Pakete & Leistungen",
-      "eyebrow": "LEISTUNGEN · INDIVIDUELL PLANEN",
-      "headline": "Das passende Erlebnis für deinen Anlass.",
-      "lead": "Vergleiche die drei Fotoerlebnisse. Ein konkretes Angebot wird passend zu Termin, Location, Umfang und deinen Wünschen erstellt.",
+      "eyebrow": "PAKETE · LEISTUNGEN · EVENTPLANUNG",
+      "headline": "Ein Fotoerlebnis. So individuell wie dein Event.",
+      "lead": "Wähle das passende Erlebnis, vergleiche mögliche Leistungen und stelle deine Wünsche für ein unverbindliches Angebot zusammen. Nichts wird direkt gebucht.",
       "blocks": [
         {
-          "heading": "Fotobox",
-          "body": "Ein klassisches Fotoerlebnis für spontane Gruppenaufnahmen, mit individuell abzustimmenden Layout- und Druckoptionen."
+          "heading": "Ein Angebot, das zu deinem Event passt",
+          "body": "Paketumfang und Mietdauer richten sich nach Veranstaltung, Aufstellort und den gewünschten Optionen. Konkrete Preise, Druckkontingente, Anfahrtskosten, Auf- und Abbau sowie mögliche Betreuung werden erst nach individueller Prüfung schriftlich bestätigt."
         },
         {
-          "heading": "Fotospiegel",
-          "body": "Ein interaktiver Blickfang. Details zu Technik, Nutzung und Gestaltung werden im Angebot geklärt."
-        },
-        {
-          "heading": "Fotowohnwagen",
-          "body": "Eigenständiges Fotoerlebnis mit besonderem Ambiente. Platzbedarf und Aufstellung müssen vorab abgestimmt werden."
-        },
-        {
-          "heading": "Was gehört in ein Angebot?",
-          "body": "Erlebnis, gewünschter Termin, Nutzungszeitraum, Veranstaltungsort, Aufbau, betreute Leistungen, Fotoformate, Druck- und Designoptionen. Paketpreise werden nicht erfunden oder ohne Bestätigung veröffentlicht."
+          "heading": "Was ist im Grundpaket enthalten?",
+          "body": "Die bisherige Website listet unterschiedliche Ausstattungsmerkmale, aber keine verlässlich abrufbare, verbindliche Paketzuordnung. Wir zeigen daher Erlebnisprofile und Leistungswünsche statt unbelegter Inklusivleistungen."
         }
       ],
       "packageCards": [
@@ -227,9 +219,9 @@
           "checks": [
             "DSLR-Fotografie laut bisheriger Website",
             "Blitzbeleuchtung und Fotos vor Ort",
-            "Gestaltung & Fotodruck auf Anfrage"
+            "Gestaltung & Fotodruck als Wunsch anfragen"
           ],
-          "cta": "Fotobox im Detail"
+          "cta": "Erlebnis ansehen"
         },
         {
           "slug": "fotospiegel",
@@ -241,7 +233,7 @@
             "Hochformat & LED-Lichtakzente",
             "Live-Effekte abhängig vom System"
           ],
-          "cta": "Fotospiegel im Detail"
+          "cta": "Erlebnis ansehen"
         },
         {
           "slug": "fotowohnwagen",
@@ -253,7 +245,7 @@
             "Fotografieren im eigenen Erlebnisraum",
             "Zufahrt & Aufstellung individuell prüfen"
           ],
-          "cta": "Fotowohnwagen im Detail"
+          "cta": "Erlebnis ansehen"
         }
       ],
       "comparisonRows": [
@@ -290,18 +282,145 @@
       ],
       "planningSteps": [
         {
-          "title": "1. Erlebnis auswählen",
-          "text": "Vergleiche Charakter, Format und Anforderungen der Systeme."
+          "title": "01 · Erlebnis wählen",
+          "text": "Fotobox, Fotospiegel oder Fotowohnwagen auswählen – zunächst unabhängig von Tarifstufen."
         },
         {
-          "title": "2. Eventdaten mitteilen",
-          "text": "Nenne Wunschtermin, Location, Anlass und wichtige Wünsche."
+          "title": "02 · Wünsche zusammenstellen",
+          "text": "Nutzungsdauer, Fotodruck, Layout, Betreuung und Logistik als unverbindliche Anfragewünsche markieren."
         },
         {
-          "title": "3. Angebot erhalten",
-          "text": "Verfügbarkeiten, Preise, Anfahrt, Ausstattung und Umfang werden individuell bestätigt."
+          "title": "03 · Persönliches Angebot",
+          "text": "FOTOPOLIS bestätigt Verfügbarkeit, konkrete Leistungen, Liefer- und Aufbaukosten sowie den Gesamtpreis individuell."
         }
-      ]
+      ],
+      "serviceTopics": [
+        {
+          "id": "dauer",
+          "title": "Mietdauer & Einsatzzeit",
+          "description": "Wie lange das Erlebnis verfügbar sein soll, wird anhand deines Eventablaufs geplant. Zeiten sind Wünsche, keine angebotenen Tarife.",
+          "status": "individuell",
+          "bullets": [
+            "Gewünschte Nutzungsdauer festhalten",
+            "Zeitfenster für Aufbau und Abbau abstimmen",
+            "Verlängerung und Betreuung separat klären"
+          ]
+        },
+        {
+          "id": "druck",
+          "title": "Drucke & digitale Fotos",
+          "description": "Die bisherige Fotobox-Seite nennt Sofortdruck und USB-Übergabe. Druckformate, Mengen und die Verfügbarkeit bei anderen Systemen sind vor Angebotszusage zu prüfen.",
+          "status": "bestandsangabe",
+          "bullets": [
+            "Fotodruck als Wunschoption",
+            "Digitaler Fotoexport / USB bei Fotobox beschrieben",
+            "Print-Umfang und Format vorab bestätigen"
+          ]
+        },
+        {
+          "id": "gestaltung",
+          "title": "Fotolayouts & Hintergründe",
+          "description": "Individuelle Event-Layouts und Hintergründe sind auf der früheren Fotobox-Seite beschrieben. Aktuelle Auswahl, mögliche Individualisierung und Kosten werden im Angebot festgelegt.",
+          "status": "bestandsangabe",
+          "bullets": [
+            "Motiv passend zu Hochzeit, Geburtstag oder Firma",
+            "Fotohintergrund als Wunsch anfragen",
+            "Logo- und Layoutgestaltung separat abstimmen"
+          ]
+        },
+        {
+          "id": "extras",
+          "title": "Extras & Betreuung",
+          "description": "Optionale Begleitung und Zusatzleistungen werden als Anfragewünsche aufgenommen. Sie sind nicht automatisch Bestandteil eines Pakets.",
+          "status": "anfrage",
+          "bullets": [
+            "Persönliche Betreuung anfragen",
+            "Besondere Gestaltungswünsche beschreiben",
+            "Weitere Extras individuell prüfen"
+          ]
+        },
+        {
+          "id": "logistik",
+          "title": "Lieferung, Auf- und Abbau",
+          "description": "Standort, Anfahrt, Zugänglichkeit, Strom und Aufstellung beeinflussen das Angebot. Beim Fotowohnwagen muss die Zufahrt zusätzlich geprüft werden.",
+          "status": "individuell",
+          "bullets": [
+            "Veranstaltungsort und Zufahrt klären",
+            "Strom und Stellfläche bestätigen",
+            "Anlieferung, Aufbau und Abholung kalkulieren"
+          ]
+        }
+      ],
+      "packagePlanner": {
+        "id": "package-planner",
+        "title": "Stelle deine Eventwünsche zusammen.",
+        "introduction": "Diese Angaben erstellen nur eine unverbindliche E-Mail-Vorlage in deinem Browser. Keine Buchung, keine Verfügbarkeitsprüfung, kein automatischer Versand.",
+        "productOptions": [
+          {
+            "value": "Fotobox",
+            "label": "Fotobox"
+          },
+          {
+            "value": "Fotospiegel",
+            "label": "Fotospiegel"
+          },
+          {
+            "value": "Fotowohnwagen",
+            "label": "Fotowohnwagen"
+          }
+        ],
+        "durationOptions": [
+          {
+            "value": "noch offen",
+            "label": "Dauer noch offen"
+          },
+          {
+            "value": "bis zu 4 Stunden gewünscht",
+            "label": "Bis zu 4 Stunden (Wunsch)"
+          },
+          {
+            "value": "4–6 Stunden gewünscht",
+            "label": "4–6 Stunden (Wunsch)"
+          },
+          {
+            "value": "mehr als 6 Stunden gewünscht",
+            "label": "Mehr als 6 Stunden (Wunsch)"
+          }
+        ],
+        "wishes": [
+          {
+            "id": "prints",
+            "label": "Fotodruck prüfen",
+            "detail": "Formate und Kontingente im Angebot bestätigen"
+          },
+          {
+            "id": "layouts",
+            "label": "Individuelles Fotolayout",
+            "detail": "Gestaltungswunsch, keine bestätigte Inklusivleistung"
+          },
+          {
+            "id": "backdrop",
+            "label": "Hintergrund / Dekoration",
+            "detail": "Verfügbarkeit und mögliche Zusatzkosten klären"
+          },
+          {
+            "id": "support",
+            "label": "Betreuung vor Ort anfragen",
+            "detail": "Personalumfang und Einsatzzeit auf Anfrage"
+          },
+          {
+            "id": "delivery",
+            "label": "Lieferung & Auf- und Abbau",
+            "detail": "Abhängig von Veranstaltungsort und Aufwand"
+          },
+          {
+            "id": "digital",
+            "label": "Digitale Fotoübergabe",
+            "detail": "Format und Übergabeweg vorab abstimmen"
+          }
+        ],
+        "disclaimer": "Alle Angaben sind unverbindliche Wünsche. Es werden weder Preise berechnet noch Termine reserviert. Du entscheidest selbst, ob du die vorbereitete E-Mail versendest."
+      }
     },
     {
       "slug": "galerie",
