@@ -38,6 +38,13 @@ for(const [label,width,height] of sizes){
     fotoboxCardStatus:document.querySelector("[data-product='fotobox']")?.getAttribute("data-asset-status"),
     fotoboxHasWrongLegacyImage:!!document.querySelector("[data-product='fotobox'] img[src*='LEG-019']"),
     fotoboxHasUnknownImage:!!document.querySelector("[data-product='fotobox'] img"),
+    fotoboxSrc:document.querySelector("[data-product-image='fotobox']")?.getAttribute("src"),
+    fotoboxAlt:document.querySelector("[data-product-image='fotobox']")?.getAttribute("alt"),
+    fotoboxSrcset:document.querySelector("[data-product-image='fotobox']")?.getAttribute("srcset"),
+    fotoboxObjectFit:document.querySelector("[data-product-image='fotobox']")?getComputedStyle(document.querySelector("[data-product-image='fotobox']")).objectFit:null,
+    fotoboxFilter:document.querySelector("[data-product-image='fotobox']")?getComputedStyle(document.querySelector("[data-product-image='fotobox']")).filter:null,
+    wohnwagenSrc:document.querySelector("[data-product-image='fotowohnwagen']")?.getAttribute("src"),
+    wohnwagenSrcset:document.querySelector("[data-product-image='fotowohnwagen']")?.getAttribute("srcset"),
     brokenAnchors:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute("href")).filter(h=>h.length>1&&!document.getElementById(h.slice(1)))
   }));
   check(label+" HTTP",res?.status()===200,String(res?.status()));
@@ -48,8 +55,12 @@ for(const [label,width,height] of sizes){
   check(label+" preserve full Fotospiegel frame",info.heroObjectFit==="contain"&&info.mobileObjectFit==="contain"&&info.mirrorObjectFit==="contain",info.heroObjectFit+"/"+info.mobileObjectFit+"/"+info.mirrorObjectFit);
   check(label+" Fotospiegel no CSS colour filter",info.mirrorFilter==="none",info.mirrorFilter);
   check(label+" Wohnwagen original full image",info.wohnwagenObjectFit==="contain"&&info.wohnwagenFilter==="none",info.wohnwagenObjectFit+"/"+info.wohnwagenFilter);
-  check(label+" Wohnwagen correctly flagged as legacy reference",info.wohnwagenStatus==="legacy-reference",info.wohnwagenStatus);
-  check(label+" Fotobox: no guests falsely presented as device",!info.fotoboxHasWrongLegacyImage&&!info.fotoboxHasUnknownImage&&info.fotoboxCardStatus==="pending-approved-file",info.fotoboxCardStatus);
+  check(label+" Wohnwagen approved upload",info.wohnwagenStatus==="approved-user-upload"&&info.wohnwagenSrc?.endsWith("fotowohnwagen-gartenparty-1448.webp"),info.wohnwagenSrc);
+  check(label+" Wohnwagen responsive sources",info.wohnwagenSrcset?.includes("760.webp 760w")&&info.wohnwagenSrcset?.includes("1448.webp 1448w"),info.wohnwagenSrcset);
+  check(label+" Fotobox approved image not guests",!info.fotoboxHasWrongLegacyImage&&info.fotoboxHasUnknownImage&&info.fotoboxCardStatus==="approved-user-upload"&&info.fotoboxSrc?.endsWith("fotobox-event-1672.webp"),info.fotoboxSrc);
+  check(label+" Fotobox responsive sources",info.fotoboxSrcset?.includes("800.webp 800w")&&info.fotoboxSrcset?.includes("1672.webp 1672w"),info.fotoboxSrcset);
+  check(label+" Fotobox contains and has no filter",info.fotoboxObjectFit==="contain"&&info.fotoboxFilter==="none",info.fotoboxObjectFit+"/"+info.fotoboxFilter);
+  check(label+" Fotobox descriptive alt",info.fotoboxAlt?.includes("Fotobox")&&info.fotoboxAlt?.includes("Touchscreen"),info.fotoboxAlt);
   check(label+" no broken internal anchors",info.brokenAnchors.length===0,info.brokenAnchors.join(", "));
   if(width>=1024)check(label+" compact hero",info.heroHeight<=620,String(Math.round(info.heroHeight))+"px");
   check(label+" one H1",info.headingCount===1,String(info.headingCount));
