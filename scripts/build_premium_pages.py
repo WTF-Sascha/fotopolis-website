@@ -88,7 +88,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<span class="kicker">DAS FOTOERLEBNIS</span>'
                 f'<h2>{e(p["tagline"])}</h2>'
                 f'<p>{e(p["story"])}</p>'
-                f'<a class="button gold" href="/kontakt/">'
+                f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">'
                 f'{e(p["title"])} anfragen <span aria-hidden="true">↗</span></a>'
                 '<small class="product-source-note">Technische Angaben basieren auf der bisherigen '
                 'FOTOPOLIS-Website; Details und Verfügbarkeiten werden im Angebot bestätigt.</small>'
