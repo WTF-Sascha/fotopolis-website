@@ -108,7 +108,8 @@ for(const width of widths){
    check(width+" "+route+" usable bounds",!d.overflow&&!d.clippedHeadings.length,JSON.stringify(d));
    check(width+" "+route+" images",!d.brokenImages.length,d.brokenImages.join(","));
    const jumps=await page.locator(".studio-route-jumps a").count();
-   check(width+" "+route+" relevant shortcuts",jumps>=2);
+   check(width+" "+route+" concise contextual navigation",
+     route==="kontakt/"?jumps===0:jumps>=2);
    const paths=await page.locator('.studio-route-jumps a[href^="#"]').evaluateAll(nodes=>
       nodes.map(n=>n.getAttribute("href")).filter(h=>!document.getElementById(h.slice(1))));
    check(width+" "+route+" valid quicklinks",paths.length===0,paths.join(","));
