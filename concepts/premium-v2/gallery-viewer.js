@@ -60,7 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target === dialog) dialog.close();
   });
   dialog.addEventListener("close", () => {
-    large.removeAttribute("src");
+    large.src = "/assets/images/LEG-060.webp";
+    large.alt = "Interne Eventaufnahme";
     if (opener?.isConnected && !opener.closest("[data-gallery-item]")?.hidden) {
       opener.focus();
     }
