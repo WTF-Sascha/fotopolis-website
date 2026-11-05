@@ -393,7 +393,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     '<button class="curated-open" type="button" data-gallery-open '
                     f'aria-label="{e(item["label"])} – Bild vergrößern">'
                     f'<img src="/assets/images/{e(item["file"])}" '
-                    f'alt="{e(item["alt"])}" loading="lazy" decoding="async">'
+                    f'alt="{e(item["alt"])}" loading="eager" decoding="async">'
                     '<span class="curated-zoom" aria-hidden="true">Ansehen ↗</span>'
                     '</button><figcaption>'
                     f'<span class="curated-category">{e(category)}</span>'
