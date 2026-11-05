@@ -608,6 +608,11 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 route_jumps += f'<a href="{e(href)}">{e(label)} <span aria-hidden="true">↗</span></a>'
             route_jumps += '</div></nav>'
 
+        aside_contact = (
+            f'/kontakt/?produkt={e(p["title"])}'
+            if slug in ("fotobox", "fotospiegel", "fotowohnwagen")
+            else '/kontakt/'
+        )
         seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -637,7 +642,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<h2>Dein Event. Dein Moment.</h2>'
             '<p>Welches Erlebnis passt zu deinem Anlass? Schicke uns die Eckdaten, '
             'wir klären das individuell. Kein Live-Kalender und keine Sofortbuchung.</p>'
-            f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">Event anfragen '
+            f'<a class="button gold" href="{aside_contact}">Event anfragen '
             '<span aria-hidden="true">↗</span></a></aside></div></div>'
             '<section class="page-end"><div class="inner"><div><h2>Erinnerungen beginnen mit einer Idee.</h2>'
             '<p>FOTOPOLIS · Fotobox · Fotospiegel · Fotowohnwagen</p></div>'
