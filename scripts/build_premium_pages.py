@@ -674,7 +674,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
             f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
             + closing_cta
-            '</main>' + footer.group(0) + '</body></html>'
+            + '</main>' + footer.group(0) + '</body></html>'
         )
         assert page_html.count("<h1>") == 1, slug
         dest = target / slug
