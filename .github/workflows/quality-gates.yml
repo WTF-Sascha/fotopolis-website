@@ -1,0 +1,44 @@
+name: FOTOPOLIS Quality Gates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/qa.mjs"
+      - "netlify.toml"
+      - ".github/workflows/quality-gates.yml"
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  technical:
+    name: Technical QA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify links, approved logo and PWA
+        run: node scripts/qa.mjs --technical
+
+  premium:
+    name: Premium release gate
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check premium blockers
+        run: node scripts/qa.mjs --premium
