@@ -91,7 +91,7 @@ Die Website 2.9 besaß bereits ein konsistentes Farbsystem und eine funktioniere
 | Studio 3.0, acht Viewports und Nutzerpfade | 724/724 |
 | **Gesamt** | **2.835/2.835** |
 
-Die Bild- und Logo-Hashes des bestehenden Build-Prozesses bleiben durchgehend aktiv. Der neue Studio-Code enthält keine externen API-Calls, Tracking-, Kalender- oder Backend-Verbindungen. 33 neue gezielte Vollseiten-/Fold-Screenshots wurden zusätzlich zu den bestehenden Browser-Screenshots erzeugt (15 Layout, 3 Paket, 9 Anlässe/Galerie/Über uns, 3 Kontakt, 6 Studio = 36; hiervon 3 Studio-Fold zusätzlich und nicht als FullPage gezählt).
+Die Bild- und Logo-Hashes des bestehenden Build-Prozesses bleiben durchgehend aktiv. Der neue Studio-Code enthält keine externen API-Calls, Tracking-, Kalender- oder Backend-Verbindungen. 36 gezielte Screenshots entstanden im bestehenden und erweiterten Testprogramm (15 Layout, 3 Paket, 9 Anlässe/Galerie/Über uns, 3 Kontakt, 6 Studio – davon 3 Studio-Fold und 3 Studio-Vollseitenbilder). Weitere Konzept- und Navigationsscreenshots liegen ebenfalls im QA-Artefakt.
 
 ### Manuelle visuelle Stichproben nach Bildexport
 
