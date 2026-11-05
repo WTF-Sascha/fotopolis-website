@@ -80,6 +80,20 @@ for(const width of widths){
  data=await facts();
  check(width+" no broken assets after modal cycle",data.brokenImages.length===0,data.brokenImages.join("|"));
  if(snapshots.has(width)){
+  // Browser may have auto-scrolled to restore focus after closing the dialog.
+  // Capture only a settled top-of-page state; otherwise sticky navigation and
+  // lazily decoded images can appear displaced or blank in full-page screenshots.
+  await page.evaluate(async()=>{
+    document.documentElement.style.scrollBehavior="auto";
+    for(const image of document.images)image.loading="eager";
+    await Promise.all([...document.images].map(image=>image.decode().catch(()=>{})));
+    if(document.activeElement instanceof HTMLElement)document.activeElement.blur();
+    window.scrollTo(0,0);
+  });
+  await page.waitForFunction(()=>window.scrollY===0);
+  check(width+" gallery screenshot starts at top",await page.evaluate(()=>window.scrollY===0));
+  check(width+" gallery screenshot assets decoded",
+    await page.evaluate(()=>[...document.images].every(x=>x.complete&&x.naturalWidth>0)));
   const p="galerie-"+width+".png";
   await page.screenshot({path:path.join(out,p),fullPage:true,animations:"disabled"});screenshots.push(p);
  }
