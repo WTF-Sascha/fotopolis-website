@@ -248,3 +248,20 @@ a:focus-visible,button:focus-visible{outline:3px solid #73bcf0;outline-offset:4p
   .hero-bottom{display:none}
   .mirror-card-photo>img{max-height:100%}
 }
+
+/* Design 2.2 · Product media must not be cropped or colour-treated.
+   No substitute devices, generative artwork or logo overlays. */
+.spotlight-image{background:#10283b;display:flex;align-items:center;justify-content:center}
+.spotlight-image>img{position:relative;inset:auto;width:100%;height:100%;object-fit:contain;object-position:center;filter:none}
+.pending-product-photo{isolation:isolate;display:flex;align-items:center;justify-content:center;padding:clamp(26px,4vw,48px);background:linear-gradient(148deg,#071b30,#123b5c);color:#f8f2e6}
+.pending-product-photo::before{content:"";position:absolute;inset:18px;border:1px solid rgba(215,183,122,.35);pointer-events:none}
+.pending-product-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:12px;max-width:370px}
+.pending-product-copy>span{font-size:10px;letter-spacing:.24em;color:var(--champagne);font-weight:750}
+.pending-product-copy strong{font:600 clamp(26px,3vw,42px)/1.13 Manrope,Inter,system-ui,sans-serif;letter-spacing:-.045em}
+.pending-product-copy small{color:#d1dfe2;font:400 12px/1.65 Inter,system-ui,sans-serif;max-width:310px}
+.pending-product-photo .card-index{z-index:2}
+@media(max-width:630px){
+ .spotlight-image{min-height:260px}
+ .pending-product-photo{min-height:310px;padding:34px 24px}
+ .pending-product-copy strong{font-size:clamp(26px,8vw,35px)}
+}

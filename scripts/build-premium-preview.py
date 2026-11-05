@@ -7,8 +7,7 @@ import re, shutil, hashlib
 root = Path(__file__).resolve().parents[1]
 source = root / "concepts/premium-v2"
 target = root / "preview-build"
-photos = ("LEG-014.webp", "LEG-019.webp",
-          "LEG-060.webp", "LEG-073.webp", "LEG-046.webp")
+photos = ("LEG-014.webp", "LEG-060.webp", "LEG-073.webp", "LEG-046.webp")
 if target.exists():
     shutil.rmtree(target)
 (target / "assets/images").mkdir(parents=True)
@@ -41,9 +40,14 @@ assert "../../" not in html
 assert html.count("<h1") == 1
 assert all(("/assets/images/" + name) in html for name in photos)
 assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 3
+assert "LEG-019.webp" not in html, "Guests image may not be passed off as Fotobox product photography"
+assert 'data-asset-status="pending-approved-file"' in html, "Missing-asset state must be disclosed"
+assert 'data-asset-status="legacy-reference"' in html, "Wohnwagen legacy source must be disclosed"
 (target / "index.html").write_text(html, encoding="utf-8")
 # Build QA: all referenced local assets must exist.
 for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     ref = found.group(1)
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
-print("FOTOPOLIS V2 Deploy Preview prepared: 1 HTML, CSS, JS, approved logo, favicon, 5 curated review photographs and unchanged-format Fotospiegel image")
+# No edits to the approved logo; exact copy verified byte-for-byte.
+assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
+print("FOTOPOLIS V2.2 preview: approved logo + Fotospiegel unchanged, 4 legacy reference/gallery photos; Fotobox pending (no substitute guests photo), Wohnwagen reference transparently marked")

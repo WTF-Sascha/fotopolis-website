@@ -30,7 +30,15 @@ for(const [label,width,height] of sizes){
     heroHeight:document.querySelector(".hero")?.getBoundingClientRect().height,
     heroObjectFit:getComputedStyle(document.querySelector(".hero-photo img")).objectFit,
     mobileObjectFit:getComputedStyle(document.querySelector(".mobile-hero-photo img")).objectFit,
-    mirrorObjectFit:getComputedStyle(document.querySelector(".mirror-card-photo img")).objectFit
+    mirrorObjectFit:getComputedStyle(document.querySelector(".mirror-card-photo img")).objectFit,
+    mirrorFilter:getComputedStyle(document.querySelector(".mirror-card-photo img")).filter,
+    wohnwagenObjectFit:getComputedStyle(document.querySelector(".spotlight-image img")).objectFit,
+    wohnwagenFilter:getComputedStyle(document.querySelector(".spotlight-image img")).filter,
+    wohnwagenStatus:document.querySelector("[data-product-image='fotowohnwagen']")?.getAttribute("data-asset-status"),
+    fotoboxCardStatus:document.querySelector("[data-product='fotobox']")?.getAttribute("data-asset-status"),
+    fotoboxHasWrongLegacyImage:!!document.querySelector("[data-product='fotobox'] img[src*='LEG-019']"),
+    fotoboxHasUnknownImage:!!document.querySelector("[data-product='fotobox'] img"),
+    brokenAnchors:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute("href")).filter(h=>h.length>1&&!document.getElementById(h.slice(1)))
   }));
   check(label+" HTTP",res?.status()===200,String(res?.status()));
   check(label+" no horizontal overflow",info.pageWidth<=width+2,info.pageWidth+" / "+width);
@@ -38,6 +46,11 @@ for(const [label,width,height] of sizes){
   check(label+" approved logo",["../../site/assets/fotopolis-logo-original.png","/assets/fotopolis-logo-original.png"].includes(info.logo),info.logo);
   check(label+" new Fotospiegel hero",info.heroImg?.endsWith("fotospiegel-hero-lossless.webp"),info.heroImg);
   check(label+" preserve full Fotospiegel frame",info.heroObjectFit==="contain"&&info.mobileObjectFit==="contain"&&info.mirrorObjectFit==="contain",info.heroObjectFit+"/"+info.mobileObjectFit+"/"+info.mirrorObjectFit);
+  check(label+" Fotospiegel no CSS colour filter",info.mirrorFilter==="none",info.mirrorFilter);
+  check(label+" Wohnwagen original full image",info.wohnwagenObjectFit==="contain"&&info.wohnwagenFilter==="none",info.wohnwagenObjectFit+"/"+info.wohnwagenFilter);
+  check(label+" Wohnwagen correctly flagged as legacy reference",info.wohnwagenStatus==="legacy-reference",info.wohnwagenStatus);
+  check(label+" Fotobox: no guests falsely presented as device",!info.fotoboxHasWrongLegacyImage&&!info.fotoboxHasUnknownImage&&info.fotoboxCardStatus==="pending-approved-file",info.fotoboxCardStatus);
+  check(label+" no broken internal anchors",info.brokenAnchors.length===0,info.brokenAnchors.join(", "));
   if(width>=1024)check(label+" compact hero",info.heroHeight<=620,String(Math.round(info.heroHeight))+"px");
   check(label+" one H1",info.headingCount===1,String(info.headingCount));
   check(label+" JS runtime",errors.length===0,errors.join(" | "));
