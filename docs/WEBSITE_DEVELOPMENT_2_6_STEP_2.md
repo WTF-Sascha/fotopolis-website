@@ -30,7 +30,7 @@ Der Workflow `.github/workflows/premium-concept-qa.yml` baut beide überprüfbar
 
 **Korrektur 2.6.1:** Automatisches Hyphenating und erlaubte Zeilenumbrüche für lange Headlines; mehr typografischer Vertikalspielraum; Paketkarten werden auf Tabletgrößen zweispaltig und auf mobilen Größen einspaltig. Anschließend erneuter vollständiger Lauf.
 
-**Finaler QA-Status:** bis zur Auswertung des Wiederholungslaufs offen. Menschliche Prüfung der Screenshot-Artefakte vor visueller Freigabe weiterhin erforderlich.
+**Finaler technischer QA-Status:** [GitHub Actions Lauf 42069129265](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42069129265) auf Code-Commit `cbc8838c9ce2e21b1f5084bee4743b14e109cf18` **PASS**: 124/124 Tests Quellkonzept, 124/124 Tests Netlify-Publish-Verzeichnis, 147/147 Unterseiten- und Navigationstests, **1.188/1.188 Layout-Checks** bei 12 Routen × 9 Viewports; **15 Vollseiten-Screenshots** archiviert. Die 16 Findings aus dem Erstlauf sind bei identischem Layout-Gate nach der Korrektur nicht mehr reproduzierbar. Eine separate menschliche Prüfung der Screenshot-Artefakte vor endgültiger visueller bzw. Live-Freigabe bleibt erforderlich.
 
 ## Schutzregeln
 Kein Merge, kein Produktiv-Deploy, keine Änderung an `main`, `site/`, `fotopolis-mieten.de`, Logo oder Produktbilddateien. Keine Live-Buchung, keine Kalenderdaten und keine neuen kostenpflichtigen Services.
