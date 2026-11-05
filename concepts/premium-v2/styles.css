@@ -799,3 +799,51 @@ html{scroll-padding-top:100px}
 .home-trust-links .editorial-link{font-size:13px}
 @media(max-width:900px){.home-trust-heading{align-items:start;flex-direction:column;gap:12px}.home-trust-heading>p{flex:auto;max-width:720px}}
 @media(max-width:730px){.home-trust-grid{grid-template-columns:1fr}.home-trust-links{align-items:flex-start;gap:15px}}
+
+
+/* FOTOPOLIS 2.9 · Contact experience: editable enquiry only, no live submission. */
+.contact-flow.section{padding-block:clamp(62px,7.5vw,118px);background:#f6f2eb}
+.contact-intro{max-width:850px;margin-bottom:34px}
+.contact-intro .kicker{color:#986e35}
+.contact-intro h2{font-size:clamp(35px,4.8vw,67px);letter-spacing:-.045em;line-height:1.17;padding-block:.07em;overflow-wrap:anywhere}
+.contact-intro p{font-size:15px;line-height:1.78;color:#516775;margin-top:18px}
+.contact-layout{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(290px,.72fr);gap:clamp(19px,3vw,45px);align-items:start}
+.contact-layout>*{min-width:0}
+.contact-form{display:flex;flex-direction:column;gap:24px}
+.contact-form fieldset{min-width:0;margin:0;border:1px solid #dcd2c3;background:#fff;padding:clamp(21px,2.7vw,36px)}
+.contact-form legend{display:flex;align-items:center;gap:11px;padding:0 12px 0 0;font-size:14px;color:#102c44;font-weight:760}
+.contact-form legend span{font-size:11px;color:#966f39;font-weight:750}
+.contact-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 15px}
+.contact-fields>div{min-width:0}
+.contact-fields label,.contact-form fieldset>label{display:block;color:#263d4c;font-size:12px;font-weight:730;line-height:1.55;margin-bottom:8px}
+.contact-form input:not([type="checkbox"]),.contact-form select,.contact-form textarea{width:100%;max-width:100%;min-width:0;min-height:48px;display:block;color:#173147;background:#fff;border:1px solid #a6b2b8;border-radius:2px;font:400 14px/1.5 Inter,Arial,sans-serif;padding:11px 13px}
+.contact-form textarea{min-height:115px;resize:vertical}
+.contact-form :is(input,select,textarea):focus-visible{outline:3px solid #4e9ac9;outline-offset:2px}
+.contact-form label span[aria-hidden]{color:#8e5628}
+.contact-wishes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.contact-choice{display:flex;align-items:center;gap:11px;min-width:0;min-height:55px;padding:12px 14px;border:1px solid #e2d9ca;background:#fbf8f3;font-size:12px;color:#374c59;font-weight:650;line-height:1.55;cursor:pointer}
+.contact-choice:has(input:checked){border-color:#b28c52;background:#f5eada}
+.contact-choice:focus-within{outline:3px solid #4e9ac9;outline-offset:2px}
+.contact-choice input{accent-color:#9e7541;width:18px;height:18px;min-width:18px;margin:0}
+.contact-choice span{min-width:0;overflow-wrap:anywhere}
+.contact-small{font-size:11px;color:#5c6d79;margin:0}
+.contact-privacy{font-size:12px;color:#405765;background:#fff8ed;border-left:3px solid #a67d45;padding:16px 20px;line-height:1.7}
+.contact-recap{position:sticky;top:105px;min-width:0;color:#f4f0e7;background:#071b30;border-top:3px solid #d7b77a;padding:clamp(22px,2.8vw,37px);box-shadow:0 15px 35px #071b3015}
+.contact-recap>.kicker{font-size:10px;color:#dec28b;margin-bottom:13px}
+.contact-recap h3{font-size:clamp(26px,2.8vw,40px);line-height:1.17;letter-spacing:-.035em;overflow-wrap:anywhere}
+.contact-recap>p:not(.contact-status){font-size:12px;color:#cbd8df;line-height:1.7;margin:15px 0}
+.contact-recap pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:400 12px/1.85 Inter,Arial,sans-serif;border-top:1px solid #345064;border-bottom:1px solid #345064;color:#e5eced;padding:19px 0;margin:20px 0}
+.contact-actions{display:grid;gap:10px}
+.contact-actions .button{width:100%;min-height:50px;white-space:normal}
+.contact-copy{background:transparent;border:1px solid #b69c74;color:#f7eddc;cursor:pointer}
+.contact-copy:hover{background:#12364e}
+.contact-status{min-height:16px;font-size:12px;color:#edd09b;line-height:1.65;margin:12px 0}
+.contact-recap>small{font-size:11px;line-height:1.7;color:#b8c9d2}
+@media(max-width:950px){.contact-layout{grid-template-columns:1fr}.contact-recap{position:static}}
+@media(max-width:610px){
+ .contact-fields,.contact-wishes{grid-template-columns:1fr}
+ .contact-form fieldset{padding:18px}
+ .contact-flow.section{padding-block:50px}
+ .contact-recap{padding:24px 20px}
+ .contact-intro h2{font-size:clamp(32px,9vw,44px)}
+}
