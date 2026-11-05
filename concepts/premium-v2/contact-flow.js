@@ -102,5 +102,11 @@ document.addEventListener("DOMContentLoaded", () => {
       .find(x=>x.value===product);
     if(option)option.selected=true;
   }
+  const occasion = query.get("anlass");
+  if(occasion) {
+    const option = [...form.querySelectorAll('select[name="anlass"] option')]
+      .find(x=>x.value === occasion && x.value !== "");
+    if(option)option.selected=true;
+  }
   update();
 });
