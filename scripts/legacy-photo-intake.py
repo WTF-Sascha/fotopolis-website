@@ -65,7 +65,7 @@ for page_url in pages[:16]:
         if "galerie.html" in page_url:
             scan=[]
             for ln in response.text.splitlines():
-                if re.search(r"assets/|\\.jpg|\\.png|gallery|galerie|fetch\\(|\\.js",ln,re.I):
+                if any(k in ln.lower() for k in ("assets/",".jpg",".png","gallery","galerie","fetch(", ".js")):
                     scan.append(ln.strip()[:1200])
             for tag in soup.select("script[src]"):
                 src=urljoin(page_url,tag.get("src",""))
@@ -74,7 +74,7 @@ for page_url in pages[:16]:
                         jr=session.get(src,timeout=(9,15))
                         if jr.ok and len(jr.content)<400000:
                             scan.append("EXTERNAL_SCRIPT "+src)
-                            scan.extend(line.strip()[:1200] for line in jr.text.splitlines() if re.search(r"assets/|\\.jpg|\\.png|galerie|gallery",line,re.I))
+                if any(k in ln.lower() for k in ("assets/",".jpg",".png","gallery","galerie","fetch(", ".js")):
                     except Exception as err:scan.append("SCRIPT_ERROR "+src+" "+str(err)[:100])
             (OUT/"gallery-source-scan.txt").write_text("\n".join(scan)+"\n",encoding="utf-8")
         for link in soup.find_all("a",href=True):
