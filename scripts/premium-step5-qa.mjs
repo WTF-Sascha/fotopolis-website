@@ -90,7 +90,7 @@ for(const width of widths){
     saved.push(file);
   }
   // URL pre-selection: product pages can hand off product interest without cookies.
-  await page.goto(new URL("kontakt/?produkt=Fotowohnwagen",base),{waitUntil:"networkidle"});
+  await page.goto(new URL("kontakt/?produkt=Fotowohnwagen",base).toString(),{waitUntil:"networkidle"});
   check(prefix+" query preselection",await page.locator('select[name="produkt"]').inputValue()==="Fotowohnwagen");
   await page.close();
 }
