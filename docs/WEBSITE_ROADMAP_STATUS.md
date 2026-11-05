@@ -26,3 +26,9 @@
 ## Technischer Hinweis zur Vorschau
 
 Die aktuelle Vorschau ist **öffentlich über ihren Netlify-Link abrufbar**, auch wenn Seiten `noindex` setzen. Deshalb dürfen dort keine vertraulichen Schlüssel, Kundendaten oder personenbezogenen Testdatensätze abgelegt werden. Eine echte Supabase-Datenbank und der E-Mail-Versand werden erst in einer geeigneten isolierten Testumgebung mit freigegebenen Sicherheitsregeln angeschlossen.
+
+## Abhängigkeit für die Schritte 6–8 · Supabase-Isolation
+
+Der lesende Projektabgleich am 05.11.2026 hat **kein bestehendes FOTOPOLIS-Projekt** in der verbundenen allgemeinen Supabase-Organisation ergeben. Es bestehen Projekte anderer Anwendungen. **Diese dürfen nicht für FOTOPOLIS zweckentfremdet oder geändert werden.**
+
+Vor der Implementierung des tatsächlichen Verfügbarkeits-/Buchungsbackends wird ein **getrenntes FOTOPOLIS-Testprojekt** benötigt. Etwaige Projekt-/Branch-Kosten, Organisation und Berechtigungen sind vor einer Anlage transparent zu prüfen und bei Kosten durch den Nutzer freizugeben. Die derzeitige Version 2.9 wird daher bewusst ohne Supabase-Produktivverbindung betrieben.
