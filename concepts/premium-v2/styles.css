@@ -685,3 +685,99 @@ html{scroll-padding-top:100px}
 @media(prefers-reduced-motion:reduce){
  .planner-product,.planner-wish,.package-select{transition:none}
 }
+
+
+/* Website Development 2.8 – occasions, curated media and verifiable trust.
+   All imagery is linked unchanged; only editorial layout is styled here. */
+.occasion-section.section,.curated-gallery.section,.trust-section.section{padding-block:clamp(62px,7.3vw,116px);background:#f4f0e8}
+.occasion-section .section-heading,.curated-gallery .section-heading,.trust-section .section-heading{max-width:850px}
+.occasion-section h2,.curated-gallery h2,.occasion-steps h2,.trust-section h2,.trust-process h2{font-size:clamp(36px,4.8vw,70px);line-height:1.17;padding-block:.08em;overflow-wrap:anywhere}
+.occasion-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.occasion-card{min-width:0;display:flex;flex-direction:column;justify-content:space-between;background:#fff;border:1px solid #e1d7c8;box-shadow:0 12px 38px #071b3008}
+.occasion-card-head{padding:clamp(22px,3.4vw,48px) clamp(23px,3.4vw,47px) 26px;min-width:0}
+.occasion-number{display:block;color:#a38048;font:650 11px/1.3 Inter,system-ui,sans-serif;letter-spacing:.17em;margin-bottom:26px}
+.occasion-card-head .kicker{font-size:10px;color:#967348;margin-bottom:16px}
+.occasion-card h3{font-size:clamp(30px,3.1vw,45px);line-height:1.12;letter-spacing:-.045em;max-width:640px;overflow-wrap:anywhere}
+.occasion-card-head>p{font-size:15px;line-height:1.84;color:#4e6070;max-width:620px;margin-top:21px}
+.occasion-card-detail{padding:25px clamp(23px,3.4vw,47px) 32px;background:#fffdf8;border-top:1px solid #e8dfd2}
+.occasion-card-detail h4{font:750 11px/1.45 Inter,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#87693d;margin-bottom:15px}
+.occasion-card-detail ul{display:grid;gap:10px;padding:0;margin:0 0 23px;list-style:none}
+.occasion-card-detail li{padding-left:21px;position:relative;color:#364d5c;font-size:13px;line-height:1.7;overflow-wrap:break-word}
+.occasion-card-detail li:before{content:"✓";position:absolute;left:0;color:#987344}
+.occasion-card-links{display:flex;gap:10px 19px;flex-wrap:wrap}
+.occasion-card-links a{display:inline-flex;align-items:center;justify-content:space-between;gap:15px;padding:10px 0;min-height:44px;color:#0d3d5d;font-weight:750;font-size:12px;line-height:1.5;border-bottom:1px solid #bf9b5d}
+.occasion-card-links a:focus-visible{outline:3px solid #6aa5cb;outline-offset:3px}
+.occasion-disclaimer{color:#63707b;font-size:12px;line-height:1.75;margin-top:22px}
+.occasion-steps.section,.trust-process.section{background:#fff;padding-block:clamp(58px,7vw,104px)}
+.occasion-step-grid,.trust-step-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:38px 0}
+.occasion-step,.trust-step{min-width:0;border-top:1px solid #c9bca6;padding:25px 0 10px}
+.occasion-step-num,.trust-step-number{font:750 11px/1.6 Inter,system-ui,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#9d763b}
+.occasion-step p,.trust-step p{font-size:14px;color:#506373;line-height:1.78;margin-top:20px}
+.occasion-steps .button{min-height:52px}
+.curated-gallery.section{background:#f4f0e8}
+.gallery-filters{display:flex;gap:10px;flex-wrap:wrap;margin:-8px 0 27px}
+.gallery-filter{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid #b7a996;background:transparent;color:#344a5c;border-radius:2px;padding:11px 18px;font-size:13px;line-height:1.45;font-weight:710;cursor:pointer}
+.gallery-filter[aria-pressed="true"]{background:#0d2e47;border-color:#0d2e47;color:#fff}
+.gallery-filter:hover:not([aria-pressed="true"]){background:#e5ded3}
+.gallery-filter:focus-visible{outline:3px solid #4794c7;outline-offset:3px}
+.curated-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.curated-item{margin:0;min-width:0;display:flex;flex-direction:column;background:white;border:1px solid #e6e0d7}
+.curated-item[hidden]{display:none!important}
+.curated-open{appearance:none;border:0;display:block;position:relative;width:100%;padding:0;cursor:zoom-in;background:#173a52;overflow:hidden;min-height:175px}
+.curated-open img{display:block;width:100%;height:clamp(220px,24vw,360px);max-width:100%;object-fit:cover;object-position:center;filter:none}
+.curated-item[data-gallery-kind="products"] .curated-open{background:#142d43}
+.curated-item[data-gallery-kind="products"] .curated-open img{object-fit:contain;padding:15px}
+.curated-zoom{position:absolute;right:14px;bottom:13px;padding:10px 13px;background:rgba(6,24,41,.94);color:#f6e4c1;font-size:11px;font-weight:770;line-height:1.5;letter-spacing:.03em;pointer-events:none}
+.curated-open:focus-visible{outline:4px solid #4d9bd1;outline-offset:-4px}
+.curated-item figcaption{display:flex;flex-direction:column;gap:9px;min-height:112px;padding:22px 21px 26px}
+.curated-category{font:750 10px/1.5 Inter,system-ui,sans-serif;letter-spacing:.11em;color:#956f3c}
+.curated-item figcaption strong{font-size:clamp(17px,1.5vw,22px);line-height:1.2;letter-spacing:-.025em;color:#0c2b42}
+.curated-item figcaption small{font-size:11px;line-height:1.6;color:#526473;overflow-wrap:anywhere}
+.gallery-rights-note{font-size:12px;color:#576c78;line-height:1.8;margin-top:28px;padding:16px 20px;border-left:2px solid #b89556;background:#fff9f0}
+.gallery-lightbox{border:1px solid rgba(215,183,122,.35);border-radius:3px;background:#061b2d;color:#f7f2e6;width:min(94vw,1050px);max-height:91dvh;padding:22px;overflow:auto;box-shadow:0 20px 70px rgba(0,0,0,.5)}
+.gallery-lightbox[open]{display:flex;flex-direction:column;gap:15px}
+.gallery-lightbox::backdrop{background:rgba(1,11,22,.88)}
+.gallery-dialog-close{align-self:flex-end;display:inline-flex;align-items:center;justify-content:center;color:#fff;background:transparent;border:1px solid #c2a777;border-radius:2px;min-width:44px;min-height:44px;font:500 27px/1 Arial,sans-serif;cursor:pointer}
+.gallery-dialog-media{display:flex;align-items:center;justify-content:center;min-height:0;background:#102a40;padding:12px}
+.gallery-dialog-media img{display:block;max-width:100%;max-height:62dvh;min-height:0;object-fit:contain;filter:none}
+.gallery-dialog-foot{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.gallery-dialog-foot>div:first-child{min-width:0}
+.gallery-dialog-foot strong{display:block;color:#f9e5bf;font-size:17px;line-height:1.4;overflow-wrap:anywhere}
+.gallery-dialog-foot small{display:block;color:#c3d0d8;font-size:12px;line-height:1.5;margin-top:4px}
+.gallery-dialog-actions{display:flex;gap:9px;flex:0 0 auto}
+.gallery-dialog-actions button{min-width:46px;min-height:46px;border:1px solid #c2a777;color:#f9e5bf;background:transparent;cursor:pointer;font-size:23px}
+.gallery-dialog-actions button:focus-visible,.gallery-dialog-close:focus-visible{outline:3px solid #69b4e9;outline-offset:3px}
+.trust-section.section{background:#f7f4ed}
+.trust-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.trust-fact{min-width:0;border:1px solid #dfd4c3;background:#fff;padding:clamp(26px,3.1vw,44px);border-top:2px solid #bc955a}
+.trust-fact .kicker{font-size:10px;margin-bottom:18px}
+.trust-fact h3{font-size:clamp(26px,3vw,43px);line-height:1.16;letter-spacing:-.037em;overflow-wrap:anywhere}
+.trust-fact p{font-size:14px;line-height:1.85;color:#51616e;margin-top:20px}
+.trust-step{border-top:2px solid #c7b289}
+.trust-step h3{font-size:clamp(22px,2.4vw,33px);line-height:1.2;letter-spacing:-.035em;margin-top:18px;overflow-wrap:anywhere}
+.trust-step p{margin-top:15px}
+.trust-review-policy{background:#f4f0e8;border-left:3px solid #a57e44;color:#4d6170;font-size:12px;line-height:1.7;padding:16px 21px;margin:14px 0 30px}
+@media(max-width:1010px){
+ .curated-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .curated-open img{height:clamp(230px,34vw,360px)}
+}
+@media(max-width:760px){
+ .occasion-grid,.trust-grid{grid-template-columns:1fr}
+ .occasion-step-grid,.trust-step-grid{grid-template-columns:1fr}
+ .occasion-step,.trust-step{padding-top:21px}
+ .occasion-card h3{font-size:clamp(29px,7vw,42px)}
+ .gallery-dialog-foot{align-items:flex-start}
+}
+@media(max-width:630px){
+ .curated-grid{grid-template-columns:1fr}
+ .curated-open img{height:clamp(260px,71vw,420px)}
+ .gallery-filters{gap:8px}
+ .gallery-filter{font-size:12px;padding:11px 13px}
+ .gallery-lightbox{width:96vw;padding:12px}
+ .gallery-dialog-media{padding:5px}
+ .gallery-dialog-media img{max-height:54dvh}
+ .gallery-dialog-foot{gap:15px;flex-wrap:wrap}
+ .gallery-dialog-actions{margin-left:auto}
+ .occasion-card-head,.occasion-card-detail{padding-inline:23px}
+}
+@media(prefers-reduced-motion:reduce){.curated-open img,.gallery-filter,.gallery-dialog-actions button{transition:none!important}}
