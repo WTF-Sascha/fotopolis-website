@@ -31,6 +31,14 @@ for (const width of widths){
   });
   check(width+" advisor reveals response with keyboard focus",focus&&bounds.visible,JSON.stringify(bounds));
  }
+ if(width<=900){
+   await page.locator("[data-advisor-reset]").click();
+   const reset=await page.locator('[data-advisor-occasion="party"]').evaluate(el=>{
+      const r=el.getBoundingClientRect();
+      return {focused:document.activeElement===el,visible:r.top<innerHeight&&r.bottom>0};
+   });
+   check(width+" advisor can return directly to selected occasion",reset.focused&&reset.visible,JSON.stringify(reset));
+ }
  const destination=await page.locator("[data-advisor-enquiry]").getAttribute("href");
  check(width+" advice transfers product and occasion",destination.includes("Fotowohnwagen")&&
    decodeURIComponent(destination).includes("Motto- / Gartenparty"),String(destination));
