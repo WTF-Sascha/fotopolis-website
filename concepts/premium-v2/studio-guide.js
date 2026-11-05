@@ -72,5 +72,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }));
+  const switchOccasion = root.querySelector("[data-advisor-reset]");
+  switchOccasion?.addEventListener("click", () => {
+    const selected = buttons.find(button => button.getAttribute("aria-pressed") === "true") || buttons[0];
+    selected?.focus({preventScroll:true});
+    root.querySelector(".advisor-choice")?.scrollIntoView({
+      block:"center",
+      behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"
+    });
+  });
   choose("hochzeit");
 });
