@@ -577,3 +577,17 @@ html{scroll-padding-top:96px}
  .product-premium{padding-block:37px 50px}
  .package-card{padding:23px}
 }
+
+
+/* Layout-gate remediation 2.6.1: issues detected across 320/768/1440/1920. */
+.page-hero h1{line-height:1.16;padding-block:.095em;hyphens:auto;overflow-wrap:anywhere}
+.page-hero .inner,.page-article,.page-aside{min-width:0}
+.page-content-block h2,.page-aside h2{hyphens:auto;overflow-wrap:anywhere}
+.package-card,.package-card-footer,.package-card-footer .editorial-link{min-width:0;max-width:100%}
+.package-card-footer .editorial-link{white-space:normal;overflow-wrap:break-word}
+@media(max-width:1024px){
+ .package-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .package-cards{grid-template-columns:1fr}
+}
