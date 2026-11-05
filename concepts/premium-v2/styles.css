@@ -781,3 +781,21 @@ html{scroll-padding-top:100px}
  .occasion-card-head,.occasion-card-detail{padding-inline:23px}
 }
 @media(prefers-reduced-motion:reduce){.curated-open img,.gallery-filter,.gallery-dialog-actions button{transition:none!important}}
+
+
+/* 2.8 home continuity: truthful reasons to explore occasions and the company. */
+.home-trust.section{padding-block:clamp(62px,7vw,110px);background:#fbf8f3}
+.home-trust-heading{display:flex;align-items:end;justify-content:space-between;gap:clamp(25px,5vw,75px);margin-bottom:39px}
+.home-trust-heading>div{min-width:0;flex:1}
+.home-trust-heading h2{font-size:clamp(36px,4.65vw,67px);line-height:1.16;padding-block:.08em;letter-spacing:-.045em;overflow-wrap:anywhere}
+.home-trust-heading h2 em{color:#947246}
+.home-trust-heading>p{max-width:400px;color:#586977;font-size:14px;line-height:1.8;flex:0 1 400px}
+.home-trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.home-trust-grid article{min-width:0;border-top:2px solid #b99354;background:#fff;padding:clamp(22px,2.55vw,36px)}
+.home-trust-number{color:#97703f;font-size:10px;font-weight:760;letter-spacing:.12em}
+.home-trust-grid h3{font-size:clamp(23px,2.1vw,32px);line-height:1.22;letter-spacing:-.035em;overflow-wrap:anywhere;margin:19px 0 13px}
+.home-trust-grid p{font-size:14px;color:#566777;line-height:1.75}
+.home-trust-links{display:flex;align-items:center;gap:clamp(15px,4vw,48px);flex-wrap:wrap;margin-top:29px}
+.home-trust-links .editorial-link{font-size:13px}
+@media(max-width:900px){.home-trust-heading{align-items:start;flex-direction:column;gap:12px}.home-trust-heading>p{flex:auto;max-width:720px}}
+@media(max-width:730px){.home-trust-grid{grid-template-columns:1fr}.home-trust-links{align-items:flex-start;gap:15px}}
