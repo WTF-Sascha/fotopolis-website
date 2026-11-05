@@ -12,6 +12,9 @@ for(const [label,width,height] of sizes){
   const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1,reducedMotion:"reduce"});
   const errors=[];page.on("pageerror",e=>errors.push(e.message));
   const res=await page.goto(base,{waitUntil:"networkidle",timeout:40000});
+  // Force lazy gallery images to load before full-page screenshot and integrity checks.
+  await page.evaluate(()=>{for(const img of document.images)if(img.loading==="lazy")img.loading="eager"});
+  await page.waitForFunction(()=>[...document.images].every(img=>img.complete),{timeout:20000});
   await page.screenshot({path:path.join(out,label+".png"),fullPage:true,animations:"disabled"});
   await page.screenshot({path:path.join(out,label+"-fold.png"),fullPage:false,animations:"disabled"});
   const info=await page.evaluate(()=>({
