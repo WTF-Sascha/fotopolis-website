@@ -1,5 +1,5 @@
 "use strict";
-/* FOTOPOLIS 2.9 – client-side enquiry draft, never a live submission.
+/* FOTOPOLIS Studio 3.0 – progressive client-only enquiry wizard.
  * No persistence, APIs, tracking, background requests or automatic email.
  */
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const mailLink = document.querySelector("[data-contact-email]");
   const copy = document.querySelector("[data-contact-copy]");
   const status = document.querySelector("[data-contact-status]");
+  const inlineStatus = document.querySelector("[data-contact-inline-status]");
+  const steps = [...form.querySelectorAll("[data-contact-step]")];
+  const progress = [...document.querySelectorAll("[data-contact-progress-step]")];
+  const backButton = form.querySelector("[data-contact-back]");
+  const nextButton = form.querySelector("[data-contact-next]");
   const emailAddress = "kontakt@fotopolis-mieten.de";
   const safe = value => String(value || "").trim();
 
@@ -67,22 +72,82 @@ document.addEventListener("DOMContentLoaded", () => {
       "&body=" + encodeURIComponent(text(d));
     status.textContent = "";
   }
+  // Native controls remain available without JS. Progressive reveal only runs
+  // after DOMContentLoaded and never deletes form values from the DOM.
+  let currentStep = 1;
+  function showStep(step, focusField = false) {
+    currentStep = Math.min(3, Math.max(1, step));
+    for(const group of steps) {
+      const active = Number(group.dataset.contactStep) === currentStep;
+      group.hidden = !active;
+    }
+    for(const item of progress) {
+      const index = Number(item.dataset.contactProgressStep);
+      if(index === currentStep)item.setAttribute("aria-current","step");
+      else item.removeAttribute("aria-current");
+      item.classList.toggle("is-complete",index < currentStep);
+    }
+    backButton.hidden = currentStep === 1;
+    nextButton.textContent = currentStep === 1 ? "Weiter zu Kontaktdaten →" :
+      currentStep === 2 ? "Weiter zu deinen Wünschen →" : "Angaben prüfen →";
+    if (focusField) {
+      steps[currentStep-1]?.querySelector("select,input:not([type=checkbox]),textarea")?.focus();
+    }
+  }
+  function firstInvalid() {
+    // Check all steps, including those currently hidden, without letting native
+    // validation attempt to focus an invisible input.
+    for(const group of steps) {
+      const fields = [...group.querySelectorAll("input,select,textarea")];
+      const invalid = fields.find(control => !control.checkValidity());
+      if(invalid)return {step:Number(group.dataset.contactStep),element:invalid};
+    }
+    return null;
+  }
+  function askForMissing(message) {
+    const invalid = firstInvalid();
+    if(!invalid)return false;
+    showStep(invalid.step);
+    const msg = message || "Bitte vervollständige zuerst die Pflichtfelder.";
+    inlineStatus.textContent = msg;
+    status.textContent = msg;
+    invalid.element.focus();
+    invalid.element.reportValidity();
+    return true;
+  }
+  backButton.addEventListener("click",()=>{
+    inlineStatus.textContent="";
+    showStep(currentStep-1,true);
+  });
+  nextButton.addEventListener("click",()=>{
+    inlineStatus.textContent="";
+    if(currentStep < 3){
+      const fields = [...steps[currentStep-1].querySelectorAll("input,select,textarea")];
+      const invalid = fields.find(control=>!control.checkValidity());
+      if(invalid){
+        inlineStatus.textContent = "Bitte vervollständige die markierten Pflichtfelder.";
+        invalid.focus(); invalid.reportValidity(); return;
+      }
+      showStep(currentStep+1,true);
+    }else{
+      if(askForMissing("Bitte prüfe noch deine Pflichtangaben."))return;
+      const recap = document.querySelector(".contact-recap");
+      recap?.scrollIntoView({behavior:"smooth",block:"nearest"});
+      mailLink.focus({preventScroll:true});
+    }
+  });
+  showStep(1);
   form.addEventListener("input",update);
   form.addEventListener("change",update);
+  form.addEventListener("input",()=>{inlineStatus.textContent="";});
   form.addEventListener("submit",event=>event.preventDefault());
   mailLink.addEventListener("click",event=>{
-    if(!form.checkValidity()){
+    if(askForMissing("Bitte fülle zuerst Anlass, Name und eine gültige E-Mail-Adresse aus.")){
       event.preventDefault();
-      form.reportValidity();
-      status.textContent = "Bitte fülle zuerst Anlass, Name und eine gültige E-Mail-Adresse aus.";
     }
   });
   copy.addEventListener("click",async()=>{
-    if(!form.checkValidity()){
-      form.reportValidity();
-      status.textContent = "Bitte fülle zuerst die Pflichtfelder aus.";
-      return;
-    }
+    if(askForMissing("Bitte fülle zuerst die Pflichtfelder aus."))return;
     if(!navigator.clipboard?.writeText){
       status.textContent = "Kopieren ist im Browser nicht verfügbar. Nutze die E-Mail-Vorlage.";
       return;
