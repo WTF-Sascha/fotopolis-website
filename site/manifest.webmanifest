@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "FOTOPOLIS – Fotoerlebnisse für Events",
+  "short_name": "FOTOPOLIS",
+  "description": "Fotobox, Fotospiegel und Fotowohnwagen.",
+  "lang": "de",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#071B30",
+  "background_color": "#071B30",
+  "categories": [
+    "photography",
+    "lifestyle"
+  ],
+  "icons": []
+}
