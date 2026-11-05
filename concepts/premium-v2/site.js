@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
   };
   const closeMenu=()=>{
+    document.body.classList.remove("menu-open");
     nav.classList.remove("open");
     button.setAttribute("aria-expanded","false");
     button.setAttribute("aria-label","Menü öffnen");
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   };
   button.addEventListener("click",()=>{
     const open=nav.classList.toggle("open");
+    document.body.classList.toggle("menu-open",open);
     button.setAttribute("aria-expanded",String(open));
     button.setAttribute("aria-label",open?"Menü schließen":"Menü öffnen");
     if(!open)closeSubmenus();
@@ -41,6 +43,13 @@ document.addEventListener("DOMContentLoaded",()=>{
         trigger.setAttribute("aria-expanded","false");
       }
     });
+  });
+  // Expose the actual location to assistive technology on all 12 routes.
+  nav.querySelectorAll('a[href^="/"]').forEach(link => {
+    if (link.hash) return;
+    if (new URL(link.href).pathname === location.pathname) {
+      link.setAttribute("aria-current", "page");
+    }
   });
   nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",closeMenu));
   document.addEventListener("keydown",event=>{
