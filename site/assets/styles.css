@@ -10,3 +10,7 @@
 .contact-layout>* ,.form-grid>* , .content-card, .content-card form{min-width:0;max-width:100%}
 .content-card .input{min-width:0;max-width:100%;width:100%;display:block}
 @media(max-width:600px){.contact-layout,.form-grid{grid-template-columns:minmax(0,1fr)}.content-card{padding:23px}}
+
+/* QA 2.1: on small contact cards allow long CTA text to wrap */
+.contact-layout .button{max-width:100%;white-space:normal;text-align:center;gap:10px}
+@media(max-width:600px){.contact-layout .button{width:100%;padding-inline:10px}}
