@@ -14,7 +14,7 @@ def e(value: str) -> str:
 def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
-    assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9")
+    assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9", "3.0")
     header = re.search(r'<header class="site-header">.*?</header>', home_html, re.S)
     footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
@@ -54,11 +54,26 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             for question, answer in p["faqs"]:
                 content += f'<details><summary>{e(question)}</summary><p>{e(answer)}</p></details>'
             content += "</div>"
+        # Reduce repeated reading burden while keeping detail content accessible.
+        # Legal pages and FAQ answers remain visible as regular page content.
+        editorial_route = slug in {
+            "fotobox", "fotospiegel", "fotowohnwagen", "pakete",
+            "anlaesse", "galerie", "ueber-uns", "kontakt"
+        }
+        if editorial_route and p.get("blocks"):
+            content += '<h2 class="studio-details-heading">Weitere Details &amp; Fragen</h2>'
         for block in p.get("blocks", []):
-            content += (
-                '<section class="page-content-block">'
-                f'<h2>{e(block["heading"])}</h2><p>{e(block["body"])}</p></section>'
-            )
+            if editorial_route:
+                content += (
+                    '<details class="page-content-block studio-disclosure">'
+                    f'<summary>{e(block["heading"])}</summary>'
+                    f'<p>{e(block["body"])}</p></details>'
+                )
+            else:
+                content += (
+                    '<section class="page-content-block">'
+                    f'<h2>{e(block["heading"])}</h2><p>{e(block["body"])}</p></section>'
+                )
         if slug in ("impressum","datenschutz"):
             content = (
                 '<div class="page-legal-notice"><strong>Entwurf – kein veröffentlichungsreifer Rechtstext.</strong> '
@@ -77,7 +92,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 "fotowohnwagen-gartenparty-1448.webp",
             }, image
             rich_sections += (
-                '<section class="product-premium" aria-label="Produktpräsentation">'
+                '<section class="product-premium" id="product-details" aria-label="Produktpräsentation">'
                 '<div class="inner"><div class="product-stage">'
                 '<figure class="product-stage-media">'
                 f'<img src="/assets/images/{e(image)}" alt="{e(p["imageAlt"])}" '
@@ -107,7 +122,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
 
             # Include an easy-to-follow, non-binding event planning sequence.
             rich_sections += (
-                '<section class="product-steps section">'
+                '<section class="product-steps section" id="product-steps">'
                 '<div class="inner"><div class="section-heading">'
                 '<span class="kicker">DEIN WEG ZUM EVENT</span>'
                 '<h2>Von der Idee zum <em>Fotoerlebnis.</em></h2>'
@@ -125,7 +140,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
 
         elif p.get("packageCards"):
             rich_sections += (
-                '<section class="package-overview section">'
+                '<section class="package-overview section" id="pakete-vergleich">'
                 '<div class="inner"><div class="section-heading">'
                 '<span class="kicker">DREI ERLEBNISSE · EIN GUTES GEFÜHL</span>'
                 '<h2>Finde dein <em>Fotoerlebnis.</em></h2>'
@@ -551,6 +566,48 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '</aside></div></div></section>'
             )
 
+        # Shortcuts let people navigate directly to the information they need.
+        quick_nav = {
+            "fotobox": [
+                ("#product-details", "Erlebnis"), ("#product-steps", "Ablauf"),
+                ("/kontakt/?produkt=Fotobox", "Anfrage")
+            ],
+            "fotospiegel": [
+                ("#product-details", "Erlebnis"), ("#product-steps", "Ablauf"),
+                ("/kontakt/?produkt=Fotospiegel", "Anfrage")
+            ],
+            "fotowohnwagen": [
+                ("#product-details", "Erlebnis"), ("#product-steps", "Ablauf"),
+                ("/kontakt/?produkt=Fotowohnwagen", "Anfrage")
+            ],
+            "pakete": [
+                ("#pakete-vergleich", "Vergleich"), ("#leistungsumfang", "Leistungen"),
+                ("#paketfinder", "Paketfinder")
+            ],
+            "anlaesse": [
+                ("#occasion-section-title", "Anlässe"), ("#occasion-steps-title", "Planung"),
+                ("/kontakt/", "Anfragen")
+            ],
+            "galerie": [
+                ("#curated-gallery-title", "Bilder"), ("/anlaesse/", "Anlässe"),
+                ("/kontakt/", "Anfragen")
+            ],
+            "ueber-uns": [
+                ("#trust-title", "Das ist FOTOPOLIS"), ("#trust-flow-title", "Ablauf"),
+                ("/kontakt/", "Anfragen")
+            ],
+            "kontakt": [("#contact-flow-title", "Anfrageformular"), ("/pakete/", "Erlebnisse vergleichen")],
+        }
+        route_jumps = ""
+        if slug in quick_nav:
+            route_jumps = (
+                '<nav class="studio-route-jumps" aria-label="Auf dieser Seite">'
+                '<div class="inner"><span>ENTDECKEN</span>'
+            )
+            for href,label in quick_nav[slug]:
+                route_jumps += f'<a href="{e(href)}">{e(label)} <span aria-hidden="true">↗</span></a>'
+            route_jumps += '</div></nav>'
+
         seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -560,11 +617,12 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'<title>{seo_title}</title><meta name="description" content="{e(p["lead"])}">'
             '<link rel="icon" href="/favicon.ico">'
             '<link rel="stylesheet" href="/styles.css">'
+            '<link rel="stylesheet" href="/studio-polish.css">'
             '<script defer src="/site.js"></script>' +
             ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
             ('<script defer src="/gallery-viewer.js"></script>' if slug == "galerie" else '') +
             ('<script defer src="/contact-flow.js"></script>' if slug == "kontakt" else '') +
-            '</head><body>'
+            f'</head><body class="route-{slug}{" is-contact-route" if slug == "kontakt" else ""}">'
             '<a class="skip" href="#content">Zum Inhalt springen</a>'
             + ribbon.group(0) + header.group(0) +
             '<main id="content"><section class="page-hero"><div class="inner">'
@@ -573,13 +631,13 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'<span aria-current="page">{e(p["title"])}</span></nav>'
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
             f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>'
-            '</div></section>' + rich_sections + '<div class="page-body"><div class="inner page-grid">'
+            '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
             f'<div class="page-article">{content}</div>'
             '<aside class="page-aside"><span class="kicker">UNVERBINDLICH PLANEN</span>'
             '<h2>Dein Event. Dein Moment.</h2>'
             '<p>Welches Erlebnis passt zu deinem Anlass? Schicke uns die Eckdaten, '
             'wir klären das individuell. Kein Live-Kalender und keine Sofortbuchung.</p>'
-            '<a class="button gold" href="/kontakt/">Event anfragen '
+            f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">Event anfragen '
             '<span aria-hidden="true">↗</span></a></aside></div></div>'
             '<section class="page-end"><div class="inner"><div><h2>Erinnerungen beginnen mit einer Idee.</h2>'
             '<p>FOTOPOLIS · Fotobox · Fotospiegel · Fotowohnwagen</p></div>'
