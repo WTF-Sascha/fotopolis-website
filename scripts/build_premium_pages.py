@@ -14,7 +14,7 @@ def e(value: str) -> str:
 def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
-    assert data["version"] in ("2.5", "2.6", "2.7")
+    assert data["version"] in ("2.5", "2.6", "2.7", "2.8")
     header = re.search(r'<header class="site-header">.*?</header>', home_html, re.S)
     footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
@@ -40,7 +40,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<p class="page-image-caption">Freigegebene, unveränderte Produktvisualisierung.'
                 ' Tatsächliche Ausstattung bitte vor Buchung bestätigen.</p>'
             )
-        if "gallery" in p:
+        if "gallery" in p and not p.get("galleryCollection"):
             assert p["gallery"] == ["LEG-060.webp","LEG-073.webp","LEG-046.webp"]
             content += '<div class="page-gallery-grid">'
             for i,name in enumerate(p["gallery"],start=1):
@@ -299,6 +299,167 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     '</div></form></div></section>'
                 )
 
+        # Roadmap 4: independent occasion storytelling, with no promises of availability.
+        if p.get("occasionCards"):
+            assert slug == "anlaesse"
+            rich_sections += (
+                '<section class="occasion-section section" aria-labelledby="occasion-section-title">'
+                '<div class="inner"><div class="section-heading">'
+                '<span class="kicker">DEIN ANLASS · DEIN FOTOERLEBNIS</span>'
+                '<h2 id="occasion-section-title">Für jedes Fest <em>eine eigene Geschichte.</em></h2>'
+                '<p>Diese Ideen helfen dir bei der Auswahl. Details werden passend zu deiner Feier abgestimmt.</p>'
+                '</div><div class="occasion-grid">'
+            )
+            for item in p["occasionCards"]:
+                assert re.fullmatch(r"[a-z]+", item["id"])
+                rich_sections += (
+                    f'<article class="occasion-card" id="anlass-{e(item["id"])}">'
+                    '<div class="occasion-card-head">'
+                    f'<span class="occasion-number" aria-hidden="true">{e(item["number"])}</span>'
+                    f'<span class="kicker">{e(item["category"])}</span>'
+                    f'<h3>{e(item["title"])}</h3>'
+                    f'<p>{e(item["lead"])}</p></div>'
+                    '<div class="occasion-card-detail">'
+                    '<h4>Worauf es bei der Planung ankommt</h4><ul>'
+                )
+                for item_text in item["planning"]:
+                    rich_sections += f'<li>{e(item_text)}</li>'
+                rich_sections += '</ul><div class="occasion-card-links">'
+                for product in item["products"]:
+                    assert product["slug"] in ("fotobox", "fotospiegel", "fotowohnwagen")
+                    rich_sections += (
+                        f'<a href="/{e(product["slug"])}/">{e(product["label"])}'
+                        ' <span aria-hidden="true">↗</span></a>'
+                    )
+                rich_sections += '</div></div></article>'
+            rich_sections += (
+                '</div><p class="occasion-disclaimer">'
+                f'{e(p["occasionDisclaimer"])}</p></div></section>'
+                '<section class="occasion-steps section" aria-labelledby="occasion-steps-title">'
+                '<div class="inner"><div class="section-heading">'
+                '<span class="kicker">DIE DREI FRAGEN VOR DEINEM EVENT</span>'
+                '<h2 id="occasion-steps-title">Gut geplant. <em>Einfach angefragt.</em></h2>'
+                '</div><div class="occasion-step-grid">'
+            )
+            for step in p["occasionChecklist"]:
+                rich_sections += (
+                    '<article class="occasion-step">'
+                    f'<span class="occasion-step-num">{e(step["title"])}</span>'
+                    f'<p>{e(step["text"])}</p></article>'
+                )
+            rich_sections += (
+                '</div><a class="button gold" href="/pakete/#paketfinder">'
+                'Eventwünsche zusammenstellen <span aria-hidden="true">↗</span></a>'
+                '<p class="occasion-disclaimer">Öffnet einen unverbindlichen Paketfinder, '
+                'keine Buchungsseite.</p></div></section>'
+            )
+
+        # Roadmap 4: two clearly separated media classes, all assets unchanged.
+        # Legacy event imagery is PREVIEW-ONLY until persons and usage rights clear.
+        elif p.get("galleryCollection"):
+            assert slug == "galerie"
+            allow = {
+                "LEG-060.webp": "moments",
+                "LEG-073.webp": "moments",
+                "LEG-046.webp": "moments",
+                "fotobox-event-1672.webp": "products",
+                "fotospiegel-hero-lossless.webp": "products",
+                "fotowohnwagen-gartenparty-1448.webp": "products",
+            }
+            assert len(p["galleryCollection"]) == len(allow) == 6
+            assert {item["file"] for item in p["galleryCollection"]} == set(allow)
+            rich_sections += (
+                '<section class="curated-gallery section" aria-labelledby="curated-gallery-title">'
+                '<div class="inner"><div class="section-heading">'
+                '<span class="kicker">BILDER MIT KLARER HERKUNFT</span>'
+                '<h2 id="curated-gallery-title">Zwei Blickwinkel. <em>Eine Bildwelt.</em></h2>'
+                '<p>Unterscheide zwischen historischen Eventaufnahmen und freigegebenen '
+                'Produktvisualisierungen. Alle Bilder bleiben unverändert.</p></div>'
+                '<div class="gallery-filters" role="group" aria-label="Galerieansicht wählen">'
+                '<button class="gallery-filter" type="button" data-gallery-filter="all" '
+                'aria-pressed="true">Alle Eindrücke</button>'
+                '<button class="gallery-filter" type="button" data-gallery-filter="moments" '
+                'aria-pressed="false">Eventmomente</button>'
+                '<button class="gallery-filter" type="button" data-gallery-filter="products" '
+                'aria-pressed="false">Produktwelten</button></div>'
+                '<div class="curated-grid" data-curated-gallery>'
+            )
+            for item in p["galleryCollection"]:
+                assert item["kind"] == allow[item["file"]]
+                assert (item["rights"] == "unverified") == (item["kind"] == "moments")
+                category = "INTERNE EVENTAUFNAHME" if item["kind"] == "moments" else "PRODUKTVISUALISIERUNG"
+                rich_sections += (
+                    f'<figure class="curated-item" data-gallery-item data-gallery-kind="{e(item["kind"])}">'
+                    '<button class="curated-open" type="button" data-gallery-open '
+                    f'aria-label="{e(item["label"])} – Bild vergrößern">'
+                    f'<img src="/assets/images/{e(item["file"])}" '
+                    f'alt="{e(item["alt"])}" loading="lazy" decoding="async">'
+                    '<span class="curated-zoom" aria-hidden="true">Ansehen ↗</span>'
+                    '</button><figcaption>'
+                    f'<span class="curated-category">{e(category)}</span>'
+                    f'<strong>{e(item["label"])}</strong>'
+                    f'<small>{e(item["note"])}</small>'
+                    '</figcaption></figure>'
+                )
+            rich_sections += (
+                '</div><p class="gallery-rights-note" data-gallery-rights>'
+                f'{e(p["galleryNotice"])}</p></div>'
+                '<dialog class="gallery-lightbox" data-gallery-dialog '
+                'aria-label="Fotogalerie Großansicht">'
+                '<button type="button" class="gallery-dialog-close" data-gallery-close '
+                'aria-label="Großansicht schließen">×</button>'
+                '<div class="gallery-dialog-media"><img data-gallery-large alt=""></div>'
+                '<div class="gallery-dialog-foot"><div>'
+                '<strong data-gallery-dialog-title></strong>'
+                '<small data-gallery-dialog-note></small>'
+                '</div><div class="gallery-dialog-actions">'
+                '<button type="button" data-gallery-prev aria-label="Vorheriges Bild">←</button>'
+                '<button type="button" data-gallery-next aria-label="Nächstes Bild">→</button>'
+                '</div></div></dialog></section>'
+            )
+
+        # Trust via verifiable processes and product facts, never fabricated reviews.
+        elif p.get("trustFacts"):
+            assert slug == "ueber-uns"
+            rich_sections += (
+                '<section class="trust-section section" aria-labelledby="trust-title">'
+                '<div class="inner"><div class="section-heading">'
+                '<span class="kicker">WORAUF DU DICH BEI DER PLANUNG STÜTZEN KANNST</span>'
+                '<h2 id="trust-title">Gute Erlebnisse beginnen <em>mit Klarheit.</em></h2>'
+                '<p>Diese Aussagen beschreiben unser Angebot und den transparenten '
+                'Planungsprozess – keine erfundenen Sterne oder Referenzen.</p>'
+                '</div><div class="trust-grid">'
+            )
+            for item in p["trustFacts"]:
+                rich_sections += (
+                    '<article class="trust-fact">'
+                    f'<span class="kicker">{e(item["eyebrow"])}</span>'
+                    f'<h3>{e(item["title"])}</h3>'
+                    f'<p>{e(item["description"])}</p>'
+                    '</article>'
+                )
+            rich_sections += (
+                '</div></div></section>'
+                '<section class="trust-process section" aria-labelledby="trust-flow-title">'
+                '<div class="inner"><div class="section-heading">'
+                '<span class="kicker">SO ENTSTEHT DEIN ANGEBOT</span>'
+                '<h2 id="trust-flow-title">Persönlich planen. <em>Verbindlich klären.</em></h2>'
+                '</div><div class="trust-step-grid">'
+            )
+            for step in p["trustFlow"]:
+                rich_sections += (
+                    '<article class="trust-step">'
+                    f'<span class="trust-step-number">{e(step["step"])}</span>'
+                    f'<h3>{e(step["title"])}</h3>'
+                    f'<p>{e(step["description"])}</p></article>'
+                )
+            rich_sections += (
+                '</div><p class="trust-review-policy">'
+                f'{e(p["reviewPolicy"])}</p>'
+                '<a href="/kontakt/" class="button gold">Event unverbindlich anfragen '
+                '<span aria-hidden="true">↗</span></a></div></section>'
+            )
+
         seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -310,6 +471,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<link rel="stylesheet" href="/styles.css">'
             '<script defer src="/site.js"></script>' +
             ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
+            ('<script defer src="/gallery-viewer.js"></script>' if slug == "galerie" else '') +
             '</head><body>'
             '<a class="skip" href="#content">Zum Inhalt springen</a>'
             + ribbon.group(0) + header.group(0) +
