@@ -1,6 +1,6 @@
 {
   "source": "https://fotopolis-mieten.de/",
-  "retrieved_at": "2026-11-05T11:51:40.353806+00:00",
+  "retrieved_at": "2026-11-05T11:56:41.461439+00:00",
   "publication_permitted": false,
   "entries": [
     {
@@ -380,27 +380,6 @@
       "production_approved": false,
       "category": "Fotowohnwagen",
       "download_url": "https://fotopolis-mieten.de/assets/wohnwagen/ww_innenraum%20(3).jpeg"
-    },
-    {
-      "id": "LEG-019",
-      "source_url": "https://fotopolis-mieten.de/assets/galerie/fb_party02.jpg",
-      "fallback_url": "https://fotopolis-mieten.de/assets/galerie/fb_party02.jpg",
-      "name": "fb_party02.jpg",
-      "section": "galerie",
-      "alt": "",
-      "status": "downloaded",
-      "width": 2560,
-      "height": 1707,
-      "source_bytes": 507800,
-      "sha256": "691705b8b9766abeccfa313f5b8b1d671f0b140e2234d51216a3d3f924709941",
-      "webp_file": "review-assets/legacy/LEG-019.webp",
-      "webp_bytes": 144400,
-      "error": "",
-      "rights_status": "UNVERIFIED",
-      "person_release": "UNVERIFIED",
-      "production_approved": false,
-      "category": "Galerie",
-      "download_url": "https://fotopolis-mieten.de/assets/galerie/fb_party02.jpg"
     }
   ]
 }

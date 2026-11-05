@@ -4,8 +4,8 @@ Quelle: https://fotopolis-mieten.de/
 Status: nur gesonderte Bildbibliothek zur Sichtung. Keine produktive Verwendung oder Veröffentlichung genehmigt.
 
 ## Zahlen
-- identified: 19
-- imported: 19
+- identified: 18
+- imported: 18
 - failed: 0
 - duplicates: 0
 - under800px_shorter_side: 2
@@ -13,7 +13,6 @@ Status: nur gesonderte Bildbibliothek zur Sichtung. Keine produktive Verwendung 
 ## Vorläufige Rubriken
 - Fotobox: 5
 - Fotowohnwagen: 5
-- Galerie: 1
 - Sonstige: 8
 
 ## Dateien
