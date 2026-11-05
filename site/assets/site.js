@@ -33,8 +33,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   const form=document.querySelector("[data-enquiry-form]");
   if(form){
     const occasionSelect=form.querySelector("[name=anlass]");
-    const requested=new URLSearchParams(location.search).get("anlass");
+    const params=new URLSearchParams(location.search);
+    const requested=params.get("anlass");
     if(requested&&occasionSelect&&[...occasionSelect.options].some(o=>o.value===requested))occasionSelect.value=requested;
+    const productSelect=form.querySelector("[name=produkt]");
+    const product=params.get("produkt");
+    if(product&&productSelect&&[...productSelect.options].some(o=>o.value===product))productSelect.value=product;
     form.addEventListener("submit",event=>{
       event.preventDefault();
       if(!form.reportValidity())return;
