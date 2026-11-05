@@ -57,6 +57,15 @@ assert "pending-approved-file" not in html and "legacy-reference" not in html, "
 assert html.count('data-asset-status="approved-user-upload"') == 2, "Both approved scenes needed"
 assert all("/assets/images/" + name in html for name in product_photos), "Responsive assets not linked"
 (target / "index.html").write_text(html, encoding="utf-8")
+# Build dedicated editorial pages from a single, reviewed content manifest.
+# This runs only for Netlify deploy-preview / branch-deploy contexts, never production.
+from build_premium_pages import build_pages
+routes = build_pages(source, target, html)
+assert routes == [
+    "fotobox","fotospiegel","fotowohnwagen","pakete","galerie",
+    "anlaesse","ueber-uns","faq","kontakt","impressum","datenschutz"
+], f"Unexpected route inventory: {routes}"
+
 # Build QA: all referenced local assets must exist.
 for match in re.finditer(r'srcset="([^"]+)"', html):
     for entry in match.group(1).split(","):
@@ -68,4 +77,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print("FOTOPOLIS V2.4: image-free editorial hero, semantic product shortcuts; approved logo and all product images remain unchanged")
+print(f"FOTOPOLIS V2.5: {len(routes)} editorial pages and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
