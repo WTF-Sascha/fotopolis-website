@@ -1,5 +1,5 @@
 {
-  "version": "2.8",
+  "version": "2.9",
   "status": "preview-only",
   "pages": [
     {
@@ -698,19 +698,59 @@
     {
       "slug": "kontakt",
       "title": "Kontakt & Eventanfrage",
-      "eyebrow": "FOTOPOLIS · DEIN EVENT",
-      "headline": "Erzähl uns, was du planst.",
-      "lead": "Ob Hochzeit, Geburtstag oder Firmenevent – wir freuen uns auf deine Ideen. In dieser Preview wird keine Anfrage automatisch übertragen.",
+      "eyebrow": "EVENTANFRAGE · PERSÖNLICH & UNVERBINDLICH",
+      "headline": "Jede gute Geschichte beginnt mit einer Idee.",
+      "lead": "Teile uns die wichtigsten Eckdaten zu deinem Event mit. Die Angaben werden in dieser Preview nur lokal verarbeitet und als E-Mail-Entwurf vorbereitet – nicht automatisch versendet.",
       "blocks": [
         {
-          "heading": "Deine Anfrage",
-          "body": "Schreib uns deinen Wunschtermin, Veranstaltungsort, Anlass, das gewünschte Fotoerlebnis und besondere Wünsche. So können wir den Rahmen gemeinsam klären."
+          "heading": "Direkt per E-Mail",
+          "body": "Du kannst uns auch ohne Formular an kontakt@fotopolis-mieten.de schreiben. Diese Adresse stammt aus dem bisherigen Webauftritt und ist vor dem Livegang erneut zu bestätigen."
         },
         {
-          "heading": "Persönlicher Kontakt",
-          "body": "E-Mail: kontakt@fotopolis-mieten.de. Diese Kontaktadresse stammt von der bisherigen offiziellen Website und sollte vor dem späteren Produktivstart nochmals bestätigt werden."
+          "heading": "Wie geht es weiter?",
+          "body": "FOTOPOLIS klärt nach einer von dir selbst versendeten Anfrage die Details individuell. Eine Eingabe in dieser Entwicklungsvorschau ist weder eine Buchung noch eine Reservierung. Es gibt keine Live-Verfügbarkeitsprüfung."
         }
-      ]
+      ],
+      "contactFlow": {
+        "title": "Erzähl uns von deinem Event.",
+        "eyebrow": "ANFRAGE VORBEREITEN",
+        "intro": "In wenigen Schritten entsteht ein unverbindlicher E-Mail-Entwurf. Die Vorschau überträgt keine Daten an FOTOPOLIS und speichert keine Eingaben.",
+        "productOptions": [
+          "Noch offen",
+          "Fotobox",
+          "Fotospiegel",
+          "Fotowohnwagen"
+        ],
+        "occasionOptions": [
+          "Bitte wählen",
+          "Hochzeit",
+          "Geburtstag / Jubiläum",
+          "Firmenfeier / Business",
+          "Motto- / Gartenparty",
+          "Sonstiger Anlass"
+        ],
+        "timeOptions": [
+          "Noch offen",
+          "Vormittag",
+          "Nachmittag",
+          "Abend",
+          "Ganztägig"
+        ],
+        "contactWays": [
+          "E-Mail",
+          "Telefon (Rückrufwunsch)"
+        ],
+        "wishItems": [
+          "Druckoptionen prüfen",
+          "Individuelles Fotolayout",
+          "Hintergrund / Dekoration",
+          "Betreuung vor Ort",
+          "Lieferung und Aufbau",
+          "Digitale Fotoübergabe"
+        ],
+        "legalNotice": "Preview-Hinweis: Deine Eingaben bleiben im Browser, bis du selbst dein E-Mail-Programm öffnest und den Entwurf versendest. Keine Online-Buchung, kein automatischer E-Mail-Versand, keine Speicherung.",
+        "responseNote": "Verfügbarkeit, Leistungsumfang, Anfahrt, Aufbau, Preise und Rückmeldung werden individuell geklärt. Hier wird keine konkrete Reaktionszeit zugesagt."
+      }
     },
     {
       "slug": "impressum",
