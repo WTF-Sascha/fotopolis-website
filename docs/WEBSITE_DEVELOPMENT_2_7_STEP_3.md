@@ -40,7 +40,7 @@ Am 05.11.2026 wurden die bislang öffentlich auslesbaren Seiten geprüft:
 3. Neue Pakettests: Eingabefelder, Vorschau, Email-URL, keine unautorisierte Datenübertragung, Screenshots und Responsive-Layout.
 4. Screenshots visuell prüfen; Automatisierung allein kann ein Design nicht abschließend freigeben.
 
-**QA-Ergebnis:** nach Abschluss der zugehörigen finalen GitHub-Actions- und Netlify-Deploy-Prüfungen dokumentieren. Kein Status PASS behaupten, bevor die jeweiligen Läufe wirklich abgeschlossen sind.
+**Automatischer QA-Abschluss:** [GitHub Actions – Premium V2 Visual QA #42074914810](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42074914810), Commit `5c506a0c8c0a6706eb3d2842cfc5c4926f78c6cd`, Ergebnis **success**: Startseiten-Quellkonzept **124/124**, gebautes Netlify-Preview-Verzeichnis **124/124**, Unterseiten-/Menüprüfungen **147/147**, vollständiges Layout-Gate **1.188/1.188**, neue Paketfinder-Interaktionen **108/108** (6 Breiten). Gesamt **1.691/1.691 automatisierte Einzelprüfungen**. Es wurden 15 allgemeine Layout- und 3 zusätzliche Paketseiten-Screenshots erzeugt. Eine **separate menschliche Sichtkontrolle** der Screenshots ist für eine vollständige visuelle Freigabe weiterhin erforderlich.
 
 ## Unveränderte Schutzregeln
 Kein Merge, keine Änderung in `main` oder `site/`, kein Livegang unter `fotopolis-mieten.de`, keine Supabase-Produktivdaten, keine Backend-Kalenderbuchung, kein neues kostenpflichtiges Angebot. Freigegebenes Original-Logo und sämtliche Produkt- und Quellbilder werden unverändert weiterverwendet.
