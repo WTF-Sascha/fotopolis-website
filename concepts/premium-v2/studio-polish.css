@@ -380,3 +380,20 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
  .home-trust-grid p{font-size:12px}
  .home-trust-links{gap:7px 24px}
 }
+
+
+.advisor-reset{
+ align-self:flex-start;
+ background:transparent;
+ color:#e3c994;
+ border:0;
+ border-bottom:1px solid rgba(215,183,122,.55);
+ margin-top:15px;
+ padding:9px 0;
+ min-height:44px;
+ font:730 12px/1.4 Inter,Arial,sans-serif;
+ cursor:pointer
+}
+.advisor-reset span{margin-left:9px;font-size:16px}
+.advisor-reset:hover{color:#fff;border-bottom-color:#fff}
+.advisor-reset:focus-visible{outline:3px solid #d7b77a;outline-offset:4px}
