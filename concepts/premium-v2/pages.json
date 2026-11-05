@@ -1,0 +1,240 @@
+{
+  "version": "2.5",
+  "status": "preview-only",
+  "pages": [
+    {
+      "slug": "fotobox",
+      "title": "Fotobox",
+      "eyebrow": "FOTOPOLIS BOX · FOTOERLEBNIS 01",
+      "headline": "Gemeinsam lachen. Momente bewahren.",
+      "lead": "Die Fotobox bringt Menschen zusammen – für spontane Bilder bei Hochzeit, Geburtstag, Jubiläum oder Firmenevent.",
+      "image": "fotobox-event-1672.webp",
+      "imageAlt": "Freigegebene FOTOPOLIS-Fotobox in festlicher Geburtstagsszene",
+      "blocks": [
+        {
+          "heading": "Ein Erlebnis für deine Gäste",
+          "body": "Die Fotobox wird zum Treffpunkt auf deiner Feier: Alle können miteinander fotografieren und ihren persönlichen Moment festhalten."
+        },
+        {
+          "heading": "Design und Ausdrucke",
+          "body": "Die bisherige Website zeigt individuelle Fotolayouts und Ausdruckoptionen. Welche Gestaltung, Druckleistung und Betreuung beim gewünschten Termin konkret verfügbar sind, wird im Angebot bestätigt."
+        },
+        {
+          "heading": "Vor deinem Event",
+          "body": "Wir klären Platzbedarf, Stromversorgung, Aufstellzeit und die gewünschte Nutzungsdauer gemeinsam. Eine automatische Buchung findet in dieser Preview nicht statt."
+        }
+      ]
+    },
+    {
+      "slug": "fotospiegel",
+      "title": "Fotospiegel",
+      "eyebrow": "FOTOPOLIS MIRROR · FOTOERLEBNIS 02",
+      "headline": "Ein Spiegel. Ein besonderer Auftritt.",
+      "lead": "Interaktiv, elegant und ein Blickfang: Der Fotospiegel macht das Fotografieren selbst zum Erlebnis.",
+      "image": "fotospiegel-hero-lossless.webp",
+      "imageAlt": "Freigegebene unveränderte Studio-Visualisierung des FOTOPOLIS-Fotospiegels",
+      "blocks": [
+        {
+          "heading": "Fotografieren mit Interaktion",
+          "body": "Gäste treten vor den Spiegel, sehen sich und halten ihren Moment fest. Die besonderen Abläufe und Funktionen stimmen wir anhand des eingesetzten Systems ab."
+        },
+        {
+          "heading": "Passend zur Atmosphäre",
+          "body": "Als eigenständiger Blickfang eignet sich der Fotospiegel insbesondere für festliche Anlässe und Events mit besonderem Gestaltungsanspruch."
+        },
+        {
+          "heading": "Individuelle Abstimmung",
+          "body": "Verfügbare Fotoformate, Layouts und organisatorische Anforderungen werden vor einer Buchung verbindlich geklärt. Das gezeigte Bild ist eine Studio-Visualisierung."
+        }
+      ]
+    },
+    {
+      "slug": "fotowohnwagen",
+      "title": "Fotowohnwagen",
+      "eyebrow": "FOTOPOLIS CAMPER · FOTOERLEBNIS 03",
+      "headline": "Ein kleiner Ort für große Geschichten.",
+      "lead": "Ein Fotowohnwagen mit eigenem Charakter: ein besonderer Treffpunkt für Menschen und ihre Erinnerungen.",
+      "image": "fotowohnwagen-gartenparty-1448.webp",
+      "imageAlt": "Freigegebene unveränderte Produktvisualisierung des Fotowohnwagens auf einer Gartenparty",
+      "blocks": [
+        {
+          "heading": "Ein Erlebnisraum auf deiner Feier",
+          "body": "Der Fotowohnwagen schafft einen eigenen Ort, an dem Gäste zusammenkommen und sich fotografieren lassen können."
+        },
+        {
+          "heading": "Der besondere Blickfang",
+          "body": "Der Wohnwagen ist eine Alternative zur klassischen Fotostation und lässt sich in geeignete Veranstaltungsflächen integrieren."
+        },
+        {
+          "heading": "Aufstellbedingungen prüfen",
+          "body": "Zufahrt, Platzbedarf, Zugänglichkeit, Stromversorgung und Aufbau werden für die jeweilige Location geprüft. Ausstattung und dargestellte Umgebung können abweichen."
+        }
+      ]
+    },
+    {
+      "slug": "pakete",
+      "title": "Pakete & Leistungen",
+      "eyebrow": "LEISTUNGEN · INDIVIDUELL PLANEN",
+      "headline": "Das passende Erlebnis für deinen Anlass.",
+      "lead": "Vergleiche die drei Fotoerlebnisse. Ein konkretes Angebot wird passend zu Termin, Location, Umfang und deinen Wünschen erstellt.",
+      "blocks": [
+        {
+          "heading": "Fotobox",
+          "body": "Ein klassisches Fotoerlebnis für spontane Gruppenaufnahmen, mit individuell abzustimmenden Layout- und Druckoptionen."
+        },
+        {
+          "heading": "Fotospiegel",
+          "body": "Ein interaktiver Blickfang. Details zu Technik, Nutzung und Gestaltung werden im Angebot geklärt."
+        },
+        {
+          "heading": "Fotowohnwagen",
+          "body": "Eigenständiges Fotoerlebnis mit besonderem Ambiente. Platzbedarf und Aufstellung müssen vorab abgestimmt werden."
+        },
+        {
+          "heading": "Was gehört in ein Angebot?",
+          "body": "Erlebnis, gewünschter Termin, Nutzungszeitraum, Veranstaltungsort, Aufbau, betreute Leistungen, Fotoformate, Druck- und Designoptionen. Paketpreise werden nicht erfunden oder ohne Bestätigung veröffentlicht."
+        }
+      ]
+    },
+    {
+      "slug": "galerie",
+      "title": "Galerie",
+      "eyebrow": "IMPRESSIONEN · INTERNER BILDREVIEW",
+      "headline": "Momente, die für sich sprechen.",
+      "lead": "Eine Auswahl aus dem bisherigen Bildbestand. Die Fotos dienen nur der internen Designprüfung; Bild- und Personenfreigaben stehen für einen Livegang noch aus.",
+      "gallery": [
+        "LEG-060.webp",
+        "LEG-073.webp",
+        "LEG-046.webp"
+      ],
+      "blocks": [
+        {
+          "heading": "Bisherige Eventmomente",
+          "body": "Die gezeigten Aufnahmen stammen aus der internen Sichtung des bisherigen Fotopolis-Bildbestands. Sie sind noch keine freigegebene öffentliche Unternehmensgalerie."
+        }
+      ]
+    },
+    {
+      "slug": "anlaesse",
+      "title": "Anlässe",
+      "eyebrow": "FEIERN · VERBINDEN · ERINNERN",
+      "headline": "Jeder Anlass hat seinen eigenen Zauber.",
+      "lead": "Ob private Feier oder geschäftliches Event: FOTOPOLIS begleitet besondere Momente mit einem passenden Fotoerlebnis.",
+      "blocks": [
+        {
+          "heading": "Hochzeiten",
+          "body": "Für echte Emotionen, spontane Gruppenbilder und Erinnerungen an einen gemeinsamen Tag."
+        },
+        {
+          "heading": "Geburtstage und Jubiläen",
+          "body": "Für ausgelassene Feiern, große Meilensteine und persönliche Fotomomente."
+        },
+        {
+          "heading": "Firmenevents",
+          "body": "Für Unternehmensfeiern, Team-Events und gemeinsame Erlebnisse mit Gästen oder Kolleginnen und Kollegen."
+        },
+        {
+          "heading": "Familienfeiern und besondere Ideen",
+          "body": "Auch individuelle Anlässe können gemeinsam geplant werden. Das passende System richtet sich nach Ort, Gästen und gewünschter Atmosphäre."
+        }
+      ]
+    },
+    {
+      "slug": "ueber-uns",
+      "title": "Über FOTOPOLIS",
+      "eyebrow": "FOTOPOLIS · AUS AHLEN",
+      "headline": "Wir lieben die Momente dazwischen.",
+      "lead": "FOTOPOLIS bietet Fotobox, Fotospiegel und Fotowohnwagen für besondere private und geschäftliche Veranstaltungen.",
+      "blocks": [
+        {
+          "heading": "Wofür FOTOPOLIS steht",
+          "body": "Bei einem gelungenen Event zählt nicht nur das Foto. Es geht um Begegnungen, gemeinsames Lachen und Erinnerungen, die lange bleiben."
+        },
+        {
+          "heading": "Unsere drei Erlebniswelten",
+          "body": "Die Fotobox bringt Gruppen zusammen, der Fotospiegel sorgt für ein interaktives Erlebnis und der Fotowohnwagen setzt einen eigenen besonderen Akzent."
+        },
+        {
+          "heading": "Persönliche Planung",
+          "body": "Welche Ausstattung und Leistungen für ein Event möglich sind, wird individuell geklärt. Diese Entwicklungsseite ersetzt keine verbindliche Buchungsbestätigung."
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "Häufige Fragen",
+      "eyebrow": "WISSENSWERTES · GUT GEPLANT",
+      "headline": "Die wichtigsten Fragen vor deinem Event.",
+      "lead": "Klare Orientierung für die Planung. Konkrete Leistungen und Verfügbarkeiten müssen vor einer Buchung persönlich bestätigt werden.",
+      "faqs": [
+        [
+          "Was ist der Unterschied zwischen den drei Systemen?",
+          "Die Fotobox ist eine klassische Fotostation, der Fotospiegel ein interaktiver Spiegel und der Fotowohnwagen ein eigenständiger kleiner Erlebnisraum."
+        ],
+        [
+          "Kann ich Fotolayouts individuell gestalten?",
+          "Die bisherige FOTOPOLIS-Website erwähnt individuelle Layouts. Verfügbare Optionen und eventuelle Zusatzkosten bestätigen wir im Angebot."
+        ],
+        [
+          "Kann ich direkt online buchen?",
+          "Nein. In dieser Design-Preview gibt es keine verbindlichen Online-Buchungen oder Live-Verfügbarkeiten. Der Buchungskalender ist ein späterer Entwicklungsschritt."
+        ],
+        [
+          "Wie viel Platz wird benötigt?",
+          "Das hängt vom gewählten Fotoerlebnis und der Location ab. Für den Fotowohnwagen prüfen wir zusätzlich Zufahrt, Standfläche und Zugang."
+        ],
+        [
+          "Welche Veranstaltungen sind geeignet?",
+          "Zum Beispiel Hochzeiten, Geburtstage, Jubiläen, Familienfeiern und Firmenevents."
+        ],
+        [
+          "Wie erhalte ich ein Angebot?",
+          "Schicke uns Anlass, Wunschtermin, Ort und dein bevorzugtes Fotoerlebnis per E-Mail. Die Anfrage ist unverbindlich."
+        ]
+      ]
+    },
+    {
+      "slug": "kontakt",
+      "title": "Kontakt & Eventanfrage",
+      "eyebrow": "FOTOPOLIS · DEIN EVENT",
+      "headline": "Erzähl uns, was du planst.",
+      "lead": "Ob Hochzeit, Geburtstag oder Firmenevent – wir freuen uns auf deine Ideen. In dieser Preview wird keine Anfrage automatisch übertragen.",
+      "blocks": [
+        {
+          "heading": "Deine Anfrage",
+          "body": "Schreib uns deinen Wunschtermin, Veranstaltungsort, Anlass, das gewünschte Fotoerlebnis und besondere Wünsche. So können wir den Rahmen gemeinsam klären."
+        },
+        {
+          "heading": "Persönlicher Kontakt",
+          "body": "E-Mail: kontakt@fotopolis-mieten.de. Diese Kontaktadresse stammt von der bisherigen offiziellen Website und sollte vor dem späteren Produktivstart nochmals bestätigt werden."
+        }
+      ]
+    },
+    {
+      "slug": "impressum",
+      "title": "Impressum",
+      "eyebrow": "RECHTLICHES · ENTWICKLUNGSVORSCHAU",
+      "headline": "Rechtliche Angaben vor Livegang prüfen.",
+      "lead": "Diese Seite ist eine isolierte, nicht produktive Design-Preview. Ein juristisch geprüftes Impressum für den neuen Auftritt wird vor Freigabe ergänzt.",
+      "blocks": [
+        {
+          "heading": "Bisherige Pflichtangaben",
+          "body": "Die bisherige offizielle Website stellt ein eigenes Impressum bereit. Wir übernehmen dessen Angaben hier nicht ungeprüft, da Verantwortliche, Kontaktdaten und rechtliche Details vor dem Relaunch bestätigt werden müssen."
+        }
+      ]
+    },
+    {
+      "slug": "datenschutz",
+      "title": "Datenschutz",
+      "eyebrow": "RECHTLICHES · ENTWICKLUNGSVORSCHAU",
+      "headline": "Datenschutz vor Veröffentlichung finalisieren.",
+      "lead": "Die neue Website wird zunächst ausschließlich zur Designprüfung bereitgestellt. Die finale Datenschutzerklärung wird erst nach technischer Festlegung aller Funktionen geprüft.",
+      "blocks": [
+        {
+          "heading": "Status der Preview",
+          "body": "Es werden keine direkten Online-Buchungen, Kontaktformulare mit Serverversand oder Analytics-Integrationen in diesem Schritt aktiviert. Die spätere Kalender- und Anfragetechnik erhält eine eigene Datenschutzprüfung."
+        }
+      ]
+    }
+  ]
+}
