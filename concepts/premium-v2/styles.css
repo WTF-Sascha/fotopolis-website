@@ -375,3 +375,18 @@ html{scroll-padding-top:96px}
  .hero.hero-editorial .chapter span:last-child{max-width:165px}
 }
 @media(prefers-reduced-motion:reduce){.hero-guide-link,.editorial-link,.button{transition:none!important;transform:none!important}}
+
+/* Design 2.4 QA refinement: tighter editorial fold; compact mobile jump navigation. */
+@media(min-width:901px){
+ .hero.hero-editorial .hero-layout{padding-block:clamp(64px,5.8vw,88px)}
+}
+@media(min-width:1101px){
+ .hero.hero-editorial h1{font-size:clamp(56px,5.2vw,82px)}
+}
+@media(max-width:630px){
+ .hero.hero-editorial .hero-layout{gap:18px;padding-bottom:34px}
+ .hero-guide{padding:7px 18px}
+ .hero-guide-heading{display:none}
+ .hero-guide-link,.hero-guide-link:nth-child(2),.hero-guide-link:last-child{padding:12px 0}
+ .hero-guide-link small{display:none}
+}
