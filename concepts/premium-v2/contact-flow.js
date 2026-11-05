@@ -14,6 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const progress = [...document.querySelectorAll("[data-contact-progress-step]")];
   const backButton = form.querySelector("[data-contact-back]");
   const nextButton = form.querySelector("[data-contact-next]");
+  const preferredWay = form.querySelector('[name="kontaktweg"]');
+  const phoneField = form.querySelector('[name="telefon"]');
+  const phoneLabel = form.querySelector("[data-contact-phone-optional]");
+  const phoneHint = form.querySelector("[data-contact-phone-hint]");
+  function updateCallbackRequirement() {
+    const callback = preferredWay?.value === "Telefon (Rückrufwunsch)";
+    if (phoneField) {
+      phoneField.required = callback;
+      phoneField.setAttribute("aria-required", String(callback));
+    }
+    if (phoneLabel) phoneLabel.textContent = callback ? "(erforderlich für Rückruf)" : "(optional)";
+    if (phoneHint) phoneHint.textContent = callback ?
+      "Bitte gib für den gewünschten Rückruf eine Telefonnummer an." :
+      "Nur nötig, wenn du einen Rückruf wünschst.";
+  }
   const emailAddress = "kontakt@fotopolis-mieten.de";
   const safe = value => String(value || "").trim();
 
@@ -137,6 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   showStep(1);
+  updateCallbackRequirement();
+  preferredWay?.addEventListener("change", () => {
+    updateCallbackRequirement();
+    update();
+  });
   form.addEventListener("input",update);
   form.addEventListener("change",update);
   form.addEventListener("input",()=>{inlineStatus.textContent="";});
