@@ -99,6 +99,7 @@ for (const width of widths){
   const panels=await page.locator(".page-aside").count();
   const endings=await page.locator(".page-end").count();
   check(width+" "+route+" no repeated sidebar/end",panels===0&&endings===0);
+  check(width+" "+route+" no fixed CTA occlusion",await page.locator(".mobile-quick-cta").count()===0);
   const bad=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
   check(width+" "+route+" no horizontal overflow",!bad);
   if(route==="faq/"&&[320,1440].includes(width)){
@@ -110,6 +111,7 @@ for (const width of widths){
  for(const route of ["fotobox/","fotospiegel/","fotowohnwagen/"]){
   await visit(route);
   check(width+" "+route+" retains single context panel",await page.locator(".page-aside").count()===1);
+  check(width+" "+route+" media not obscured by mobile CTA",await page.locator(".mobile-quick-cta").count()===0);
   const a=await page.locator(".page-aside a.button").getAttribute("href");
   check(width+" "+route+" correct preselected contact route",decodeURIComponent(a).includes("produkt="));
  }
