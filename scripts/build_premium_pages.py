@@ -14,7 +14,7 @@ def e(value: str) -> str:
 def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
-    assert data["version"] in ("2.5", "2.6", "2.7", "2.8")
+    assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9")
     header = re.search(r'<header class="site-header">.*?</header>', home_html, re.S)
     footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
@@ -64,14 +64,6 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<div class="page-legal-notice"><strong>Entwurf – kein veröffentlichungsreifer Rechtstext.</strong> '
                 'Vor einem Livegang muss die verantwortliche Stelle diese Angaben prüfen und freigeben.</div>'
                 + content
-            )
-        if slug == "kontakt":
-            content += (
-                '<p><a class="button gold" '
-                'href="mailto:kontakt@fotopolis-mieten.de?subject=FOTOPOLIS%20Eventanfrage">'
-                'E-Mail-Anfrage vorbereiten <span aria-hidden="true">↗</span></a></p>'
-                '<p class="page-image-caption" style="margin:18px 0 0">Öffnet das E-Mail-Programm. '
-                'Es wird nichts automatisch versendet.</p>'
             )
         # Roadmap point 2: shared premium product stage + source-labelled features.
         # The source product photo is referenced unchanged, never generated or transformed.
@@ -460,6 +452,105 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<span aria-hidden="true">↗</span></a></div></section>'
             )
 
+        # Step 5: contact form never transmits visitor inputs from this preview.
+        if p.get("contactFlow"):
+            assert slug == "kontakt"
+            flow = p["contactFlow"]
+            rich_sections += (
+                '<section class="contact-flow section" aria-labelledby="contact-flow-title">'
+                '<div class="inner"><div class="contact-intro">'
+                f'<span class="kicker">{e(flow["eyebrow"])}</span>'
+                f'<h2 id="contact-flow-title">{e(flow["title"])}</h2>'
+                f'<p>{e(flow["intro"])}</p></div>'
+                '<div class="contact-layout"><form class="contact-form" '
+                'data-contact-flow novalidate>'
+                '<fieldset><legend><span>01</span> Das Event</legend>'
+                '<div class="contact-fields">'
+                '<div><label for="contact-occasion">Anlass <span aria-hidden="true">*</span></label>'
+                '<select id="contact-occasion" name="anlass" required>'
+            )
+            for i, item in enumerate(flow["occasionOptions"]):
+                value = '' if i == 0 else item
+                rich_sections += (
+                    f'<option value="{e(value)}">{e(item)}</option>'
+                )
+            rich_sections += (
+                '</select></div>'
+                '<div><label for="contact-product">Fotoerlebnis</label>'
+                '<select id="contact-product" name="produkt">'
+            )
+            for item in flow["productOptions"]:
+                rich_sections += f'<option value="{e(item)}">{e(item)}</option>'
+            rich_sections += (
+                '</select></div>'
+                '<div><label for="contact-date">Wunschtermin (optional)</label>'
+                '<input type="date" id="contact-date" name="datum"></div>'
+                '<div><label for="contact-time">Tageszeit</label>'
+                '<select id="contact-time" name="tageszeit">'
+            )
+            for item in flow["timeOptions"]:
+                rich_sections += f'<option value="{e(item)}">{e(item)}</option>'
+            rich_sections += (
+                '</select></div>'
+                '<div><label for="contact-location">Veranstaltungsort (optional)</label>'
+                '<input id="contact-location" name="ort" type="text" '
+                'maxlength="120" autocomplete="address-level2" placeholder="z. B. Ahlen"></div>'
+                '<div><label for="contact-guests">Gästezahl (optional)</label>'
+                '<input id="contact-guests" name="gaeste" type="number" '
+                'min="1" max="20000" step="1" inputmode="numeric" '
+                'placeholder="z. B. 100"></div>'
+                '</div></fieldset>'
+                '<fieldset><legend><span>02</span> Deine Kontaktdaten</legend>'
+                '<div class="contact-fields">'
+                '<div><label for="contact-name">Name <span aria-hidden="true">*</span></label>'
+                '<input id="contact-name" name="name" type="text" maxlength="100" '
+                'autocomplete="name" required placeholder="Dein Name"></div>'
+                '<div><label for="contact-email">E-Mail <span aria-hidden="true">*</span></label>'
+                '<input id="contact-email" name="email" type="email" maxlength="150" '
+                'autocomplete="email" required placeholder="name@beispiel.de"></div>'
+                '<div><label for="contact-phone">Telefon (optional)</label>'
+                '<input id="contact-phone" name="telefon" type="tel" maxlength="45" '
+                'autocomplete="tel" placeholder="+49 ..."></div>'
+                '<div><label for="contact-way">Bevorzugter Kontaktweg</label>'
+                '<select id="contact-way" name="kontaktweg">'
+            )
+            for item in flow["contactWays"]:
+                rich_sections += f'<option value="{e(item)}">{e(item)}</option>'
+            rich_sections += (
+                '</select></div></div></fieldset>'
+                '<fieldset><legend><span>03</span> Wünsche &amp; Extras</legend>'
+                '<div class="contact-wishes">'
+            )
+            for item in flow["wishItems"]:
+                rich_sections += (
+                    '<label class="contact-choice"><input type="checkbox" '
+                    f'name="wunsch" value="{e(item)}"><span>{e(item)}</span></label>'
+                )
+            rich_sections += (
+                '</div><label for="contact-details">Weitere Wünsche (optional)</label>'
+                '<textarea id="contact-details" name="details" rows="4" maxlength="800" '
+                'placeholder="Was sollten wir über dein Event wissen?"></textarea></fieldset>'
+                '<p class="contact-small">* Pflichtfeld – erforderlich, damit die '
+                'E-Mail-Vorlage sinnvoll ausgefüllt werden kann.</p>'
+                '<p class="contact-privacy">'
+                f'{e(flow["legalNotice"])}</p>'
+                '</form><aside class="contact-recap" aria-labelledby="contact-recap-title">'
+                '<span class="kicker">DEINE VORSCHAU</span>'
+                '<h3 id="contact-recap-title">Dein Event auf einen Blick.</h3>'
+                '<p>Die Vorschau aktualisiert sich direkt. '
+                'Es wird nichts versendet oder reserviert.</p>'
+                '<pre data-contact-summary aria-live="polite"></pre>'
+                '<div class="contact-actions">'
+                '<a class="button gold" data-contact-email '
+                'href="mailto:kontakt@fotopolis-mieten.de">'
+                'E-Mail-Entwurf öffnen <span aria-hidden="true">↗</span></a>'
+                '<button type="button" class="button contact-copy" '
+                'data-contact-copy>Angaben kopieren</button></div>'
+                '<p class="contact-status" data-contact-status role="status"></p>'
+                f'<small>{e(flow["responseNote"])}</small>'
+                '</aside></div></div></section>'
+            )
+
         seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -472,6 +563,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<script defer src="/site.js"></script>' +
             ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
             ('<script defer src="/gallery-viewer.js"></script>' if slug == "galerie" else '') +
+            ('<script defer src="/contact-flow.js"></script>' if slug == "kontakt" else '') +
             '</head><body>'
             '<a class="skip" href="#content">Zum Inhalt springen</a>'
             + ribbon.group(0) + header.group(0) +
