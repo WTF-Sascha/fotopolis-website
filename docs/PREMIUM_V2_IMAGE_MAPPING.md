@@ -8,13 +8,13 @@
 ## Tatsächlich integrierte Originalbilder
 | Bauteil | Genutztes Altbild | Zweck | Nachfolger / Ersatz |
 |---|---|---|---|
-| Hero Desktop + Mobil | LEG-068 | Gäste im Fotowohnwagen, authentische Situation | Neues hochwertiges, veranstaltungsbezogenes Hero-Foto mit echter Nutzungsfreigabe |
+| Hero Desktop + Mobil | Vom Nutzer hochgeladenes Fotospiegelmotiv (`fotospiegel-hero-lossless.webp`) | Studio-Visualisierung mit vollständigem Fotospiegel; Original unverändert außer Skalierung 1122×1402 → 840×1050 | Hochwertiges, echtes Foto bei Bedarf als späteres Upgrade |
 | Fotowohnwagen Hauptfeature | LEG-014 | Wiedererkennbares Originalgerät außen | Neue hochwertige Außenaufnahme ohne störende Requisiten, gern Golden Hour/Blue Hour |
 | Fotobox Bildfläche | LEG-019 | Gäste mit Fotoaccessoires | Hochwertiges Produktfoto der tatsächlichen Fotobox plus ergänzend Gäste-Interaktion |
 | Hochzeits-Galerie | LEG-060 | Hochzeitspaar | Freigegebene, aktuelle Hochzeits-/Eventaufnahme |
 | Event-Galerie | LEG-073 | Gruppe im Wohnwagen | Freigegebenes hochwertiges Erlebnis-/Gruppenbild |
 | Mottoparty-Galerie | LEG-046 | Kostümierte Gäste | Freigegebenes Foto für Party-/Event-Variation |
-| Fotospiegel Hauptfeature | Noch kein Bild | Kennzeichnung als Platzhalter, keine erfundene Hardwareaufnahme | Neues, originalgetreues Fotospiegelbild aus Parallelchat, ohne RGB und ohne falschen Goldrahmen |
+| Fotospiegel Hauptfeature | Derselbe Fotospiegel-Visualisierungs-Upload | Bildfläche ohne Beschnitt, ohne Farb-/Inhaltsänderung | Weitere echte Gerätewinkel, sobald als Originaldatei verfügbar |
 
 Diese Bilder sind **nur für den Review-Branch** vorgesehen. Bereits öffentlich sichtbare Bilder der bisherigen Website sind nicht automatisch für eine zweite Veröffentlichung freigegeben. Die People-/Event-Releases müssen separat geprüft werden.
 
@@ -37,3 +37,13 @@ Die hochwertigen Einzelbilder aus dem parallelen Chat werden zunächst **nicht a
 - Datensparsame sichere Anfragefunktion vor Live-Betrieb.
 - Rechtliche Texte, vollständige mobile/desktop QA, PWA-Installation und Ladezeitmessungen.
 - Das GitHub-Repository ist öffentlich und sollte für die Entwicklungsarbeit auf privat gestellt werden.
+
+## Verbindliche Schutzregel für neue Produktvisualisierungen (vom Auftraggeber)
+
+- **Keine** Retusche, Montage, generative Änderungen, Objektentfernungen, Hinzufügungen, Perspektivverzerrungen, Schärfe-/Farblooks oder nachträgliche Veränderung des im Bild sichtbaren Logos.
+- Erlaubt ist ausschließlich eine **proportionale Skalierung** der Datei; anschließend verlustfreie WebP-Speicherung.
+- Fotospiegelmotiv: ursprünglich 1122 × 1402 Pixel PNG, skalierte Version 840 × 1050 Pixel WebP lossless, SHA-256 `c9a493de7b479b13253e1c7ba91da6d8fc5cd775f918c84c5881a71efe640241`.
+- Im Layout `object-fit: contain`; **kein** Cropping durch `cover`, keine CSS-Filter oder überlagernde Bildmanipulation. Schrift und CTA sind neben dem Foto, nicht darüber.
+- Netlify-Build hat eine Prüfsummenkontrolle; Änderungen am verwendeten Bild müssen bei unverändertem Hash den Build stoppen.
+- Bildinhalt ist eine **Studio-Visualisierung**, kein belegtes Foto eines bereits aufgestellten realen Geräts.
+- Nur nachweislich verfügbare Bilder integrieren; die weiteren im Chat gezeigten Bilder benötigen einen direkt zugänglichen Datei-Upload, bevor eine verlustfreie Übernahme möglich ist.
