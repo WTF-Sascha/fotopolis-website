@@ -1,5 +1,5 @@
 {
-  "version": "2.7",
+  "version": "2.8",
   "status": "preview-only",
   "pages": [
     {
@@ -425,9 +425,9 @@
     {
       "slug": "galerie",
       "title": "Galerie",
-      "eyebrow": "IMPRESSIONEN · INTERNER BILDREVIEW",
-      "headline": "Momente, die für sich sprechen.",
-      "lead": "Eine Auswahl aus dem bisherigen Bildbestand. Die Fotos dienen nur der internen Designprüfung; Bild- und Personenfreigaben stehen für einen Livegang noch aus.",
+      "eyebrow": "GALERIE · MOMENTE & PRODUKTVISUALISIERUNGEN",
+      "headline": "Erinnerungen bekommen hier einen Platz.",
+      "lead": "Entdecke bisherige Eventaufnahmen und die freigegebenen Produktvisualisierungen. Eventfotos werden ausschließlich für die interne Designprüfung gezeigt; ihre Bild- und Personenfreigaben stehen noch aus.",
       "gallery": [
         "LEG-060.webp",
         "LEG-073.webp",
@@ -435,56 +435,232 @@
       ],
       "blocks": [
         {
-          "heading": "Bisherige Eventmomente",
-          "body": "Die gezeigten Aufnahmen stammen aus der internen Sichtung des bisherigen Fotopolis-Bildbestands. Sie sind noch keine freigegebene öffentliche Unternehmensgalerie."
+          "heading": "Die Bildauswahl wird noch geprüft",
+          "body": "Die früheren Veranstaltungsfotos sind Vorschau-Material und kein freigegebenes Portfolio. Produktdarstellungen sind klar als Visualisierungen gekennzeichnet. Vor einer Veröffentlichung prüfen wir Bildrechte, Personenfreigaben und Bildunterschriften."
         }
-      ]
+      ],
+      "galleryCollection": [
+        {
+          "file": "LEG-060.webp",
+          "kind": "moments",
+          "label": "Ein besonderer Tag",
+          "alt": "Hochzeitspaar bei einem Foto-Shooting",
+          "note": "Eventaufnahme · Personenfreigabe ausstehend",
+          "rights": "unverified"
+        },
+        {
+          "file": "LEG-073.webp",
+          "kind": "moments",
+          "label": "Gemeinsam lachen",
+          "alt": "Gruppe von Gästen mit Hüten und Accessoires beim Fotografieren",
+          "note": "Eventaufnahme · Personenfreigabe ausstehend",
+          "rights": "unverified"
+        },
+        {
+          "file": "LEG-046.webp",
+          "kind": "moments",
+          "label": "Die Mottofeier",
+          "alt": "Drei verkleidete Gäste bei einer Halloweenfeier",
+          "note": "Eventaufnahme · Personenfreigabe ausstehend",
+          "rights": "unverified"
+        },
+        {
+          "file": "fotobox-event-1672.webp",
+          "kind": "products",
+          "label": "FOTOPOLIS BOX",
+          "alt": "Freigegebene Fotobox-Visualisierung in einer festlichen Geburtstagsszene",
+          "note": "Freigegebene Produktvisualisierung · kein reales Referenzfoto",
+          "rights": "approved-product"
+        },
+        {
+          "file": "fotospiegel-hero-lossless.webp",
+          "kind": "products",
+          "label": "FOTOPOLIS MIRROR",
+          "alt": "Freigegebene Fotospiegel-Studiovisualisierung",
+          "note": "Freigegebene Produktvisualisierung · kein reales Referenzfoto",
+          "rights": "approved-product"
+        },
+        {
+          "file": "fotowohnwagen-gartenparty-1448.webp",
+          "kind": "products",
+          "label": "FOTOPOLIS CAMPER",
+          "alt": "Freigegebene Fotowohnwagen-Visualisierung auf einer Gartenparty",
+          "note": "Freigegebene Produktvisualisierung · kein reales Referenzfoto",
+          "rights": "approved-product"
+        }
+      ],
+      "galleryNotice": "Interne Designvorschau: Eventaufnahmen sind nicht für den Live-Einsatz freigegeben. Es werden weder neue Fotos generiert noch bestehende Motive verändert."
     },
     {
       "slug": "anlaesse",
       "title": "Anlässe",
-      "eyebrow": "FEIERN · VERBINDEN · ERINNERN",
-      "headline": "Jeder Anlass hat seinen eigenen Zauber.",
-      "lead": "Ob private Feier oder geschäftliches Event: FOTOPOLIS begleitet besondere Momente mit einem passenden Fotoerlebnis.",
+      "eyebrow": "ANLÄSSE · HOCHZEIT · GEBURTSTAG · BUSINESS",
+      "headline": "Für die Momente, die man zusammen feiert.",
+      "lead": "Hochzeit, Geburtstag, Firmenevent oder Mottofeier: Entdecke passende Ideen und die wichtigsten Fragen für die Planung. Jedes Angebot wird individuell abgestimmt.",
       "blocks": [
         {
-          "heading": "Hochzeiten",
-          "body": "Für echte Emotionen, spontane Gruppenbilder und Erinnerungen an einen gemeinsamen Tag."
-        },
-        {
-          "heading": "Geburtstage und Jubiläen",
-          "body": "Für ausgelassene Feiern, große Meilensteine und persönliche Fotomomente."
-        },
-        {
-          "heading": "Firmenevents",
-          "body": "Für Unternehmensfeiern, Team-Events und gemeinsame Erlebnisse mit Gästen oder Kolleginnen und Kollegen."
-        },
-        {
-          "heading": "Familienfeiern und besondere Ideen",
-          "body": "Auch individuelle Anlässe können gemeinsam geplant werden. Das passende System richtet sich nach Ort, Gästen und gewünschter Atmosphäre."
+          "heading": "Der Anlass macht den Unterschied",
+          "body": "Je nach Veranstaltungsort, Gästezahl und gewünschter Atmosphäre eignen sich unterschiedliche Fotoerlebnisse. Wir zeigen Ideen zur Orientierung – keine vorab garantierte Ausstattung oder Terminverfügbarkeit."
         }
-      ]
+      ],
+      "occasionCards": [
+        {
+          "id": "hochzeit",
+          "number": "01",
+          "category": "HOCHZEITEN",
+          "title": "Euer Tag. Eure Geschichte.",
+          "lead": "Vom Sektempfang bis zur Tanzfläche: Kleine spontane Momente werden zu Erinnerungen, die euch lange begleiten.",
+          "planning": [
+            "Platz und Aufbauzeit am Veranstaltungsort klären",
+            "Fotolayout passend zur Feier anfragen",
+            "Fotodruck und digitale Übergabe individuell abstimmen"
+          ],
+          "products": [
+            {
+              "slug": "fotospiegel",
+              "label": "Fotospiegel ansehen"
+            },
+            {
+              "slug": "fotobox",
+              "label": "Fotobox ansehen"
+            }
+          ]
+        },
+        {
+          "id": "geburtstag",
+          "number": "02",
+          "category": "GEBURTSTAGE & JUBILÄEN",
+          "title": "Ein Grund zum Feiern. Viele Gründe zu lachen.",
+          "lead": "Ob runder Geburtstag oder großes Jubiläum – eine Fotostation gibt Gästen Raum für gemeinsame Bilder.",
+          "planning": [
+            "Eventdauer und Gästezahl als Orientierung nennen",
+            "Individuelle Motive oder Hintergründe anfragen",
+            "Ausdrucke und Übergabe vorab klären"
+          ],
+          "products": [
+            {
+              "slug": "fotobox",
+              "label": "Fotobox ansehen"
+            },
+            {
+              "slug": "fotospiegel",
+              "label": "Fotospiegel ansehen"
+            }
+          ]
+        },
+        {
+          "id": "business",
+          "number": "03",
+          "category": "FIRMEN- & TEAMEVENTS",
+          "title": "Begegnungen, die in Erinnerung bleiben.",
+          "lead": "Teamfeier, Jubiläum oder Kundenveranstaltung: Gemeinsame Fotos verbinden Menschen auch jenseits des Arbeitsalltags.",
+          "planning": [
+            "Wunschlayout mit Unternehmensfarben anfragen",
+            "Platz, Strom und Zeitfenster abstimmen",
+            "Foto- und Datenschutzkonzept der Veranstaltung klären"
+          ],
+          "products": [
+            {
+              "slug": "fotospiegel",
+              "label": "Fotospiegel ansehen"
+            },
+            {
+              "slug": "fotobox",
+              "label": "Fotobox ansehen"
+            }
+          ]
+        },
+        {
+          "id": "motto",
+          "number": "04",
+          "category": "MOTTO- & GARTENPARTYS",
+          "title": "Ein besonderes Setting für besondere Menschen.",
+          "lead": "Eine Mottofeier, eine Gartenparty oder eine Familienfeier braucht keine Schablone: Der Fotowohnwagen setzt einen eigenen Akzent, wenn die Location passt.",
+          "planning": [
+            "Zufahrt und Standfläche des Fotowohnwagens prüfen",
+            "Technische Bedingungen und Witterung klären",
+            "Aufbau und Dekorationswünsche abstimmen"
+          ],
+          "products": [
+            {
+              "slug": "fotowohnwagen",
+              "label": "Fotowohnwagen ansehen"
+            },
+            {
+              "slug": "fotobox",
+              "label": "Fotobox ansehen"
+            }
+          ]
+        }
+      ],
+      "occasionChecklist": [
+        {
+          "title": "01 / Anlass und Gäste",
+          "text": "Welche Art von Feier planst du und wie viele Menschen sind ungefähr dabei?"
+        },
+        {
+          "title": "02 / Ort und Zeit",
+          "text": "Wo findet dein Event statt und welche Aufstell- oder Nutzungszeit ist gewünscht?"
+        },
+        {
+          "title": "03 / Fotoerlebnis und Wünsche",
+          "text": "Wähle Fotobox, Spiegel oder Wohnwagen und beschreibe wichtige Gestaltungsideen."
+        }
+      ],
+      "occasionDisclaimer": "Die Beispiele sind Ideen zur Planung, keine konkreten Leistungs- oder Verfügbarkeitszusagen."
     },
     {
       "slug": "ueber-uns",
       "title": "Über FOTOPOLIS",
-      "eyebrow": "FOTOPOLIS · AUS AHLEN",
-      "headline": "Wir lieben die Momente dazwischen.",
-      "lead": "FOTOPOLIS bietet Fotobox, Fotospiegel und Fotowohnwagen für besondere private und geschäftliche Veranstaltungen.",
+      "eyebrow": "FOTOPOLIS · AUS AHLEN · PERSÖNLICH PLANEN",
+      "headline": "Nicht einfach nur Fotos. Gemeinsame Geschichten.",
+      "lead": "Drei Fotoerlebnisse, unterschiedliche Veranstaltungsformate und ein gemeinsames Ziel: eine Feier, bei der Menschen zusammenkommen. Die Planung stimmen wir passend zu deinem Anlass ab.",
       "blocks": [
         {
-          "heading": "Wofür FOTOPOLIS steht",
-          "body": "Bei einem gelungenen Event zählt nicht nur das Foto. Es geht um Begegnungen, gemeinsames Lachen und Erinnerungen, die lange bleiben."
-        },
-        {
-          "heading": "Unsere drei Erlebniswelten",
-          "body": "Die Fotobox bringt Gruppen zusammen, der Fotospiegel sorgt für ein interaktives Erlebnis und der Fotowohnwagen setzt einen eigenen besonderen Akzent."
-        },
-        {
-          "heading": "Persönliche Planung",
-          "body": "Welche Ausstattung und Leistungen für ein Event möglich sind, wird individuell geklärt. Diese Entwicklungsseite ersetzt keine verbindliche Buchungsbestätigung."
+          "heading": "Der Mensch steht vor der Kamera",
+          "body": "Bei FOTOPOLIS dreht sich alles um Begegnungen. Die Fotobox, der Fotospiegel und der Fotowohnwagen schaffen unterschiedliche Räume für Erinnerungen. Was beim konkreten Event möglich ist, klären wir persönlich."
         }
-      ]
+      ],
+      "trustFacts": [
+        {
+          "eyebrow": "01 / AUSWAHL",
+          "title": "Drei Erlebniswelten",
+          "description": "Fotobox, Fotospiegel und Fotowohnwagen – drei eigenständige Formate, die du in Ruhe vergleichen kannst."
+        },
+        {
+          "eyebrow": "02 / BERATUNG",
+          "title": "Dein Event ist der Maßstab",
+          "description": "Die Wahl hängt von Gästezahl, Location, Ablauf und Gestaltungswünschen ab. Die Details werden individuell besprochen."
+        },
+        {
+          "eyebrow": "03 / TRANSPARENZ",
+          "title": "Angebot statt Vermutung",
+          "description": "Leistungen, Druckoptionen, Anfahrt, Aufbau, Preise und Verfügbarkeit werden erst in einem konkreten Angebot bestätigt."
+        },
+        {
+          "eyebrow": "04 / VERANTWORTUNG",
+          "title": "Bewusst mit Erinnerungen umgehen",
+          "description": "Eventaufnahmen werden für den späteren öffentlichen Auftritt erst nach Prüfung der erforderlichen Nutzungs- und Personenrechte ausgewählt."
+        }
+      ],
+      "trustFlow": [
+        {
+          "step": "01",
+          "title": "Erlebnis entdecken",
+          "description": "Lerne die drei Optionen kennen und vergleiche mögliche Einsatzbereiche."
+        },
+        {
+          "step": "02",
+          "title": "Wünsche teilen",
+          "description": "Anlass, Datum, Location und weitere Anforderungen als unverbindliche Anfrage übermitteln."
+        },
+        {
+          "step": "03",
+          "title": "Details bestätigen",
+          "description": "Verfügbarkeiten, Lieferumfang und Preis erst nach individueller Klärung verbindlich festhalten."
+        }
+      ],
+      "reviewPolicy": "Für diese Entwicklungsvorschau werden keine Sternebewertungen, Kundenstimmen, Referenzlogos oder Veranstaltungszahlen ohne verifizierbaren Nachweis veröffentlicht."
     },
     {
       "slug": "faq",
