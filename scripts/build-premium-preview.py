@@ -48,7 +48,7 @@ html = html.replace('<script defer src="./site.js"></script>',
 assert "../../" not in html
 assert html.count("<h1") == 1
 assert all(("/assets/images/" + name) in html for name in photos)
-assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 3
+assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 4  # preload, mobile, desktop, card
 assert "LEG-019.webp" not in html and "LEG-014.webp" not in html, "No misleading legacy product visuals"
 assert "pending-approved-file" not in html and "legacy-reference" not in html, "Outdated placeholder"
 assert html.count('data-asset-status="approved-user-upload"') == 2, "Both approved scenes needed"
