@@ -360,3 +360,23 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 @media(prefers-reduced-motion:reduce){
  .contact-progress li{transition:none}
 }
+
+
+/* Studio 3.1 – a compact, useful journey instead of another marketing wall. */
+.home-trust.section{padding-block:clamp(41px,5vw,75px)}
+.home-trust-heading{margin-bottom:20px;gap:20px}
+.home-trust-heading h2{font-size:clamp(29px,3.6vw,50px)}
+.home-trust-heading>p{font-size:13px;line-height:1.6}
+.home-trust-grid article{padding:clamp(17px,2vw,26px)}
+.home-trust-grid h3{font-size:clamp(20px,1.85vw,27px);margin:10px 0 7px}
+.home-trust-grid p{font-size:12px;line-height:1.62}
+.home-trust-links{margin-top:18px}
+@media(max-width:720px){
+ .home-trust.section{padding-block:42px}
+ .home-trust-heading{margin-bottom:16px}
+ .home-trust-grid{gap:8px}
+ .home-trust-grid article{padding:16px 18px}
+ .home-trust-grid h3{font-size:20px;margin:6px 0}
+ .home-trust-grid p{font-size:12px}
+ .home-trust-links{gap:7px 24px}
+}
