@@ -14,7 +14,7 @@ def e(value: str) -> str:
 def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
-    assert data["version"] in ("2.5", "2.6")
+    assert data["version"] in ("2.5", "2.6", "2.7")
     header = re.search(r'<header class="site-header">.*?</header>', home_html, re.S)
     footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
@@ -190,6 +190,112 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 )
             rich_sections += '</div></div></section>'
 
+            # Roadmap 3: offer scope explanations, not fixed prices or fictitious tiers.
+            if p.get("serviceTopics"):
+                rich_sections += (
+                    '<section class="services-overview section" id="leistungsumfang" '
+                    'aria-labelledby="services-title"><div class="inner">'
+                    '<div class="section-heading"><span class="kicker">LEISTUNGSUMFANG</span>'
+                    '<h2 id="services-title">Was gehört <em>zu deinem Event?</em></h2>'
+                    '<p>Unsere Leistungen werden für jede Veranstaltung individuell geprüft. '
+                    'Die folgenden Angaben sind Möglichkeiten beziehungsweise '
+                    'Beschreibungen des bisherigen Angebots, keine fest zugesagten Paketinhalte.</p>'
+                    '</div><div class="services-grid">'
+                )
+                for topic in p["serviceTopics"]:
+                    assert re.fullmatch(r"[a-z]+", topic["id"])
+                    status = {"bestandsangabe":"Auf der bisherigen Website beschrieben",
+                              "anfrage":"Auf Anfrage prüfen",
+                              "individuell":"Individuell abstimmen"}[topic["status"]]
+                    rich_sections += (
+                        f'<article class="service-panel" id="service-{e(topic["id"])}">'
+                        '<div class="service-panel-head">'
+                        f'<span class="service-status">{e(status)}</span>'
+                        f'<h3>{e(topic["title"])}</h3>'
+                        f'<p>{e(topic["description"])}</p></div>'
+                        '<ul class="service-bullets">'
+                    )
+                    for bullet in topic["bullets"]:
+                        rich_sections += f'<li>{e(bullet)}</li>'
+                    rich_sections += '</ul></article>'
+                rich_sections += '</div></div></section>'
+
+            # The configurator is local-only and cannot create a reservation.
+            if p.get("packagePlanner"):
+                cfg = p["packagePlanner"]
+                assert cfg["id"] == "package-planner"
+                rich_sections += (
+                    '<section class="package-planner section" id="paketfinder" '
+                    'aria-labelledby="planner-title"><div class="inner">'
+                    '<div class="planner-heading"><span class="kicker">DEINE WÜNSCHE</span>'
+                    f'<h2 id="planner-title">{e(cfg["title"])}</h2>'
+                    f'<p>{e(cfg["introduction"])}</p></div>'
+                    '<form class="planner-form" data-package-planner novalidate>'
+                    '<fieldset class="planner-fieldset"><legend>01 / Fotoerlebnis wählen</legend>'
+                    '<div class="planner-product-grid">'
+                )
+                for i, item in enumerate(cfg["productOptions"]):
+                    assert item["value"] in ("Fotobox","Fotospiegel","Fotowohnwagen")
+                    checked = ' checked' if i == 0 else ''
+                    rich_sections += (
+                        '<label class="planner-product">'
+                        f'<input type="radio" name="produkt" value="{e(item["value"])}"{checked}>'
+                        f'<span>{e(item["label"])}</span></label>'
+                    )
+                rich_sections += (
+                    '</div></fieldset><div class="planner-options">'
+                    '<div class="planner-details">'
+                    '<label class="planner-label" for="planner-duration">'
+                    '02 / Gewünschte Mietdauer <small>Keine buchbare Tarifstufe</small></label>'
+                    '<select id="planner-duration" name="dauer">'
+                )
+                for option in cfg["durationOptions"]:
+                    rich_sections += (
+                        f'<option value="{e(option["value"])}">{e(option["label"])}</option>'
+                    )
+                rich_sections += (
+                    '</select><div class="planner-meta-grid">'
+                    '<div><label for="planner-date">Wunschtermin (optional)</label>'
+                    '<input id="planner-date" name="datum" type="date"></div>'
+                    '<div><label for="planner-location">Veranstaltungsort (optional)</label>'
+                    '<input id="planner-location" name="ort" type="text" '
+                    'maxlength="120" autocomplete="off" placeholder="z. B. Ahlen"></div>'
+                    '</div><label for="planner-message">Besondere Wünsche (optional)</label>'
+                    '<textarea id="planner-message" name="nachricht" maxlength="500" '
+                    'rows="3" placeholder="Was ist dir wichtig?"></textarea></div>'
+                    '<fieldset class="planner-fieldset planner-wishes">'
+                    '<legend>03 / Mögliche Zusatzleistungen anfragen</legend>'
+                    '<p class="planner-help">Auswahl bedeutet Anfrage, nicht Zusage oder Preis.</p>'
+                    '<div class="planner-wish-grid">'
+                )
+                for item in cfg["wishes"]:
+                    assert re.fullmatch(r"[a-z]+", item["id"])
+                    rich_sections += (
+                        '<label class="planner-wish">'
+                        f'<input type="checkbox" name="wunsch" value="{e(item["label"])}">'
+                        '<span>'
+                        f'<strong>{e(item["label"])}</strong>'
+                        f'<small>{e(item["detail"])}</small></span></label>'
+                    )
+                rich_sections += (
+                    '</div></fieldset></div>'
+                    '<div class="planner-result"><div class="planner-result-header">'
+                    '<span class="kicker">DEINE UNVERBINDLICHE AUSWAHL</span>'
+                    '<h3>Alles auf einen Blick.</h3>'
+                    '<p>Es wird nichts automatisch gesendet oder reserviert.</p></div>'
+                    '<div class="planner-result-content">'
+                    '<pre data-planner-summary aria-live="polite"></pre>'
+                    '</div><div class="planner-actions">'
+                    '<a class="button gold" data-planner-email '
+                    'href="mailto:kontakt@fotopolis-mieten.de?subject=FOTOPOLIS%20unverbindliche%20Paket-Anfrage">'
+                    'E-Mail-Vorlage öffnen <span aria-hidden="true">↗</span></a>'
+                    '<button type="button" class="button muted-button" data-planner-copy>'
+                    'Auswahl kopieren</button></div>'
+                    '<p class="planner-status" data-planner-status role="status"></p>'
+                    f'<small class="planner-disclaimer">{e(cfg["disclaimer"])}</small>'
+                    '</div></form></div></section>'
+                )
+
         seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -199,7 +305,9 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'<title>{seo_title}</title><meta name="description" content="{e(p["lead"])}">'
             '<link rel="icon" href="/favicon.ico">'
             '<link rel="stylesheet" href="/styles.css">'
-            '<script defer src="/site.js"></script></head><body>'
+            '<script defer src="/site.js"></script>' +
+            ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
+            '</head><body>'
             '<a class="skip" href="#content">Zum Inhalt springen</a>'
             + ribbon.group(0) + header.group(0) +
             '<main id="content"><section class="page-hero"><div class="inner">'
