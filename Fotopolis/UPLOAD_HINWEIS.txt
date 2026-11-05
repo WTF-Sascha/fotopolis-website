@@ -1,0 +1,3 @@
+FOTOPOLIS - Nur freigegebene Logo-Bilddateien.
+ZIP entpacken. Den Inhalt des Ordners site/ in den gleichnamigen Ordner des GitHub-Repositories hochladen (bestehende Ordner beibehalten).
+Nicht das Logo neu erstellen.
