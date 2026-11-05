@@ -76,3 +76,19 @@
 **E – Vorführung**: Nur nach durchgeführter QA mit dokumentierten Belegen und offenen Punkten.
 
 **Bewertung:** Aktuelle Seite bleibt eine **technische Entwicklungsreferenz** und wird nicht als Premium-Endergebnis ausgewiesen. Es wurden im Rahmen dieses Audits **keine gestalterischen Veränderungen** am freigegebenen Logo oder an der CI vorgenommen.
+
+---
+
+## Ergänzung 1.1 — Echte Browser-QA vom 05.11.2026
+
+**Prüfumgebung:** Chromium/Playwright auf Ubuntu 24.04, lokaler Server mit exakt dem GitHub-Stand, nicht die Produktivdomain. Prüfungen bei 320, 375, 768 und 1440 px. 
+
+**Befund:** 119 automatische Browserchecks erfolgreich. Geprüft wurden Statuscodes der zehn Seiten, horizontale Überläufe, Ladezustand aller eingebundenen Bilder, einzelne H1, JS-Laufzeitfehler, Mobilnavigation (inklusive Escape), Anlässe-Tabs, FAQ-Aufklappen, Auswahlübernahme im Kontaktformular, Manifest und App-Icon-URLs.
+
+**Konkret gefundener und behobener Fehler:** Die Kontaktseite überlief bei 320 und 375 px horizontal. Die Ursache lag im Formular-/CTA-Bereich (intrinsische Mindestbreiten und nicht umbrechender Buttontext); die CSS-Korrektur ist eingespielt und der erneute Prüflauf ist grün.
+
+**Nachweise:** [GitHub Actions Run 42019930439](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42019930439); [Screenshot-Artefakt](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42019930439/artifacts/13409949848).
+
+**Visuelle Sichtung:** Die erzeugte Kontaktübersicht mit Desktop- und Mobilansichten der Startseite sowie dem mobilen oberen Kontaktbereich wurde überprüft. Zu viele Logo-/Textflächen, keine emotionale Produktfotografie, kleine schematische Illustration und eine zu generische Editorial-Komposition bestätigen, dass das Design weiterhin **nicht** premium-freigabefähig ist. Die übrigen vollständigen Screenshots sind als Artefakt gespeichert, aber nicht alle einzeln im Originalformat bewertet.
+
+**Wichtig:** Technische Browser-QA und visuelles Konzepturteil sind voneinander getrennt. Ein grüner Browserlauf hebt die offenen P0-Designblocker nicht auf. Der Design-Branch `design/premium-v2` dient dem nächsten visuellen Neuaufbau, ohne den aktuell ausgelieferten `main`-Stand vorschnell durch halbfertige Entwürfe zu ersetzen.
