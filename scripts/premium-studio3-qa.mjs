@@ -89,15 +89,13 @@ for(const width of widths){
    }
  }
  const mobile=width<=720;
- check(width+" thumb CTA appropriate",await page.locator(".mobile-quick-cta").isVisible()===mobile);
+ check(width+" unobstructed layout has no floating CTA",await page.locator(".mobile-quick-cta").count()===0);
  if(mobile){
    const toggle=page.locator("[data-menu-toggle]");
    await toggle.click();
    check(width+" menu state open",await toggle.getAttribute("aria-expanded")==="true");
-   check(width+" menu hides fixed CTA",!(await page.locator(".mobile-quick-cta").isVisible()));
    await page.keyboard.press("Escape");
    check(width+" menu closes accessibly",await toggle.getAttribute("aria-expanded")==="false");
-   check(width+" mobile CTA restored",await page.locator(".mobile-quick-cta").isVisible());
  }
  // Route overview: essential links visible and detailed content accessible.
  for(const route of ["fotobox/","fotospiegel/","fotowohnwagen/","pakete/","galerie/","anlaesse/","ueber-uns/","kontakt/"]){
@@ -115,7 +113,7 @@ for(const width of widths){
    check(width+" "+route+" valid quicklinks",paths.length===0,paths.join(","));
    check(width+" "+route+" detailed disclosures",await page.locator(".studio-disclosure").count()>0);
    if(route==="kontakt/"){
-     check(width+" contact CTA absent",!(await page.locator(".mobile-quick-cta").isVisible()));
+     check(width+" contact has no obscuring overlay",await page.locator(".mobile-quick-cta").count()===0);
    }
  }
  // End-to-end URL selection from website's recommendation to enquiry.
