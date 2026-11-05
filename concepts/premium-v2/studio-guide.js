@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       occasion: "Motto- / Gartenparty"
     }
   };
-  function choose(key, updateHash = false) {
+  function choose(key) {
     const item = content[key];
     if (!item) return;
     for (const button of buttons) {
@@ -57,8 +57,20 @@ document.addEventListener("DOMContentLoaded", () => {
     enquiry.href = "/kontakt/?produkt=" + encodeURIComponent(item.product) +
                    "&anlass=" + encodeURIComponent(item.occasion);
     root.dataset.selectedOccasion = key;
-    if (updateHash) root.querySelector(".advisor-result")?.scrollIntoView({block:"nearest",behavior:"auto"});
   }
-  buttons.forEach(button => button.addEventListener("click", () => choose(button.dataset.advisorOccasion)));
+  const result = root.querySelector(".advisor-result");
+  // On a narrow screen the result is below the choices. Bring it into view
+  // and move keyboard focus there, so the selection has immediate feedback.
+  buttons.forEach(button => button.addEventListener("click", () => {
+    choose(button.dataset.advisorOccasion);
+    if (window.matchMedia("(max-width: 900px)").matches && result) {
+      result.tabIndex = -1;
+      result.focus({preventScroll:true});
+      result.scrollIntoView({
+        block:"start",
+        behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"
+      });
+    }
+  }));
   choose("hochzeit");
 });
