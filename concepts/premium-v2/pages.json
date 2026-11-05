@@ -1,5 +1,5 @@
 {
-  "version": "2.5",
+  "version": "2.6",
   "status": "preview-only",
   "pages": [
     {
@@ -23,7 +23,48 @@
           "heading": "Vor deinem Event",
           "body": "Wir klären Platzbedarf, Stromversorgung, Aufstellzeit und die gewünschte Nutzungsdauer gemeinsam. Eine automatische Buchung findet in dieser Preview nicht statt."
         }
-      ]
+      ],
+      "tagline": "Fotografie, die Menschen zusammenbringt.",
+      "story": "Die klassische Fotobox sorgt für spontane Bilder zwischen Tanzfläche, Empfang und Lieblingsmenschen. Gäste werden selbst kreativ – und nehmen Erinnerungen aus dem Event mit.",
+      "features": [
+        {
+          "label": "KAMERA",
+          "title": "Canon EOS 1300D",
+          "text": "Die bisherige Website nennt eine DSLR-Kamera mit 18 Megapixeln.",
+          "source": "Bestandsangabe · vor Angebot bestätigen"
+        },
+        {
+          "label": "LICHT",
+          "title": "Studio-Blitzkopf",
+          "text": "Für eine gleichmäßige Ausleuchtung ist laut bisheriger Website ein Studio-Blitz vorgesehen.",
+          "source": "Bestandsangabe · vor Angebot bestätigen"
+        },
+        {
+          "label": "FOTOS",
+          "title": "Sofortdruck & USB",
+          "text": "Sofortausdrucke, digitale Übergabe und individuelle Fotolayouts werden auf der bisherigen Website beschrieben.",
+          "source": "Optionen und Umfang vor Buchung bestätigen"
+        }
+      ],
+      "process": [
+        {
+          "title": "Eventdaten teilen",
+          "text": "Datum, Ort, Gästezahl und gewünschte Einsatzdauer nennen."
+        },
+        {
+          "title": "Fotoerlebnis abstimmen",
+          "text": "Layouts, Hintergründe und Druckoptionen im Angebot festlegen."
+        },
+        {
+          "title": "Gemeinsam Erinnerungen schaffen",
+          "text": "Aufbau und tatsächliche Betreuung im Angebot verbindlich klären."
+        }
+      ],
+      "related": [
+        "fotospiegel",
+        "fotowohnwagen"
+      ],
+      "contentStatus": "Abgleich mit früherer offizieller Produktbeschreibung; Ausstattung und Verfügbarkeit vor Angebot bestätigen"
     },
     {
       "slug": "fotospiegel",
@@ -46,7 +87,48 @@
           "heading": "Individuelle Abstimmung",
           "body": "Verfügbare Fotoformate, Layouts und organisatorische Anforderungen werden vor einer Buchung verbindlich geklärt. Das gezeigte Bild ist eine Studio-Visualisierung."
         }
-      ]
+      ],
+      "tagline": "Der besondere Moment beginnt mit einem Blick.",
+      "story": "Elegantes Design, intuitive Bedienung und ein interaktiver Moment vor dem Spiegel. Ein eigenständiger Hingucker für festliche Veranstaltungen und die Menschen davor.",
+      "features": [
+        {
+          "label": "BEDIENUNG",
+          "title": "Touch-Interaktion",
+          "text": "Auf dem bisherigen Auftritt wird eine intuitive Touch-Bedienung genannt.",
+          "source": "Bestandsangabe · vor Angebot bestätigen"
+        },
+        {
+          "label": "ERLEBNIS",
+          "title": "Live-Effekte",
+          "text": "Dezente Animationen und Effekte gehören laut bisherigem Produktauftritt zum Konzept.",
+          "source": "Verfügbarkeit vor Buchung bestätigen"
+        },
+        {
+          "label": "INSZENIERUNG",
+          "title": "Hochformat & LED",
+          "text": "Die frühere Beschreibung nennt Hochformat-Fotos und LED-Lichtakzente.",
+          "source": "Bestandsangabe · vor Angebot bestätigen"
+        }
+      ],
+      "process": [
+        {
+          "title": "Anlass beschreiben",
+          "text": "Wunschtermin, Veranstaltungsort und Rahmen nennen."
+        },
+        {
+          "title": "Spiegel-Erlebnis gestalten",
+          "text": "Touch-Ablauf, Fotoformat, Effekte und gewünschte Präsentation abstimmen."
+        },
+        {
+          "title": "Details bestätigen",
+          "text": "Platzbedarf, Technik und Leistungsumfang schriftlich festhalten."
+        }
+      ],
+      "related": [
+        "fotobox",
+        "fotowohnwagen"
+      ],
+      "contentStatus": "Abgleich mit früherer offizieller Produktbeschreibung; Ausstattung und Verfügbarkeit vor Angebot bestätigen"
     },
     {
       "slug": "fotowohnwagen",
@@ -69,7 +151,48 @@
           "heading": "Aufstellbedingungen prüfen",
           "body": "Zufahrt, Platzbedarf, Zugänglichkeit, Stromversorgung und Aufbau werden für die jeweilige Location geprüft. Ausstattung und dargestellte Umgebung können abweichen."
         }
-      ]
+      ],
+      "tagline": "Vintage-Charakter trifft besondere Erinnerungen.",
+      "story": "Ein renovierter Fotowohnwagen als kleiner Erlebnisraum für große Begegnungen – auf der Hochzeit, beim Firmenevent oder als besonderer Blickfang einer Gartenfeier.",
+      "features": [
+        {
+          "label": "FORMAT",
+          "title": "4,25 × 2,05 × 2,35 m",
+          "text": "Diese Maße nennt der bisherige Auftritt. Zufahrt und Aufstellfläche müssen für die Location geprüft werden.",
+          "source": "Bestandsangabe · Maße vor Buchung prüfen"
+        },
+        {
+          "label": "RAUM",
+          "title": "Sitzplatz für Gruppen",
+          "text": "Eine renovierte Sitzkonstruktion ist laut bisheriger Website für Gruppen bis ungefähr neun Personen ausgelegt.",
+          "source": "Bestandsangabe · Kapazität prüfen"
+        },
+        {
+          "label": "AMBIENTE",
+          "title": "Renoviertes Interieur",
+          "text": "Lichtkonzept, Vorhänge und eine gemütliche Einrichtung prägen laut bisheriger Website das Erlebnis.",
+          "source": "Ausstattung vor Buchung bestätigen"
+        }
+      ],
+      "process": [
+        {
+          "title": "Location prüfen",
+          "text": "Standfläche, Zufahrt und Zugänglichkeit für den Wohnwagen abstimmen."
+        },
+        {
+          "title": "Atmosphäre planen",
+          "text": "Anlass, Dekoration und benötigte Nutzungszeit besprechen."
+        },
+        {
+          "title": "Aufstellung abstimmen",
+          "text": "Aufbau, Strom und Rahmenbedingungen vor der Zusage verbindlich bestätigen."
+        }
+      ],
+      "related": [
+        "fotobox",
+        "fotospiegel"
+      ],
+      "contentStatus": "Abgleich mit früherer offizieller Produktbeschreibung; Ausstattung und Verfügbarkeit vor Angebot bestätigen"
     },
     {
       "slug": "pakete",
@@ -93,6 +216,90 @@
         {
           "heading": "Was gehört in ein Angebot?",
           "body": "Erlebnis, gewünschter Termin, Nutzungszeitraum, Veranstaltungsort, Aufbau, betreute Leistungen, Fotoformate, Druck- und Designoptionen. Paketpreise werden nicht erfunden oder ohne Bestätigung veröffentlicht."
+        }
+      ],
+      "packageCards": [
+        {
+          "slug": "fotobox",
+          "tag": "KLASSISCH & SPONTAN",
+          "title": "Fotobox",
+          "teaser": "Für alle, die zusammen lachen und direkt zum nächsten Erinnerungsfoto springen möchten.",
+          "checks": [
+            "DSLR-Fotografie laut bisheriger Website",
+            "Blitzbeleuchtung und Fotos vor Ort",
+            "Gestaltung & Fotodruck auf Anfrage"
+          ],
+          "cta": "Fotobox im Detail"
+        },
+        {
+          "slug": "fotospiegel",
+          "tag": "ELEGANT & INTERAKTIV",
+          "title": "Fotospiegel",
+          "teaser": "Für ein präsentes Fotoerlebnis mit Interaktion und einer besonderen Inszenierung.",
+          "checks": [
+            "Touch-Bedienung laut bisheriger Website",
+            "Hochformat & LED-Lichtakzente",
+            "Live-Effekte abhängig vom System"
+          ],
+          "cta": "Fotospiegel im Detail"
+        },
+        {
+          "slug": "fotowohnwagen",
+          "tag": "VINTAGE & BESONDERS",
+          "title": "Fotowohnwagen",
+          "teaser": "Für Events mit ausreichend Platz, die einen echten Treffpunkt für die Gäste schaffen wollen.",
+          "checks": [
+            "Renovierter Fotowohnwagen",
+            "Fotografieren im eigenen Erlebnisraum",
+            "Zufahrt & Aufstellung individuell prüfen"
+          ],
+          "cta": "Fotowohnwagen im Detail"
+        }
+      ],
+      "comparisonRows": [
+        {
+          "label": "Erlebnischarakter",
+          "fotobox": "Spontan & unkompliziert",
+          "fotospiegel": "Interaktiv & elegant",
+          "fotowohnwagen": "Eigenständiger Erlebnisraum"
+        },
+        {
+          "label": "Geeignete Anlässe",
+          "fotobox": "Private & geschäftliche Events",
+          "fotospiegel": "Hochzeit, Gala & Business",
+          "fotowohnwagen": "Hochzeit, Geburtstag & Outdoor-Events"
+        },
+        {
+          "label": "Platz / Aufstellung",
+          "fotobox": "Im Angebot klären",
+          "fotospiegel": "Im Angebot klären",
+          "fotowohnwagen": "Zufahrt und Standfläche erforderlich"
+        },
+        {
+          "label": "Gestaltung",
+          "fotobox": "Layouts auf Anfrage",
+          "fotospiegel": "Effekte & Layouts abstimmen",
+          "fotowohnwagen": "Ambiente individuell abstimmen"
+        },
+        {
+          "label": "Preis / Verfügbarkeit",
+          "fotobox": "Individuelles Angebot",
+          "fotospiegel": "Individuelles Angebot",
+          "fotowohnwagen": "Individuelles Angebot"
+        }
+      ],
+      "planningSteps": [
+        {
+          "title": "1. Erlebnis auswählen",
+          "text": "Vergleiche Charakter, Format und Anforderungen der Systeme."
+        },
+        {
+          "title": "2. Eventdaten mitteilen",
+          "text": "Nenne Wunschtermin, Location, Anlass und wichtige Wünsche."
+        },
+        {
+          "title": "3. Angebot erhalten",
+          "text": "Verfügbarkeiten, Preise, Anfahrt, Ausstattung und Umfang werden individuell bestätigt."
         }
       ]
     },
