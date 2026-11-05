@@ -15,7 +15,22 @@ for(const [label,width,height] of sizes){
   // Force lazy gallery images to load before full-page screenshot and integrity checks.
   await page.evaluate(()=>{for(const img of document.images)if(img.loading==="lazy")img.loading="eager"});
   await page.waitForFunction(()=>[...document.images].every(img=>img.complete),{timeout:20000});
+  // Browser-level decode and real scroll are necessary for reliable screenshots
+  // of lazy-loaded product imagery (network completion alone is insufficient).
+  await page.evaluate(async()=>{await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})))});
+  for(const target of [".spotlight-image img","[data-product-image='fotobox']",".mirror-card-photo img"]){
+    await page.locator(target).scrollIntoViewIfNeeded();
+  }
+  await page.evaluate(async()=>{await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})))});
   await page.screenshot({path:path.join(out,label+".png"),fullPage:true,animations:"disabled"});
+  if(width===1440){
+    for(const [name,selector] of [
+      ["desktop-1440-product-spotlight",".spotlight"],
+      ["desktop-1440-product-fotobox","[data-product='fotobox']"],
+      ["desktop-1440-product-fotospiegel",".duo .experience-card:nth-child(2)"]]){
+      await page.locator(selector).screenshot({path:path.join(out,name+".png"),animations:"disabled"});
+    }
+  }
   await page.screenshot({path:path.join(out,label+"-fold.png"),fullPage:false,animations:"disabled"});
   const info=await page.evaluate(()=>({
     pageWidth:document.documentElement.scrollWidth,
@@ -43,6 +58,15 @@ for(const [label,width,height] of sizes){
     fotoboxSrcset:document.querySelector("[data-product-image='fotobox']")?.getAttribute("srcset"),
     fotoboxObjectFit:document.querySelector("[data-product-image='fotobox']")?getComputedStyle(document.querySelector("[data-product-image='fotobox']")).objectFit:null,
     fotoboxFilter:document.querySelector("[data-product-image='fotobox']")?getComputedStyle(document.querySelector("[data-product-image='fotobox']")).filter:null,
+    productRenderMetrics:[...document.querySelectorAll("[data-product-image]")].map(img=>({
+      type:img.getAttribute("data-product-image"),
+      width:Math.round(img.getBoundingClientRect().width),
+      height:Math.round(img.getBoundingClientRect().height),
+      naturalWidth:img.naturalWidth,
+      naturalHeight:img.naturalHeight,
+      currentSrc:img.currentSrc,
+      visible:getComputedStyle(img).visibility==="visible"&&getComputedStyle(img).opacity==="1"
+    })),
     wohnwagenSrc:document.querySelector("[data-product-image='fotowohnwagen']")?.getAttribute("src"),
     wohnwagenSrcset:document.querySelector("[data-product-image='fotowohnwagen']")?.getAttribute("srcset"),
     brokenAnchors:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute("href")).filter(h=>h.length>1&&!document.getElementById(h.slice(1)))
@@ -61,6 +85,7 @@ for(const [label,width,height] of sizes){
   check(label+" Fotobox responsive sources",info.fotoboxSrcset?.includes("800.webp 800w")&&info.fotoboxSrcset?.includes("1672.webp 1672w"),info.fotoboxSrcset);
   check(label+" Fotobox contains and has no filter",info.fotoboxObjectFit==="contain"&&info.fotoboxFilter==="none",info.fotoboxObjectFit+"/"+info.fotoboxFilter);
   check(label+" Fotobox descriptive alt",info.fotoboxAlt?.includes("Fotobox")&&info.fotoboxAlt?.includes("Touchscreen"),info.fotoboxAlt);
+  check(label+" product images have rendered bounds",info.productRenderMetrics.length===3&&info.productRenderMetrics.every(p=>p.width>100&&p.height>100&&p.naturalWidth>0&&p.naturalHeight>0&&p.visible),JSON.stringify(info.productRenderMetrics));
   check(label+" no broken internal anchors",info.brokenAnchors.length===0,info.brokenAnchors.join(", "));
   if(width>=1024)check(label+" compact hero",info.heroHeight<=620,String(Math.round(info.heroHeight))+"px");
   check(label+" one H1",info.headingCount===1,String(info.headingCount));
