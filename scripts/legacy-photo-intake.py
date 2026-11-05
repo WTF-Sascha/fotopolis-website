@@ -74,7 +74,7 @@ for page_url in pages[:16]:
                         jr=session.get(src,timeout=(9,15))
                         if jr.ok and len(jr.content)<400000:
                             scan.append("EXTERNAL_SCRIPT "+src)
-                if any(k in ln.lower() for k in ("assets/",".jpg",".png","gallery","galerie","fetch(", ".js")):
+                            scan.extend(line.strip()[:1200] for line in jr.text.splitlines() if any(k in line.lower() for k in ("assets/",".jpg",".png","gallery","galerie")))
                     except Exception as err:scan.append("SCRIPT_ERROR "+src+" "+str(err)[:100])
             (OUT/"gallery-source-scan.txt").write_text("\n".join(scan)+"\n",encoding="utf-8")
         for link in soup.find_all("a",href=True):
