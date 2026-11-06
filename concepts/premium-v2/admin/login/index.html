@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#071b30">
+<meta name="referrer" content="no-referrer">
+<title>FOTOPOLIS · Geschützte Anmeldung – Entwicklungsumgebung</title>
+<meta name="description" content="FOTOPOLIS Administration · Authentifizierungsprüfung in der isolierten Entwicklungsumgebung.">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/admin/login/login.css">
+<script type="module" src="/admin/login/login-bundle.js"></script>
+</head>
+<body>
+<a class="skip" href="#login">Zur Anmeldung springen</a>
+<div class="ribbon"><strong>FOTOPOLIS · STUDIO DEVELOPMENT</strong><span>Geschützte Anmeldung wird geprüft · kein Produktivzugang</span></div>
+<div class="shell">
+<aside class="brand-panel">
+  <a class="brand" href="/" aria-label="FOTOPOLIS – Startseite"><img src="/assets/fotopolis-logo-original.png" alt="" width="65" height="65"><strong>FOTOPOLIS<small>STUDIO · ADMIN</small></strong></a>
+  <div class="brand-message"><span class="eyebrow">INTERNE VERWALTUNG</span><h1>Ein sicherer Zugang.<br><em>Für besondere Momente.</em></h1><p>Hier beginnen die vertraulichen Verwaltungsfunktionen von FOTOPOLIS – getrennt von der öffentlichen Website.</p></div>
+  <div class="side-note">Nur Entwicklungsumgebung · Frankfurt · Neon Auth</div>
+</aside>
+<main id="login" class="login-panel">
+  <div class="form-shell">
+    <span class="eyebrow">01 / ZUGANGSBESTÄTIGUNG</span>
+    <h2>Willkommen zurück.</h2>
+    <p class="intro">Melde dich mit einem Einmalcode an. Beim ersten Zugriff musst du zuerst deine E-Mail-Adresse bestätigen.</p>
+    <div class="security-flag"><span aria-hidden="true">◈</span> Registrierung geschlossen · Einmalcode erforderlich</div>
+    <form id="auth-form" novalidate>
+      <label for="email">E-Mail-Adresse</label>
+      <input type="email" id="email" autocomplete="email" placeholder="dein.postfach@beispiel.de" spellcheck="false" required maxlength="254">
+      <div class="mode-tabs" role="group" aria-label="Anmeldeschritt">
+        <button type="button" data-mode="verify" aria-pressed="true">1. E-Mail bestätigen</button>
+        <button type="button" data-mode="signin" aria-pressed="false">2. Anmelden</button>
+      </div>
+      <div class="step-note" id="step-explanation">Nur für die erste Einrichtung: Fordere einen Code zur Bestätigung deiner E-Mail-Adresse an.</div>
+      <button class="action" type="button" id="send-code">Bestätigungscode senden <span aria-hidden="true">↗</span></button>
+      <div id="otp-area" hidden>
+        <label for="otp">Einmalcode aus deinem Postfach</label>
+        <input type="text" id="otp" autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]{6,8}" maxlength="8" placeholder="000000">
+        <button class="action secondary" type="submit" id="confirm-code">E-Mail-Adresse bestätigen</button>
+      </div>
+    </form>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <section id="session-panel" class="session-panel" hidden aria-labelledby="session-title">
+      <span class="eyebrow">ANMELDESTATUS</span>
+      <h3 id="session-title">Identität geprüft</h3>
+      <p id="session-info"></p>
+      <p id="access-info"></p>
+      <a id="calendar-link" href="/admin/" hidden>Kalender-Demo ansehen ↗</a>
+      <button type="button" id="signout" class="text-action">Sicher abmelden</button>
+    </section>
+    <p class="footnote">Diese Anmeldung verwendet den verwalteten Neon-Authentifizierungsdienst. Der Einmalcode wird nur von Neon geprüft und gehört nicht in einen Chat oder eine Supportnachricht. Echte Buchungen sind noch deaktiviert.</p>
+    <a class="back" href="/admin/">← Zur Kalender-Demovorschau</a>
+  </div>
+</main>
+</div>
+</body>
+</html>
