@@ -106,6 +106,9 @@ function renderCalendar(){
 async function loadCalendar(){
   if(busy)return;busy=true;
   try{
+    const renewed=await client.token();
+    if(renewed.error||!renewed.data?.token){lock("Deine Sitzung muss erneuert werden. Melde dich bitte erneut an.");return}
+    jwt=renewed.data.token;
     const days=visibleDays(),from=isoKey(addDays(days[0],-1)),to=isoKey(addDays(days[days.length-1],2));
     const response=await fetch("/api/fotopolis/admin/overview?from="+encodeURIComponent(from)+"&to="+encodeURIComponent(to),{
       method:"GET",headers:{Authorization:"Bearer "+jwt},cache:"no-store",credentials:"same-origin"
