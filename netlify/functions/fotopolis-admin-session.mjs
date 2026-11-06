@@ -9,11 +9,11 @@ const jwks=createRemoteJWKSet(new URL(AUTH_BASE+"/.well-known/jwks.json"),{timeo
 export const noCache={"Cache-Control":"no-store, max-age=0","Content-Type":"application/json; charset=utf-8"};
 export const response=(data,status)=>new Response(JSON.stringify(data),{status,headers:noCache});
 
-export async function authorizeAdmin(request,context){
+export async function authorizeAdmin(request,context,{methods=["GET"]}={}){
   if(context?.deploy?.context!=="deploy-preview"||context?.deploy?.published===true){
     return {denied:response({error:"Not found"},404)};
   }
-  if(request.method!=="GET")return {denied:response({error:"Method not allowed"},405)};
+  if(!methods.includes(request.method))return {denied:response({error:"Method not allowed"},405)};
   const origin=request.headers.get("origin");
   if(origin&&origin!==PREVIEW_ORIGIN)return {denied:response({error:"Forbidden origin"},403)};
   const header=request.headers.get("authorization")||"";
