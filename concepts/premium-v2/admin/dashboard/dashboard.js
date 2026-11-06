@@ -1,6 +1,7 @@
 import {createAuthClient} from "@neondatabase/auth";
 import {getAdminJwt} from "../session-token.js";
 import {setupInventoryManager} from "./inventory-manager.js";
+import {setupPlanningManager} from "./planning-manager.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -12,15 +13,16 @@ const fmtTime=new Intl.DateTimeFormat("de-DE",{hour:"2-digit",minute:"2-digit",t
 const keyFmt=new Intl.DateTimeFormat("en-GB",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:"Europe/Berlin"});
 const types={fotobox:"Fotobox",fotospiegel:"Fotospiegel",fotowohnwagen:"Fotowohnwagen"};
 const roleLabels={owner:"Hauptadministrator",manager:"Koordinator",viewer:"Betrachter"};
-const today=new Date(),current=new Date(Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),12));
+const today=new Date();
 const keyFromInstant=(timestamp)=>{
   const parts=keyFmt.formatToParts(new Date(timestamp));
   const p=Object.fromEntries(parts.filter(x=>["day","month","year"].includes(x.type)).map(x=>[x.type,x.value]));
   return p.year+"-"+p.month+"-"+p.day;
 };
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
+const current=new Date(keyFromInstant(today)+"T12:00:00.000Z");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
-let inventoryManager=null;
+let inventoryManager=null,planningManager=null;
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -67,17 +69,54 @@ function description(a){
   const kind=a.allocation_kind==="booking"?"Buchung":a.allocation_kind==="maintenance"?"Wartung":"Interne Sperrzeit";
   return label+" · "+kind;
 }
+function plannedForDay(key){
+ const product=$("[data-product-filter]").value;
+ return (planningManager?.getDrafts()||[]).filter(p=>{
+   if(product!=="all"&&p.resourceType!==product)return false;
+   const first=keyFromInstant(p.startUtc);
+   const last=keyFromInstant(new Date(p.endUtc).getTime()-1);
+   return key>=first&&key<=last;
+ });
+}
+function fillEntries(target,real,planned){
+ target.replaceChildren();
+ if(!real.length&&!planned.length){
+   const p=document.createElement("p");p.className="day-dialog-empty";
+   p.textContent="Für diesen Tag sind im geladenen Entwicklungszeitraum keine Belegungen hinterlegt. Das ist keine verbindliche Verfügbarkeitszusage.";
+   target.append(p);return;
+ }
+ for(const a of real){
+   const row=document.createElement("article");row.className="day-dialog-entry";
+   const title=document.createElement("strong");title.textContent=description(a);
+   const meta=document.createElement("p");
+   meta.textContent=fmtTime.format(new Date(a.event_start_at))+" – "+fmtTime.format(new Date(a.event_end_at))+" · In Neon hinterlegt";
+   row.append(title,meta);target.append(row);
+ }
+ for(const p of planned){
+   const row=document.createElement("article");row.className="day-dialog-entry";
+   row.dataset.draft="true";
+   const title=document.createElement("strong");
+   title.textContent=p.resourceName+" · "+(p.kind==="maintenance"?"Wartung":"Interne Sperrzeit");
+   const meta=document.createElement("p");
+   meta.textContent=p.start.replace("T"," ")+" bis "+p.end.replace("T"," ")+" Uhr · Nur Entwurf, keine wirksame Sperre";
+   row.append(title,meta);target.append(row);
+ }
+}
 function renderDetails(){
-  $("[data-day-title]").textContent=fmtDay.format(fromKey(selected));
-  const target=$("[data-day-details]");target.replaceChildren();
-  const items=entriesForDay(selected);
-  if(!items.length){const p=document.createElement("p");p.textContent="Für diesen Tag liegen keine Belegungen im Entwicklungsbestand vor. Dies ist keine verbindliche Verfügbarkeitszusage.";target.append(p);return}
-  items.forEach(a=>{
-    const row=document.createElement("div");row.className="day-details-entry";
-    const title=document.createElement("strong");title.textContent=description(a);
-    const time=document.createElement("span");time.textContent=fmtTime.format(new Date(a.event_start_at))+" – "+fmtTime.format(new Date(a.event_end_at));
-    row.append(title,time);target.append(row);
-  });
+ const day=fmtDay.format(fromKey(selected));
+ $("[data-day-title]").textContent=day;
+ fillEntries($("[data-day-details]"),entriesForDay(selected),plannedForDay(selected));
+ const dialog=$("#day-detail-dialog");
+ if(dialog.open){
+   $("[data-dialog-day-title]").textContent=day;
+   fillEntries($("[data-dialog-entries]"),entriesForDay(selected),plannedForDay(selected));
+ }
+}
+function openDayDialog(){
+ const dialog=$("#day-detail-dialog");
+ $("[data-dialog-day-title]").textContent=fmtDay.format(fromKey(selected));
+ fillEntries($("[data-dialog-entries]"),entriesForDay(selected),plannedForDay(selected));
+ if(typeof dialog.showModal==="function")dialog.showModal();
 }
 function renderCalendar(){
  const days=visibleDays();
@@ -85,9 +124,9 @@ function renderCalendar(){
  const grid=$("[data-calendar-grid]");grid.replaceChildren();
  const currentKey=isoKey(current);
  days.forEach(d=>{
-   const key=isoKey(d),items=entriesForDay(key);
+   const key=isoKey(d),items=entriesForDay(key),plans=plannedForDay(key);
    const cell=document.createElement("button");cell.type="button";cell.className="day";
-   cell.setAttribute("aria-label",fmtDay.format(d)+", "+items.length+" Belegungen");
+   cell.setAttribute("aria-label",fmtDay.format(d)+", "+items.length+" reale Belegungen, "+plans.length+" Planungsentwürfe");
    cell.setAttribute("aria-pressed",String(key===selected));
    if(view==="month"&&d.getUTCMonth()!==cursor.getUTCMonth())cell.classList.add("outside");
    if(key===selected)cell.classList.add("is-selected");
@@ -97,8 +136,9 @@ function renderCalendar(){
      const mark=document.createElement("span");mark.className="day-entry "+(a.allocation_kind==="booking"?"booked":"blocked");
      mark.textContent=description(a);cell.append(mark);
    });
+   if(plans.length){const draft=document.createElement("span");draft.className="day-entry blocked";draft.textContent="Entwurf ("+plans.length+")";draft.title="Nur lokale Planung, nicht gespeichert";draft.dataset.localDraft="true";cell.append(draft)}
    if(items.length>2){const extra=document.createElement("span");extra.className="day-extra";extra.textContent="+"+(items.length-2);cell.append(extra)}
-   cell.addEventListener("click",()=>{selected=key;renderCalendar();});
+   cell.addEventListener("click",()=>{selected=key;renderCalendar();openDayDialog()});
    grid.append(cell);
  });
  const inVisible=filteredAllocations().filter(a=>days.some(d=>{const k=isoKey(d);return k>=keyFromInstant(a.occupied_from)&&k<=keyFromInstant(new Date(a.occupied_until).getTime()-1)}));
@@ -121,7 +161,7 @@ async function loadCalendar(){
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;
     $("[data-count=resources]").textContent=String(resources.length);
-    renderInventory();inventoryManager?.refresh();renderCalendar();
+    renderInventory();inventoryManager?.refresh();planningManager?.refresh();renderCalendar();
   }catch(e){
     $("[data-period]").textContent="Laden fehlgeschlagen";
     const wrap=$("[data-day-details]");wrap.replaceChildren();
@@ -152,11 +192,12 @@ async function authenticate(){
     $("[data-role-label]").textContent=roleLabels[body.role];
     $("#top-role").textContent=roleLabels[body.role].toUpperCase();
     gate.hidden=true;app.hidden=false;
-    inventoryManager ||= setupInventoryManager({root:$("[data-inventory-manager]"),getResources:()=>resources});
+    inventoryManager ||= setupInventoryManager({root:$("[data-inventory-manager]"),getResources:()=>resources,onChange:()=>{planningManager?.refresh();renderCalendar()}});
+    planningManager ||= setupPlanningManager({root:$("[data-planning-manager]"),getResources:()=>resources,getInventoryDrafts:()=>inventoryManager?.getDrafts()||[],getAllocations:()=>allocations,onChange:()=>renderCalendar()});
     await loadCalendar();
-    if(location.hash==="#inventory"){
-      requestAnimationFrame(()=>$("#inventory")?.scrollIntoView({block:"start"}));
-    }
+    updateNavigation();
+    const anchor=location.hash&&document.querySelector(location.hash);
+    if(anchor)requestAnimationFrame(()=>anchor.scrollIntoView({block:"start"}));
   }catch(e){lock("Die geschützte Verwaltung ist aktuell nicht erreichbar. Deine Daten bleiben gesperrt.")}
 }
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",async()=>{
@@ -175,6 +216,40 @@ $("[data-product-filter]").addEventListener("change",renderCalendar);
 const menu=$("[data-menu-toggle]"),mobile=$("#dashboard-mobile-menu");
 menu.addEventListener("click",()=>{const open=menu.getAttribute("aria-expanded")!=="true";menu.setAttribute("aria-expanded",String(open));menu.setAttribute("aria-label",open?"Menü schließen":"Menü öffnen");mobile.hidden=!open});
 mobile.querySelectorAll("a").forEach(x=>x.addEventListener("click",()=>{mobile.hidden=true;menu.setAttribute("aria-expanded","false")}));
+// Keep context visible on mobile and desktop. Navigation is never an auth bypass.
+function updateNavigation(){
+ const target=location.hash||"#overview";
+ for(const a of document.querySelectorAll('.sidebar-nav a, #dashboard-mobile-menu a')){
+   const isActive=a.getAttribute("href")===target;
+   a.classList.toggle("active",isActive);
+   if(isActive)a.setAttribute("aria-current","page");
+   else a.removeAttribute("aria-current");
+ }
+}
+window.addEventListener("hashchange",updateNavigation);
+$("[data-date-go]").addEventListener("click",async()=>{
+ const date=$("#admin-jump-date").value;
+ if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date))return;
+ const parsed=fromKey(date);
+ if(!Number.isFinite(parsed.getTime())||isoKey(parsed)!==date)return;
+ cursor=parsed;selected=date;
+ await loadCalendar();
+ $("#calendar")?.scrollIntoView({block:"start",behavior:"smooth"});
+ openDayDialog();
+});
+$("[data-plan-day]").addEventListener("click",()=>{
+ $("#planning")?.scrollIntoView({block:"start",behavior:"smooth"});
+ planningManager?.openForDate(selected);
+});
+$("[data-close-day]").addEventListener("click",()=>$("#day-detail-dialog").close());
+$("[data-plan-selected]").addEventListener("click",()=>{
+ $("#day-detail-dialog").close();
+ $("#planning")?.scrollIntoView({block:"start",behavior:"smooth"});
+ planningManager?.openForDate(selected);
+});
+$("#day-detail-dialog").addEventListener("click",event=>{
+ if(event.target.id==="day-detail-dialog")event.currentTarget.close();
+});
 document.querySelectorAll("[data-signout]").forEach(b=>b.addEventListener("click",async()=>{
   try{await client.signOut()}finally{jwt="";location.replace("/admin/login/")}
 }));
