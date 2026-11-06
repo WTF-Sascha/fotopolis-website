@@ -2,11 +2,11 @@
   publish = "site"
 
 [context.deploy-preview]
-  command = "python3 scripts/build-premium-preview.py"
+  command = "python3 scripts/build-premium-preview.py && npm run build:auth"
   publish = "preview-build"
 
 [context.branch-deploy]
-  command = "python3 scripts/build-premium-preview.py"
+  command = "python3 scripts/build-premium-preview.py && npm run build:auth"
   publish = "preview-build"
 
 [[headers]]
