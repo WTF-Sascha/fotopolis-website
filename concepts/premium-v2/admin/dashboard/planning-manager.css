@@ -55,3 +55,9 @@
  .plan-form{padding:15px}.plan-entry{align-items:flex-start}
  .day-dialog-inner{padding:19px}
 }
+
+.calendar-reload{min-height:37px;border:1px solid #bfcbd0;border-radius:5px;background:#fff;color:#173c58;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}
+.calendar-reload:hover,.calendar-reload:focus-visible{border-color:#b99857;background:#fcf8ee}
+.calendar-sync{margin:0 0 10px;padding:9px 13px;border:1px solid #dae6e9;background:#f4f9fa;border-radius:4px;font-size:10px;color:#4d6877;line-height:1.5}
+#dashboard-app .day-entry[data-local-draft="true"]{background:#f5ecdd;border:1px dashed #ae844b;color:#7b623f}
+@media(max-width:570px){.calendar-reload{width:100%}}
