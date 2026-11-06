@@ -6,7 +6,8 @@ const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 const page=await browser.newPage({viewport:{width:430,height:900}});
 const visited=[];
 try{
-  await page.route("**/*.neonauth.*",async route=>{
+  await page.route("**/*",async route=>{
+    if(!route.request().url().includes(".neonauth."))return route.continue();
     const req=route.request();
     const path=new URL(req.url()).pathname;
     visited.push({path,method:req.method()});
@@ -28,6 +29,8 @@ try{
   await page.locator("#submit").click();
   await page.waitForTimeout(650);
   const sent=visited.filter(r=>r.method==="POST").map(r=>r.path);
+  console.log("AUTH MOCK VISITED:",JSON.stringify(visited.map(x=>({path:x.path,method:x.method}))));
+  console.log("AUTH MOCK STATUS:",await page.locator("#status").innerText());
   assert.ok(sent.some(p=>p.includes("email-otp")||p.includes("forget")), "Neon Auth reset-OTP request dispatched");
   // SDK reset routes have changed in past releases; never report a password
   // as saved if the verified remote endpoint rejects it.
