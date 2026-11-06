@@ -101,3 +101,18 @@ Diese technische Umsetzung orientiert sich an den offiziellen Postgres-Dokumente
 **Technisch implementiert:** isolierter Datenbankentwurf und PostgreSQL-17-Prüfstrecke. **Nicht implementiert:** echte Supabase-Projektanlage, Einspielen in eine Cloud-Datenbank, öffentliche Verfügbarkeits-API, Kundendatenverarbeitung und verbindliche Reservierungen.
 
 **Projektstatus:** Roadmap-Punkt 6 ist nach erfolgreichem CI-Lauf auf Ebene Datenmodell/Integrität **technisch vorbereitet und getestet**, bleibt für einen echten Cloudbetrieb bis zur Freigabe des eigenen Supabase-Testprojekts **teilweise offen**. Die folgenden Punkte 7–10 bleiben unverändert.
+
+
+## Technischer Abnahmenachweis (06.11.2026)
+
+- **[GitHub Actions – FOTOPOLIS Step 6 Database Integrity #42177082651](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42177082651): SUCCESS.**
+- PostgreSQL-17-Datenbankcontainer wurde vollständig isoliert gestartet. Das SQL-Schema wurde tatsächlich angewendet, nicht nur als Text geprüft.
+- Alle **18 SQL-Integrationstests** (Ressourcen, Verfügbarkeit, Logistikpuffer, blockierende Belegungen, Stornierung, interne Sperren, Wartung, Zeit-/Statusprüfungen, Sommerzeit und Berechtigungen) abgeschlossen.
+- Der zusätzliche **echte parallele Transaktionstest** hat das Überlappungsverbot durchgesetzt: exakt eine akzeptierte Belegung auf einem Gerät, eine mit SQLSTATE-Ausnahme abgewiesen; zwei unterschiedliche Geräte bleiben unabhängig.
+- `SET ROLE anon` und `SET ROLE authenticated` plus `SELECT` auf private `fotopolis.allocations` wurden tatsächlich ausgeführt und jeweils mit `permission denied for schema fotopolis` abgelehnt.
+- Das Netlify-Preview-Verzeichnis wurde im CI aus dem Repository erzeugt und anschließend explizit gegen versehentliche Veröffentlichung von Datenbank-/Test-SQL geprüft: **keine SQL-Dateien im Preview-Output**.
+- Alle Testressourcen im SQL-Integrationstest wurden durch `ROLLBACK` entfernt; die parallele Testdatenbank ist ein kurzlebiger, nach dem Lauf verworfener CI-Container. Keine echten Daten, keine Fremdanwendungen.
+
+**Abnahmestatus:** Datenbankschema + Integritäts-/Sicherheitskern **implementiert und in echtem PostgreSQL technisch bestanden**. Supabase-Cloudinbetriebnahme ausdrücklich **nicht erfolgt**. Ein realer Kalender und eine produktive Reservierung sind damit **noch nicht freigegeben**.
+
+Der separate GitHub-Workflow **FOTOPOLIS Quality Gates** kann weiterhin am vorgesehenen Premium-Release-Gate scheitern; das ist keine Freigabe der öffentlichen Website. Maßgeblich für Punkt 6 ist der isolierte Datenbank-Workflow.
