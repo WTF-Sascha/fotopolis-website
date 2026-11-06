@@ -4,7 +4,7 @@ Stand: 06.11.2026. **Nur Neon-Projekt `icy-wave-78750589`, Branch `development` 
 
 ## Angelegt und über Neon verifiziert
 
-- Ein erster Neon-Auth-Benutzer für das temporäre FOTOPOLIS-Setup-Postfach wurde angelegt. **Die E-Mail-Adresse wird nicht in Frontend-/Netlify-Code oder dieser Dokumentation hinterlegt.** Das vom Nutzer im Gespräch gesprochene „Photopolis“ kann in der Schreibweise vom vorher vorgeschlagenen „Fotopolis“ abweichen; die exakte Adresse muss vor dem Aktivieren geprüft werden.
+- Ein erster Neon-Auth-Benutzer für das temporäre FOTOPOLIS-Setup-Postfach wurde angelegt. **Die E-Mail-Adresse wird nicht in Frontend-/Netlify-Code oder dieser Dokumentation hinterlegt.** Die E-Mail-Schreibweise wurde vom Nutzer verbindlich bestätigt: **fotopolis.setup@proton.me**. Das Postfach ist für die erste Authentifizierung vorgesehen.
 - Der Benutzer ist mit der FOTOPOLIS-Anwendungsrolle `owner` in `fotopolis.admin_members` verknüpft. **`enabled = false`**, bis Besitz und Verifikation der Zieladresse sowie die serverseitigen Autorisierungschecks eindeutig nachgewiesen sind.
 - Neon Auth `neon_auth.user.emailVerified = false`; **keine** Passwortvergabe und **kein** Versand einer Bestätigungsmail behauptet.
 - Öffentliche Self-Sign-ups in Neon Auth sind **deaktiviert**, E-Mail-Verifizierung ist erforderlich, und nach Passwort-Reset werden bestehende Sessions widerrufen.
@@ -13,7 +13,7 @@ Stand: 06.11.2026. **Nur Neon-Projekt `icy-wave-78750589`, Branch `development` 
 
 ## Nächste verbindliche Schritte
 
-1. Schreibweise/Empfang der temporären Mailadresse bestätigen, ohne Passwort oder OTP an den Assistenten zu übermitteln.
+1. **Schreibweise am 06.11.2026 bestätigt**; der tatsächliche Empfang des späteren Bestätigungscodes muss noch vom Kontoinhaber im Browser geprüft werden, ohne Passwort oder OTP an den Assistenten zu übermitteln.
 2. Eigene Neon Auth-Anmeldeseite mit offiziellem SDK und E-Mail-OTP auf der Preview einrichten. Exakte Abhängigkeiten, Builds, Bundle-CSP und Cross-Origin-Cookie-Verhalten prüfen, nicht mit beliebigen fremden CDNs oder selbst erfundenen Auth-Endpunkten abkürzen.
 3. Serverseitige Auth- und RBAC-Prüfung für alle echten Verwaltungsendpunkte: Neon Auth JWT kryptografisch verifizieren und `fotopolis.admin_members.enabled` und Rolle in Neon Postgres nachschlagen; keine serverseitige Datenbankverbindung ohne sichere, Branch-spezifische Umgebungsvariablen und Least-Privilege-Rolle.
 4. Erst nach erfolgreicher E-Mail-Verifizierung und negativer 401/403-Testmatrix den ersten `owner` explizit freischalten. Produktive Geräte, Buchungen und Kundeninformationen erst nach gesonderter Abnahme verwenden.
