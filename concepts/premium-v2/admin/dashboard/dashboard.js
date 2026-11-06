@@ -154,6 +154,9 @@ async function authenticate(){
     gate.hidden=true;app.hidden=false;
     inventoryManager ||= setupInventoryManager({root:$("[data-inventory-manager]"),getResources:()=>resources});
     await loadCalendar();
+    if(location.hash==="#inventory"){
+      requestAnimationFrame(()=>$("#inventory")?.scrollIntoView({block:"start"}));
+    }
   }catch(e){lock("Die geschützte Verwaltung ist aktuell nicht erreichbar. Deine Daten bleiben gesperrt.")}
 }
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",async()=>{
