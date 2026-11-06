@@ -70,8 +70,10 @@
     <div class="calendar-tools">
       <div class="date-navigation"><button type="button" data-nav="prev" aria-label="Vorheriger Zeitraum">‹</button><button type="button" data-nav="today">Heute</button><button type="button" data-nav="next" aria-label="Nächster Zeitraum">›</button><strong data-period aria-live="polite">Kalender wird geladen</strong></div>
       <div class="date-jump"><label for="admin-jump-date">Datum wählen</label><input id="admin-jump-date" type="date" aria-label="Kalenderdatum auswählen"><button type="button" data-date-go>Zeigen</button></div>
+      <button type="button" data-refresh-calendar class="calendar-reload">↻ Aktualisieren</button>
       <label class="filter">Produkt <select data-product-filter><option value="all">Alle Fotoerlebnisse</option><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
     </div>
+    <p class="calendar-sync" data-calendar-sync role="status" aria-live="polite">Verbinde mit der Entwicklungsdatenbank …</p>
     <div class="calendar-hint"><span class="hint-point" aria-hidden="true"></span><span>ECHTE ENTWICKLUNGSDATEN · Ohne bestätigten Gerätebestand ist ein leerer Tag keine Buchungszusage. Termindetails öffnen direkt über einen Klick auf den Kalendertag. Geplante Sperrzeiten sind nur lokale Entwürfe.</span></div>
     <div class="calendar-scroller"><div class="weekdays" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div class="calendar-grid" data-calendar-grid role="group" aria-label="Kalender"></div></div>
     <div class="calendar-foot"><div class="legend"><span><i class="legend-gold"></i> Sperrzeit</span><span><i class="legend-outline"></i> Buchung</span></div><span>Europe/Berlin · echte Daten nur lesbar</span></div>
