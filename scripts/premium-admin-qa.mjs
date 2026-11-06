@@ -16,7 +16,7 @@ try{
     const failures=[],requests=[];
     page.on("pageerror",e=>failures.push(e.message));
     page.on("request",r=>{if(/neon\.tech|supabase\.co|\/api\/|\.netlify\/functions\//i.test(r.url()))requests.push(r.url())});
-    await page.goto(new URL("admin/",base),{waitUntil:"networkidle"});
+    await page.goto(new URL("admin/",base).href,{waitUntil:"networkidle"});
     assert((await page.title()).includes("Admin-Kalender"),"Admin Studio title "+width);
     assert(await page.locator('meta[name="robots"][content*="noindex"]').count()===1,"Noindex admin "+width);
     assert(await page.locator("[data-calendar-grid] .day").count()>=7,"Day grid visible "+width);
