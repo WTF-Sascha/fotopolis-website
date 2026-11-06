@@ -48,8 +48,26 @@ jobs:
         run: psql -X -v ON_ERROR_STOP=1 -f database/step6/test_availability.sql
       - name: Prove concurrent requests cannot double-book an asset
         run: bash database/step6/test_concurrent_bookings.sh
-      - name: Verify no client role can query a private table
+      - name: Verify live SQL requests are denied to anon and authenticated
         run: |
           result="$(psql -X -Atc "SELECT has_schema_privilege('anon','fotopolis','USAGE')::text || ',' || has_schema_privilege('authenticated','fotopolis','USAGE')::text")"
           test "$result" = "false,false"
-          echo "PASS: no anonymous or authenticated schema access"
+          for role in anon authenticated; do
+            set +e
+            failure="$(psql -X -v ON_ERROR_STOP=1 -c "SET ROLE $role; SELECT count(*) FROM fotopolis.allocations;" 2>&1)"
+            rc=$?
+            set -e
+            if [ "$rc" -eq 0 ] || ! grep -q "permission denied for schema fotopolis" <<< "$failure"; then
+              echo "FAIL: $role had unexpected access or failed for unrelated reason"
+              echo "$failure"
+              exit 1
+            fi
+            echo "PASS: $role denied SELECT on booking allocation table"
+          done
+      - name: Ensure database schema cannot leak into Netlify preview
+        run: |
+          python3 scripts/build-premium-preview.py
+          test ! -e preview-build/database
+          test ! -e preview-build/availability_schema.sql
+          test ! -e preview-build/test_availability.sql
+          echo "PASS: all SQL files excluded from the published preview directory"
