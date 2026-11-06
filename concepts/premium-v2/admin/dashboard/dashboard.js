@@ -229,7 +229,7 @@ function updateNavigation(){
 window.addEventListener("hashchange",updateNavigation);
 $("[data-date-go]").addEventListener("click",async()=>{
  const date=$("#admin-jump-date").value;
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date))return;
+ if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return;
  const parsed=fromKey(date);
  if(!Number.isFinite(parsed.getTime())||isoKey(parsed)!==date)return;
  cursor=parsed;selected=date;
