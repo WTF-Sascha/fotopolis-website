@@ -25,7 +25,7 @@ try{
     const url=page.url();
     if(url.includes("/admin/dashboard/")){
       assert.equal(await page.locator("#dashboard-app").isVisible(),false,"Anon dashboard must be concealed at "+width);checks++;
-      assert.equal(await page.locator("#gate").isVisible(),true);checks++;
+      assert.equal(await page.locator(".account-card").isVisible(),false);checks++;
     }else{
       assert.ok(url.includes("/admin/login/"),"Anonymous must be redirected to login");checks+=2;
     }
@@ -34,8 +34,10 @@ try{
     assert.deepEqual(errors,[],"Browser JS errors "+width+": "+errors.join(";"));checks++;
     // Static VISUAL SHELL only. Never mocks an actual authorized JWT or
     // queries private data; this is an offline layout review of the UI.
-    await page.goto(new URL("admin/dashboard/",base).href,{waitUntil:"domcontentloaded"});
-    await page.evaluate(()=>{
+    const staticPage=await context.newPage();
+    await staticPage.route("**/admin/dashboard/dashboard-bundle.js",r=>r.abort());
+    await staticPage.goto(new URL("admin/dashboard/",base).href,{waitUntil:"domcontentloaded"});
+    await staticPage.evaluate(()=>{
       document.getElementById("gate").hidden=true;
       document.getElementById("dashboard-app").hidden=false;
       const grid=document.querySelector("[data-calendar-grid]");
@@ -45,13 +47,14 @@ try{
         d.append(span);grid.append(d);
       }
     });
-    const layout=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:window.innerWidth}));
+    const layout=await staticPage.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:window.innerWidth}));
     assert.ok(layout.scroll<=layout.width+2,"Protected dashboard visual shell overflow "+width+": "+JSON.stringify(layout));checks++;
-    assert.equal(await page.locator(".account-card").isVisible(),true);checks++;
+    assert.equal(await staticPage.locator(".account-card").isVisible(),true);checks++;
     if([320,430,1440].includes(width)){
       mkdirSync("concepts/premium-v2/qa-screenshots/admin-studio",{recursive:true});
-      await page.screenshot({path:"concepts/premium-v2/qa-screenshots/admin-studio/dashboard-shell-"+width+".png",fullPage:true});
+      await staticPage.screenshot({path:"concepts/premium-v2/qa-screenshots/admin-studio/dashboard-shell-"+width+".png",fullPage:true});
     }
+    await staticPage.close();
     await context.close();
   }
   console.log("FOTOPOLIS PROTECTED DASHBOARD QA SUCCESS – "+checks+" anonymous-protection, static-secret and responsive tests.");
