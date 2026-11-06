@@ -18,3 +18,9 @@ Im Neon-Projekt FOTOPOLIS existiert nur auf dem Branch `development` die Rolle `
 Vor dem nächsten Schritt sind granular begrenzte Datenbankrechte (nur erlaubte Ressourcenfelder und Audit-Aktion), eine nur in `deploy-preview` verfügbare Function-Credential, serverseitige Owner-/Manager-RBAC-Autorisierung, Transaktions-/Audit-Tests sowie eine neue ausdrückliche Freigabe für echte Bestandsänderungen erforderlich.
 
 Das Entwicklungsschema enthält weiterhin keine erfundenen Geräte oder Buchungen. `main`, die Live-Website und Mammut-/RM-Inventory bleiben unverändert. PR #2 bleibt Draft. **Roadmap 7 ist noch offen.**
+
+## Vorbereitete API-Schnittstelle (noch NICHT freigeschaltet)
+
+Die Netlify-Function `/api/fotopolis/admin/inventory` liegt als fail-closed-Gerüst im Entwicklungsbranch. `POST` sieht ausschließlich die Erstellung eines standardmäßig deaktivierten Geräts vor; `PATCH` ausschließlich die Änderung seines Anzeigenamens. Andere Ressourcenfelder (insbesondere `enabled`, `resource_code` im Update oder die Buchungstabellen) können nicht geändert werden. Ein serverseitiger Rollencheck erlaubt nur `owner` oder `manager`; fremde Origins, ungültige JSON-Eingaben und anonyme Aufrufe werden abgewiesen. Der geplante SQL-Write führt Geräteänderung und Aktivitätsprotokoll in derselben Operation aus.
+
+**Die Schnittstelle besitzt noch keine Writer-Connection-Variable und daher keinerlei effektive Schreibfunktion.** Der Fehlerstatus 503 für diese nicht freigeschaltete Funktion ist beabsichtigt. Die zusätzliche Unit-Testdatei `scripts/test-admin-inventory.mjs` kontrolliert die sicheren Negativfälle. Die zunächst benötigten minimalen Rechte werden nicht über die bisherigen Sicherheitsprüfungsgrenzen hinweg vergeben. Erst nach Sicherheits- und Funktionsabnahme kann die Speichern-Funktion in der UI angebunden werden.
