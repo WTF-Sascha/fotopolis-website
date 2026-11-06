@@ -23,7 +23,7 @@ function el(tag,css,text){
   if(text!==undefined)element.textContent=text;
   return element;
 }
-export function setupInventoryManager({root,getResources}){
+export function setupInventoryManager({root,getResources,onChange}){
   if(!root)throw Error("Missing inventory editor root");
   const drafts=[];
   const lead=el("p","inventory-manager-lead","Geräte als lokale Entwürfe vorbereiten. Es wird noch nichts in Neon gespeichert oder zur Buchung freigegeben.");
@@ -83,7 +83,7 @@ export function setupInventoryManager({root,getResources}){
       remove.addEventListener("click",()=>{
         const index=drafts.indexOf(item);
         if(index>=0)drafts.splice(index,1);
-        render();
+        render();onChange?.();
       });
       row.append(details,remove);
       draftList.append(row);
@@ -104,9 +104,9 @@ export function setupInventoryManager({root,getResources}){
     if(result.error){feedback.textContent=result.error;return}
     if(drafts.length>=20){feedback.textContent="Maximal 20 gleichzeitige Vorschauentwürfe.";return}
     drafts.push(result.value);
-    render();
+    render();onChange?.();
     form.hidden=true;
     newButton.focus();
   });
-  return {refresh:render,getDraftCount:()=>drafts.length};
+  return {refresh:render,getDraftCount:()=>drafts.length,getDrafts:()=>drafts.map(x=>({...x}))};
 }
