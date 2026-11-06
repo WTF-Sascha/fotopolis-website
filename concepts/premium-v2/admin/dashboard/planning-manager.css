@@ -61,3 +61,6 @@
 .calendar-sync{margin:0 0 10px;padding:9px 13px;border:1px solid #dae6e9;background:#f4f9fa;border-radius:4px;font-size:10px;color:#4d6877;line-height:1.5}
 #dashboard-app .day-entry[data-local-draft="true"]{background:#f5ecdd;border:1px dashed #ae844b;color:#7b623f}
 @media(max-width:570px){.calendar-reload{width:100%}}
+
+.plan-inventory-link{display:inline-block;margin:0 0 12px;color:#91713e;font-weight:800;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.plan-inventory-link:hover,.plan-inventory-link:focus-visible{color:#173c58}
