@@ -1,5 +1,6 @@
 import {createAuthClient} from "@neondatabase/auth";
 import {getAdminJwt} from "../session-token.js";
+import {setupInventoryManager} from "./inventory-manager.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -19,6 +20,7 @@ const keyFromInstant=(timestamp)=>{
 };
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
+let inventoryManager=null;
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -119,7 +121,7 @@ async function loadCalendar(){
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;
     $("[data-count=resources]").textContent=String(resources.length);
-    renderInventory();renderCalendar();
+    renderInventory();inventoryManager?.refresh();renderCalendar();
   }catch(e){
     $("[data-period]").textContent="Laden fehlgeschlagen";
     const wrap=$("[data-day-details]");wrap.replaceChildren();
@@ -150,6 +152,7 @@ async function authenticate(){
     $("[data-role-label]").textContent=roleLabels[body.role];
     $("#top-role").textContent=roleLabels[body.role].toUpperCase();
     gate.hidden=true;app.hidden=false;
+    inventoryManager ||= setupInventoryManager({root:$("[data-inventory-manager]"),getResources:()=>resources});
     await loadCalendar();
   }catch(e){lock("Die geschützte Verwaltung ist aktuell nicht erreichbar. Deine Daten bleiben gesperrt.")}
 }
