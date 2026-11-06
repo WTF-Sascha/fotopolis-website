@@ -1,0 +1,55 @@
+name: FOTOPOLIS Step 6 Database Integrity (isolated)
+on:
+  push:
+    branches: [design/premium-v2]
+    paths:
+      - "database/step6/**"
+      - ".github/workflows/step6-database-ci.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  postgres-integrity:
+    name: Postgres 17 / no double bookings / fail-closed access
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: fotopolis_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-disposable-test-only
+        ports: 
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fotopolis_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: fotopolis_test
+      PGUSER: postgres
+      PGPASSWORD: ci-disposable-test-only
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install psql client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client
+      - name: Prepare simulated client roles in ephemeral database
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -c "CREATE ROLE anon NOLOGIN;"
+          psql -X -v ON_ERROR_STOP=1 -c "CREATE ROLE authenticated NOLOGIN;"
+      - name: Apply isolated FOTOPOLIS step-6 schema
+        run: psql -X -v ON_ERROR_STOP=1 -f database/step6/availability_schema.sql
+      - name: Test allocations, status changes, buffers, DST and RLS
+        run: psql -X -v ON_ERROR_STOP=1 -f database/step6/test_availability.sql
+      - name: Prove concurrent requests cannot double-book an asset
+        run: bash database/step6/test_concurrent_bookings.sh
+      - name: Verify no client role can query a private table
+        run: |
+          result="$(psql -X -Atc "SELECT has_schema_privilege('anon','fotopolis','USAGE')::text || ',' || has_schema_privilege('authenticated','fotopolis','USAGE')::text")"
+          test "$result" = "false,false"
+          echo "PASS: no anonymous or authenticated schema access"
