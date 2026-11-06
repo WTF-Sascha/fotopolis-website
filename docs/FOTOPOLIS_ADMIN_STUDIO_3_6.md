@@ -37,6 +37,21 @@
 - Die bisherige FOTOPOLIS-Studio-Regression bleibt bestehen.
 - **Wichtig:** Ein isolierter Unit- oder gemockter Browser-Test beweist noch keinen vollständig funktionierenden Reset in Neon. Eine echte Passwortvergabe, anschließend erfolgreiche Passwortanmeldung, Browser-Neuladen, Logout und erneutes Login müssen am Postfach durch den Benutzer getestet werden.
 
+## Erfolgreiche technische Abnahme – 06.11.2026
+
+**[FOTOPOLIS Admin Studio – Run 42255774201](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42255774201): SUCCESS.**
+
+- 180/180 interaktive Demokalender-Prüfungen (Monats-/Wochennavigation, lokale Demo-Sperren, keine Persistenz, sieben Breiten)
+- 75/75 neue Passwort-Login-UI-Prüfungen (5 Breiten, Umschalten zwischen Passwort, OTP und Passwortvergabe, Passwortsichtbarkeit, keine echten E-Mails)
+- 34/34 Prüfungen des geschützten Dashboard-Shells (anonymer Inhalt bleibt verborgen, fünf Breiten, keine Datenbankgeheimnisse im Browser)
+- 6/6 serverseitige Auth- und API-Unit-Tests: 401/403/404/405-Abweisung unter den getesteten Bedingungen
+- Vertragstest für die Passwort-Ersteinrichtung **bestanden**: künstlicher Code, tatsächliche Browser-Aufrufe gegen **gemocktes Neon Auth** an `/neondb/auth/forget-password/email-otp` und `/neondb/auth/email-otp/reset-password`, Erfolg nur nach positiver simulierten Provider-Antwort
+- CSS visuell anhand drei separater Dashboard-Shell-Screenshots für **320, 430 und 1440 Pixel** überprüft: keine horizontale Überlagerung, marineblaue Seitenleiste, korrekt gestapelter Smartphone-Kalender, Hauptbereiche und Kontokarte sichtbar
+
+**Nicht aus diesem Test abzuleiten:** Ein echter Passwortversand/Reset, echtes Neon-Auth-Login mit neuem Passwort und ein 200-Response der Netlify-Rollenprüfung mit realem User-JWT. Diese Prüfungen bleiben beim Nutzer und anschließend beim technisch geprüften Realzustand.
+
+Der allgemeine `Premium release gate` bleibt wegen der noch ausstehenden Geschäfts-, Bildrechte- und Live-Abnahmen bewusst blockiert; das ist keine fehlende Admin-UI-Testfreigabe.
+
 ## Weiter offen
 
 1. Echten Passwort-Code im Proton-Postfach anfordern und **ausschließlich in der Website** eingeben. Passwort selbst festlegen, ohne es ChatGPT zu übermitteln.
