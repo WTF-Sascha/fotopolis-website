@@ -57,3 +57,9 @@ Der Neon-Branch `production` bleibt ohne FOTOPOLIS-Tabellen; das produktive Webh
 Der lesende Projektabgleich am 05.11.2026 hat **kein bestehendes FOTOPOLIS-Projekt** in der verbundenen allgemeinen Supabase-Organisation ergeben. Es bestehen Projekte anderer Anwendungen. **Diese dürfen nicht für FOTOPOLIS zweckentfremdet oder geändert werden.**
 
 Vor der Implementierung des tatsächlichen Verfügbarkeits-/Buchungsbackends wird ein **getrenntes FOTOPOLIS-Testprojekt** benötigt. Etwaige Projekt-/Branch-Kosten, Organisation und Berechtigungen sind vor einer Anlage transparent zu prüfen und bei Kosten durch den Nutzer freizugeben. Die derzeitige Studio-Version 3.1 wird deshalb weiterhin bewusst **ohne** Supabase-Produktivverbindung betrieben. Der Punkt-6-SQL-Entwurf liegt ausschließlich im Entwicklungsrepository und wird separat in einem kurzlebigen PostgreSQL-17-CI-Container getestet.
+
+## Update 06.11.2026 – Studio 3.7 Geräteverwaltung (Vorschau)
+
+Der Nutzer hat den echten Passwort-Login und den Dashboard-Zugang erfolgreich getestet. Die neue Geräteverwaltung unter `/admin/dashboard/#inventory` ist im isolierten Netlify-Deploy-Preview eingebaut. Sie ermöglicht responsive, validierte **nur lokale Entwürfe** je Fotobox/Fotospiegel/Fotowohnwagen, einschließlich Eindeutigkeitsprüfung gegen den tatsächlichen Bestand. Die Entwürfe verschwinden beim Neuladen; es gibt **keine neue Datenbank-Schreibfunktion, keine echte Geräteanlage und keine neue Buchbarkeit**. Gesonderte Browser-QA umfasst fünf Displaybreiten und Null-Schreibzugriffe. Der neue Neon-Schreibrollen-Entwurf ist mangels genehmigter granularer Berechtigungen absichtlich **nicht** als API-Secret verbunden. Roadmap-Punkt 7 bleibt offen bis zur freigegebenen und durchgängig getesteten Datenbank-Schreibschnittstelle sowie den echten Sperrzeiten.
+
+Technische Einzelheiten: [Studio 3.7 Geräteverwaltung](./FOTOPOLIS_STUDIO_3_7_INVENTORY_BRIEF.md).
