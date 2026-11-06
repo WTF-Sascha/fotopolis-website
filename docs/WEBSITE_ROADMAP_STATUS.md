@@ -10,7 +10,7 @@
 | 4 | Anlässe, Galerie, Vertrauenselemente | In Preview implementiert | Bild-/Personenrechte und Fotobezeichnungen prüfen |
 | 5 | Kontakt- und Anfrageprozess | Preview-Kontaktformular mit eigenständigem E-Mail-Entwurf implementiert; Live-Datenübertragung **nicht** vorhanden | Formularworkflow, rechtliche Angaben, Aufbewahrung, Versand |
 | 6 | Neon-PostgreSQL-Buchungsdatenbank und Verfügbarkeitslogik | **In Neon Free (Frankfurt), PostgreSQL 18, separatem `development`-Branch installiert und erfolgreich mit zurückgerollten Testbuchungen geprüft**. CI-Parallelbuchungstest zuvor in PostgreSQL 17 bestanden. | Reale Inventar-/Pufferregeln, abgesicherte API und Admin-Auth; keine öffentliche Buchbarkeit |
-| 7 | Admin-Kalender und interne Sperrzeiten | Demo-Kalender implementiert. Ein Neon-Auth-Benutzer mit deaktivierter Owner-Rolle angelegt; OTP-Login und signaturgeprüfte Read-only-Rollenabfrage in der Preview entwickelt. Echte Speicherung noch gesperrt. | E-Mail verifizieren, Login praktisch testen, 401/403/200-Rollenprüfung abnehmen, echte API und Inventar einrichten |
+| 7 | Admin-Kalender und interne Sperrzeiten | **Persönlicher Owner-Account in Neon development mit bestätigter E-Mail und aktivierter Rolle; E-Mail-/Passwortanmeldung, Passwortvergabe per OTP, geschütztes Premium-Dashboard und tatsächliche Geräte-/Kalenderansicht (read-only) im Deploy Preview entwickelt.** | Echter Passwort-End-to-End-Test, sichere Ressourcen-/Sperrzeiten-CRUD-Endpunkte, Bestands- und Pufferregeln, endgültige Freigabe |
 | 8 | Kundenkalender und echte Online-Buchung | Noch nicht implementiert | Konfliktprüfungen, transaktionale Buchung, Benachrichtigungen, Testfälle |
 | 9 | Design Studio und Buchungskommunikation | Noch nicht integriert | Umfang, Schnittstelle, finale Texte, Datenschutz- und E-Mail-Freigaben |
 | 10 | Finale Premium-QA und Übergabe | Teilweise automatisiert; Endabnahme ausstehend | Responsive, Browser, Performance, Accessibility, SEO, Datenschutz, Rechte, Security, Buchung, PWA, echte Testbuchungen |
@@ -33,6 +33,10 @@ Die aktuelle Vorschau ist **öffentlich über ihren Netlify-Link abrufbar**, auc
 - [Isolierter Postgres-17-Datenbanktest](https://github.com/WTF-Sascha/fotopolis-website/actions/workflows/step6-database-ci.yml)
 - Testdaten sind fiktiv und der Regeltest wird zurückgerollt; keinerlei Zugriff auf Mammut-, Tierheim-, Inventory- oder sonstige produktive Datenbanken.
 - Trotz erfolgreichem SQL-Test kann aktuell **kein echtes Datum als frei bestätigt oder reserviert werden**, weil noch kein eigenes Supabase-Cloudprojekt, kein bestätigter Gerätebestand und kein freigegebener Buchungsprozess existieren.
+
+## Aktualisierung 06.11.2026 – Persönlicher Adminbereich 3.6
+
+Der erste Owner ist auf Neon `development` nach nachgewiesener E-Mail-Verifizierung kontrolliert aktiviert. Unter [`/admin/login/`](https://deploy-preview-2--fotopolis-preview.netlify.app/admin/login/) stehen nun Passwortanmeldung, alternative OTP-Anmeldung und selbstständige Passwortvergabe über einen einmaligen Sicherheitscode bereit. Nach erfolgreicher servertseitiger JWT-/RBAC-Prüfung erfolgt die Weiterleitung zum [`/admin/dashboard/`](https://deploy-preview-2--fotopolis-preview.netlify.app/admin/dashboard/), das den tatsächlichen Geräte- und Terminbestand ausschließlich lesend aus Neon abfragt. Der vorhandene Gerätebestand ist weiterhin leer. Für die Lese-API wurde eine zweite Rolle mit SELECT-Rechten nur auf Ressourcen und Belegungen eingerichtet. **Echte Passwortvergabe und kompletter Login-/Browser-Flow müssen noch mit dem Nutzer getestet werden.** Es gibt weiterhin keine echten CRUD- oder Kundenbuchungen. [Technischer Bericht](./FOTOPOLIS_ADMIN_STUDIO_3_6.md).
 
 ## Aktualisierung 06.11.2026 – Auth-Erstanmeldung 3.5
 
