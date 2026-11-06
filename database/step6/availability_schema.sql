@@ -72,6 +72,22 @@ CREATE TABLE fotopolis.allocation_audit (
   actor_db_role text NOT NULL DEFAULT current_user
 );
 
+CREATE FUNCTION fotopolis.touch_allocation()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = ''
+AS $touch$
+BEGIN
+  NEW.updated_at := now();
+  RETURN NEW;
+END;
+$touch$;
+
+CREATE TRIGGER touch_allocation_before_update
+BEFORE UPDATE ON fotopolis.allocations
+FOR EACH ROW EXECUTE FUNCTION fotopolis.touch_allocation();
+
 CREATE FUNCTION fotopolis.capture_allocation_change()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -83,7 +99,6 @@ BEGIN
     INSERT INTO fotopolis.allocation_audit (allocation_id,action,before_state,after_state)
     VALUES (NEW.id,'INSERT',NULL,to_jsonb(NEW));
   ELSIF TG_OP = 'UPDATE' THEN
-    NEW.updated_at := now();
     INSERT INTO fotopolis.allocation_audit (allocation_id,action,before_state,after_state)
     VALUES (NEW.id,'UPDATE',to_jsonb(OLD),to_jsonb(NEW));
   END IF;
@@ -91,8 +106,9 @@ BEGIN
 END;
 $capture$;
 
+-- AFTER timing is essential: the allocation FK must exist before writing audit.
 CREATE TRIGGER capture_allocation_audit
-BEFORE INSERT OR UPDATE ON fotopolis.allocations
+AFTER INSERT OR UPDATE ON fotopolis.allocations
 FOR EACH ROW EXECUTE FUNCTION fotopolis.capture_allocation_change();
 
 -- Internal-only read model. No anonymous/public availability endpoint or RPC.
