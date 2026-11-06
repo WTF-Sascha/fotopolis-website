@@ -35,6 +35,15 @@ Neuer Test: `scripts/premium-admin-qa.mjs` (GitHub Actions: `premium-concept-qa.
 
 Der bereits bestehende 3.1-Website-Testkatalog läuft unverändert als Regression mit.
 
+### Abnahmeevidenz 06.11.2026
+
+- **[FOTOPOLIS Admin Studio 3.3 Review QA, Run 42224009917](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42224009917): SUCCESS.**
+- **180 / 180 überprüfte Admin-UI-Prüfpunkte** über 7 Viewports (320, 375, 430, 768, 1024, 1440 und 1920 Pixel), inklusive mobilen 7-Spalten-Rasters ohne horizontalen Kalenderzwang.
+- Navigation, Monats-/Wochenansicht, Gerätefilter, Demo-Erstellen/Löschen, vollständig zurückgesetzte Demodaten nach Seitenreload und verbotene Backendanfragen geprüft.
+- **[Komplette Studio-Regression, Run 42222949540](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42222949540): SUCCESS.** Alle 3.202 bisherigen Website-Checks plus 177 Adminchecks auf dem unmittelbar vorhergehenden UI-Stand bestanden. Die separate Abschlussprüfung deckt zusätzlich die zuletzt überarbeitete mobile Kalenderdarstellung mit 180 Prüfungen ab.
+- Die vier Screenshots für Desktop / Mobil wurden im QA-Artefakt erzeugt, und der erste visuelle Review der vorhandenen Ansichten ergab keine Überschneidung der Seitenbereiche; der mobile Monatskalender wurde nach dieser Kontrolle auf alle 7 Tage pro Zeile optimiert.
+- **[Netlify Deploy Preview](https://deploy-preview-2--fotopolis-preview.netlify.app/admin/)** steht auf `ready` zum UI-Commit `6362add663208c92f9ad8ebb18591ca6e058c287`; `published_at=null`, keine Liveveröffentlichung.
+
 ## 4. Sicherheit und reale Funktionsgrenzen
 
 Diese öffentlich erreichbare Preview ist **kein geschütztes Admin-Portal**: Sie ist eine bedienbare, künstlich befüllbare UI-Demo ohne persistente Daten. Der User darf diese Route nicht mit einer produktiven Verwaltungsfunktion verwechseln.
@@ -52,7 +61,7 @@ Keine Änderung an `main`, `fotopolis-mieten.de`, freigegebenem Logo und Origina
 
 ## 5. Abnahmestatus
 
-**Admin-Studio-Visualisierung:** implementiert, aber rein lokal simulierend; Browser-QA ist getrennt nachzuweisen.
+**Admin-Studio-Visualisierung:** implementiert, aber rein lokal simulierend; eigene Browser-QA **erfolgreich** (180/180), bestehende Website-Regression **erfolgreich** (3.202/3.202 vor abschließender mobiler CSS-Anpassung).
 
 **Datenbank-Autorisierung:** private Tabellenstruktur und Grundrollenmodell angelegt; tatsächliche Admin-Authentifizierung und Live-Verwaltungsfunktionen stehen noch aus.
 
