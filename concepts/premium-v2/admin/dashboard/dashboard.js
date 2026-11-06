@@ -11,13 +11,13 @@ const keyFmt=new Intl.DateTimeFormat("en-GB",{year:"numeric",month:"2-digit",day
 const types={fotobox:"Fotobox",fotospiegel:"Fotospiegel",fotowohnwagen:"Fotowohnwagen"};
 const roleLabels={owner:"Hauptadministrator",manager:"Koordinator",viewer:"Betrachter"};
 const today=new Date(),current=new Date(Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),12));
-let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
 const keyFromInstant=(timestamp)=>{
   const parts=keyFmt.formatToParts(new Date(timestamp));
   const p=Object.fromEntries(parts.filter(x=>["day","month","year"].includes(x.type)).map(x=>[x.type,x.value]));
   return p.year+"-"+p.month+"-"+p.day;
 };
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
+let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
