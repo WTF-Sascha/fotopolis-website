@@ -87,6 +87,19 @@ assert all(forbidden not in admin_js for forbidden in ("fetch(", "localStorage",
 assert "data-product-filter" in admin_html and "data-view" in admin_html
 assert not any((target / x).exists() for x in ("database", "database_url", ".env"))
 
+# Roadmap 7.5: optional Neon Auth first-account verification route.
+# Only HTML/CSS are copied here. The official SDK is bundled in the next
+# npm build:auth step; the SQL reader credential is never in this output.
+login_source = admin_source / "login"
+login_target = admin_target / "login"
+login_target.mkdir(exist_ok=True)
+for name in ("index.html", "login.css"):
+    shutil.copy2(login_source / name, login_target / name)
+login_html = (login_target / "index.html").read_text(encoding="utf-8")
+assert 'name="robots" content="noindex,nofollow,noarchive"' in login_html
+assert '/admin/login/login-bundle.js' in login_html
+assert 'POSTGRES' not in login_html and 'password=' not in login_html
+
 # Build QA: all referenced local assets must exist.
 for match in re.finditer(r'srcset="([^"]+)"', html):
     for entry in match.group(1).split(","):
