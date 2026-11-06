@@ -56,7 +56,7 @@ try{
   await page.locator("[data-close-day]").click();
   assert.equal(await page.locator("#day-detail-dialog").isVisible(),false);checks++;
   await page.locator("[data-refresh-calendar]").click();
-  await page.locator("[data-calendar-sync]").waitFor({state:"visible"});
+  await page.waitForFunction(()=>document.querySelector("[data-calendar-sync]")?.textContent?.includes("Mit Neon verbunden"));
   assert.match(await page.locator("[data-calendar-sync]").innerText(),/Mit Neon verbunden/);checks++;
   assert.deepEqual(adminWrites,[]);checks++;
   assert.deepEqual(unexpected,[]);checks++;
