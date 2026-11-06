@@ -38,6 +38,29 @@ function errorText(error){
  return "Die Anfrage konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
 }
 function unwrap(r){if(r?.error)throw r.error;return r?.data}
+// Neon Auth SDK versions differ in their email-OTP reset endpoint mapping.
+// First attempt the documented SDK. A confirmed missing-route error falls
+// back to the actual Better Auth OTP reset endpoint on the SAME trusted
+// managed-auth origin. No password is logged, stored or sent to Netlify.
+async function savePasswordWithOtp(address,code,pwd){
+  try{
+    const result=await client.emailOtp.resetPassword({email:address,otp:code,password:pwd});
+    if(!result?.error)return;
+    const status=result.error.status||result.error.statusCode;
+    const msg=(result.error.message||"")+" "+(result.error.code||"");
+    if(status!==404&&!/NOT_FOUND|404|passcode|endpoint not found/i.test(msg))throw result.error;
+  }catch(e){
+    const msg=String(e?.message||e);
+    if(!/not a function|undefined|NOT_FOUND|404|passcode|endpoint not found/i.test(msg))throw e;
+  }
+  const res=await fetch(AUTH_URL+"/email-otp/reset-password",{
+    method:"POST",mode:"cors",credentials:"include",cache:"no-store",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:address,otp:code,password:pwd})
+  });
+  if(!res.ok)throw new Error("Der Passwortdienst hat die Änderung nicht bestätigt.");
+}
+
 function setMode(next){
  if(!modes[next])return;
  mode=next;codeRequested=false;
@@ -112,7 +135,7 @@ $("#auth-form").addEventListener("submit",async e=>{
       message("Einmalcode angenommen. Dein Dashboard wird geöffnet.","success");
       await finishLogin();
     }else if(mode==="reset"){
-      unwrap(await client.emailOtp.resetPassword({email:a,otp:c,password:p}));
+      await savePasswordWithOtp(a,c,p);
       fresh.value="";repeat.value="";otp.value="";
       // Neon revokes existing sessions after password reset.
       setMode("password");
