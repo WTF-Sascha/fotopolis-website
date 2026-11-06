@@ -22,7 +22,7 @@ const keyFromInstant=(timestamp)=>{
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
 const current=new Date(keyFromInstant(today)+"T12:00:00.000Z");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
-let inventoryManager=null,planningManager=null;
+let inventoryManager=null,planningManager=null,loadPending=false;
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -147,7 +147,9 @@ function renderCalendar(){
  renderDetails();
 }
 async function loadCalendar(){
-  if(busy)return;busy=true;
+  if(busy){loadPending=true;return}
+  busy=true;
+  $("[data-calendar-sync]").textContent="Geschützte Kalenderdaten werden aktualisiert …";
   try{
     jwt=await getAdminJwt(client,await client.getSession());
     if(!jwt){lock("Dein Sitzungsschlüssel konnte nicht geladen werden. Bitte melde dich erneut an.");return}
@@ -162,12 +164,19 @@ async function loadCalendar(){
     resources=data.resources;allocations=data.allocations;
     $("[data-count=resources]").textContent=String(resources.length);
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();renderCalendar();
+    $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
   }catch(e){
+    resources=[];allocations=[];
+    renderInventory();inventoryManager?.refresh();planningManager?.refresh();renderCalendar();
+    $("[data-calendar-sync]").textContent="Kalenderdaten nicht verfügbar · Keine Verfügbarkeitsaussage möglich";
     $("[data-period]").textContent="Laden fehlgeschlagen";
     const wrap=$("[data-day-details]");wrap.replaceChildren();
     const info=document.createElement("p");info.className="alert-inline";info.textContent="Die geschützten Kalenderdaten sind zurzeit nicht erreichbar. Bitte lade die Seite erneut.";wrap.append(info);
     $("[data-count=resources]").textContent="–";$("[data-count=bookings]").textContent="–";$("[data-count=blocks]").textContent="–";
-  }finally{busy=false}
+  }finally{
+    busy=false;
+    if(loadPending){loadPending=false;void loadCalendar()}
+  }
 }
 function lock(msg){
   app.hidden=true;gate.hidden=false;message.textContent=msg;loginBack.hidden=false;
@@ -227,6 +236,7 @@ function updateNavigation(){
  }
 }
 window.addEventListener("hashchange",updateNavigation);
+$("[data-refresh-calendar]").addEventListener("click",()=>void loadCalendar());
 $("[data-date-go]").addEventListener("click",async()=>{
  const date=$("#admin-jump-date").value;
  if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return;
