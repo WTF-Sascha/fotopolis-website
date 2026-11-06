@@ -7,3 +7,16 @@ dialog{border:1px solid #e4d8c2;border-radius:9px;box-shadow:0 30px 90px #071b30
 @media(max-width:780px){.app{grid-template-columns:minmax(0,1fr)}.sidebar{display:none}.topbar{height:66px;padding-inline:20px}.menu-button{display:block}.mobile-menu:not([hidden]){display:flex;flex-wrap:wrap;gap:10px;padding:12px 20px;background:#102d45;color:#f0ede7}.mobile-menu a{font-size:12px;padding:9px}.workspace main{padding:32px 19px 45px}.intro{align-items:start}.intro h1{font-size:42px}.metrics{gap:9px}.metrics article{padding:16px}.metrics strong{font-size:28px}.bottom-grid{grid-template-columns:1fr}.calendar-heading,.calendar-tools{padding-inline:17px}.calendar-hint{padding-inline:17px}.calendar-foot{padding-inline:17px}.day{min-height:88px}.access-label{display:none}}
 @media(max-width:570px){.preview-banner{gap:5px;padding-inline:9px;font-size:9px}.preview-banner strong{font-size:9px}.crumbs{font-size:10px;gap:7px}.intro{flex-direction:column;gap:17px}.intro h1{font-size:clamp(35px,8vw,43px)}.intro-action{align-items:stretch;width:100%}.intro-action>span{text-align:center}.intro p{font-size:12px}.metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.metrics article{padding:12px 9px}.metrics article>span{font-size:8px;letter-spacing:.04em}.metrics strong{font-size:27px}.metrics small{font-size:9px}.calendar-heading{align-items:start;gap:6px}.calendar-heading h2{font-size:21px}.calendar-controls button{min-width:50px}.calendar-tools{align-items:flex-start;flex-direction:column}.date-navigation{flex-wrap:wrap}.date-navigation strong{font-size:13px;margin-left:5px}.filter{width:100%}.filter select{flex:1;min-width:0}.detail-card,.inventory-card{padding:20px 18px}.footer{font-size:9px}dialog form{padding:20px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Studio 3.3 mobile final: every day of the week is reachable at a glance;
+   full descriptions remain in the accessible day detail panel below. */
+@media(max-width:570px){
+  .calendar-scroller{overflow-x:visible}
+  .weekdays,.calendar-grid{min-width:0;width:100%}
+  .weekdays span{padding:10px 2px;text-align:center;font-size:8px;letter-spacing:.02em}
+  .day{min-width:0;min-height:68px;padding:8px 2px;align-items:center;gap:5px}
+  .day-number{font-size:10px}
+  .day-entry{flex:none;width:7px;height:7px;border:0;padding:0;overflow:hidden;border-radius:50%;text-indent:-9999px;white-space:nowrap;background:#b98c4b}
+  .day-extra{font-size:8px;text-align:center}
+  .day.is-today .day-number{width:24px;height:24px;margin:-6px 0 -2px}
+}
