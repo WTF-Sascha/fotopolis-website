@@ -70,6 +70,23 @@ assert routes == [
     "anlaesse","ueber-uns","faq","kontakt","impressum","datenschutz"
 ], f"Unexpected route inventory: {routes}"
 
+# Roadmap 7: publish a separate, explicitly demo-only Admin Studio route.
+# No source SQL, credentials, DB client or writable endpoint enters this folder.
+admin_source = source / "admin"
+admin_target = target / "admin"
+admin_target.mkdir(exist_ok=True)
+for name in ("index.html", "admin.css", "admin.js"):
+    shutil.copy2(admin_source / name, admin_target / name)
+admin_html = (admin_target / "index.html").read_text(encoding="utf-8")
+assert 'name="robots" content="noindex,nofollow,noarchive"' in admin_html
+assert "/assets/fotopolis-logo-original.png" in admin_html
+assert 'data-calendar-grid' in admin_html and 'data-block-dialog' in admin_html
+assert 'STUDIO REVIEW' in admin_html and 'keine echten Buchungen' in admin_html
+admin_js = (admin_target / "admin.js").read_text(encoding="utf-8")
+assert all(forbidden not in admin_js for forbidden in ("fetch(", "localStorage", "sessionStorage", "DATABASE_URL", "service_role", "supabase", "neon.tech"))
+assert "data-product-filter" in admin_html and "data-view" in admin_html
+assert not any((target / x).exists() for x in ("database", "database_url", ".env"))
+
 # Build QA: all referenced local assets must exist.
 for match in re.finditer(r'srcset="([^"]+)"', html):
     for entry in match.group(1).split(","):
@@ -81,4 +98,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print(f"FOTOPOLIS V3.1: {len(routes)} editorial pages and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
+print(f"FOTOPOLIS V3.3: {len(routes)} editorial pages + isolated Admin Studio demo and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
