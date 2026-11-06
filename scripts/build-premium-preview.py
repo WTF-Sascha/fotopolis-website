@@ -100,6 +100,20 @@ assert 'name="robots" content="noindex,nofollow,noarchive"' in login_html
 assert '/admin/login/login-bundle.js' in login_html
 assert 'POSTGRES' not in login_html and 'password=' not in login_html
 
+# Studio 3.6: separate real-data admin dashboard; no static admin data or
+# database credentials are published. All API access is bearer/JWKS gated.
+dashboard_source = admin_source / "dashboard"
+dashboard_target = admin_target / "dashboard"
+dashboard_target.mkdir(exist_ok=True)
+for name in ("index.html", "dashboard.css"):
+    shutil.copy2(dashboard_source / name, dashboard_target / name)
+dashboard_html = (dashboard_target / "index.html").read_text(encoding="utf-8")
+assert 'id="dashboard-app" hidden' in dashboard_html
+assert '/admin/dashboard/dashboard-bundle.js' in dashboard_html
+assert 'data-count="resources"' in dashboard_html
+assert 'name="robots" content="noindex,nofollow,noarchive"' in dashboard_html
+assert 'DATABASE_URL' not in dashboard_html and 'password=' not in dashboard_html
+
 # Build QA: all referenced local assets must exist.
 for match in re.finditer(r'srcset="([^"]+)"', html):
     for entry in match.group(1).split(","):
@@ -111,4 +125,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print(f"FOTOPOLIS V3.3: {len(routes)} editorial pages + isolated Admin Studio demo and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
+print(f"FOTOPOLIS V3.6: {len(routes)} editorial pages + isolated Admin Studio demo and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
