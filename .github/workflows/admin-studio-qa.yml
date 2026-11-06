@@ -13,6 +13,7 @@ on:
       - "scripts/premium-admin-dashboard-qa.mjs"
       - "scripts/premium-inventory-draft-qa.mjs"
       - "scripts/premium-admin-planning-qa.mjs"
+      - "scripts/premium-admin-day-dialog-qa.mjs"
       - "scripts/test-admin-planning.mjs"
       - "scripts/premium-admin-password-flow-qa.mjs"
       - "netlify/functions/fotopolis-admin-overview.mjs"
@@ -71,6 +72,10 @@ jobs:
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
         run: node scripts/premium-admin-planning-qa.mjs
+      - name: Viewport day dialog and date-jump integration (mocked login)
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-day-dialog-qa.mjs
       - name: Inventory preview editor, mobile and desktop QA
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
