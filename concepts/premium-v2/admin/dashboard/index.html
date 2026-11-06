@@ -9,6 +9,7 @@
 <link rel="icon" href="/favicon.ico">
 <link rel="stylesheet" href="/admin/admin.css">
 <link rel="stylesheet" href="/admin/dashboard/dashboard.css">
+<link rel="stylesheet" href="/admin/dashboard/inventory-manager.css">
 <script type="module" src="/admin/dashboard/dashboard-bundle.js"></script>
 </head>
 <body>
@@ -74,15 +75,15 @@
    </section>
    <section class="bottom-grid">
     <article class="detail-card"><span class="eyebrow">TAGESÜBERSICHT</span><h2 data-day-title>Ausgewählter Tag</h2><div data-day-details><p>Wähle ein Datum im Kalender aus.</p></div><a class="text-button" href="/admin/">Zur Demo-Sperrzeitenplanung ↗</a></article>
-    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Hier erscheinen alle einzeln registrierten Fotoboxen, Fotospiegel und Fotowohnwagen.</p><div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
+    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Hier erscheinen die tatsächlich in Neon registrierten Fotoboxen, Fotospiegel und Fotowohnwagen. Der neue Geräte-Editor darunter erzeugt ausschließlich Vorschauentwürfe.</p><div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
    </section>
    <section class="account-card" id="account" aria-labelledby="account-heading">
     <div><span class="eyebrow">ADMINISTRATORKONTO</span><h2 id="account-heading">Mein Konto & Sicherheit</h2><p>Deine Anmeldung und Berechtigungen werden durch Neon Auth und die FOTOPOLIS-Rollenprüfung geschützt.</p><dl><div><dt>E-Mail-Adresse</dt><dd data-user-email>–</dd></div><div><dt>Berechtigung</dt><dd data-user-role>–</dd></div><div><dt>Umgebung</dt><dd>Development · Frankfurt</dd></div></dl></div>
     <div class="account-actions"><a href="/admin/login/?mode=reset" class="primary-button">Passwort festlegen / ändern ↗</a><button type="button" class="secondary-button" data-signout>Abmelden</button></div>
    </section>
-   <section class="security-note"><strong>Nächster Ausbau: echte Verwaltungsfunktionen</strong><p>Derzeit ist der Adminbereich authentifiziert und zeigt echte Entwicklungsdaten lesend an. Für Geräteanlage, Änderungen von Sperrzeiten und Buchungen fehlen noch eure verbindlichen Bestands- und Logistikregeln. Diese Funktionen werden erst nach der separaten Berechtigungsprüfung freigeschaltet.</p></section>
+   <section class="security-note"><strong>Nächster Ausbau: echte Verwaltungsfunktionen</strong><p>Derzeit ist der Adminbereich authentifiziert und zeigt echte Entwicklungsdaten lesend an. Geräte können in Studio 3.7 als lokale, nicht gespeicherte Entwürfe geplant werden. Echte Geräteanlage, Änderungen von Sperrzeiten und Buchungen bleiben bis zur sicheren Schreibfreigabe deaktiviert.</p></section>
   </main>
-  <footer class="footer"><span>FOTOPOLIS STUDIO · VERWALTUNG 3.6</span><span>Geschützter Entwicklungsbereich · keine Produktivbuchungen</span></footer>
+  <footer class="footer"><span>FOTOPOLIS STUDIO · VERWALTUNG 3.7</span><span>Geschützter Entwicklungsbereich · keine Produktivbuchungen</span></footer>
  </div>
 </div>
 </body>
