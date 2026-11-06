@@ -33,7 +33,7 @@ try{
       if(path.endsWith("/session"))
         return route.fulfill({status:200,contentType:"application/json",body:'{"authenticated":true,"authorized":true,"role":"owner"}'});
       if(path.endsWith("/overview"))
-        return route.fulfill({status:200,contentType:"application/json",body:'{"readOnly":true,"resources":[],"allocations":[]}')});
+        return route.fulfill({status:200,contentType:"application/json",body:'{"readOnly":true,"resources":[],"allocations":[]}'});
       return route.fulfill({status:404});
     }
     return route.continue();
