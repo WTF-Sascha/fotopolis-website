@@ -9,6 +9,8 @@ on:
       - "scripts/build-admin-auth.mjs"
       - "scripts/premium-admin-login-qa.mjs"
       - "scripts/test-admin-auth.mjs"
+      - "scripts/premium-admin-dashboard-qa.mjs"
+      - "netlify/functions/fotopolis-admin-overview.mjs"
       - "concepts/premium-v2/admin/login/**"
       - "netlify/functions/fotopolis-admin-session.mjs"
       - "package.json"
@@ -48,6 +50,10 @@ jobs:
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
         run: node scripts/premium-admin-login-qa.mjs
+      - name: Protected owner dashboard - anonymous access and secret isolation
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-dashboard-qa.mjs
       - name: Archive admin review screenshots
         if: always()
         uses: actions/upload-artifact@v4
