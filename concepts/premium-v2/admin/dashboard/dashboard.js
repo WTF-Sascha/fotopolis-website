@@ -1,4 +1,5 @@
 import {createAuthClient} from "@neondatabase/auth";
+import {getAdminJwt} from "../session-token.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -106,9 +107,8 @@ function renderCalendar(){
 async function loadCalendar(){
   if(busy)return;busy=true;
   try{
-    const renewed=await client.token();
-    if(renewed.error||!renewed.data?.token){lock("Deine Sitzung muss erneuert werden. Melde dich bitte erneut an.");return}
-    jwt=renewed.data.token;
+    jwt=await getAdminJwt(client,await client.getSession());
+    if(!jwt){lock("Dein Sitzungsschlüssel konnte nicht geladen werden. Bitte melde dich erneut an.");return}
     const days=visibleDays(),from=isoKey(addDays(days[0],-1)),to=isoKey(addDays(days[days.length-1],2));
     const response=await fetch("/api/fotopolis/admin/overview?from="+encodeURIComponent(from)+"&to="+encodeURIComponent(to),{
       method:"GET",headers:{Authorization:"Bearer "+jwt},cache:"no-store",credentials:"same-origin"
@@ -135,14 +135,16 @@ async function authenticate(){
   try{
     const r=await client.getSession();
     if(r.error||!r.data?.user||!r.data?.session){location.replace("/admin/login/?next=dashboard");return}
-    const t=await client.token();
-    if(t.error||!t.data?.token){lock("Sitzung konnte nicht geprüft werden. Bitte erneut anmelden.");return}
-    const resp=await fetch("/api/fotopolis/admin/session",{method:"GET",headers:{Authorization:"Bearer "+t.data.token},cache:"no-store"});
-    if(resp.status===401||resp.status===403){lock("Dein Konto ist angemeldet, aber derzeit nicht für die Verwaltung freigeschaltet.");return}
+    const token=await getAdminJwt(client,r);
+    if(!token){lock("Neon hat keinen gültigen Sitzungsschlüssel geliefert. Bitte melde dich erneut an.");return}
+    const resp=await fetch("/api/fotopolis/admin/session",{method:"GET",headers:{Authorization:"Bearer "+token},cache:"no-store",credentials:"same-origin"});
+    if(resp.status===401){lock("Anmeldenachweis abgelehnt (401). Bitte melde dich erneut an.");return}
+    if(resp.status===403){lock("Administratorrolle abgelehnt (403). Bitte kontaktiere die Administration.");return}
+    if(resp.status===503){lock("Der Berechtigungsdienst ist vorübergehend nicht erreichbar (503).");return}
     if(!resp.ok)throw Error("Berechtigung nicht prüfbar");
     const body=await resp.json();
     if(!body.authorized||!["owner","manager","viewer"].includes(body.role))throw Error("Berechtigung ungültig");
-    jwt=t.data.token;
+    jwt=token;
     $("[data-user-email]").textContent=r.data.user.email||"–";
     $("[data-user-role]").textContent=roleLabels[body.role];
     $("[data-role-label]").textContent=roleLabels[body.role];

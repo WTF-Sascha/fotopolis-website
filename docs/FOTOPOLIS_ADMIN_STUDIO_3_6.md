@@ -61,3 +61,11 @@ Der allgemeine `Premium release gate` bleibt wegen der noch ausstehenden Geschä
 5. Vor Produktivbetrieb rechtliche, Sicherheits- und Backup-Abnahme sowie angemessene Mehrfaktorauthentifizierung und ein endgültiges geschäftliches Administratorkonto.
 
 **Roadmap 7:** Zugang und authentifizierte Lesemaske umgesetzt; konkrete Bearbeitungsfunktionen und E2E-Bestätigung bleiben offen. Kein vorzeitiger Abschluss.
+
+## Studio 3.6.1 – Authentifizierungsfehler vom 06.11.2026
+
+Beim echten Login zeigt der Browser nach erfolgreicher Neon-Authentifizierung noch keine abgeschlossene API-Berechtigung. Der erste Owner ist im isolierten Neon-Entwicklungsbranch aktiv; im Netlify-Request-Protokoll des gemeldeten Zeitfensters fehlt ein Aufruf des Session-Gateways. Eine vollständige echte End-to-End-Ursache ist noch nicht abschließend belegt.
+
+**Preview-Korrektur:** Vorrangige Nutzung des von Neon in die Sitzung injizierten JWT, Fallback auf `token()` und erneute Sitzungsabfrage; eindeutige Fehlermeldungen für fehlendes JWT, Netzwerkfehler sowie Status 401/403/404/503. Erfolg wird erst nach positiver serverseitiger Autorisierung angezeigt. Der JWT-Verifier verlangt weiterhin EdDSA-Signatur der branchgebundenen JWKS, gültige Issuer-Prüfung und eine aktive private FOTOPOLIS-Adminrolle; das von Neon nicht garantierte `aud`-Feld ist nicht mehr obligatorisch. Regressionstests schützen die JWT-Fallback-Kette.
+
+**Noch offen:** echter mobiler Login-/Dashboard-Durchlauf mit neuem Deploy. Kein Merge, keine Live-Veröffentlichung und keine Änderungen produktiver Daten.

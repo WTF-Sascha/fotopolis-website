@@ -9,6 +9,7 @@ on:
       - "scripts/build-admin-auth.mjs"
       - "scripts/premium-admin-login-qa.mjs"
       - "scripts/test-admin-auth.mjs"
+      - "scripts/test-admin-token.mjs"
       - "scripts/premium-admin-dashboard-qa.mjs"
       - "scripts/premium-admin-password-flow-qa.mjs"
       - "netlify/functions/fotopolis-admin-overview.mjs"
@@ -47,6 +48,8 @@ jobs:
         run: node scripts/premium-admin-qa.mjs
       - name: Fail-closed admin session authorization unit checks
         run: npm run test:auth-unit
+      - name: Session JWT extraction and recovery QA (no real credentials)
+        run: node --test scripts/test-admin-token.mjs
       - name: Responsive sign-in page and mode-switch QA (no emails sent)
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/

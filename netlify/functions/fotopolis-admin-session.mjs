@@ -21,9 +21,10 @@ export async function authorizeAdmin(request,context){
   if(!match||match[1].length>6000)return {denied:response({authenticated:false,error:"Unauthorized"},401)};
   let userId;
   try{
+    // Official Neon Auth JWT verification requires issuer and branch JWKS.
+    // Audience may be absent; private role lookup independently gates access.
     const {payload}=await jwtVerify(match[1],jwks,{
       issuer:new URL(AUTH_BASE).origin,
-      audience:new URL(AUTH_BASE).origin,
       algorithms:["EdDSA"],
       clockTolerance:10
     });

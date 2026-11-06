@@ -1,4 +1,5 @@
 import {createAuthClient} from "@neondatabase/auth";
+import {getAdminJwt} from "../session-token.js";
 
 // Public provider URL, never a database password. Credentials are handled by Neon Auth.
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
@@ -77,27 +78,44 @@ function setMode(next){
  message("");
 }
 async function getAccess(){
- const session=unwrap(await client.getSession());
- if(!session?.user||!session?.session)return null;
- const tok=unwrap(await client.token());
- if(!tok?.token)return {status:401,user:session.user};
- const r=await fetch("/api/fotopolis/admin/session",{method:"GET",headers:{Authorization:"Bearer "+tok.token},cache:"no-store",credentials:"same-origin"});
- return {status:r.status,user:session.user,details:r.status===200?await r.json():null};
+ const session=await client.getSession();
+ if(session.error||!session.data?.user||!session.data?.session)return {status:0,stage:"session",user:null};
+ const token=await getAdminJwt(client,session);
+ if(!token)return {status:0,stage:"jwt",user:session.data.user};
+ try{
+   const r=await fetch("/api/fotopolis/admin/session",{method:"GET",headers:{Authorization:"Bearer "+token},cache:"no-store",credentials:"same-origin"});
+   return {status:r.status,stage:"gateway",user:session.data.user,details:r.status===200?await r.json():null};
+ }catch{return {status:0,stage:"network",user:session.data.user}}
 }
 async function finishLogin(){
-  const result=await getAccess();
-  if(!result){panel.hidden=true;return}
-  panel.hidden=false;$("#session-info").textContent="Angemeldet als "+(result.user.email||"Administrator");
-  $("#calendar-link").hidden=true;
-  if(result.status===200&&result.details?.authorized){
-    $("#access-info").textContent="Dein Konto ist freigeschaltet. Du wirst zu deinem Dashboard weitergeleitet.";
-    $("#calendar-link").hidden=false;
-    location.replace("/admin/dashboard/");
-  }else if(result.status===403){
-    $("#access-info").textContent="Die Anmeldung funktioniert. Die Administratorrolle ist jedoch noch nicht freigeschaltet.";
-  }else{
-    $("#access-info").textContent="Die Berechtigungsprüfung konnte noch nicht erfolgreich abgeschlossen werden. Dein Verwaltungszugang bleibt geschützt.";
-  }
+ const result=await getAccess();
+ if(!result.user){
+   panel.hidden=true;
+   message("Es besteht noch keine gültige Sitzung. Bitte melde dich erneut an.","error");
+   return;
+ }
+ panel.hidden=false;
+ $("#session-info").textContent="Angemeldet als "+(result.user.email||"Administrator");
+ $("#calendar-link").hidden=true;
+ if(result.status===200&&result.details?.authorized){
+   $("#access-info").textContent="Dein Administratorkonto ist bestätigt. Dein Dashboard wird geöffnet.";
+   message("Anmeldung und Berechtigungen erfolgreich bestätigt.","success");
+   $("#calendar-link").hidden=false;
+   location.replace("/admin/dashboard/");
+   return;
+ }
+ const errors={
+   401:"Der Sitzungsschlüssel wurde vom Server abgelehnt (401). Melde dich bitte erneut an.",
+   403:"Dein Konto ist angemeldet, aber die Administratorrolle wurde abgelehnt (403).",
+   404:"Der Verwaltungsdienst ist unter dieser Vorschau nicht verfügbar (404).",
+   503:"Die Berechtigungsprüfung ist vorübergehend nicht erreichbar (503)."
+ };
+ $("#access-info").textContent=result.stage==="jwt"
+    ?"Die Anmeldung besteht, aber Neon hat keinen gültigen Sitzungsschlüssel für die Verwaltungs-API geliefert. Melde dich bitte erneut an."
+    :result.stage==="network"
+    ?"Die Verwaltungs-API ist aufgrund eines Verbindungsproblems nicht erreichbar."
+    :errors[result.status]||"Berechtigungsprüfung nicht abgeschlossen (HTTP "+result.status+").";
+ message("Dashboard-Zugriff noch nicht bestätigt"+(result.status?" · Fehlercode "+result.status:"")+".","error");
 }
 send.addEventListener("click",async()=>{
   if(busy||mode==="password")return;
@@ -127,12 +145,12 @@ $("#auth-form").addEventListener("submit",async e=>{
     if(mode==="password"){
       unwrap(await client.signIn.email({email:a,password:p}));
       password.value="";
-      message("Anmeldung bestätigt. Dein Dashboard wird geöffnet.","success");
+      message("Anmeldung erfolgreich. Dashboard-Berechtigung wird geprüft …");
       await finishLogin();
     }else if(mode==="otp"){
       unwrap(await client.signIn.emailOtp({email:a,otp:c}));
       otp.value="";
-      message("Einmalcode angenommen. Dein Dashboard wird geöffnet.","success");
+      message("Einmalcode angenommen. Dashboard-Berechtigung wird geprüft …");
       await finishLogin();
     }else if(mode==="reset"){
       await savePasswordWithOtp(a,c,p);
