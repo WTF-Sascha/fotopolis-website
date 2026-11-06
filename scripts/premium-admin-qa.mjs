@@ -61,6 +61,8 @@ try{
     assert(requests.length===0,"No backend calls even after interactions "+width);
     assert(failures.length===0,"No JS errors after interactions "+width);
     if(width<=430){
+      const calendarWidth=await page.locator("[data-calendar-grid]").evaluate(el=>({left:el.getBoundingClientRect().left,right:el.getBoundingClientRect().right,viewport:window.innerWidth}));
+      assert(calendarWidth.left>=-1 && calendarWidth.right<=calendarWidth.viewport+1,"Mobile must show all 7 days without horizontal swipe "+width+": "+JSON.stringify(calendarWidth));
       const toggle=page.locator("[data-menu-toggle]");
       await toggle.click();
       assert(await toggle.getAttribute("aria-expanded")==="true","Mobile menu opens "+width);
