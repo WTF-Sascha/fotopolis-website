@@ -62,8 +62,7 @@ export default async function handler(request,context){
         ), recorded AS (
           INSERT INTO fotopolis.admin_activity(user_id,action,entity_id)
           SELECT ${authorized.userId}::uuid,'change_resource',id FROM inserted
-          RETURNING id
-        ) SELECT inserted.* FROM inserted, recorded
+        ) SELECT inserted.* FROM inserted
       `;
     }else{
       const {id,name}=parsed.value;
@@ -75,8 +74,7 @@ export default async function handler(request,context){
         ), recorded AS (
           INSERT INTO fotopolis.admin_activity(user_id,action,entity_id)
           SELECT ${authorized.userId}::uuid,'change_resource',id FROM changed
-          RETURNING id
-        ) SELECT changed.* FROM changed, recorded
+        ) SELECT changed.* FROM changed
       `;
     }
     if(!rows.length)return response({error:"Resource not found"},404);
