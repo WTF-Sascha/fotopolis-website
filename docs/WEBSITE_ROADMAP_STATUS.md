@@ -9,8 +9,8 @@
 | 3 | Pakete, Leistungen, Paketfinder | In Preview implementiert | Angebotspreise und Paketinhalt schriftlich bestätigen |
 | 4 | Anlässe, Galerie, Vertrauenselemente | In Preview implementiert | Bild-/Personenrechte und Fotobezeichnungen prüfen |
 | 5 | Kontakt- und Anfrageprozess | Preview-Kontaktformular mit eigenständigem E-Mail-Entwurf implementiert; Live-Datenübertragung **nicht** vorhanden | Formularworkflow, rechtliche Angaben, Aufbewahrung, Versand |
-| 6 | Supabase-Buchungsdatenbank und Verfügbarkeitslogik | **Datenmodell und Kollisionslogik entwickelt, in PostgreSQL 17 inkl. paralleler Buchungen erfolgreich getestet**; Supabase-Testprojekt und Cloudanbindung ausstehend | Eigenes FOTOPOLIS-Projekt + Kostenfreigabe; reale Inventar-/Pufferregeln, Adminrechte und Security Advisors |
-| 7 | Admin-Kalender und interne Sperrzeiten | Noch nicht implementiert | Auth, rollenbasierte Rechte, Audit-Logs, Testnutzer |
+| 6 | Neon-PostgreSQL-Buchungsdatenbank und Verfügbarkeitslogik | **In Neon Free (Frankfurt), PostgreSQL 18, separatem `development`-Branch installiert und erfolgreich mit zurückgerollten Testbuchungen geprüft**. CI-Parallelbuchungstest zuvor in PostgreSQL 17 bestanden. | Reale Inventar-/Pufferregeln, abgesicherte API und Admin-Auth; keine öffentliche Buchbarkeit |
+| 7 | Admin-Kalender und interne Sperrzeiten | Nächste Phase; Datenbankschema für Sperrzeiten auf Neon `development` vorhanden, UI/API noch offen | Auth, rollenbasierte Rechte, Audit-Logs, Testnutzer |
 | 8 | Kundenkalender und echte Online-Buchung | Noch nicht implementiert | Konfliktprüfungen, transaktionale Buchung, Benachrichtigungen, Testfälle |
 | 9 | Design Studio und Buchungskommunikation | Noch nicht integriert | Umfang, Schnittstelle, finale Texte, Datenschutz- und E-Mail-Freigaben |
 | 10 | Finale Premium-QA und Übergabe | Teilweise automatisiert; Endabnahme ausstehend | Responsive, Browser, Performance, Accessibility, SEO, Datenschutz, Rechte, Security, Buchung, PWA, echte Testbuchungen |
@@ -34,7 +34,13 @@ Die aktuelle Vorschau ist **öffentlich über ihren Netlify-Link abrufbar**, auc
 - Testdaten sind fiktiv und der Regeltest wird zurückgerollt; keinerlei Zugriff auf Mammut-, Tierheim-, Inventory- oder sonstige produktive Datenbanken.
 - Trotz erfolgreichem SQL-Test kann aktuell **kein echtes Datum als frei bestätigt oder reserviert werden**, weil noch kein eigenes Supabase-Cloudprojekt, kein bestätigter Gerätebestand und kein freigegebener Buchungsprozess existieren.
 
-## Abhängigkeit für die Schritte 6–8 · Supabase-Isolation
+## Aktualisierung 06.11.2026 – eigene Neon-Cloudinfrastruktur
+
+Die bisherige Supabase-Free-Organisation ist wegen zweier produktiv genutzter Projekte ausgeschöpft; Mammut und RM-Inventory bleiben unberührt. **Es erfolgt keine neue Supabase-Projektanlage.** Als kostenlose Alternative ist in Neon das bereits vom Nutzer angelegte Projekt `Fotopolis` (`icy-wave-78750589`, Frankfurt, Free) verbunden. Ein separater Neon-Branch `development` enthält das migrierte FOTOPOLIS-Buchungsschema. Die Neon-Abnahme dokumentiert [FOTOPOLIS_NEON_DEVELOPMENT_SETUP.md](./FOTOPOLIS_NEON_DEVELOPMENT_SETUP.md).
+
+Der Neon-Branch `production` bleibt ohne FOTOPOLIS-Tabellen; das produktive Webhosting wird nicht geändert. Alle Neon-Testbuchungen wurden zurückgerollt. Roadmap 6 ist damit auf Datenbank-Entwicklungs-/Integritätsebene abgeschlossen, auf API-, Rechte- und Betriebsreifeebene weiterhin offen.
+
+## Historischer Supabase-Plan (durch Neon ersetzt)
 
 Der lesende Projektabgleich am 05.11.2026 hat **kein bestehendes FOTOPOLIS-Projekt** in der verbundenen allgemeinen Supabase-Organisation ergeben. Es bestehen Projekte anderer Anwendungen. **Diese dürfen nicht für FOTOPOLIS zweckentfremdet oder geändert werden.**
 
