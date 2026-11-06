@@ -1,0 +1,23 @@
+/* Studio 3.7 - inventory drafts, FOTOPOLIS navy and champagne palette */
+.inventory-manager-lead{font-size:12px;line-height:1.75;color:#62778a;margin:12px 0}
+.inventory-manager-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:12px 0 18px}
+.inventory-manager-primary,.inventory-manager-secondary{cursor:pointer;border-radius:5px;font-size:11px;font-weight:800;padding:12px 15px;min-height:40px}
+.inventory-manager-primary{background:#173c58;color:#fff;border:1px solid #173c58}
+.inventory-manager-primary:hover,.inventory-manager-primary:focus-visible{background:#285b7a}
+.inventory-manager-secondary{background:#fff;color:#173c58;border:1px solid #b8c3c9}
+.inventory-manager-secondary:hover,.inventory-manager-secondary:focus-visible{border-color:#9d7c47}
+.inventory-manager-state{font-weight:800;font-size:9px;letter-spacing:.07em;color:#896c3d}
+.inventory-manager-list{display:grid;gap:9px;margin-top:14px}
+.inventory-manager-drafts-title{font-size:13px;margin:5px 0;color:#173c58}
+.inventory-manager-draft{background:#fcfaf5;border:1px dashed #ccb98f;border-radius:6px;padding:13px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.inventory-manager-draft strong{font-size:12px;color:#173c58;overflow-wrap:anywhere}
+.inventory-manager-draft p{margin:4px 0 0;font-size:10px;line-height:1.5;color:#89724c}
+.inventory-manager-form{border:1px solid #dfd0b3;background:#fbf8f2;padding:18px;border-radius:7px;display:grid;gap:12px;margin-top:15px}
+.inventory-manager-form h3{margin:0;font-size:17px;color:#163950}
+.inventory-manager-explainer{font-size:11px!important;color:#607386!important;line-height:1.7;margin:0!important}
+.inventory-manager-form label{display:grid;gap:6px;font-size:11px;font-weight:800;color:#21425c}
+.inventory-manager-form input,.inventory-manager-form select{width:100%;border:1px solid #bbc6cc;border-radius:5px;background:#fff;color:#16364c;font-size:14px;padding:11px 12px;min-height:44px}
+.inventory-manager-form input:focus-visible,.inventory-manager-form select:focus-visible{outline:2px solid #b29359;outline-offset:1px}
+.inventory-manager-feedback{color:#9b5b32;font-size:11px;line-height:1.6;margin:0}
+.inventory-manager-form-actions{display:flex;flex-wrap:wrap;gap:9px}
+@media(max-width:570px){.inventory-manager-form{padding:14px}.inventory-manager-draft{align-items:flex-start;flex-direction:column}.inventory-manager-draft button{align-self:flex-start}.inventory-manager-form-actions button{flex:1}}
