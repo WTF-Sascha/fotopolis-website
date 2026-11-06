@@ -1,5 +1,5 @@
 "use strict";
-// Roadmap 7 Studio Demo. No fetch, DB, session storage, localStorage or secret.
+// Roadmap 7 Studio Demo. No remote requests, browser persistence, or credentials.
 document.addEventListener("DOMContentLoaded", () => {
   const $ = (selector, root=document) => root.querySelector(selector);
   const grid = $("[data-calendar-grid]");
