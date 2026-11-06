@@ -4,3 +4,26 @@
 @media(max-width:800px){.shell{grid-template-columns:1fr}.brand-panel{min-height:265px;padding:30px 26px;gap:22px}.brand img{width:49px;height:49px}.brand strong{font-size:16px}.brand-message h1{font-size:35px;margin:7px 0}.brand-message p{display:none}.side-note{display:none}.login-panel{padding:38px 24px 60px}.form-shell{max-width:540px}}
 @media(max-width:420px){.brand-panel{min-height:230px}.brand-message h1{font-size:30px}.brand-message .eyebrow{font-size:9px}.login-panel{padding-inline:20px}.mode-tabs button{font-size:10px}.ribbon span{font-size:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Studio 3.6: password-first sign-in, self-service password setup and reset */
+[hidden]{display:none!important}
+.mode-tabs{margin:0 0 18px;gap:3px}
+.mode-tabs button{min-width:0;line-height:1.3;min-height:46px;padding:8px 7px}
+#auth-form{gap:10px}
+#password-fields,#reset-fields,#otp-fields{display:grid;gap:7px}
+#password-fields[hidden],#reset-fields[hidden],#otp-fields[hidden]{display:none}
+#reset-fields{margin:4px 0}
+#reset-fields .step-note{padding:12px 14px;margin-bottom:8px;background:#eee7da;color:#615337;border-left:2px solid #c4a16b}
+#reset-fields label:not(:first-of-type){margin-top:8px}
+#otp-fields{margin-top:7px}
+.password-wrap{position:relative;display:flex;min-width:0}
+.password-wrap input{padding-right:89px}
+.show-password{position:absolute;right:6px;top:6px;bottom:6px;padding:0 8px;border:0;background:#f3f4f2;border-radius:3px;color:#576e7c;font-size:11px;font-weight:800}
+.show-password:hover{background:#e7e9e6}
+#send-code{width:100%;margin-top:6px;background:#f5f0e8;border-color:#d7b77a;color:#554026}
+#send-code:hover{background:#e9dec8}
+#submit{width:100%;margin-top:7px}
+.helper-actions{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px}
+.link-button{font-size:11px;font-weight:760;color:#977445;border:0;background:none;text-decoration:underline;text-align:left;padding:0;line-height:1.6}
+.link-button:hover{color:#553a18}
+@media(max-width:400px){.mode-tabs button{font-size:9px;letter-spacing:-.015em;padding-inline:2px}.helper-actions{gap:7px}}
