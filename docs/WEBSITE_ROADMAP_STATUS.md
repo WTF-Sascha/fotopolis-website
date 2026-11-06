@@ -10,7 +10,7 @@
 | 4 | Anlässe, Galerie, Vertrauenselemente | In Preview implementiert | Bild-/Personenrechte und Fotobezeichnungen prüfen |
 | 5 | Kontakt- und Anfrageprozess | Preview-Kontaktformular mit eigenständigem E-Mail-Entwurf implementiert; Live-Datenübertragung **nicht** vorhanden | Formularworkflow, rechtliche Angaben, Aufbewahrung, Versand |
 | 6 | Neon-PostgreSQL-Buchungsdatenbank und Verfügbarkeitslogik | **In Neon Free (Frankfurt), PostgreSQL 18, separatem `development`-Branch installiert und erfolgreich mit zurückgerollten Testbuchungen geprüft**. CI-Parallelbuchungstest zuvor in PostgreSQL 17 bestanden. | Reale Inventar-/Pufferregeln, abgesicherte API und Admin-Auth; keine öffentliche Buchbarkeit |
-| 7 | Admin-Kalender und interne Sperrzeiten | Nächste Phase; Datenbankschema für Sperrzeiten auf Neon `development` vorhanden, UI/API noch offen | Auth, rollenbasierte Rechte, Audit-Logs, Testnutzer |
+| 7 | Admin-Kalender und interne Sperrzeiten | **Premium-Admin-Kalender als bedienbare, ausschließlich lokale Demo auf `/admin/` implementiert; private Neon-Rollen- und Audit-Tabellen auf `development` eingerichtet. Echte Auth, Rechteprüfung, Daten-API und Speicherung offen.** | Administrator-Konto und serverseitig geprüfte RBAC, geschützte Backendfunktionen, realer Gerätebestand, End-to-End-Tests |
 | 8 | Kundenkalender und echte Online-Buchung | Noch nicht implementiert | Konfliktprüfungen, transaktionale Buchung, Benachrichtigungen, Testfälle |
 | 9 | Design Studio und Buchungskommunikation | Noch nicht integriert | Umfang, Schnittstelle, finale Texte, Datenschutz- und E-Mail-Freigaben |
 | 10 | Finale Premium-QA und Übergabe | Teilweise automatisiert; Endabnahme ausstehend | Responsive, Browser, Performance, Accessibility, SEO, Datenschutz, Rechte, Security, Buchung, PWA, echte Testbuchungen |
@@ -33,6 +33,10 @@ Die aktuelle Vorschau ist **öffentlich über ihren Netlify-Link abrufbar**, auc
 - [Isolierter Postgres-17-Datenbanktest](https://github.com/WTF-Sascha/fotopolis-website/actions/workflows/step6-database-ci.yml)
 - Testdaten sind fiktiv und der Regeltest wird zurückgerollt; keinerlei Zugriff auf Mammut-, Tierheim-, Inventory- oder sonstige produktive Datenbanken.
 - Trotz erfolgreichem SQL-Test kann aktuell **kein echtes Datum als frei bestätigt oder reserviert werden**, weil noch kein eigenes Supabase-Cloudprojekt, kein bestätigter Gerätebestand und kein freigegebener Buchungsprozess existieren.
+
+## Aktualisierung 06.11.2026 – Premium Admin Studio (Roadmap 7)
+
+Die isolierte Netlify-Preview enthält jetzt [`/admin/`](https://deploy-preview-2--fotopolis-preview.netlify.app/admin/) mit Monats-/Wochenkalender, Gerätefilter und in-memory-Demo-Sperrzeiten. Das ist **keine produktive Admin-App**, sondern ein interaktiver Entwurf ohne echten Datenbankzugriff. Die Neon-Tabellen `fotopolis.admin_members` und `fotopolis.admin_activity` sind auf dem Entwicklungsbranch mit RLS und anfangs **0** Mitgliedern erstellt. [Technischer Entwicklungsstand 3.3](./FOTOPOLIS_ADMIN_STUDIO_3_3_STEP_7.md). Authentifizierung, autorisierte Endpunkte und echte Änderungen bleiben ausdrücklich offen.
 
 ## Aktualisierung 06.11.2026 – eigene Neon-Cloudinfrastruktur
 
