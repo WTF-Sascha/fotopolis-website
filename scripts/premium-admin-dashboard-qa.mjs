@@ -1,5 +1,5 @@
 import {chromium} from "playwright";
-import {readFileSync} from "node:fs";
+import {readFileSync,mkdirSync} from "node:fs";
 import assert from "node:assert/strict";
 
 const base=process.env.SITE_BASE_URL||"http://127.0.0.1:8766/";
@@ -32,6 +32,26 @@ try{
     const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:window.innerWidth}));
     assert.ok(size.scroll<=size.width+2,"Mobile overflow "+width);checks++;
     assert.deepEqual(errors,[],"Browser JS errors "+width+": "+errors.join(";"));checks++;
+    // Static VISUAL SHELL only. Never mocks an actual authorized JWT or
+    // queries private data; this is an offline layout review of the UI.
+    await page.goto(new URL("admin/dashboard/",base).href,{waitUntil:"domcontentloaded"});
+    await page.evaluate(()=>{
+      document.getElementById("gate").hidden=true;
+      document.getElementById("dashboard-app").hidden=false;
+      const grid=document.querySelector("[data-calendar-grid]");
+      for(let i=0;i<35;i++){
+        const d=document.createElement("button");d.type="button";d.className="day";
+        const span=document.createElement("span");span.className="day-number";span.textContent=String(i%31+1);
+        d.append(span);grid.append(d);
+      }
+    });
+    const layout=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:window.innerWidth}));
+    assert.ok(layout.scroll<=layout.width+2,"Protected dashboard visual shell overflow "+width+": "+JSON.stringify(layout));checks++;
+    assert.equal(await page.locator(".account-card").isVisible(),true);checks++;
+    if([320,430,1440].includes(width)){
+      mkdirSync("concepts/premium-v2/qa-screenshots/admin-studio",{recursive:true});
+      await page.screenshot({path:"concepts/premium-v2/qa-screenshots/admin-studio/dashboard-shell-"+width+".png",fullPage:true});
+    }
     await context.close();
   }
   console.log("FOTOPOLIS PROTECTED DASHBOARD QA SUCCESS – "+checks+" anonymous-protection, static-secret and responsive tests.");
