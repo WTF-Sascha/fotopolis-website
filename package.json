@@ -1,0 +1,19 @@
+{
+  "name": "fotopolis-premium-preview",
+  "version": "3.5.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:auth": "node scripts/build-admin-auth.mjs",
+    "build:preview": "python3 scripts/build-premium-preview.py && npm run build:auth",
+    "test:auth-unit": "node --test scripts/test-admin-auth.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/auth": "0.7.0-beta",
+    "@neondatabase/serverless": "1.2.0",
+    "jose": "6.1.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
