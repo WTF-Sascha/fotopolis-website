@@ -5,7 +5,7 @@ import {authorizeAdmin,response} from "./fotopolis-admin-session.mjs";
 const TYPES=new Set(["fotobox","fotospiegel","fotowohnwagen"]);
 const previewOrigin="https://deploy-preview-2--fotopolis-preview.netlify.app";
 const allowedKeys=["type","code","name"];
-const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{12}$/i;
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export function validateResourceDraft(value,method){
   if(!value||typeof value!=="object"||Array.isArray(value))return {error:"Invalid resource payload"};
   const keys=Object.keys(value);
