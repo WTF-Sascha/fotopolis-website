@@ -15,6 +15,8 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  const plans=[];
  const heading=node("div","plan-header");
  const message=node("p","plan-help","Sperrzeiten und Wartungen vorplanen, ohne echte Termine zu verändern. Vorschauentwürfe werden nie gespeichert.");
+ const inventoryLink=node("a","plan-inventory-link","Noch kein Gerät erfasst? Zuerst Geräte-Entwurf vorbereiten ↗");
+ inventoryLink.href="#inventory";
  const info=node("span","plan-nonpersistent","LOKALE PLANUNG · NICHT GESPEICHERT");
  const create=button("+ Sperrzeit planen","plan-primary");
  heading.append(create,info);
@@ -53,7 +55,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  download.disabled=true;
  const clear=button("Alle Entwürfe verwerfen");clear.disabled=true;
  exports.append(download,clear);
- root.replaceChildren(message,heading,form,status,rows,exports);
+ root.replaceChildren(message,inventoryLink,heading,form,status,rows,exports);
  function choices(){
    const previously=select.value;
    select.replaceChildren();
