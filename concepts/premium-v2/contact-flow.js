@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Product-page Wunschtermin links populate the existing detailed wizard.
   // Keep personal contact information out of URL parameters.
   const date = query.get("datum");
-  if(date && /^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+  if(date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
     const field=form.querySelector('[name="datum"]');
     if(field) field.value=date;
   }
