@@ -28,7 +28,7 @@ for(const width of widths){
  page.on("request",r=>{if(!["GET","HEAD"].includes(r.method()))writes.push(r.method()+" "+r.url())});
  for(const product of products){
   const {slug,code,display,image}=product;
-  const result=await page.goto(new URL(slug+"/",origin),{waitUntil:"networkidle",timeout:45000});
+  const result=await page.goto(new URL(slug+"/",origin).toString(),{waitUntil:"networkidle",timeout:45000});
   await page.evaluate(async()=>{
     for(const img of document.images)img.loading="eager";
     await Promise.all([...document.images].map(x=>x.decode().catch(()=>{})));
@@ -125,7 +125,7 @@ for(const width of widths){
   check(width,slug,"date summary updates",infoAfter.summary.includes(future.slice(0,4)),infoAfter.summary);
   check(width,slug,"full enquiry link does not leak PII",!infoAfter.full.includes("Mustermann")&&!infoAfter.full.includes("example.org"));
   // Preserve product, date, time and place in the existing full contact wizard.
-  await page.goto(new URL(infoAfter.full,origin),{waitUntil:"networkidle"});
+  await page.goto(new URL(infoAfter.full,origin).toString(),{waitUntil:"networkidle"});
   const prefilled=await page.evaluate(()=>({
     product:document.querySelector('[data-contact-flow] [name="produkt"]')?.value,
     date:document.querySelector('[data-contact-flow] [name="datum"]')?.value,
@@ -138,7 +138,7 @@ for(const width of widths){
     prefilled.product===code&&prefilled.date===future&&prefilled.time==="Abend"&&prefilled.place==="Ahlen"&&prefilled.occasion==="Hochzeit"&&prefilled.details.includes("Druckoptionen"),prefilled);
   check(width,slug,"no visitor POST or PUT",writes.length===0,writes);
   if([320,375,430,1440].includes(width)){
-   await page.goto(new URL(slug+"/",origin),{waitUntil:"networkidle"});
+   await page.goto(new URL(slug+"/",origin).toString(),{waitUntil:"networkidle"});
    await page.locator("#terminanfrage").scrollIntoViewIfNeeded();
    const file=slug+"-"+width+"-request.png";
    await page.screenshot({path:path.join(output,file),animations:"disabled",fullPage:false});
