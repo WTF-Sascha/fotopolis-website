@@ -13,6 +13,7 @@ test("internal hold allows only exact bounded occupancy and active resource",()=
   {...payload,occupiedFromUtc:"2026-12-01T12:00:00.000Z"},
   {...payload,occupiedUntilUtc:"2026-12-01T12:00:00.000Z"},
   {...payload,eventStartUtc:"no"},
+  {...payload,eventStartUtc:"2026-02-30T12:00:00.000Z"},
   {...payload,eventEndUtc:"2026-12-01T11:10:00.000Z"}
  ])assert.ok(validateHoldAction(bad,"POST").error);
 });
