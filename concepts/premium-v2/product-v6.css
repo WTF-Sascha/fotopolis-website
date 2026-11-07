@@ -247,3 +247,43 @@
 @media(prefers-reduced-motion:reduce){
  .product-v6-overview .product-spec,.product-editorial-link{transition:none}
 }
+
+
+/* Product Studio 6.0 · mobile hero balance: let the actual product enter the
+   first viewport sooner without cropping a single pixel of its source image. */
+@media(max-width:760px){
+ .route-fotobox .studio-page-hero-grid,
+ .route-fotospiegel .studio-page-hero-grid,
+ .route-fotowohnwagen .studio-page-hero-grid{
+   gap:17px;padding-top:62px;padding-bottom:39px;
+ }
+ .route-fotobox .studio-page-hero .page-breadcrumbs,
+ .route-fotospiegel .studio-page-hero .page-breadcrumbs,
+ .route-fotowohnwagen .studio-page-hero .page-breadcrumbs{margin-bottom:14px}
+ .route-fotobox .studio-page-hero h1,
+ .route-fotospiegel .studio-page-hero h1,
+ .route-fotowohnwagen .studio-page-hero h1{
+   font-size:clamp(38px,8.7vw,52px);line-height:1.08;
+   margin:13px 0 15px;
+ }
+ .route-fotobox .studio-page-hero h1:after,
+ .route-fotospiegel .studio-page-hero h1:after,
+ .route-fotowohnwagen .studio-page-hero h1:after{
+   margin-top:17px;
+ }
+ .route-fotobox .studio-page-hero p,
+ .route-fotospiegel .studio-page-hero p,
+ .route-fotowohnwagen .studio-page-hero p{
+   font-size:14px;line-height:1.59;
+ }
+ .route-fotobox .studio-page-hero .v4-page-actions,
+ .route-fotospiegel .studio-page-hero .v4-page-actions,
+ .route-fotowohnwagen .studio-page-hero .v4-page-actions{
+   margin-top:19px;
+ }
+ .route-fotobox .studio-page-hero-media,
+ .route-fotospiegel .studio-page-hero-media,
+ .route-fotowohnwagen .studio-page-hero-media{
+   height:clamp(275px,74vw,355px);min-height:0;
+ }
+}
