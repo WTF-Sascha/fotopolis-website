@@ -428,7 +428,7 @@ h1 em,h2 em,h3 em{font-weight:500;font-style:normal;color:#c49d5d}
   }
   .v4-hero-meta-claim{
     grid-area:claim;
-    grid-column:auto;
+    grid-column:1 / -1;
     width:100%;
     margin-top:5px;
     min-height:37px;
