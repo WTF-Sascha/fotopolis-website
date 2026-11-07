@@ -34,15 +34,15 @@ jobs:
           python3 -m http.server 8766 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-v4-audit.log 2>&1 &
           sleep 2
           curl --fail --silent --show-error http://127.0.0.1:8766/ >/dev/null
+      - name: Regression test minimal home 4.5, real links and images at 15 widths
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-home45-qa.mjs
       - name: Deep inspect 12 routes and 15 breakpoints
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
           QA_STRICT: "0"
         run: node scripts/reference-v4-audit.mjs
-      - name: Regression test minimal home 4.5, real links and images at 15 widths
-        env:
-          SITE_BASE_URL: http://127.0.0.1:8766/
-        run: node scripts/premium-home45-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
