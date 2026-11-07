@@ -47,7 +47,7 @@ for(const width of widths){
  check(width+" collapsed redundant storytelling",await page.locator(".intro.section,.interlude.section").count()===0);
  check(width+" three original product scenes",await page.locator(".v4-product-card img").count()===3);
  check(width+" three direct product cards",await page.locator(".v4-product-card").count()===3);
- check(width+" product order",[...await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.map(n=>n.id))].join(",")==="fotobox,fotowohnwagen,fotospiegel");
+ check(width+" product order",[...await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.map(n=>n.id))].join(",")==="fotobox,fotospiegel,fotowohnwagen");
  check(width+" detail links",(await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.every(n=>n.getAttribute("href")==="/"+n.id+"/"))));
  check(width+" no occasion advisor",await page.locator("#studio-berater,[data-advisor-occasion]").count()===0);
  check(width+" minimal home sections",await page.locator("main > section").count()===3);
