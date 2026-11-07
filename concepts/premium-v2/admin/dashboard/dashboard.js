@@ -5,6 +5,7 @@ import {setupPlanningManager} from "./planning-manager.js";
 import {setupReservationsManager} from "./reservations-manager.js";
 import {downloadCsv} from "./csv-export.js";
 import {filterInventory,calendarAgenda,occupancyLabels} from "./operations-insights.js";
+import {setupFirstRun} from "./first-run.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -25,7 +26,7 @@ const keyFromInstant=(timestamp)=>{
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
 const current=new Date(keyFromInstant(today)+"T12:00:00.000Z");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
-let inventoryManager=null,planningManager=null,reservationsManager=null,loadPending=false,adminRole="viewer",calendarLoaded=false;
+let inventoryManager=null,planningManager=null,reservationsManager=null,firstRun=null,loadPending=false,adminRole="viewer",calendarLoaded=false;
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -230,7 +231,7 @@ async function loadCalendar(){
     const data=await response.json();
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;calendarLoaded=true;
-    $("#setup-assistant").hidden=resources.length>0||adminRole==="viewer";
+    firstRun?.refresh({loaded:true,resources,allocations});
     $("[data-export-inventory]").disabled=!["owner","manager"].includes(adminRole)||resources.length===0;
     $("[data-export-calendar]").disabled=!["owner","manager"].includes(adminRole)||allocations.length===0;
     $("[data-count=resources]").textContent=String(resources.length);
@@ -238,7 +239,7 @@ async function loadCalendar(){
     $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
   }catch(e){
     resources=[];allocations=[];calendarLoaded=false;
-    $("#setup-assistant").hidden=true;
+    firstRun?.refresh({loaded:false,resources:[],allocations:[]});
     $("[data-export-inventory]").disabled=true;$("[data-export-calendar]").disabled=true;
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Kalenderdaten nicht verfügbar · Keine Verfügbarkeitsaussage möglich";
@@ -423,6 +424,11 @@ async function authenticate(){
     $("[data-role-label]").textContent=roleLabels[body.role];
     $("#top-role").textContent=roleLabels[body.role].toUpperCase();
     gate.hidden=true;app.hidden=false;
+    firstRun ||= setupFirstRun({
+      root:$("#setup-assistant"),
+      onHealthCheck:()=>fetchHealthReport()
+    });
+    firstRun.refresh({role:body.role,loaded:false,resources:[],allocations:[]});
     inventoryManager ||= setupInventoryManager({
       root:$("[data-inventory-manager]"),getResources:()=>resources,
       onChange:()=>{planningManager?.refresh();renderCalendar()},
@@ -485,20 +491,26 @@ function updateNavigation(){
  }
 }
 window.addEventListener("hashchange",updateNavigation);
+async function fetchHealthReport(){
+ if(adminRole!=="owner")throw Error("Nur der Hauptadministrator darf die Systemrechte prüfen.");
+ const token=await getAdminJwt(client,await client.getSession());
+ if(!token)throw Error("Die Sitzung ist abgelaufen.");
+ const res=await fetch("/api/fotopolis/admin/health",{
+   method:"GET",headers:{"Authorization":"Bearer "+token},
+   cache:"no-store",credentials:"same-origin"
+ });
+ if(!res.ok)throw Error("Der Systemstatus ist gerade nicht erreichbar.");
+ const data=await res.json();
+ if(data?.previewOnly!==true||!data.services)throw Error("Ungültiger Systemstatus.");
+ return data;
+}
 $("[data-health-check]").addEventListener("click",async()=>{
  if(adminRole!=="owner")return;
  const button=$("[data-health-check]"),target=$("[data-health-status]");
  button.disabled=true;target.textContent="Verbindungen werden serverseitig geprüft …";
  try{
-   const token=await getAdminJwt(client,await client.getSession());
-   if(!token)throw Error("session");
-   const response=await fetch("/api/fotopolis/admin/health",{
-     method:"GET",headers:{"Authorization":"Bearer "+token},
-     cache:"no-store",credentials:"same-origin"
-   });
-   if(!response.ok)throw Error("unavailable");
-   const body=await response.json();
-   if(!body.previewOnly||!body.services)throw Error("unexpected");
+   const body=await fetchHealthReport();
+   firstRun?.refresh({health:body});
    const names={inventory:"Geräte",blocks:"Sperrzeiten",reservations:"Vormerkungen",calendar:"Kalender"};
    target.replaceChildren();
    for(const [name,label] of Object.entries(names)){
@@ -506,8 +518,8 @@ $("[data-health-check]").addEventListener("click",async()=>{
      const line=document.createElement("div");line.className="health-row";
      const title=document.createElement("span");title.textContent=label;
      const state=document.createElement("strong");
-     state.textContent=data?.connected?"Verbunden":data?.configured?"Verbindung gestört":"Nicht konfiguriert";
-     state.dataset.ok=String(data?.connected===true);
+     state.textContent=data?.connected?(data.permissionsReady?"Verbunden · Rechte geprüft":"Verbunden · Berechtigungen unvollständig"):data?.configured?"Verbindung gestört":"Nicht konfiguriert";
+     state.dataset.ok=String(data?.connected===true&&data?.permissionsReady===true);
      line.append(title,state);target.append(line);
    }
  }catch{target.textContent="Die Systemdiagnose ist aktuell nicht erreichbar."}
