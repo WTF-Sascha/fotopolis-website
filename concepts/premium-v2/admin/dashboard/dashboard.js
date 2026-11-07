@@ -74,7 +74,7 @@ function entriesForDay(key){
 function description(a){
   const r=resources.find(x=>x.id===a.resource_id);
   const label=r?r.display_name:"Unbekanntes Gerät";
-  const kind=a.allocation_kind==="booking"?"Buchung":a.allocation_kind==="maintenance"?"Wartung":"Interne Sperrzeit";
+  const kind=a.allocation_kind==="booking"?"Interne Reservierung":a.allocation_kind==="maintenance"?"Wartung":"Interne Sperrzeit";
   return label+" · "+kind;
 }
 function plannedForDay(key){
