@@ -9,6 +9,11 @@ on:
       - "concepts/premium-v2/studio-v5.js"
       - "scripts/build-premium-preview.py"
       - "scripts/build_premium_pages.py"
+      - "concepts/premium-v2/pages.json"
+      - "concepts/premium-v2/product-v6.css"
+      - "concepts/premium-v2/product-enquiry-v6.js"
+      - "concepts/premium-v2/contact-flow.js"
+      - "scripts/product-v6-qa.mjs"
   workflow_dispatch:
 permissions:
   contents: read
@@ -17,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify real preview URL, HTTP 200 and 4.5.1 homepage content
+      - name: Verify the public preview serves Studio 6.0 product pages and direct date requests
         shell: bash
         run: |
           python3 - <<'PY'
@@ -41,12 +46,33 @@ jobs:
                       css_code=css_res.status
                       stylesheet=css_res.read().decode("utf-8",errors="replace")
                   reference_css = css_code==200 and ".studio-header-curve-stroke" in stylesheet and ".studio-header-curve-fill" in stylesheet and ".studio-menu-toggle.mobile-toggle" in stylesheet
+                  product_results=[]
+                  for slug,canonical in (("fotobox","Fotobox"),("fotospiegel","Fotospiegel"),("fotowohnwagen","Fotowohnwagen")):
+                      product_req=urllib.request.Request(url+slug+"/",headers={"User-Agent":"Mozilla/5.0 FOTOPOLIS-QA"})
+                      with urllib.request.urlopen(product_req,timeout=20) as product_res:
+                          product_status=product_res.status
+                          product_html=product_res.read().decode("utf-8",errors="replace")
+                      product_valid=(product_status==200 and
+                          'data-product-request-section' in product_html and
+                          'data-product="'+canonical+'"' in product_html and
+                          'href="/product-v6.css"' in product_html and
+                          'src="/product-enquiry-v6.js"' in product_html and
+                          'id="terminanfrage"' in product_html)
+                      product_results.append(product_valid)
+                      print("PRODUCT_ROUTE",slug,"HTTP",product_status,"INLINE_REQUEST",product_valid)
+                  req=urllib.request.Request(url+"product-v6.css",headers={"User-Agent":"Mozilla/5.0 FOTOPOLIS-QA"})
+                  with urllib.request.urlopen(req,timeout=20) as css_resp:
+                      product_css_ok=css_resp.status==200 and "Product Detail Studio 6.0" in css_resp.read().decode("utf-8",errors="replace")
+                  req=urllib.request.Request(url+"product-enquiry-v6.js",headers={"User-Agent":"Mozilla/5.0 FOTOPOLIS-QA"})
+                  with urllib.request.urlopen(req,timeout=20) as js_resp:
+                      product_js_ok=js_resp.status==200 and "data-product-request-email" in js_resp.read().decode("utf-8",errors="replace")
+                  product6=all(product_results) and product_css_ok and product_js_ok
                   print("CSS_STATUS", css_code, "CSS_BYTES", len(stylesheet), "CURVE_RULE", ".studio-header-curve-stroke" in stylesheet)
-                  print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy} STUDIO5={studio} WAVE={reference_curve} MENU3={reference_menu} CSS={reference_css}")
-                  if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy and studio and reference_curve and reference_menu and reference_css:
+                  print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy} STUDIO5={studio} WAVE={reference_curve} MENU3={reference_menu} CSS={reference_css} PRODUCT6={product6}")
+                  if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy and studio and reference_curve and reference_menu and reference_css and product6:
                       print("PUBLIC_PREVIEW_VERIFIED", url)
                       break
-                  last = f"HTTP {code}: wrong or stale 4.5.1 homepage"
+                  last = f"HTTP {code}: wrong, outdated or incomplete Studio 6.0 product preview"
               except Exception as exc:
                   last = repr(exc)
                   print(f"ATTEMPT={attempt+1} ERROR={last}")
