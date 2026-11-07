@@ -309,6 +309,38 @@ async function saveBlock(method,payload){
   void loadActivity();
   return answer.allocation;
 }
+async function checkOccupancy(payload){
+ const token=await getAdminJwt(client,await client.getSession());
+ if(!token)throw Error("Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.");
+ const url=new URL("/api/fotopolis/admin/occupancy-check",location.origin);
+ url.searchParams.set("resourceId",payload.resourceId);
+ url.searchParams.set("occupiedFromUtc",payload.occupiedFromUtc);
+ url.searchParams.set("occupiedUntilUtc",payload.occupiedUntilUtc);
+ let response;
+ try{response=await fetch(url.pathname+url.search,{
+   method:"GET",headers:{"Authorization":"Bearer "+token},
+   credentials:"same-origin",cache:"no-store"
+ })}catch{throw Error("Keine Verbindung zur geschützten Belegungsprüfung.")}
+ if(!response.ok){
+   const errors={
+     400:"Bitte Gerät, Zeitraum und beide Logistikpuffer prüfen.",
+     401:"Die Sitzung ist abgelaufen. Bitte neu anmelden.",
+     403:"Für die Vorprüfung fehlen Administratorrechte.",
+     404:"Das ausgewählte Gerät ist nicht registriert.",
+     503:"Die geschützte Belegungsprüfung ist momentan nicht erreichbar."
+   };
+   throw Error(errors[response.status]||"Vorprüfung fehlgeschlagen (HTTP "+response.status+").");
+ }
+ let body;
+ try{body=await response.json()}catch{throw Error("Ungültige Serverantwort bei der Belegungsprüfung.")}
+ if(body?.readOnly!==true||body?.previewOnly!==true||
+    body.resourceId!==payload.resourceId||
+    body.occupiedFromUtc!==payload.occupiedFromUtc||
+    body.occupiedUntilUtc!==payload.occupiedUntilUtc){
+   throw Error("Die Serverantwort stimmt nicht mit dem Prüfzeitraum überein.");
+ }
+ return body;
+}
 async function saveReservation(method,payload){
  const token=await getAdminJwt(client,await client.getSession());
  if(!token)throw Error("Anmeldung abgelaufen. Bitte melde dich erneut an.");
@@ -409,7 +441,8 @@ async function authenticate(){
       root:$("[data-reservations-manager]"),getResources:()=>resources,
       getAllocations:()=>allocations,
       createHold:body.role==="viewer"?undefined:(payload)=>saveReservation("POST",payload),
-      changeHold:body.role==="viewer"?undefined:(id,action)=>saveReservation("PATCH",{id,action})
+      changeHold:body.role==="viewer"?undefined:(id,action)=>saveReservation("PATCH",{id,action}),
+      checkOccupancy:body.role==="viewer"?undefined:(payload)=>checkOccupancy(payload)
     });
     await loadCalendar();
     await loadActivity();
