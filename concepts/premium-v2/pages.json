@@ -9,7 +9,7 @@
       "headline": "Gemeinsam lachen. Momente bewahren.",
       "lead": "Die Fotobox bringt Menschen zusammen – für spontane Bilder bei Hochzeit, Geburtstag, Jubiläum oder Firmenevent.",
       "image": "fotobox-event-1672.webp",
-      "imageAlt": "Freigegebene FOTOPOLIS-Fotobox in festlicher Geburtstagsszene",
+      "imageAlt": "FOTOPOLIS Fotobox in festlicher Event-Atmosphäre",
       "blocks": [
         {
           "heading": "Ein Erlebnis für deine Gäste",
@@ -17,7 +17,7 @@
         },
         {
           "heading": "Design und Ausdrucke",
-          "body": "Die bisherige Website zeigt individuelle Fotolayouts und Ausdruckoptionen. Welche Gestaltung, Druckleistung und Betreuung beim gewünschten Termin konkret verfügbar sind, wird im Angebot bestätigt."
+          "body": "Individuelle Fotolayouts, passende Designs und Ausdrucke machen jedes Foto zu einem persönlichen Andenken. Welche Druckoptionen und Gestaltungsleistungen du nutzen möchtest, stimmen wir auf dein Event ab."
         },
         {
           "heading": "Vor deinem Event",
@@ -30,20 +30,17 @@
         {
           "label": "KAMERA",
           "title": "Canon EOS 1300D",
-          "text": "Die bisherige Website nennt eine DSLR-Kamera mit 18 Megapixeln.",
-          "source": "Bestandsangabe · vor Angebot bestätigen"
+          "text": "Unsere Fotobox ist mit einer Canon EOS 1300D ausgestattet und erstellt detailreiche Fotos mit 18 Megapixeln."
         },
         {
           "label": "LICHT",
           "title": "Studio-Blitzkopf",
-          "text": "Für eine gleichmäßige Ausleuchtung ist laut bisheriger Website ein Studio-Blitz vorgesehen.",
-          "source": "Bestandsangabe · vor Angebot bestätigen"
+          "text": "Ein Studio-Blitzkopf sorgt für eine gleichmäßige Ausleuchtung und überzeugende Fotos bei unterschiedlichen Lichtverhältnissen."
         },
         {
           "label": "FOTOS",
           "title": "Sofortdruck & USB",
-          "text": "Sofortausdrucke, digitale Übergabe und individuelle Fotolayouts werden auf der bisherigen Website beschrieben.",
-          "source": "Optionen und Umfang vor Buchung bestätigen"
+          "text": "Mit Sofortausdrucken, digitaler Übergabe und individuellen Fotolayouts werden aus Schnappschüssen bleibende Erinnerungen."
         }
       ],
       "process": [
@@ -63,8 +60,7 @@
       "related": [
         "fotospiegel",
         "fotowohnwagen"
-      ],
-      "contentStatus": "Abgleich mit früherer offizieller Produktbeschreibung; Ausstattung und Verfügbarkeit vor Angebot bestätigen"
+      ]
     },
     {
       "slug": "fotospiegel",
@@ -73,7 +69,7 @@
       "headline": "Ein Spiegel. Ein besonderer Auftritt.",
       "lead": "Interaktiv, elegant und ein Blickfang: Der Fotospiegel macht das Fotografieren selbst zum Erlebnis.",
       "image": "fotospiegel-hero-lossless.webp",
-      "imageAlt": "Freigegebene unveränderte Studio-Visualisierung des FOTOPOLIS-Fotospiegels",
+      "imageAlt": "FOTOPOLIS Fotospiegel mit beleuchtetem Rahmen",
       "blocks": [
         {
           "heading": "Fotografieren mit Interaktion",
@@ -85,7 +81,7 @@
         },
         {
           "heading": "Individuelle Abstimmung",
-          "body": "Verfügbare Fotoformate, Layouts und organisatorische Anforderungen werden vor einer Buchung verbindlich geklärt. Das gezeigte Bild ist eine Studio-Visualisierung."
+          "body": "Fotolayouts, Formate und weitere Gestaltungswünsche stimmen wir passend zu deiner Veranstaltung ab. Auch Platzbedarf und Aufbau berücksichtigen wir bei der Planung."
         }
       ],
       "tagline": "Der besondere Moment beginnt mit einem Blick.",
@@ -94,20 +90,17 @@
         {
           "label": "BEDIENUNG",
           "title": "Touch-Interaktion",
-          "text": "Auf dem bisherigen Auftritt wird eine intuitive Touch-Bedienung genannt.",
-          "source": "Bestandsangabe · vor Angebot bestätigen"
+          "text": "Der Fotospiegel lässt sich intuitiv über die berührungsempfindliche Oberfläche bedienen."
         },
         {
           "label": "ERLEBNIS",
           "title": "Live-Effekte",
-          "text": "Dezente Animationen und Effekte gehören laut bisherigem Produktauftritt zum Konzept.",
-          "source": "Verfügbarkeit vor Buchung bestätigen"
+          "text": "Animationen und kreative Effekte machen die Aufnahme zum unterhaltsamen Erlebnis für deine Gäste."
         },
         {
           "label": "INSZENIERUNG",
           "title": "Hochformat & LED",
-          "text": "Die frühere Beschreibung nennt Hochformat-Fotos und LED-Lichtakzente.",
-          "source": "Bestandsangabe · vor Angebot bestätigen"
+          "text": "Hochformat-Aufnahmen und stilvolle LED-Lichtakzente setzen Gäste und Erinnerungsfotos in Szene."
         }
       ],
       "process": [
@@ -127,8 +120,7 @@
       "related": [
         "fotobox",
         "fotowohnwagen"
-      ],
-      "contentStatus": "Abgleich mit früherer offizieller Produktbeschreibung; Ausstattung und Verfügbarkeit vor Angebot bestätigen"
+      ]
     },
     {
       "slug": "fotowohnwagen",
@@ -137,7 +129,7 @@
       "headline": "Ein kleiner Ort für große Geschichten.",
       "lead": "Ein Fotowohnwagen mit eigenem Charakter: ein besonderer Treffpunkt für Menschen und ihre Erinnerungen.",
       "image": "fotowohnwagen-gartenparty-1448.webp",
-      "imageAlt": "Freigegebene unveränderte Produktvisualisierung des Fotowohnwagens auf einer Gartenparty",
+      "imageAlt": "FOTOPOLIS Fotowohnwagen bei einer Gartenveranstaltung",
       "blocks": [
         {
           "heading": "Ein Erlebnisraum auf deiner Feier",
@@ -158,20 +150,17 @@
         {
           "label": "FORMAT",
           "title": "4,25 × 2,05 × 2,35 m",
-          "text": "Diese Maße nennt der bisherige Auftritt. Zufahrt und Aufstellfläche müssen für die Location geprüft werden.",
-          "source": "Bestandsangabe · Maße vor Buchung prüfen"
+          "text": "Mit etwa 4,25 × 2,05 × 2,35 m bietet der Fotowohnwagen ein kompaktes Event-Highlight. Ausreichende Zufahrt und Stellfläche sind einzuplanen."
         },
         {
           "label": "RAUM",
           "title": "Sitzplatz für Gruppen",
-          "text": "Eine renovierte Sitzkonstruktion ist laut bisheriger Website für Gruppen bis ungefähr neun Personen ausgelegt.",
-          "source": "Bestandsangabe · Kapazität prüfen"
+          "text": "Die renovierte Sitzgruppe bietet Raum für Gruppen von bis zu etwa neun Personen."
         },
         {
           "label": "AMBIENTE",
           "title": "Renoviertes Interieur",
-          "text": "Lichtkonzept, Vorhänge und eine gemütliche Einrichtung prägen laut bisheriger Website das Erlebnis.",
-          "source": "Ausstattung vor Buchung bestätigen"
+          "text": "Mit stimmungsvoller Beleuchtung, Vorhängen und gemütlichem Interieur entsteht eine besondere Fotoatmosphäre."
         }
       ],
       "process": [
@@ -191,23 +180,22 @@
       "related": [
         "fotobox",
         "fotospiegel"
-      ],
-      "contentStatus": "Abgleich mit früherer offizieller Produktbeschreibung; Ausstattung und Verfügbarkeit vor Angebot bestätigen"
+      ]
     },
     {
       "slug": "pakete",
       "title": "Pakete & Leistungen",
       "eyebrow": "PAKETE · LEISTUNGEN · EVENTPLANUNG",
       "headline": "Ein Fotoerlebnis. So individuell wie dein Event.",
-      "lead": "Wähle das passende Erlebnis, vergleiche mögliche Leistungen und stelle deine Wünsche für ein unverbindliches Angebot zusammen. Nichts wird direkt gebucht.",
+      "lead": "Entdecke unsere drei Fotoerlebnisse und stelle die passenden Leistungen für dein individuelles Eventangebot zusammen.",
       "blocks": [
         {
           "heading": "Ein Angebot, das zu deinem Event passt",
           "body": "Paketumfang und Mietdauer richten sich nach Veranstaltung, Aufstellort und den gewünschten Optionen. Konkrete Preise, Druckkontingente, Anfahrtskosten, Auf- und Abbau sowie mögliche Betreuung werden erst nach individueller Prüfung schriftlich bestätigt."
         },
         {
-          "heading": "Was ist im Grundpaket enthalten?",
-          "body": "Die bisherige Website listet unterschiedliche Ausstattungsmerkmale, aber keine verlässlich abrufbare, verbindliche Paketzuordnung. Wir zeigen daher Erlebnisprofile und Leistungswünsche statt unbelegter Inklusivleistungen."
+          "heading": "Deine Möglichkeiten auf einen Blick",
+          "body": "Du hast die Wahl zwischen Fotobox, Fotospiegel und Fotowohnwagen. Gemeinsam stellen wir die gewünschte Mietdauer, Gestaltung, Druckoptionen und weitere Leistungen passend zu deiner Veranstaltung zusammen."
         }
       ],
       "packageCards": [
@@ -217,7 +205,7 @@
           "title": "Fotobox",
           "teaser": "Für alle, die zusammen lachen und direkt zum nächsten Erinnerungsfoto springen möchten.",
           "checks": [
-            "DSLR-Fotografie laut bisheriger Website",
+            "DSLR-Kamera mit 18 Megapixeln",
             "Blitzbeleuchtung und Fotos vor Ort",
             "Gestaltung & Fotodruck als Wunsch anfragen"
           ],
@@ -229,7 +217,7 @@
           "title": "Fotospiegel",
           "teaser": "Für ein präsentes Fotoerlebnis mit Interaktion und einer besonderen Inszenierung.",
           "checks": [
-            "Touch-Bedienung laut bisheriger Website",
+            "Intuitive Touch-Bedienung",
             "Hochformat & LED-Lichtakzente",
             "Live-Effekte abhängig vom System"
           ],
@@ -309,23 +297,23 @@
         {
           "id": "druck",
           "title": "Drucke & digitale Fotos",
-          "description": "Die bisherige Fotobox-Seite nennt Sofortdruck und USB-Übergabe. Druckformate, Mengen und die Verfügbarkeit bei anderen Systemen sind vor Angebotszusage zu prüfen.",
-          "status": "bestandsangabe",
+          "description": "Fotodruck und digitale Fotodateien machen die Bilder direkt vor Ort und auch nach dem Event erlebbar. Formate, Druckmengen und Übergabe stimmen wir passend zur Veranstaltung ab.",
+          "status": "anfrage",
           "bullets": [
-            "Fotodruck als Wunschoption",
-            "Digitaler Fotoexport / USB bei Fotobox beschrieben",
-            "Print-Umfang und Format vorab bestätigen"
+            "Sofortdruck und verschiedene Fotoformate",
+            "Digitaler Fotoexport",
+            "Passende Druckmenge für deine Gäste"
           ]
         },
         {
           "id": "gestaltung",
           "title": "Fotolayouts & Hintergründe",
-          "description": "Individuelle Event-Layouts und Hintergründe sind auf der früheren Fotobox-Seite beschrieben. Aktuelle Auswahl, mögliche Individualisierung und Kosten werden im Angebot festgelegt.",
-          "status": "bestandsangabe",
+          "description": "Mit individuellen Fotolayouts und passenden Hintergründen erhält dein Fotoerlebnis eine persönliche Note – abgestimmt auf dein Event und deine Wünsche.",
+          "status": "anfrage",
           "bullets": [
-            "Motiv passend zu Hochzeit, Geburtstag oder Firma",
-            "Fotohintergrund als Wunsch anfragen",
-            "Logo- und Layoutgestaltung separat abstimmen"
+            "Design passend zu Hochzeit, Geburtstag oder Firmenfeier",
+            "Individuelle Fotohintergründe",
+            "Personalisierung mit Namen, Datum oder Logo"
           ]
         },
         {
@@ -354,7 +342,7 @@
       "packagePlanner": {
         "id": "package-planner",
         "title": "Stelle deine Eventwünsche zusammen.",
-        "introduction": "Diese Angaben erstellen nur eine unverbindliche E-Mail-Vorlage in deinem Browser. Keine Buchung, keine Verfügbarkeitsprüfung, kein automatischer Versand.",
+        "introduction": "Wähle dein Fotoerlebnis, die gewünschte Einsatzzeit und deine Extras. Aus deinen Angaben erstellen wir eine persönliche Anfrage.",
         "productOptions": [
           {
             "value": "Fotobox",
@@ -425,13 +413,13 @@
     {
       "slug": "galerie",
       "title": "Galerie",
-      "eyebrow": "GALERIE · MOMENTE & PRODUKTVISUALISIERUNGEN",
+      "eyebrow": "GALERIE · UNSERE FOTOERLEBNISSE",
       "headline": "Drei Erlebnisse. Eine Bildwelt.",
-      "lead": "Entdecke Fotobox, Fotospiegel und Fotowohnwagen in ausgewählten Produktvisualisierungen.",
+      "lead": "Entdecke FOTOPOLIS BOX, MIRROR und CAMPER in stimmungsvollen Eventwelten.",
       "blocks": [
         {
-          "heading": "Produktdarstellungen",
-          "body": "Die gezeigten Szenen illustrieren die Fotoerlebnisse. Verbindliche Angaben zu Ausstattung, Gestaltung und Verfügbarkeit erhältst du in deinem persönlichen Angebot."
+          "heading": "Für deinen besonderen Anlass",
+          "body": "Jedes unserer Fotoerlebnisse setzt eigene Akzente – vom klassischen Party-Magneten über den eleganten Fotospiegel bis zur außergewöhnlichen Fotolounge auf Rädern."
         }
       ],
       "galleryCollection": [
@@ -439,28 +427,28 @@
           "file": "fotobox-event-1672.webp",
           "kind": "products",
           "label": "FOTOPOLIS BOX",
-          "alt": "Freigegebene Fotobox-Visualisierung in einer festlichen Geburtstagsszene",
-          "note": "Produktvisualisierung · illustrative Inszenierung",
+          "alt": "FOTOPOLIS Fotobox in festlich dekorierter Eventlocation",
+          "note": "Spontane Erinnerungen für dein Event",
           "rights": "approved-product"
         },
         {
           "file": "fotospiegel-hero-lossless.webp",
           "kind": "products",
           "label": "FOTOPOLIS MIRROR",
-          "alt": "Freigegebene Fotospiegel-Studiovisualisierung",
-          "note": "Produktvisualisierung · illustrative Inszenierung",
+          "alt": "FOTOPOLIS Fotospiegel mit Beleuchtung",
+          "note": "Interaktiver Blickfang für besondere Momente",
           "rights": "approved-product"
         },
         {
           "file": "fotowohnwagen-gartenparty-1448.webp",
           "kind": "products",
           "label": "FOTOPOLIS CAMPER",
-          "alt": "Freigegebene Fotowohnwagen-Visualisierung auf einer Gartenparty",
-          "note": "Produktvisualisierung · illustrative Inszenierung",
+          "alt": "FOTOPOLIS Fotowohnwagen in Gartenatmosphäre",
+          "note": "Charmante Fotolounge mit Vintage-Flair",
           "rights": "approved-product"
         }
       ],
-      "galleryNotice": "Die gezeigten Motive sind Produktvisualisierungen. Die tatsächliche Ausstattung wird individuell abgestimmt."
+      "galleryNotice": "Entdecke unsere drei Fotoerlebnisse und finde das passende Highlight für deine Veranstaltung."
     },
     {
       "slug": "anlaesse",
@@ -605,13 +593,13 @@
         },
         {
           "eyebrow": "03 / TRANSPARENZ",
-          "title": "Angebot statt Vermutung",
-          "description": "Leistungen, Druckoptionen, Anfahrt, Aufbau, Preise und Verfügbarkeit werden erst in einem konkreten Angebot bestätigt."
+          "title": "Persönlich abgestimmt",
+          "description": "Von Fotolayouts bis Aufstellort: Wir planen die Details gemeinsam und halten Leistungen und Preise im Angebot fest."
         },
         {
-          "eyebrow": "04 / VERANTWORTUNG",
-          "title": "Bewusst mit Erinnerungen umgehen",
-          "description": "Eventaufnahmen werden für den späteren öffentlichen Auftritt erst nach Prüfung der erforderlichen Nutzungs- und Personenrechte ausgewählt."
+          "eyebrow": "04 / ERINNERUNGEN",
+          "title": "Momente mit Charakter",
+          "description": "Unsere drei Erlebniswelten bringen Menschen zusammen und schaffen Erinnerungen mit Persönlichkeit."
         }
       ],
       "trustFlow": [
@@ -631,7 +619,7 @@
           "description": "Verfügbarkeiten, Lieferumfang und Preis erst nach individueller Klärung verbindlich festhalten."
         }
       ],
-      "reviewPolicy": "Wir veröffentlichen Kundenstimmen, Referenzlogos und Veranstaltungszahlen nur, wenn sie nachweisbar und freigegeben sind."
+      "reviewPolicy": "Dein Event steht im Mittelpunkt – mit einem Fotoerlebnis, das zu deinem Anlass und deinen Gästen passt."
     },
     {
       "slug": "faq",
@@ -646,7 +634,7 @@
         ],
         [
           "Kann ich Fotolayouts individuell gestalten?",
-          "Die bisherige FOTOPOLIS-Website erwähnt individuelle Layouts. Verfügbare Optionen und eventuelle Zusatzkosten bestätigen wir im Angebot."
+          "Ja, individuelle Layouts und Designs sind Teil unserer Gestaltungsmöglichkeiten. Ob mit Namen, Datum oder Firmenlogo: Wir stimmen das passende Motiv und eventuelle Zusatzleistungen persönlich mit dir ab."
         ],
         [
           "Kann ich direkt online buchen?",
@@ -728,11 +716,32 @@
       "title": "Impressum",
       "eyebrow": "RECHTLICHE INFORMATIONEN",
       "headline": "Impressum",
-      "lead": "Die vollständigen Anbieterangaben werden vor der öffentlichen Veröffentlichung ergänzt und rechtlich geprüft.",
-      "blocks": [
+      "lead": "Anbieterinformationen und Kontaktangaben von FOTOPOLIS Social Events.",
+      "blocks": [],
+      "legalSections": [
         {
-          "heading": "Bisherige Pflichtangaben",
-          "body": "Die bisherige offizielle Website stellt ein eigenes Impressum bereit. Wir übernehmen dessen Angaben hier nicht ungeprüft, da Verantwortliche, Kontaktdaten und rechtliche Details vor dem Relaunch bestätigt werden müssen."
+          "heading": "Angaben zum Anbieter",
+          "body": "Fotopolis Social Events\nAnna Maria Elisabeth Förster und Max Petter GbR\nGesellschaft bürgerlichen Rechts (GbR)\nSperlingsweg 4\n59229 Ahlen\nDeutschland"
+        },
+        {
+          "heading": "Vertretungsberechtigte Gesellschafter",
+          "body": "Anna Maria Elisabeth Förster\nMax Petter"
+        },
+        {
+          "heading": "Kontakt",
+          "body": "Telefon: 02382 8889483\nMobil: 0151 59834919\nE-Mail: kontakt@fotopolis-mieten.de"
+        },
+        {
+          "heading": "Verantwortlich für die Inhalte",
+          "body": "Anna Maria Elisabeth Förster und Max Petter GbR\nSperlingsweg 4\n59229 Ahlen"
+        },
+        {
+          "heading": "Urheberrecht",
+          "body": "Texte, Gestaltung, Fotografien und weitere Inhalte dieses Angebots sind urheberrechtlich geschützt. Eine Nutzung außerhalb der gesetzlichen Schranken bedarf der Zustimmung der jeweiligen Rechteinhaber."
+        },
+        {
+          "heading": "Externe Links",
+          "body": "Für Inhalte verlinkter externer Internetseiten sind deren jeweilige Betreiber verantwortlich. Bei Kenntnis von Rechtsverletzungen werden entsprechende Links entfernt."
         }
       ]
     },
@@ -741,11 +750,36 @@
       "title": "Datenschutz",
       "eyebrow": "RECHTLICHE INFORMATIONEN",
       "headline": "Datenschutz",
-      "lead": "Die endgültige Datenschutzerklärung wird vor der öffentlichen Veröffentlichung anhand der tatsächlich genutzten Dienste und Verarbeitungen geprüft.",
-      "blocks": [
+      "lead": "Informationen zur Verarbeitung personenbezogener Daten beim Besuch unserer Website und bei der Kontaktaufnahme.",
+      "blocks": [],
+      "legalSections": [
         {
-          "heading": "Verarbeitung von Anfragen",
-          "body": "Kontaktanfragen werden derzeit als E-Mail-Entwurf im eigenen E-Mail-Programm vorbereitet. Das Formular sendet selbst keine Daten an FOTOPOLIS."
+          "heading": "Verantwortliche Stelle",
+          "body": "Anna Maria Elisabeth Förster und Max Petter GbR (Fotopolis Social Events)\nSperlingsweg 4\n59229 Ahlen\nE-Mail: kontakt@fotopolis-mieten.de\nTelefon: 02382 8889483"
+        },
+        {
+          "heading": "Besuch unserer Website",
+          "body": "Für die technische Bereitstellung und Sicherheit dieser Website werden beim Aufruf technisch erforderliche Verbindungsdaten verarbeitet, beispielsweise IP-Adresse, Zeitpunkt des Zugriffs und Browserinformationen. Die Verarbeitung erfolgt im berechtigten Interesse an einer sicheren und zuverlässigen Bereitstellung unseres Onlineangebots (Art. 6 Abs. 1 lit. f DSGVO)."
+        },
+        {
+          "heading": "Hosting",
+          "body": "Für die Bereitstellung dieser Website setzen wir Netlify als Hostingdienst ein. Dabei können technisch erforderliche Zugriffsdaten zur Auslieferung der Inhalte und zur Abwehr von Missbrauch verarbeitet werden."
+        },
+        {
+          "heading": "Kontaktaufnahme und Eventanfragen",
+          "body": "Das Anfrageformular erstellt zunächst einen E-Mail-Entwurf in deinem Browser. Eine Nachricht wird erst durch dein aktives Versenden im E-Mail-Programm an uns übermittelt. Wenn du uns kontaktierst, verwenden wir deine Angaben zur Bearbeitung der Anfrage und zur anschließenden Kommunikation (Art. 6 Abs. 1 lit. b oder f DSGVO)."
+        },
+        {
+          "heading": "Geschützter Verwaltungsbereich",
+          "body": "Für berechtigte Mitarbeitende stellen wir einen gesicherten Verwaltungsbereich zur Verfügung. Bei der Anmeldung und Nutzung werden erforderliche Konto-, Authentifizierungs- und Verwaltungsdaten über die eingesetzten Authentifizierungs- und Datenbankdienste verarbeitet. Der Zugang ist nicht für Besucher ohne Berechtigung vorgesehen."
+        },
+        {
+          "heading": "Deine Datenschutzrechte",
+          "body": "Du hast nach Maßgabe der DSGVO das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Datenübertragbarkeit. Zudem kannst du der Verarbeitung widersprechen und dich bei einer Datenschutzaufsichtsbehörde beschweren. Für entsprechende Anfragen nutze bitte die oben angegebene E-Mail-Adresse."
+        },
+        {
+          "heading": "Speicherdauer",
+          "body": "Personenbezogene Daten speichern wir nur so lange, wie dies für den jeweiligen Zweck notwendig ist oder gesetzliche Aufbewahrungspflichten bestehen."
         }
       ]
     }
