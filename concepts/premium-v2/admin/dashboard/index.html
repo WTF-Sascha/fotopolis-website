@@ -67,10 +67,16 @@
     <article><span>INTERNE SPERRZEITEN</span><strong data-count="blocks">–</strong><small>Blockierungen und Wartung</small></article>
    </section>
    <section class="setup-card" id="setup-assistant" hidden aria-labelledby="setup-heading">
-     <span class="eyebrow">ERSTEINRICHTUNG · FOTOPOLIS STUDIO</span>
-     <h2 id="setup-heading">Dein Studio ist bereit. Jetzt fehlt nur euer echter Gerätebestand.</h2>
-     <p>Lege zunächst eine tatsächlich vorhandene Fotobox, einen Fotospiegel oder einen Fotowohnwagen an. Neue Geräte bleiben sicher deaktiviert, bis du sie ausdrücklich freigibst. Es wurden keine fiktiven Bestände angelegt.</p>
-     <a class="primary-button" href="#inventory">Erstes Mietgerät anlegen</a>
+     <span class="eyebrow">ERSTEINRICHTUNG · FOTOPOLIS STUDIO 4.3</span>
+     <h2 id="setup-heading">Dein Studio Schritt für Schritt in Betrieb nehmen.</h2>
+     <p>Hier siehst du den tatsächlichen Fortschritt deiner internen Verwaltung. Bestätigt wird nur, was durch Anmeldung, Datenbankrechte oder gespeicherte Entwicklungsdaten nachweisbar ist. Es werden keine Testgeräte angelegt.</p>
+     <div class="setup-progress"><strong data-setup-progress>Ersteinrichtung wird geprüft …</strong><span>Nur isolierte Entwicklungsvorschau</span></div>
+     <ol class="setup-steps" data-setup-steps aria-label="Fortschritt der Ersteinrichtung" aria-live="polite"></ol>
+     <div class="setup-actions">
+       <button type="button" class="setup-check-button" data-setup-health-check>Systemrechte prüfen</button>
+       <a class="primary-button" data-setup-next href="#inventory">Echtes Mietgerät anlegen</a>
+     </div>
+     <p class="setup-status" data-setup-status role="status" aria-live="polite"></p>
    </section>
    <section class="operations-agenda" id="agenda" aria-labelledby="agenda-heading">
     <div class="operations-agenda-top"><div><span class="eyebrow">BETRIEBSÜBERSICHT · NEON DEVELOPMENT</span><h2 id="agenda-heading">Termine im gewählten Zeitraum</h2></div><a href="#calendar" class="agenda-calendar-link">Kalender öffnen ↗</a></div>
