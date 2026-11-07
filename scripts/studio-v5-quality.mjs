@@ -27,12 +27,19 @@ for(const width of widths){
       const rect=el=>{if(!el)return null;const a=el.getBoundingClientRect();return {left:a.left,right:a.right,top:a.top,bottom:a.bottom,w:a.width,h:a.height}};
       const images=[...document.images].map(i=>({src:i.getAttribute("src"),ok:!!i.naturalWidth,fit:getComputedStyle(i).objectFit}));
       const header=rect($(".studio-header")),logo=rect($(".studio-identity img"));
+      const curve=rect($(".studio-header-curve"));
+      const curveStroke=getComputedStyle($(".studio-header-curve-stroke")).stroke;
+      const menuButton=$(".studio-menu-toggle");
+      const menuButtonRect=rect(menuButton);
+      const menuStrokeCount=menuButton?.querySelectorAll("span").length||0;
+      const menuBorder=menuButton?getComputedStyle(menuButton).borderTopWidth:"";
+
       const title=rect($("main h1"));
       const brokenHeadings=[...document.querySelectorAll("main h1,main h2,main h3")].filter(e=>e.scrollWidth>e.clientWidth+3&&(getComputedStyle(e).overflowX==="hidden"||getComputedStyle(e).overflowX==="clip")).map(e=>e.textContent.trim().slice(0,70));
       return {
         width:document.documentElement.scrollWidth,innerWidth,
         hasStyle:!!$('link[href="/studio-v5.css"]'),hasScript:!!$('script[src="/studio-v5.js"]'),
-        header,logo,title,h1s:document.querySelectorAll("main h1").length,
+        header,logo,curve,curveStroke,menuButtonRect,menuStrokeCount,menuBorder,title,h1s:document.querySelectorAll("main h1").length,
         curve:rect($(".studio-header-curve")),
         curvePresent:!!$(".studio-header-curve svg path.studio-header-curve-stroke"),
         curveStroke:$(".studio-header-curve-stroke")?getComputedStyle($(".studio-header-curve-stroke")).stroke:null,
@@ -56,11 +63,18 @@ for(const width of widths){
     check(width,slug,"all images complete",data.images.every(i=>i.ok),data.images.filter(i=>!i.ok).map(x=>x.src));
     check(width,slug,"no clipped headings",data.brokenHeadings.length===0,data.brokenHeadings);
     check(width,slug,"equipment images not cropped",data.overflowMedia.every(i=>i.fit==="contain"),data.overflowMedia);
-    check(width,slug,"prominent original logo",!!data.logo&&data.logo.w>=58,data.logo);
+    check(width,slug,"prominent original logo",!!data.logo&&data.logo.w>=94,data.logo);
+    check(width,slug,"reference curved separator exists",!!data.curve&&data.curve.h>=50&&data.curveStroke!=="none",data.curve);
+    check(width,slug,"curve starts at header-to-hero transition",!!data.curve&&!!data.header&&Math.abs(data.curve.top-data.header.bottom)<5,{curve:data.curve,header:data.header});
+    check(width,slug,"logo centered in reference header",!!data.header&&!!data.logo&&Math.abs((data.logo.left+data.logo.right)/2-(data.header.left+data.header.right)/2)<=3,{logo:data.logo,header:data.header});
     check(width,slug,"reference curved divider mounted",data.curvePresent&&data.curve?.h>=20,{curve:data.curve});
     check(width,slug,"champagne separator stroke",!!data.curveStroke&&data.curveStroke!=="none",data.curveStroke);
     check(width,slug,"three golden hamburger strokes",data.menuBarCount===3,data.menuBarCount);
     check(width,slug,"responsive menu icon",data.menuVisible===(width<=1100));
+    if(width<=1100){
+      check(width,slug,"reference three-line unframed gold menu",data.menuStrokeCount===3&&parseFloat(data.menuBorder)<0.2,{count:data.menuStrokeCount,border:data.menuBorder});
+      check(width,slug,"menu separated from centered logo",!!data.logo&&!!data.menuButtonRect&&data.menuButtonRect.left>data.logo.right+6,{logo:data.logo,menu:data.menuButtonRect});
+    }
     check(width,slug,"responsive quick nav",data.bottomNavVisible===(width<=760));
     check(width,slug,"no uncaught JavaScript error",errors.length===0,errors);
     if(slug===""){
