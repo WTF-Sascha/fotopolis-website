@@ -2,12 +2,8 @@
 /* FOTOPOLIS Studio Signature 5.0: progressive UX polish.
    Works with the existing tested nav, inquiry, gallery and carousel scripts. */
 document.addEventListener("DOMContentLoaded",()=>{
-  const header=document.querySelector("[data-studio-header]");
-  if(header){
-    const sync=()=>header.classList.toggle("is-scrolled",window.scrollY>18);
-    sync();
-    window.addEventListener("scroll",sync,{passive:true});
-  }
+  // Reference header is a stable, naturally scrolling document section.
+  // Do not mutate its height, logo size or curve position during scrolling.
 
   // Treat the product showcase as an accessible native horizontal carousel.
   const track=document.querySelector("[data-v4-track]");
