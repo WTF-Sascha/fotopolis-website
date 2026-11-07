@@ -1,4 +1,4 @@
-name: FOTOPOLIS Admin Studio 3.3 Review QA
+name: FOTOPOLIS Admin Studio 4.0 Integration QA
 on:
   push:
     branches: [design/premium-v2]
@@ -112,7 +112,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fotopolis-admin-studio-3-3
+          name: fotopolis-admin-studio-4-0
           path: concepts/premium-v2/qa-screenshots/admin-studio/
           if-no-files-found: warn
           retention-days: 30
