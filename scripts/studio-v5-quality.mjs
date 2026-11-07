@@ -38,7 +38,7 @@ for(const width of widths){
         hasMedia:!!$(".studio-page-hero-media"),hasArt:!!$(".studio-page-hero-art"),
         asideCount:document.querySelectorAll(".page-aside").length,
         contactForm:!!$("[data-contact-flow]"),
-        goldCTA:document.querySelectorAll('a[href="/kontakt/"],a[href^="/kontakt/?"]').length,
+        goldCTA:document.querySelectorAll('.v45-final-cta a.button[href="/kontakt/"]').length,
         menuVisible:!!$(".mobile-toggle")&&getComputedStyle($(".mobile-toggle")).display!=="none",
         cardOrder:[...document.querySelectorAll(".v4-product-card")].map(x=>x.id),
         noHeroCTA:document.querySelector(".v45-hero a")===null,
