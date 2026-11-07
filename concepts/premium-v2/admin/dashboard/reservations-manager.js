@@ -2,7 +2,7 @@
 import {parseBerlinTime,localBerlinTime} from "./planning-logic.js";
 const el=(tag,text,cls)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=text;return x};
 const button=(label,cls="plan-secondary")=>{const x=el("button",label,cls);x.type="button";return x};
-export function prepareHold(input,devices){
+export function prepareHold(input,devices,existing=[]){
  const device=devices.find(x=>x.id===input.resourceId&&x.enabled);
  if(!device)return {error:"Bitte ein aktiviertes Mietgerät auswählen."};
  const start=parseBerlinTime(input.start),end=parseBerlinTime(input.end);
@@ -12,6 +12,11 @@ export function prepareHold(input,devices){
   before<0||after<0||before>1440||after>1440)return {error:"Aufbau-/Anfahrt- und Abbau-/Rückfahrtpuffer jeweils ausdrücklich zwischen 0 und 1440 Minuten festlegen."};
  const occupiedFrom=new Date(start.getTime()-before*60000),occupiedUntil=new Date(end.getTime()+after*60000);
  if(occupiedUntil-occupiedFrom>14*86400000)return {error:"Das gesamte Belegungsfenster darf 14 Tage nicht überschreiten."};
+ if(existing.some(x=>x.resource_id===device.id&&x.allocation_state!=="cancelled" &&
+   occupiedFrom.getTime()<new Date(x.occupied_until).getTime() &&
+   new Date(x.occupied_from).getTime()<occupiedUntil.getTime())){
+   return {error:"Dieses Gerät ist in der geladenen Kalenderübersicht bereits belegt. Bitte anderen Zeitraum wählen."};
+ }
  return {value:{resourceId:device.id,eventStartUtc:start.toISOString(),
    eventEndUtc:end.toISOString(),occupiedFromUtc:occupiedFrom.toISOString(),
    occupiedUntilUtc:occupiedUntil.toISOString()}};
@@ -95,7 +100,7 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
  form.addEventListener("submit",async event=>{
    event.preventDefault();
    const check=prepareHold({resourceId:device.value,start:start.value,end:end.value,
-     before:before.value,after:after.value},getResources());
+     before:before.value,after:after.value},getResources(),getAllocations());
    if(check.error){error.textContent=check.error;return}
    submit.disabled=true;error.textContent="Prüfe verfügbare Zeit und speichere …";
    try{await createHold(check.value);form.hidden=true;error.textContent="";status.textContent="Interne Vormerkung gespeichert. Sie blockiert das Gerät.";action.focus()}
