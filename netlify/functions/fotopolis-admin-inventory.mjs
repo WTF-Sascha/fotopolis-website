@@ -20,11 +20,15 @@ export function validateResourceDraft(value,method){
     return {value:{type,code,name}};
   }
   if(method==="PATCH"){
-    if(keys.some(key=>!["id","name"].includes(key)))return {error:"Unexpected resource field"};
+    if(keys.some(key=>!["id","name","enabled"].includes(key)))return {error:"Unexpected resource field"};
     const id=value.id;
-    const name=typeof value.name==="string"?value.name.trim():"";
-    if(typeof id!=="string"||!uuid.test(id)||name.length<2||name.length>100)return {error:"Invalid resource ID or name"};
-    return {value:{id,name}};
+    if(typeof id!=="string"||!uuid.test(id))return {error:"Invalid resource ID"};
+    const hasName=Object.hasOwn(value,"name"),hasEnabled=Object.hasOwn(value,"enabled");
+    if(!hasName&&!hasEnabled)return {error:"No resource changes provided"};
+    const name=hasName&&typeof value.name==="string"?value.name.trim():null;
+    if(hasName&&(name===null||name.length<2||name.length>100))return {error:"Invalid resource name"};
+    if(hasEnabled&&typeof value.enabled!=="boolean")return {error:"Invalid enabled status"};
+    return {value:{id,name,enabled:hasEnabled?value.enabled:null}};
   }
   return {error:"Method not allowed"};
 }
@@ -45,6 +49,7 @@ export default async function handler(request,context){
   try{payload=JSON.parse(text)}catch{return response({error:"Invalid JSON"},400)}
   const parsed=validateResourceDraft(payload,request.method);
   if(parsed.error)return response({error:parsed.error},400);
+  if(request.method==="PATCH"&&parsed.value.enabled!==null&&authorized.role!=="owner")return response({error:"Owner role required to change device activation"},403);
   const connection=Netlify.env.get("FOTOPOLIS_NEON_DEV_INVENTORY_WRITER_URL");
   if(!connection)return response({error:"Resource changes are not enabled in this preview"},503);
   try{
@@ -65,10 +70,12 @@ export default async function handler(request,context){
         ) SELECT inserted.* FROM inserted
       `;
     }else{
-      const {id,name}=parsed.value;
+      const {id,name,enabled}=parsed.value;
       rows=await sql`
         WITH changed AS (
-          UPDATE fotopolis.resources SET display_name=${name}
+          UPDATE fotopolis.resources SET
+            display_name=COALESCE(${name}::text,display_name),
+            enabled=COALESCE(${enabled}::boolean,enabled)
           WHERE id=${id}::uuid
           RETURNING id,resource_code,product_type,display_name,enabled
         ), recorded AS (
