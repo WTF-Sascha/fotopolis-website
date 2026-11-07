@@ -37,8 +37,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             content += (
                 '<figure class="page-detail-photo"><img loading="eager" decoding="async" '
                 f'src="/assets/images/{e(image)}" alt="{e(p["imageAlt"])}"></figure>'
-                '<p class="page-image-caption">Freigegebene, unveränderte Produktvisualisierung.'
-                ' Tatsächliche Ausstattung bitte vor Buchung bestätigen.</p>'
+                '<p class="page-image-caption">FOTOPOLIS Fotoerlebnis – Ausstattung und Gestaltung passend zu deinem Event.</p>'
             )
         if "gallery" in p and not p.get("galleryCollection"):
             assert p["gallery"] == ["LEG-060.webp","LEG-073.webp","LEG-046.webp"]
@@ -74,12 +73,17 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     '<section class="page-content-block">'
                     f'<h2>{e(block["heading"])}</h2><p>{e(block["body"])}</p></section>'
                 )
-        if slug in ("impressum","datenschutz"):
-            content = (
-                '<div class="page-legal-notice"><strong>Angaben in Vorbereitung.</strong> '
-                'Diese Rechtstexte müssen vor der öffentlichen Veröffentlichung rechtlich geprüft und freigegeben werden.</div>'
-                + content
-            )
+        if p.get("legalSections"):
+            assert slug in ("impressum", "datenschutz")
+            content += '<div class="legal-information">'
+            for section in p["legalSections"]:
+                safe_body = e(section["body"]).replace("\n", "<br>")
+                content += (
+                    '<section class="page-content-block legal-section">'
+                    f'<h2>{e(section["heading"])}</h2>'
+                    f'<p class="legal-paragraph">{safe_body}</p></section>'
+                )
+            content += '</div>'
         # Roadmap point 2: shared premium product stage + source-labelled features.
         # The source product photo is referenced unchanged, never generated or transformed.
         rich_sections = ""
@@ -97,16 +101,13 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<figure class="product-stage-media">'
                 f'<img src="/assets/images/{e(image)}" alt="{e(p["imageAlt"])}" '
                 f'data-approved-product="{e(p["slug"])}" loading="eager" decoding="async">'
-                '<figcaption>Freigegebene Studio-Produktvisualisierung – Bild unverändert. '
-                'Ausstattung und Lieferumfang bitte vor Buchung bestätigen.</figcaption></figure>'
+                f'<figcaption>FOTOPOLIS {e(p["title"])} – ein besonderes Highlight für dein Event.</figcaption></figure>'
                 '<div class="product-stage-copy">'
                 '<span class="kicker">DAS FOTOERLEBNIS</span>'
                 f'<h2>{e(p["tagline"])}</h2>'
                 f'<p>{e(p["story"])}</p>'
                 f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">'
                 f'{e(p["title"])} anfragen <span aria-hidden="true">↗</span></a>'
-                '<small class="product-source-note">Technische Angaben basieren auf der bisherigen '
-                'FOTOPOLIS-Website; Details und Verfügbarkeiten werden im Angebot bestätigt.</small>'
                 '</div></div>'
                 '<div class="product-specs" aria-label="Produktdetails">'
             )
@@ -115,8 +116,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     '<article class="product-spec">'
                     f'<span class="kicker">{e(feature["label"])}</span>'
                     f'<h3>{e(feature["title"])}</h3>'
-                    f'<p>{e(feature["text"])}</p>'
-                    f'<small>{e(feature["source"])}</small></article>'
+                    f'<p>{e(feature["text"])}</p></article>'
                 )
             rich_sections += '</div></div></section>'
 
@@ -126,7 +126,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<div class="inner"><div class="section-heading">'
                 '<span class="kicker">DEIN WEG ZUM EVENT</span>'
                 '<h2>Von der Idee zum <em>Fotoerlebnis.</em></h2>'
-                '<p>Die Planung bleibt persönlich. Ohne Live-Buchung oder unbestätigte Zusagen.</p>'
+                '<p>Wir begleiten dich von der ersten Anfrage bis zum abgestimmten Eventkonzept.</p>'
                 '</div><div class="product-step-grid">'
             )
             for number, step in enumerate(p["process"], 1):
@@ -207,15 +207,12 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     'aria-labelledby="services-title"><div class="inner">'
                     '<div class="section-heading"><span class="kicker">LEISTUNGSUMFANG</span>'
                     '<h2 id="services-title">Was gehört <em>zu deinem Event?</em></h2>'
-                    '<p>Unsere Leistungen werden für jede Veranstaltung individuell geprüft. '
-                    'Die folgenden Angaben sind Möglichkeiten beziehungsweise '
-                    'Beschreibungen des bisherigen Angebots, keine fest zugesagten Paketinhalte.</p>'
+                    '<p>Entdecke unsere Leistungen und stelle dein individuelles Fotoerlebnis zusammen.</p>'
                     '</div><div class="services-grid">'
                 )
                 for topic in p["serviceTopics"]:
                     assert re.fullmatch(r"[a-z]+", topic["id"])
-                    status = {"bestandsangabe":"Auf der bisherigen Website beschrieben",
-                              "anfrage":"Auf Anfrage prüfen",
+                    status = {"anfrage":"Auf Anfrage",
                               "individuell":"Individuell abstimmen"}[topic["status"]]
                     rich_sections += (
                         f'<article class="service-panel" id="service-{e(topic["id"])}">'
@@ -388,7 +385,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             for item in p["galleryCollection"]:
                 assert item["kind"] == allow[item["file"]]
                 assert item["rights"] == "approved-product" and item["kind"] == "products"
-                category = "PRODUKTVISUALISIERUNG"
+                category = "FOTOERLEBNIS"
                 rich_sections += (
                     f'<figure class="curated-item" data-gallery-item data-gallery-kind="{e(item["kind"])}" '
                     f'data-v4-product="{e({"fotobox-event-1672.webp":"fotobox","fotospiegel-hero-lossless.webp":"fotospiegel","fotowohnwagen-gartenparty-1448.webp":"fotowohnwagen"}[item["file"]])}">'
@@ -630,7 +627,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<aside class="page-aside"><span class="kicker">UNVERBINDLICH PLANEN</span>'
             '<h2>Dein Event. Dein Moment.</h2>'
             '<p>Welches Erlebnis passt zu deinem Anlass? Schicke uns die Eckdaten, '
-            'wir klären das individuell. Kein Live-Kalender und keine Sofortbuchung.</p>'
+            'wir klären alle Details persönlich und erstellen das passende Angebot.</p>'
             f'<a class="button gold" href="{aside_contact}">Event anfragen '
             '<span aria-hidden="true">↗</span></a></aside>'
             if show_side_panel else ""
