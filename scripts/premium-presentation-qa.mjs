@@ -26,7 +26,7 @@ const dashboard=readFileSync(base+"admin/dashboard/index.html","utf8");
 const contact=readFileSync(base+"kontakt/index.html","utf8");
 const legal=readFileSync(base+"impressum/index.html","utf8");
 const privacy=readFileSync(base+"datenschutz/index.html","utf8");
-assert.match(home,/Drei Erlebnisse/);checks++;
+assert.match(home,/Drei Charaktere/);checks++;
 assert.match(home,/class="v45-home"/);checks++;
 assert.doesNotMatch(home,/data-advisor-occasion|id="studio-berater"|class="home-trust"/);checks++;
 assert.match(gallery,/FOTOERLEBNIS/);checks++;
