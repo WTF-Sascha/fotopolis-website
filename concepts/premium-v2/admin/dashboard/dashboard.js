@@ -382,6 +382,9 @@ async function authenticate(){
     const body=await resp.json();
     if(!body.authorized||!["owner","manager","viewer"].includes(body.role))throw Error("Berechtigung ungültig");
     jwt=token;adminRole=body.role;
+    const canPlan=["owner","manager"].includes(body.role);
+    $("[data-reserve-day]").hidden=!canPlan;
+    $("[data-reserve-selected]").hidden=!canPlan;
     $("[data-health-check]").hidden=body.role!=="owner";
     $("[data-user-email]").textContent=r.data.user.email||"–";
     $("[data-user-role]").textContent=roleLabels[body.role];
@@ -512,6 +515,15 @@ $("[data-date-go]").addEventListener("click",async()=>{
 $("[data-plan-day]").addEventListener("click",()=>{
  $("#planning")?.scrollIntoView({block:"start",behavior:"smooth"});
  planningManager?.openForDate(selected);
+});
+$("[data-reserve-day]").addEventListener("click",()=>{
+ $("#bookings")?.scrollIntoView({block:"start",behavior:"smooth"});
+ reservationsManager?.openForDate(selected);
+});
+$("[data-reserve-selected]").addEventListener("click",()=>{
+ $("#day-detail-dialog").close();
+ $("#bookings")?.scrollIntoView({block:"start",behavior:"smooth"});
+ reservationsManager?.openForDate(selected);
 });
 $("[data-close-day]").addEventListener("click",()=>$("#day-detail-dialog").close());
 $("[data-plan-selected]").addEventListener("click",()=>{
