@@ -80,9 +80,14 @@ for(const width of widths){
     const toggle=page.locator("[data-menu-toggle]");
     await toggle.click();
     check(width,"menu","opens",await toggle.getAttribute("aria-expanded")==="true");
-    check(width,"menu","has visible link",await page.locator('#mainnav a[href="/fotospiegel/"]').isVisible());
+    const productMenu=page.locator('[aria-controls="nav-erlebnisse"]');
+    await productMenu.click();
+    check(width,"menu","product dropdown expands",await productMenu.getAttribute("aria-expanded")==="true");
+    check(width,"menu","reveals Mirror detail link",await page.locator('#mainnav a[href="/fotospiegel/"]').isVisible());
     await page.keyboard.press("Escape");
-    check(width,"menu","Escape closes",await toggle.getAttribute("aria-expanded")==="false");
+    check(width,"menu","Escape closes subnavigation",await productMenu.getAttribute("aria-expanded")==="false");
+    await page.keyboard.press("Escape");
+    check(width,"menu","Escape closes main menu",await toggle.getAttribute("aria-expanded")==="false");
   }
   if(width<=760){
     const rail=page.locator("[data-v4-track]");
