@@ -10,7 +10,7 @@
 | 4 | Anlässe, Galerie, Vertrauenselemente | In Preview implementiert | Bild-/Personenrechte und Fotobezeichnungen prüfen |
 | 5 | Kontakt- und Anfrageprozess | Preview-Kontaktformular mit eigenständigem E-Mail-Entwurf implementiert; Live-Datenübertragung **nicht** vorhanden | Formularworkflow, rechtliche Angaben, Aufbewahrung, Versand |
 | 6 | Neon-PostgreSQL-Buchungsdatenbank und Verfügbarkeitslogik | **In Neon Free (Frankfurt), PostgreSQL 18, separatem `development`-Branch installiert und erfolgreich mit zurückgerollten Testbuchungen geprüft**. CI-Parallelbuchungstest zuvor in PostgreSQL 17 bestanden. | Reale Inventar-/Pufferregeln, abgesicherte API und Admin-Auth; keine öffentliche Buchbarkeit |
-| 7 | Admin-Kalender und interne Sperrzeiten | **Persönlicher Owner-Account in Neon development mit bestätigter E-Mail und aktivierter Rolle; E-Mail-/Passwortanmeldung, Passwortvergabe per OTP, geschütztes Premium-Dashboard und tatsächliche Geräte-/Kalenderansicht (read-only) im Deploy Preview entwickelt.** | Echter Passwort-End-to-End-Test, sichere Ressourcen-/Sperrzeiten-CRUD-Endpunkte, Bestands- und Pufferregeln, endgültige Freigabe |
+| 7 | Admin-Kalender und interne Sperrzeiten | **Studio 4.0: authentifizierte Geräteanlage/-bearbeitung/-aktivierung, interne Sperrzeiten und Vormerkungen mit Pufferzeiten, Kalender sowie Audit-Log im isolierten Development-Preview implementiert.** | Echter Benutzer-End-to-End-Test sämtlicher Schreibvorgänge; tatsächlicher Bestand, Betriebsregeln und finale Freigabe |
 | 8 | Kundenkalender und echte Online-Buchung | Noch nicht implementiert | Konfliktprüfungen, transaktionale Buchung, Benachrichtigungen, Testfälle |
 | 9 | Design Studio und Buchungskommunikation | Noch nicht integriert | Umfang, Schnittstelle, finale Texte, Datenschutz- und E-Mail-Freigaben |
 | 10 | Finale Premium-QA und Übergabe | Teilweise automatisiert; Endabnahme ausstehend | Responsive, Browser, Performance, Accessibility, SEO, Datenschutz, Rechte, Security, Buchung, PWA, echte Testbuchungen |
@@ -25,14 +25,14 @@
 
 ## Technischer Hinweis zur Vorschau
 
-Die aktuelle Vorschau ist **öffentlich über ihren Netlify-Link abrufbar**, auch wenn Seiten `noindex` setzen. Deshalb dürfen dort keine vertraulichen Schlüssel, Kundendaten oder personenbezogenen Testdatensätze abgelegt werden. Eine echte Supabase-Datenbank und der E-Mail-Versand werden erst in einer geeigneten isolierten Testumgebung mit freigegebenen Sicherheitsregeln angeschlossen.
+Die aktuelle Vorschau ist **öffentlich über ihren Netlify-Link abrufbar**, auch wenn Seiten `noindex` setzen. Deshalb dürfen dort keine vertraulichen Schlüssel, Kundendaten oder personenbezogenen Testdatensätze abgelegt werden. Es besteht eine getrennte Neon-Entwicklungsdatenbank. Zugangsdaten werden ausschließlich serverseitig in Netlify Functions hinterlegt; echte Kundendaten und Mailversand sind nicht Bestandteil dieser öffentlichen Preview-Oberfläche.
 
 ## Punkt 6 – Nachweis und Supabase-Isolation
 
 - [SQL-Implementierung und Testmatrix](https://github.com/WTF-Sascha/fotopolis-website/blob/design/premium-v2/docs/WEBSITE_DEVELOPMENT_3_2_STEP_6.md)
 - [Isolierter Postgres-17-Datenbanktest](https://github.com/WTF-Sascha/fotopolis-website/actions/workflows/step6-database-ci.yml)
 - Testdaten sind fiktiv und der Regeltest wird zurückgerollt; keinerlei Zugriff auf Mammut-, Tierheim-, Inventory- oder sonstige produktive Datenbanken.
-- Trotz erfolgreichem SQL-Test kann aktuell **kein echtes Datum als frei bestätigt oder reserviert werden**, weil noch kein eigenes Supabase-Cloudprojekt, kein bestätigter Gerätebestand und kein freigegebener Buchungsprozess existieren.
+- Im isolierten Neon-Development-Branch sind interne Gerätebelegungen inzwischen technisch vorgesehen. **Öffentliche Verfügbarkeit und Kundenreservierungen bleiben dennoch deaktiviert**, bis der tatsächliche Bestand sowie Prozess-, Preis- und Vertragsregeln freigegeben sind.
 
 ## Aktualisierung 06.11.2026 – Persönlicher Adminbereich 3.6
 
@@ -69,3 +69,11 @@ Technische Einzelheiten: [Studio 3.7 Geräteverwaltung](./FOTOPOLIS_STUDIO_3_7_I
 Die Anmeldung ist im echten Nutzerbrowser bestätigt. Geräteeditor und Kalender sind weiterhin ausschließlich für autorisierte Nutzer zugänglich. Neu hinzugekommen sind ein gezielter Datumsprung, ein Tagesdetail-Dialog direkt im sichtbaren Fenster, eine manuelle Kalenderaktualisierung mit Verbindungsstatus und eine separate, **nicht persistente** Verwaltung von Sperrzeiten- und Wartungsentwürfen. Geräte aus echten Neon-Daten und lokale Geräteentwürfe werden klar unterschieden; Planungsentwürfe blockieren **keine** realen Buchungen. Der lokale JSON-Export ist nur eine Planungskopie.
 
 Die Entwicklungskontrolle `database/neon/005_inventory_writer_review_only.sql` ist ein nicht ausgeführter Minimalrechte-Vorschlag. Die bislang getrennt provisionierte Write-Rolle bleibt ohne INSERT-/UPDATE-Berechtigung; es gibt **keinen** Writer-Secret in Netlify und keine produktive Mutations-API. Der echte Gerätebestand und die tatsächlichen Pufferregeln sind weiterhin nicht bestätigt. Roadmap-Punkte 7–10 sind daher nicht vollständig abgeschlossen. Details: [Studio 3.8 Operations](./FOTOPOLIS_STUDIO_3_8_ADMIN_OPERATIONS.md).
+
+## Update 07.11.2026 – Studio 4.0 Admin MVP
+
+Der bestätigte Owner-Login wurde um echte persistente Geräteanlage, Umbenennung und Owner-Aktivierung erweitert. Interne Sperrzeiten/Wartungen sowie Vormerkungen mit ausdrücklich eingegebenen Logistikpuffern nutzen eigene serverseitig autorisierte, separat berechtigte Neon-Schreibrollen. PostgreSQL prüft Überschneidungen transaktional. Vormerkungen lassen sich bestätigen oder stornieren; Audit-Einträge werden serverseitig geschrieben und rollenbeschränkt angezeigt. **Kein öffentlicher Buchungsprozess und keine Kunden-Personendaten.**
+
+Die zugehörigen DB-Funktionsrechte wurden ausschließlich im FOTOPOLIS-`development`-Branch eingerichtet, nicht auf `production`. Technische SQL-Verifikation, rollbackgeschützte Inventartests und automatisierte Browser-Vertragstests liegen vor. **Eine Live-End-to-End-Abnahme der neuen Schreibprozesse mit dem Benutzerkonto steht noch aus**; ein grüner CI-Lauf allein bedeutet keine vollständig produktive Freigabe. Kein `main`-Merge und keine Änderung der Live-Domain.
+
+Ausführliche Übergabe: [FOTOPOLIS Studio 4.0](./FOTOPOLIS_STUDIO_4_0_HANDOVER.md).
