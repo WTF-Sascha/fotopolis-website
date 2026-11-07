@@ -67,3 +67,17 @@ Realer Bestand und Verfügbarkeit, Logistik-/Pufferstandardwerte, Kundenanfrage 
 ## Release-Gate
 
 Der allgemeine Premium-Release-Workflow kann bis zur fachlichen Freigabe absichtlich rot bleiben. Ein grüner isolierter Admin-QA-Lauf bedeutet nur, dass die abgeprüften technischen Fälle erfolgreich sind. `main` und die Live-Domain dürfen erst nach einer erneuten, expliziten Freigabe verändert werden.
+
+## Qualitätsausbau am 07.11.2026
+
+- **Leere-Ersteinrichtung:** Die Übersicht blendet nur dann einen Geräte-Setup-Hinweis ein, wenn der tatsächliche Neon-Bestand erfolgreich geladen und leer ist. Viewer erhalten keine Schreibaufforderung.
+- **CSV-Export:** Admin/Manager können den realen Gerätebestand und den aktuell geladenen Kalenderbereich lokal exportieren. CSV nutzt UTF-8 mit BOM, Semikolon als Trennzeichen und neutralisiert potenziell gefährliche Tabellenformeln. Die Exporte sind keine öffentliche Verfügbarkeitszusage.
+- **Anwendungssicherheit:** Vorprüfung für interne Vormerkungen erkennt bereits angezeigte Zeitkonflikte clientseitig. Der PostgreSQL-Exclusion-Constraint bleibt die verbindliche zweite, serverseitige Prüfung; unvollständig geladene Zeiträume können nicht lokal garantiert werden.
+- **Systemdiagnose:** Die Owner-Rolle kann im Konto-Bereich die vier isolierten Datenbankverbindungen (Geräte, Sperrzeiten, Vormerkungen, Kalender) prüfen. Der Endpoint `GET /api/fotopolis/admin/health` führt ausschließlich `SELECT current_user` aus. Er liefert keinen Verbindungsstring, keine personenbezogenen Daten und keine SQL-Fehlerdetails. Eine bestehende Verbindung ist noch keine End-to-End-Schreibbestätigung.
+- **Qualitätsprüfungen:** CSV-Injection-Test, RLS-/JWT-Negativtests, Desktop-/Mobile-UI-Vertragstest für Geräte, Sperren und interne Reservierungen mit 320, 375, 430 und 1440 Pixel, Screenshots für 320/1440 Pixel. Test-Callbacks sind isoliert, es werden keine realen Reservierungen geschrieben.
+
+### Nachvollziehbarkeit
+
+Die Netlify-Variablen der drei Writer-Rollen sind als `secret`, ausschließlich mit Scope `functions` und Context `deploy-preview` konfiguriert. Im Zuge der Kontrolle wurde ein zunächst leer konfigurierter Wert für den Kalender-Writer erkannt und korrigiert. Ein anschließender Deploy ist für die Übernahme der Runtime-Konfiguration vorgesehen. Die Datenbank-Entwicklungsrollen wurden mit `SELECT current_user` verifiziert, ohne Zugangsdaten offenzulegen.
+
+**Bitte beachten:** Ein bestätigter automatisierter Test macht die App noch nicht zur produktiven Kundenbuchungsplattform. Die letzte reale Abnahme mit dem persönlichen Administrator bleibt erforderlich.
