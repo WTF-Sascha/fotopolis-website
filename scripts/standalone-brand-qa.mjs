@@ -58,6 +58,16 @@ assert.match(gallery,/FOTOERLEBNIS/);checks++;
 const admin=readFileSync(root+"/admin/index.html","utf8");
 assert.ok(admin.includes('url=/admin/login/'),"Legacy admin must continue redirecting to login");checks++;
 assert.ok(!existsSync(root+"/admin/admin.js"),"Legacy browser-only admin remains unpublished");checks++;
+const staticRoutes=["","fotobox","fotospiegel","fotowohnwagen","leistungen","anlaesse","ueber","faq","kontakt","rechtliches"];
+for(const route of staticRoutes){
+ const file=path.join("site",route,"index.html");
+ const raw=readFileSync(file,"utf8");
+ const text=visibleText(raw);
+ assert.doesNotMatch(raw,/class="preview-ribbon"|fotopolis-preview\.netlify\.app/i,route+" still references a preview site");checks++;
+ for(const phrase of forbidden){assert.doesNotMatch(text,phrase,"static "+route+" source note");checks++}
+}
+const sw=readFileSync("site/service-worker.js","utf8");
+assert.ok(sw.includes("fotopolis-site-v2"),"PWA should invalidate older preview pages");checks++;
 const dashboard=visibleText(readFileSync(root+"/admin/dashboard/index.html","utf8"));
 for(const phrase of forbidden){assert.doesNotMatch(dashboard,phrase);checks++}
 console.log("STANDALONE_BRAND_QA",JSON.stringify({routes:routes.length,checks,issues:0,imprint:"present",privacy:"present",admin:"protected"}));
