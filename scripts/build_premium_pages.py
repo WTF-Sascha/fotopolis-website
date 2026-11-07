@@ -176,32 +176,39 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     f'<p class="legal-paragraph">{safe_body}</p></section>'
                 )
             content += '</div>'
-        # Roadmap point 2: shared premium product stage + source-labelled features.
-        # The source product photo is referenced unchanged, never generated or transformed.
+        # Product 6.0: one real photograph in hero, one editorial story,
+        # concise product facts and a short transparent planning sequence.
         rich_sections = ""
         if p.get("features"):
             assert p["slug"] in ("fotobox", "fotospiegel", "fotowohnwagen")
-            image = p["image"]
-            assert image in {
-                "fotobox-event-1672.webp",
-                "fotospiegel-hero-lossless.webp",
-                "fotowohnwagen-gartenparty-1448.webp",
-            }, image
+            number = {"fotobox": "01", "fotospiegel": "02", "fotowohnwagen": "03"}[slug]
+            display = e(p["displayTitle"])
             rich_sections += (
-                '<section class="product-premium" id="product-details" aria-label="Produktpräsentation">'
-                '<div class="inner"><div class="product-stage">'
-                '<figure class="product-stage-media">'
-                f'<img src="/assets/images/{e(image)}" alt="{e(p["imageAlt"])}" '
-                f'data-approved-product="{e(p["slug"])}" loading="eager" decoding="async">'
-                f'<figcaption>FOTOPOLIS {e(p["title"])} – ein besonderes Highlight für dein Event.</figcaption></figure>'
-                '<div class="product-stage-copy">'
-                '<span class="kicker">DAS FOTOERLEBNIS</span>'
-                f'<h2>{e(p["tagline"])}</h2>'
+                '<section class="product-premium product-v6-overview" id="product-details" '
+                'aria-labelledby="product-story-title">'
+                '<div class="inner"><div class="product-identity-stage">'
+                '<div class="product-identity-art" aria-hidden="true">'
+                '<span class="product-identity-art-top">FOTOPOLIS / SOCIAL EVENTS</span>'
+                f'<span class="product-identity-number">{number}</span>'
+                f'<span class="product-identity-art-label">{e(p["mood"])}</span>'
+                '</div><div class="product-story">'
+                '<span class="kicker">WAS DIESES ERLEBNIS AUSMACHT</span>'
+                f'<h2 id="product-story-title">{e(p["tagline"])}</h2>'
                 f'<p>{e(p["story"])}</p>'
-                f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">'
-                f'{e(p["title"])} anfragen <span aria-hidden="true">↗</span></a>'
+                '<div class="product-pills" aria-label="Die Besonderheiten">'
+            )
+            for item in p["highlights"]:
+                rich_sections += f'<span>{e(item)}</span>'
+            rich_sections += (
+                '</div><a class="product-editorial-link" href="#terminanfrage">'
+                'Wunschtermin anfragen <span aria-hidden="true">↗</span></a>'
                 '</div></div>'
-                '<div class="product-specs" aria-label="Produktdetails">'
+                '<div class="product-highlights-intro" id="product-highlights">'
+                '<div><span class="kicker">DIE DETAILS</span>'
+                f'<h2>{display} <em>auf einen Blick.</em></h2></div>'
+                '<p>Drei ausgewählte Besonderheiten. '
+                'Den genauen Leistungsumfang klären wir im persönlichen Angebot.</p>'
+                '</div><div class="product-specs" aria-label="Produktmerkmale">'
             )
             for feature in p["features"]:
                 rich_sections += (
@@ -211,22 +218,17 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     f'<p>{e(feature["text"])}</p></article>'
                 )
             rich_sections += '</div></div></section>'
-
-            # Include an easy-to-follow, non-binding event planning sequence.
             rich_sections += (
-                '<section class="product-steps section" id="product-steps">'
-                '<div class="inner"><div class="section-heading">'
-                '<span class="kicker">DEIN WEG ZUM EVENT</span>'
-                '<h2>Von der Idee zum <em>Fotoerlebnis.</em></h2>'
-                '<p>Wir begleiten dich von der ersten Anfrage bis zum abgestimmten Eventkonzept.</p>'
-                '</div><div class="product-step-grid">'
+                '<section class="product-v6-steps" id="product-steps" '
+                'aria-label="So läuft deine Anfrage ab"><div class="inner">'
+                '<span class="kicker">SO EINFACH GEHT ES</span>'
+                '<div class="product-v6-step-track">'
             )
             for number, step in enumerate(p["process"], 1):
                 rich_sections += (
-                    '<article class="product-step">'
-                    f'<span class="step-counter">{number:02d}</span>'
-                    f'<h3>{e(step["title"])}</h3><p>{e(step["text"])}</p>'
-                    '</article>'
+                    '<div class="product-v6-step">'
+                    f'<span>{number:02d}</span>'
+                    f'<strong>{e(step["title"])}</strong></div>'
                 )
             rich_sections += '</div></div></section>'
 
@@ -669,16 +671,16 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
         # Shortcuts let people navigate directly to the information they need.
         quick_nav = {
             "fotobox": [
-                ("#product-details", "Erlebnis"), ("#product-steps", "Ablauf"),
-                ("/kontakt/?produkt=Fotobox", "Anfrage")
+                ("#product-details", "Erlebnis"), ("#product-highlights", "Highlights"),
+                ("#terminanfrage", "Wunschtermin")
             ],
             "fotospiegel": [
-                ("#product-details", "Erlebnis"), ("#product-steps", "Ablauf"),
-                ("/kontakt/?produkt=Fotospiegel", "Anfrage")
+                ("#product-details", "Erlebnis"), ("#product-highlights", "Highlights"),
+                ("#terminanfrage", "Wunschtermin")
             ],
             "fotowohnwagen": [
-                ("#product-details", "Erlebnis"), ("#product-steps", "Ablauf"),
-                ("/kontakt/?produkt=Fotowohnwagen", "Anfrage")
+                ("#product-details", "Erlebnis"), ("#product-highlights", "Highlights"),
+                ("#terminanfrage", "Wunschtermin")
             ],
             "pakete": [
                 ("#pakete-vergleich", "Vergleich"), ("#leistungsumfang", "Leistungen"),
@@ -715,30 +717,16 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
         # Repeated sidebars/closing CTAs are useful on product-detail pages,
         # but distract from the enquiry and repeat questions on service routes.
         show_side_panel = slug in ("fotobox", "fotospiegel", "fotowohnwagen")
-        side_panel = (
-            '<aside class="page-aside"><span class="kicker">UNVERBINDLICH PLANEN</span>'
-            '<h2>Dein Event. Dein Moment.</h2>'
-            '<p>Welches Erlebnis passt zu deinem Anlass? Schicke uns die Eckdaten, '
-            'wir klären alle Details persönlich und erstellen das passende Angebot.</p>'
-            f'<a class="button gold" href="{aside_contact}">Event anfragen '
-            '<span aria-hidden="true">↗</span></a></aside>'
-            if show_side_panel else ""
-        )
-        closing_cta = (
-            '<section class="page-end"><div class="inner"><div>'
-            '<h2>Erinnerungen beginnen mit einer Idee.</h2>'
-            '<p>FOTOPOLIS · Fotobox · Fotospiegel · Fotowohnwagen</p>'
-            '</div><a class="button gold" href="/pakete/">Leistungen ansehen ↗</a>'
-            '</div></section>'
-            if slug in ("fotobox", "fotospiegel", "fotowohnwagen") else ""
-        )
+        # Product pages intentionally have one conversion destination: the inline request.
+        side_panel = ""
+        closing_cta = ""
         # The product hero offers a personal enquiry, not live booking.
         v4_product_actions = ""
         if slug in ("fotobox", "fotospiegel", "fotowohnwagen"):
             v4_product_actions = (
                 '<div class="v4-page-actions">'
-                f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">Jetzt anfragen <span aria-hidden="true">→</span></a>'
-                '<a class="v4-hero-outline" href="#product-details">Details entdecken <span aria-hidden="true">↓</span></a>'
+                '<a class="button gold" href="#terminanfrage">Wunschtermin anfragen <span aria-hidden="true">→</span></a>'
+                '<a class="v4-hero-outline" href="#product-details">Produkt entdecken <span aria-hidden="true">↓</span></a>'
                 '</div>'
             )
         elif slug == "galerie":
@@ -785,9 +773,11 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<link rel="stylesheet" href="/studio-polish.css">'
             '<link rel="stylesheet" href="/reference-v4.css">'
             '<link rel="stylesheet" href="/studio-v5.css">'
+            ('<link rel="stylesheet" href="/product-v6.css">' if slug in ("fotobox","fotospiegel","fotowohnwagen") else '') +
             '<script defer src="/site.js"></script>'
             '<script defer src="/reference-v4.js"></script>'
             '<script defer src="/studio-v5.js"></script>' +
+            ('<script defer src="/product-enquiry-v6.js"></script>' if slug in ("fotobox","fotospiegel","fotowohnwagen") else '') +
             ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
             ('<script defer src="/gallery-viewer.js"></script>' if slug == "galerie" else '') +
             ('<script defer src="/contact-flow.js"></script>' if slug == "kontakt" else '') +
@@ -797,11 +787,12 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<main id="content"><section class="page-hero studio-page-hero"><div class="inner studio-page-hero-grid"><div class="studio-page-hero-copy">'
             '<nav class="page-breadcrumbs" aria-label="Brotkrumennavigation">'
             '<a href="/">Start</a><span aria-hidden="true">/</span>'
-            f'<span aria-current="page">{e(p["title"])}</span></nav>'
+            f'<span aria-current="page">{e(p.get("displayTitle", p["title"]))}</span></nav>'
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
             f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>' +
             v4_product_actions + '</div>' + studio_hero_media + '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
             f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
+            + (render_product_enquiry(p) if slug in ("fotobox","fotospiegel","fotowohnwagen") else "")
             + closing_cta
             + '</main>' + footer.group(0) + '</body></html>'
         )
