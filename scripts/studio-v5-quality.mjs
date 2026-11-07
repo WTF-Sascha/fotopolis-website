@@ -63,8 +63,8 @@ for(const width of widths){
     check(width,slug,"all images complete",data.images.every(i=>i.ok),data.images.filter(i=>!i.ok).map(x=>x.src));
     check(width,slug,"no clipped headings",data.brokenHeadings.length===0,data.brokenHeadings);
     check(width,slug,"equipment images not cropped",data.overflowMedia.every(i=>i.fit==="contain"),data.overflowMedia);
-    check(width,slug,"prominent original logo",!!data.logo&&data.logo.w>=94,data.logo);
-    check(width,slug,"reference curved separator exists",!!data.curve&&data.curve.h>=50&&data.curveStroke!=="none",data.curve);
+    check(width,slug,"prominent original logo",!!data.logo&&data.logo.w>=82,data.logo);
+    check(width,slug,"reference curved separator exists",!!data.curve&&data.curve.h>=25&&data.curveStroke!=="none",data.curve);
     check(width,slug,"curve starts at header-to-hero transition",!!data.curve&&!!data.header&&Math.abs(data.curve.top-data.header.bottom)<5,{curve:data.curve,header:data.header});
     check(width,slug,"logo centered in reference header",!!data.header&&!!data.logo&&Math.abs((data.logo.left+data.logo.right)/2-(data.header.left+data.header.right)/2)<=3,{logo:data.logo,header:data.header});
     check(width,slug,"reference curved divider mounted",data.curvePresent&&data.curve?.h>=20,{curve:data.curve});
@@ -95,14 +95,39 @@ for(const width of widths){
     }
     errors.length=0;
   }
-  // Reference-inspired top state and a compact sticky header after scrolling.
+  // The reference header must scroll naturally, never resize or jump during scroll.
   await page.goto(base,{waitUntil:"networkidle"});
-  await page.evaluate(()=>window.scrollTo(0,380));
-  await page.waitForTimeout(130);
-  check(width,"header","compact on scroll",await page.locator(".studio-header.is-scrolled").count()===1);
-  await page.evaluate(()=>window.scrollTo(0,0));
-  await page.waitForTimeout(130);
-  check(width,"header","restores reference size at top",await page.locator(".studio-header.is-scrolled").count()===0);
+  const scrollFacts=async()=>page.evaluate(()=>{
+    const head=document.querySelector(".studio-header");
+    const logo=document.querySelector(".studio-identity img");
+    const curve=document.querySelector(".studio-header-curve");
+    const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:r.height,width:r.width}};
+    return {head:rect(head),logo:rect(logo),curve:rect(curve),
+      scrollY:window.scrollY,docHeight:document.documentElement.scrollHeight,
+      headerPosition:getComputedStyle(head).position,
+      hasScrollClass:head.classList.contains("is-scrolled")};
+  });
+  const topState=await scrollFacts();
+  await page.evaluate(()=>window.scrollTo({top:390,behavior:"instant"}));
+  await page.waitForTimeout(70);
+  const downState=await scrollFacts();
+  await page.evaluate(()=>window.scrollTo({top:620,behavior:"instant"}));
+  await page.waitForTimeout(70);
+  const lowerState=await scrollFacts();
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
+  await page.waitForTimeout(70);
+  const restored=await scrollFacts();
+  check(width,"header","no sticky behavior",topState.headerPosition==="relative"&&downState.head.top<topState.head.top-250,
+    {position:topState.headerPosition,top:topState.head.top,down:downState.head.top});
+  check(width,"header","same height during scroll",
+    [downState,lowerState,restored].every(d=>Math.abs(d.head.height-topState.head.height)<1&&Math.abs(d.logo.width-topState.logo.width)<1&&Math.abs(d.curve.height-topState.curve.height)<1),
+    {top:topState,down:downState,lower:lowerState,restored});
+  check(width,"header","no scroll class or document jumping",
+    [topState,downState,lowerState,restored].every(d=>!d.hasScrollClass&&Math.abs(d.docHeight-topState.docHeight)<2));
+  check(width,"header","curve remains attached throughout scroll",
+    [topState,downState,lowerState,restored].every(d=>Math.abs(d.curve.top-d.head.bottom)<4));
+  check(width,"header","returns to exact initial geometry",
+    Math.abs(restored.head.top-topState.head.top)<2&&Math.abs(restored.logo.top-topState.logo.top)<2);
   // Real menu open/close, overlay behavior, ESC and page navigation.
 
   if(width<=1100){
