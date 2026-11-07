@@ -33,6 +33,7 @@
     <a href="#inventory"><span class="nav-glyph" aria-hidden="true">▤</span> Gerätebestand</a>
     <a href="#planning"><span class="nav-glyph" aria-hidden="true">◷</span> Sperrzeitenplanung</a>
     <a href="#bookings"><span class="nav-glyph" aria-hidden="true">◇</span> Interne Vormerkungen</a>
+    <a href="#activity"><span class="nav-glyph" aria-hidden="true">◴</span> Änderungsprotokoll</a>
     <a href="#account"><span class="nav-glyph" aria-hidden="true">♧</span> Mein Konto</a>
   </nav>
   <div class="sidebar-spacer"></div>
@@ -47,7 +48,7 @@
     <div class="top-actions"><span class="access-label" id="top-role">ADMINISTRATION</span><span class="avatar" aria-label="Angemeldeter Administrator">F</span></div>
   </header>
   <nav id="dashboard-mobile-menu" class="mobile-menu" hidden aria-label="Mobile Verwaltung">
-   <a href="#overview">Dashboard</a><a href="#calendar">Terminplaner</a><a href="#inventory">Gerätebestand</a><a href="#planning">Sperrzeitenplanung</a><a href="#bookings">Vormerkungen</a><a href="#account">Mein Konto</a>
+   <a href="#overview">Dashboard</a><a href="#calendar">Terminplaner</a><a href="#inventory">Gerätebestand</a><a href="#planning">Sperrzeitenplanung</a><a href="#bookings">Vormerkungen</a><a href="#activity">Protokoll</a><a href="#account">Mein Konto</a>
    <button type="button" data-signout>Abmelden</button>
   </nav>
   <main id="main">
@@ -93,6 +94,12 @@
      <span class="eyebrow">INTERNES TERMINMANAGEMENT · STUDIO 4.0</span>
      <h2 id="bookings-heading">Vormerkungen & Reservierungen</h2>
      <div id="reservations-manager" data-reservations-manager></div>
+   </section>
+   <section class="operations-card" id="activity" aria-labelledby="activity-heading">
+      <span class="eyebrow">SICHERHEIT & NACHVOLLZIEHBARKEIT</span>
+      <h2 id="activity-heading">Letzte Verwaltungsänderungen</h2>
+      <p class="plan-help">Nur Einträge der isolierten Entwicklungsdatenbank. Keine Kundendaten oder Administrator-E-Mail-Adressen im Protokoll.</p>
+      <div data-activity-list role="status" aria-live="polite">Änderungsprotokoll wird geladen …</div>
    </section>
    <section class="account-card" id="account" aria-labelledby="account-heading">
     <div><span class="eyebrow">ADMINISTRATORKONTO</span><h2 id="account-heading">Mein Konto & Sicherheit</h2><p>Deine Anmeldung und Berechtigungen werden durch Neon Auth und die FOTOPOLIS-Rollenprüfung geschützt.</p><dl><div><dt>E-Mail-Adresse</dt><dd data-user-email>–</dd></div><div><dt>Berechtigung</dt><dd data-user-role>–</dd></div><div><dt>Umgebung</dt><dd>Development · Frankfurt</dd></div></dl></div>
