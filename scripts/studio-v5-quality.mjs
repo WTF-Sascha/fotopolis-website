@@ -33,6 +33,10 @@ for(const width of widths){
         width:document.documentElement.scrollWidth,innerWidth,
         hasStyle:!!$('link[href="/studio-v5.css"]'),hasScript:!!$('script[src="/studio-v5.js"]'),
         header,logo,title,h1s:document.querySelectorAll("main h1").length,
+        curve:rect($(".studio-header-curve")),
+        curvePresent:!!$(".studio-header-curve svg path.studio-header-curve-stroke"),
+        curveStroke:$(".studio-header-curve-stroke")?getComputedStyle($(".studio-header-curve-stroke")).stroke:null,
+        menuBarCount:document.querySelectorAll(".studio-menu-toggle span").length,
         overflowMedia:[...document.querySelectorAll(".studio-page-hero-media img,.product-stage-media img,.v4-product-photo img")].map(i=>({src:i.getAttribute("src"),fit:getComputedStyle(i).objectFit})),
         images,brokenHeadings,
         hasMedia:!!$(".studio-page-hero-media"),hasArt:!!$(".studio-page-hero-art"),
@@ -53,6 +57,9 @@ for(const width of widths){
     check(width,slug,"no clipped headings",data.brokenHeadings.length===0,data.brokenHeadings);
     check(width,slug,"equipment images not cropped",data.overflowMedia.every(i=>i.fit==="contain"),data.overflowMedia);
     check(width,slug,"prominent original logo",!!data.logo&&data.logo.w>=58,data.logo);
+    check(width,slug,"reference curved divider mounted",data.curvePresent&&data.curve?.h>=20,{curve:data.curve});
+    check(width,slug,"champagne separator stroke",!!data.curveStroke&&data.curveStroke!=="none",data.curveStroke);
+    check(width,slug,"three golden hamburger strokes",data.menuBarCount===3,data.menuBarCount);
     check(width,slug,"responsive menu icon",data.menuVisible===(width<=1100));
     check(width,slug,"responsive quick nav",data.bottomNavVisible===(width<=760));
     check(width,slug,"no uncaught JavaScript error",errors.length===0,errors);
@@ -63,7 +70,7 @@ for(const width of widths){
       check(width,slug,"editorial route hero",data.hasMedia||data.hasArt);
       if(["fotobox","fotospiegel","fotowohnwagen","galerie"].includes(slug))check(width,slug,"photo-led product hero",data.hasMedia);
     }
-    if(width<=760){
+    if(width<=1100){
       check(width,slug,"logo horizontally centered",!!data.header&&!!data.logo&&Math.abs((data.logo.left+data.logo.right)/2-(data.header.left+data.header.right)/2)<=3,{logo:data.logo,header:data.header});
     }
     if(slug==="kontakt")check(width,slug,"contact enquiry functional structure exists",data.contactForm);
@@ -74,8 +81,16 @@ for(const width of widths){
     }
     errors.length=0;
   }
-  // Real menu open/close, overlay behavior, ESC and page navigation.
+  // Reference-inspired top state and a compact sticky header after scrolling.
   await page.goto(base,{waitUntil:"networkidle"});
+  await page.evaluate(()=>window.scrollTo(0,380));
+  await page.waitForTimeout(130);
+  check(width,"header","compact on scroll",await page.locator(".studio-header.is-scrolled").count()===1);
+  await page.evaluate(()=>window.scrollTo(0,0));
+  await page.waitForTimeout(130);
+  check(width,"header","restores reference size at top",await page.locator(".studio-header.is-scrolled").count()===0);
+  // Real menu open/close, overlay behavior, ESC and page navigation.
+
   if(width<=1100){
     const toggle=page.locator("[data-menu-toggle]");
     await toggle.click();
