@@ -25,6 +25,9 @@ on:
       - "netlify/functions/fotopolis-admin-blocks.mjs"
       - "netlify/functions/fotopolis-admin-reservations.mjs"
       - "scripts/test-admin-reservations.mjs"
+      - "scripts/test-admin-occupancy.mjs"
+      - "scripts/premium-admin-occupancy-qa.mjs"
+      - "netlify/functions/fotopolis-admin-occupancy-check.mjs"
       - "netlify/functions/fotopolis-admin-activity.mjs"
       - "scripts/test-admin-activity.mjs"
       - "scripts/premium-admin-persistence-ui-qa.mjs"
@@ -78,6 +81,12 @@ jobs:
         run: node --test scripts/test-admin-health.mjs
       - name: Private activity log authorization
         run: node --test scripts/test-admin-activity.mjs
+      - name: Read-only preflight authorization and bounded occupancy requests
+        run: node --test scripts/test-admin-occupancy.mjs
+      - name: Internal booking preflight across five mobile and desktop sizes
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-occupancy-qa.mjs
       - name: Internal booking holds, buffers and no-customer-data rules
         run: node --test scripts/test-admin-reservations.mjs
       - name: Calendar mutations reject anonymous and unsafe requests
