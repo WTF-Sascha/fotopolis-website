@@ -5,82 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#071b30">
-<title>FOTOPOLIS Studio · Admin-Kalender – Designvorschau</title>
-<meta name="description" content="Isolierte und unverbindliche FOTOPOLIS Admin-Kalender-Demonstration. Keine echten Daten.">
-<link rel="icon" href="/favicon.ico">
-<link rel="stylesheet" href="/admin/admin.css">
-<script defer src="/admin/admin.js"></script>
+<meta http-equiv="refresh" content="0; url=/admin/login/">
+<title>FOTOPOLIS Studio · Anmeldung</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;
+background:radial-gradient(circle at 50% 20%,#153550,#071b30 72%);color:#faf6ef;
+font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:28px}
+main{max-width:420px}img{width:112px;height:112px;object-fit:contain;
+filter:drop-shadow(0 10px 22px #0005)}h1{font:600 30px/1.15 Georgia,serif;margin:23px 0 11px}
+p{line-height:1.55;color:#d6e0e6}a{display:inline-flex;justify-content:center;
+padding:13px 25px;margin-top:13px;text-decoration:none;color:#071b30;border-radius:999px;
+background:linear-gradient(130deg,#f7e2ba,#d5a75e);font-weight:750;min-height:46px}
+</style>
 </head>
 <body>
-<a class="skip-link" href="#main">Direkt zum Kalender springen</a>
-<div class="preview-banner"><span class="preview-dot" aria-hidden="true"></span><strong>FOTOPOLIS · STUDIO REVIEW</strong><span>Admin-Kalender · reine Vorschau · keine echten Buchungen</span></div>
-<div class="app">
-<aside class="sidebar" aria-label="Admin-Navigation">
-  <a class="brand" href="/" aria-label="FOTOPOLIS Startseite öffnen"><img src="/assets/fotopolis-logo-original.png" alt="" width="58" height="58"><span>FOTOPOLIS<small>STUDIO · ADMIN</small></span></a>
-  <p class="sidebar-label">WORKSPACE</p>
-  <nav class="sidebar-nav" aria-label="Bereiche">
-    <a class="active" aria-current="page" href="/admin/"><span class="nav-glyph" aria-hidden="true">▦</span> Kalender</a>
-    <a href="#resources"><span class="nav-glyph" aria-hidden="true">▤</span> Geräteübersicht</a>
-    <a href="#overview"><span class="nav-glyph" aria-hidden="true">◫</span> Übersicht</a>
-  </nav>
-  <div class="sidebar-spacer"></div>
-  <div class="sidebar-notice"><span class="notice-dot" aria-hidden="true"></span><strong>Vorschau-Modus</strong><p>Keine Kunden- oder Bestandsdaten. Änderungen existieren nur bis zum Neuladen.</p></div>
-  <a class="return-link" href="/admin/dashboard/">↗ Mein geschütztes Dashboard</a>
-  <a class="return-link" href="/">← Zur Website</a>
-</aside>
-<div class="workspace">
-<header class="topbar">
-  <button class="menu-button" type="button" data-menu-toggle aria-expanded="false" aria-controls="admin-mobile-menu" aria-label="Navigation öffnen">☰</button>
-  <div class="crumbs">FOTOPOLIS <span>/</span> Verwaltung <span>/</span> <strong>Kalender</strong></div>
-  <div class="top-actions"><span class="access-label">INTERNER ENTWURF</span><span class="avatar" aria-label="Demo-Modus ohne Anmeldung">D</span></div>
-</header>
-<nav id="admin-mobile-menu" class="mobile-menu" aria-label="Mobile Verwaltung" hidden>
-  <a href="/admin/" aria-current="page">Kalender</a><a href="#resources">Geräteübersicht</a><a href="#overview">Übersicht</a><a href="/admin/dashboard/">Geschütztes Dashboard</a><a href="/">Zur Website</a>
-</nav>
-<main id="main">
-<section class="intro" aria-labelledby="page-title">
-  <div><div class="eyebrow"><span class="line"></span> ORGANISATION & TERMINPLANUNG</div><h1 id="page-title">Alles im Blick.<br><em>Jeder Moment geplant.</em></h1><p>Ein zentraler Kalender für Fotobox, Fotospiegel und Fotowohnwagen. Entdecke die Verwaltungsansicht, bevor wir echte Buchungen freischalten.</p></div>
-  <div class="intro-action"><button class="primary-button" type="button" data-open-block><span aria-hidden="true">＋</span> Demo-Sperrzeit anlegen</button><span>Nur im Browser · keine Speicherung</span></div>
-</section>
-<section class="metrics" id="overview" aria-label="Status dieser Vorschau">
-  <article><span>BESTÄTIGTE BUCHUNGEN</span><strong>0</strong><small>Keine echte Buchungsdatenanbindung</small></article>
-  <article><span>GERÄTE IM SYSTEM</span><strong>0</strong><small>Realer Bestand noch nicht eingetragen</small></article>
-  <article><span>DEMO-SPERRZEITEN</span><strong data-demo-count>0</strong><small>Temporäre Anzeige · nur lokale Sitzung</small></article>
-</section>
-<section class="calendar-shell" aria-labelledby="calendar-heading">
- <div class="calendar-heading">
-   <div><span class="eyebrow">TERMINMANAGEMENT</span><h2 id="calendar-heading">Belegungsübersicht</h2></div>
-   <div class="calendar-controls" role="group" aria-label="Kalenderansicht">
-      <button type="button" data-view="month" aria-pressed="true">Monat</button><button type="button" data-view="week" aria-pressed="false">Woche</button>
-   </div>
- </div>
- <div class="calendar-tools">
-   <div class="date-navigation"><button type="button" data-nav="prev" aria-label="Vorheriger Zeitraum">‹</button><button type="button" data-nav="today">Heute</button><button type="button" data-nav="next" aria-label="Nächster Zeitraum">›</button><strong data-period aria-live="polite"></strong></div>
-   <label class="filter">Produkt <select data-product-filter><option value="all">Alle Fotoerlebnisse</option><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
- </div>
- <div class="calendar-hint"><span class="hint-point" aria-hidden="true"></span><span>VORSCHAU · Kein Abgleich mit der Neon-Datenbank. Leere Felder bedeuten <strong>nicht</strong>, dass ein Gerät buchbar ist.</span></div>
- <div class="calendar-scroller"><div class="weekdays" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div class="calendar-grid" data-calendar-grid role="group" aria-label="Kalendertage"></div></div>
- <div class="calendar-foot"><div class="legend"><span><i class="legend-gold"></i> Demo-Sperrzeit</span><span><i class="legend-outline"></i> Ohne geprüfte Verfügbarkeit</span></div><span>Zeitzone: Europe/Berlin</span></div>
-</section>
-<section class="bottom-grid">
-  <article class="detail-card" aria-labelledby="selection-heading"><span class="eyebrow">TAGESDETAILS</span><h2 id="selection-heading" data-selected-title>Ausgewählter Tag</h2><div data-day-details aria-live="polite"><p>Wähle einen Kalendertag, um die zugehörigen Demo-Einträge zu sehen.</p></div><button type="button" class="text-button" data-open-block>+ Demo-Sperrzeit für diesen Tag</button></article>
-  <article class="inventory-card" id="resources"><span class="eyebrow">RESSOURCEN</span><h2>Deine Fotoerlebnisse</h2><p class="inventory-intro">Die Geräte werden erst aktiviert, wenn der tatsächliche Bestand bestätigt und die geschützte Datenanbindung eingerichtet ist.</p><div class="inventory-list"><div><span class="inventory-icon">01</span><strong>Fotobox</strong><span class="not-configured">Nicht konfiguriert</span></div><div><span class="inventory-icon">02</span><strong>Fotospiegel</strong><span class="not-configured">Nicht konfiguriert</span></div><div><span class="inventory-icon">03</span><strong>Fotowohnwagen</strong><span class="not-configured">Nicht konfiguriert</span></div></div></article>
-</section>
-<section class="security-note"><strong>Warum noch keine echten Buchungen?</strong><p>Neon ist auf dem separaten Entwicklungsbranch bereit. Bevor Administratoren echte Daten bearbeiten dürfen, ergänzen wir überprüfbare Anmeldung, serverseitige Rollenrechte und eine geschützte API. Der öffentliche Kalender darf keine ungeprüften Verfügbarkeiten anzeigen.</p></section>
+<main>
+<img src="/assets/fotopolis-logo-original.png" alt="FOTOPOLIS Logo" width="112" height="112">
+<h1>FOTOPOLIS Management Studio</h1>
+<p>Dein geschützter Verwaltungsbereich.</p>
+<a href="/admin/login/">Zur Anmeldung</a>
 </main>
-<footer class="footer"><span>FOTOPOLIS · DEVELOPMENT 3.3</span><span>Entwicklungsvorschau · nicht zur produktiven Nutzung</span></footer>
-</div>
-</div>
-<dialog data-block-dialog aria-labelledby="block-title">
-<form method="dialog" data-block-form>
-  <div class="dialog-head"><div><span class="eyebrow">TESTE DIE VERWALTUNG</span><h2 id="block-title">Demo-Sperrzeit</h2></div><button class="close-dialog" type="button" data-close-dialog aria-label="Dialog schließen">×</button></div>
-  <p>Dieser Eintrag wird <strong>nur im Arbeitsspeicher deines Browsers</strong> erstellt. Er wird nicht gespeichert und beeinflusst keine echte Buchung.</p>
-  <label>Fotoerlebnis<select name="resource" required><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
-  <label>Datum<input type="date" name="day" required></label>
-  <label>Interne Notiz<input type="text" name="note" maxlength="100" placeholder="z. B. Wartung, Transport oder Urlaub" required></label>
-  <p class="form-error" data-form-error role="alert" hidden></p>
-  <div class="dialog-actions"><button type="button" class="secondary-button" data-close-dialog>Abbrechen</button><button type="submit" class="primary-button">Demo-Sperre anzeigen</button></div>
-</form>
-</dialog>
 </body>
 </html>
