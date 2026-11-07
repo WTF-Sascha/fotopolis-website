@@ -52,7 +52,7 @@ html = html.replace('<script defer src="./studio-guide.js"></script>',
 assert "../../" not in html
 assert html.count("<h1") == 1
 assert not any("/assets/images/LEG-"+n in html for n in ("060.webp","073.webp","046.webp")), "Unreleased people images must not appear"
-assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 1  # product card only
+assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 2  # product card plus approved showcase gallery
 assert '<section class="hero hero-editorial"' in html and '<nav class="hero-guide"' in html, "Missing photo-free editorial hero"
 assert "<img" not in html.split('<section class="hero hero-editorial"',1)[1].split("</section>",1)[0], "No images allowed in hero"
 assert all('href="#'+a+'"' in html and 'id="'+a+'"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Hero guide anchors must match products"
