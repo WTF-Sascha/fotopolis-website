@@ -40,7 +40,8 @@ jobs:
                   with urllib.request.urlopen(css_req,timeout=20) as css_res:
                       css_code=css_res.status
                       stylesheet=css_res.read().decode("utf-8",errors="replace")
-                  reference_css = css_code==200 and "FOTOPOLIS REFERENCE-ACCURATE HEADER 5.1" in stylesheet
+                  reference_css = css_code==200 and ".studio-header-curve-stroke" in stylesheet and ".studio-header-curve-fill" in stylesheet and ".studio-menu-toggle.mobile-toggle" in stylesheet
+                  print("CSS_STATUS", css_code, "CSS_BYTES", len(stylesheet), "CURVE_RULE", ".studio-header-curve-stroke" in stylesheet)
                   print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy} STUDIO5={studio} WAVE={reference_curve} MENU3={reference_menu} CSS={reference_css}")
                   if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy and studio and reference_curve and reference_menu and reference_css:
                       print("PUBLIC_PREVIEW_VERIFIED", url)
