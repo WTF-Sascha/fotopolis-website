@@ -23,20 +23,23 @@ function el(tag,css,text){
   if(text!==undefined)element.textContent=text;
   return element;
 }
-export function setupInventoryManager({root,getResources,onChange}){
+export function setupInventoryManager({root,getResources,onChange,createResource,updateResource,canActivate=false}){
   if(!root)throw Error("Missing inventory editor root");
   const drafts=[];
-  const lead=el("p","inventory-manager-lead","Geräte als lokale Entwürfe vorbereiten. Es wird noch nichts in Neon gespeichert oder zur Buchung freigegeben.");
+  const persistent=typeof createResource==="function";
+  const lead=el("p","inventory-manager-lead",persistent?"Lege physisch vorhandene Geräte dauerhaft in Neon an. Neue Geräte bleiben zunächst deaktiviert, bis du sie ausdrücklich aktivierst.":"Geräte als lokale Entwürfe vorbereiten. Es wird noch nichts in Neon gespeichert oder zur Buchung freigegeben.");
   const actions=el("div","inventory-manager-actions");
-  const newButton=el("button","inventory-manager-primary","+ Gerät vorbereiten");
+  const newButton=el("button","inventory-manager-primary",persistent?"+ Mietgerät anlegen":"+ Gerät vorbereiten");
   newButton.type="button";
-  const status=el("span","inventory-manager-state","ENTWURF · NICHT GESPEICHERT");
+  const status=el("span","inventory-manager-state",persistent?"GESCHÜTZTE DATENBANK · NEON":"ENTWURF · NICHT GESPEICHERT");
   actions.append(newButton,status);
+  const operationStatus=el("p","inventory-manager-feedback","");
+  operationStatus.setAttribute("role","status");operationStatus.setAttribute("aria-live","polite");
   const draftList=el("div","inventory-manager-list");
   draftList.setAttribute("aria-live","polite");
   const form=el("form","inventory-manager-form");
   form.noValidate=true;form.hidden=true;
-  const title=el("h3",null,"Gerät als Entwurf anlegen");
+  const title=el("h3",null,persistent?"Neues Mietgerät anlegen":"Gerät als Entwurf anlegen");
   const intro=el("p","inventory-manager-explainer","Jede Kennung steht für ein eigenständiges physisches Mietgerät.");
   function field(id,labelText,control){
     const label=el("label",null,labelText);
@@ -57,7 +60,7 @@ export function setupInventoryManager({root,getResources,onChange}){
   const feedback=el("p","inventory-manager-feedback","");
   feedback.setAttribute("role","status");
   const formActions=el("div","inventory-manager-form-actions");
-  const submit=el("button","inventory-manager-primary","Entwurf übernehmen");
+  const submit=el("button","inventory-manager-primary",persistent?"Gerät sicher speichern":"Entwurf übernehmen");
   submit.type="submit";
   const cancel=el("button","inventory-manager-secondary","Abbrechen");
   cancel.type="button";
@@ -66,8 +69,9 @@ export function setupInventoryManager({root,getResources,onChange}){
     field("inventory-code","Interne Gerätekennung",code),
     field("inventory-name","Gerätename",name),
     feedback,formActions,
-    el("p","inventory-manager-explainer","Beim Neuladen verschwinden sämtliche Entwürfe. Keine Buchungen, keine Datenbankänderungen."));
-  root.replaceChildren(lead,actions,draftList,form);
+    el("p","inventory-manager-explainer",persistent?"Das neue Gerät wird dauerhaft, aber zunächst deaktiviert in der Entwicklungsdatenbank gespeichert. Kein öffentliches Buchungsangebot.":"Beim Neuladen verschwinden sämtliche Entwürfe. Keine Buchungen, keine Datenbankänderungen."));
+  const editor=el("div","inventory-manager-saved-editor");
+  root.replaceChildren(lead,actions,operationStatus,editor,draftList,form);
   function render(){
     draftList.replaceChildren();
     if(!drafts.length)return;
@@ -96,17 +100,73 @@ export function setupInventoryManager({root,getResources,onChange}){
     type.focus();
   });
   cancel.addEventListener("click",()=>{form.hidden=true;feedback.textContent="";newButton.focus();});
-  form.addEventListener("submit",event=>{
+  form.addEventListener("submit",async event=>{
     event.preventDefault();
     const result=validateInventoryDraft({
       type:type.value,code:code.value,name:name.value
     },[...getResources(),...drafts]);
     if(result.error){feedback.textContent=result.error;return}
+    if(persistent){
+      submit.disabled=true;feedback.textContent="Speichere das Gerät in Neon …";
+      try{
+        await createResource(result.value);
+        feedback.textContent="";operationStatus.textContent="Gerät dauerhaft gespeichert. Es ist bis zur Aktivierung nicht buchbar.";
+        form.hidden=true;onChange?.();newButton.focus();
+      }catch(err){feedback.textContent=err?.message||"Das Gerät konnte nicht gespeichert werden.";}
+      finally{submit.disabled=false;}
+      return;
+    }
     if(drafts.length>=20){feedback.textContent="Maximal 20 gleichzeitige Vorschauentwürfe.";return}
     drafts.push(result.value);
     render();onChange?.();
     form.hidden=true;
     newButton.focus();
   });
-  return {refresh:render,getDraftCount:()=>drafts.length,getDrafts:()=>drafts.map(x=>({...x}))};
+  function editSaved(device){
+    if(typeof updateResource!=="function")return;
+    editor.replaceChildren();
+    const panel=el("form","inventory-manager-form");
+    panel.noValidate=true;
+    const heading=el("h3",null,"Mietgerät bearbeiten · "+device.resource_code);
+    const nameLabel=el("label",null,"Gerätename");
+    const rename=document.createElement("input");rename.type="text";rename.maxLength=100;
+    rename.value=device.display_name;rename.required=true;
+    nameLabel.append(rename);
+    const statusLabel=el("label","inventory-manager-toggle-label","Aktiv für interne Disposition");
+    const activation=document.createElement("input");activation.type="checkbox";activation.checked=device.enabled;
+    activation.disabled=!canActivate;
+    statusLabel.prepend(activation);
+    if(!canActivate)statusLabel.append(el("small",null,"Nur Hauptadministratoren dürfen den Aktivierungsstatus ändern."));
+    const note=el("p","inventory-manager-explainer","Änderungen werden im Admin-Protokoll erfasst. Eine Aktivierung öffnet noch keine öffentliche Kundenbuchung.");
+    const warn=el("p","inventory-manager-feedback","");warn.setAttribute("role","status");
+    const controls=el("div","inventory-manager-form-actions");
+    const save=el("button","inventory-manager-primary","Änderungen speichern");save.type="submit";
+    const cancel=el("button","inventory-manager-secondary","Schließen");cancel.type="button";
+    controls.append(save,cancel);
+    panel.append(heading,nameLabel,statusLabel,note,warn,controls);
+    editor.append(panel);editor.scrollIntoView({block:"nearest",behavior:"smooth"});
+    cancel.addEventListener("click",()=>editor.replaceChildren());
+    panel.addEventListener("submit",async event=>{
+      event.preventDefault();
+      const name=rename.value.trim();
+      if(name.length<2||name.length>100){warn.textContent="Gerätename: 2–100 Zeichen erforderlich.";return}
+      const patch={id:device.id};
+      if(name!==device.display_name)patch.name=name;
+      if(canActivate&&activation.checked!==device.enabled){
+        if(activation.checked&&!window.confirm("Gerät '"+device.resource_code+"' für die interne Disposition aktivieren? Es wird dadurch noch nicht öffentlich buchbar."))return;
+        patch.enabled=activation.checked;
+      }
+      if(Object.keys(patch).length===1){warn.textContent="Keine Änderungen vorhanden.";return}
+      save.disabled=true;warn.textContent="Änderungen werden geprüft und gespeichert …";
+      try{
+        await updateResource(patch);
+        operationStatus.textContent="Änderungen gespeichert und protokolliert.";
+        editor.replaceChildren();onChange?.();
+      }catch(err){warn.textContent=err?.message||"Die Änderung konnte nicht gespeichert werden.";}
+      finally{save.disabled=false}
+    });
+    rename.focus();
+  }
+  return {refresh:render,getDraftCount:()=>drafts.length,getDrafts:()=>drafts.map(x=>({...x})),editSaved};
+}
 }
