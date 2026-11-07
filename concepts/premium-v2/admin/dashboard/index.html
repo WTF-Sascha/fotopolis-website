@@ -74,13 +74,13 @@
       <label class="filter">Produkt <select data-product-filter><option value="all">Alle Fotoerlebnisse</option><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
     </div>
     <p class="calendar-sync" data-calendar-sync role="status" aria-live="polite">Verbinde mit der Entwicklungsdatenbank …</p>
-    <div class="calendar-hint"><span class="hint-point" aria-hidden="true"></span><span>ECHTE ENTWICKLUNGSDATEN · Ohne bestätigten Gerätebestand ist ein leerer Tag keine Buchungszusage. Termindetails öffnen direkt über einen Klick auf den Kalendertag. Geplante Sperrzeiten sind nur lokale Entwürfe.</span></div>
+    <div class="calendar-hint"><span class="hint-point" aria-hidden="true"></span><span>ECHTE ENTWICKLUNGSDATEN · Ohne bestätigten Gerätebestand ist ein leerer Tag keine Buchungszusage. Ein Klick auf einen Kalendertag öffnet die Details direkt im Sichtbereich. Gespeicherte Sperrzeiten werden in der Datenbank gegen Überschneidungen geprüft.</span></div>
     <div class="calendar-scroller"><div class="weekdays" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div class="calendar-grid" data-calendar-grid role="group" aria-label="Kalender"></div></div>
-    <div class="calendar-foot"><div class="legend"><span><i class="legend-gold"></i> Sperrzeit</span><span><i class="legend-outline"></i> Buchung</span></div><span>Europe/Berlin · echte Daten nur lesbar</span></div>
+    <div class="calendar-foot"><div class="legend"><span><i class="legend-gold"></i> Sperrzeit</span><span><i class="legend-outline"></i> Buchung</span></div><span>Europe/Berlin · Änderungen nur mit Administratorrechten</span></div>
    </section>
    <section class="bottom-grid">
     <article class="detail-card"><span class="eyebrow">TAGESÜBERSICHT</span><h2 data-day-title>Ausgewählter Tag</h2><div data-day-details><p>Wähle ein Datum im Kalender aus.</p></div><button type="button" class="text-button" data-plan-day>Für diesen Tag Sperrzeit planen ↗</button></article>
-    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Hier erscheinen die tatsächlich in Neon registrierten Fotoboxen, Fotospiegel und Fotowohnwagen. Der neue Geräte-Editor darunter erzeugt ausschließlich Vorschauentwürfe.</p><div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
+    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Hier erscheinen die tatsächlich in Neon registrierten Fotoboxen, Fotospiegel und Fotowohnwagen. Mit der geschützten Geräteverwaltung darunter kannst du echte Mietgeräte anlegen, umbenennen und als Hauptadministrator aktivieren oder deaktivieren.</p><div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
    </section>
    <section class="operations-card" id="planning" aria-labelledby="planning-heading">
      <span class="eyebrow">INTERNE BETRIEBSPLANUNG · STUDIO 3.8</span>
@@ -91,17 +91,17 @@
     <div><span class="eyebrow">ADMINISTRATORKONTO</span><h2 id="account-heading">Mein Konto & Sicherheit</h2><p>Deine Anmeldung und Berechtigungen werden durch Neon Auth und die FOTOPOLIS-Rollenprüfung geschützt.</p><dl><div><dt>E-Mail-Adresse</dt><dd data-user-email>–</dd></div><div><dt>Berechtigung</dt><dd data-user-role>–</dd></div><div><dt>Umgebung</dt><dd>Development · Frankfurt</dd></div></dl></div>
     <div class="account-actions"><a href="/admin/login/?mode=reset" class="primary-button">Passwort festlegen / ändern ↗</a><button type="button" class="secondary-button" data-signout>Abmelden</button></div>
    </section>
-   <section class="security-note"><strong>Nächster Ausbau: echte Verwaltungsfunktionen</strong><p>Derzeit ist der Adminbereich authentifiziert und zeigt echte Entwicklungsdaten lesend an. Geräte und Sperrzeiten lassen sich als ausdrücklich ungespeicherte Entwürfe planen und lokal exportieren. Die geschützte Neon-Anbindung zeigt echte Belegungen nur lesend; verbindliche Geräteanlage, Terminänderungen, Sperrzeiten und Kundenbuchungen bleiben bis zur technischen und fachlichen Freigabe gesperrt.</p></section>
+   <section class="security-note"><strong>Nächster Ausbau: echte Verwaltungsfunktionen</strong><p>Derzeit ist der Adminbereich authentifiziert und zeigt echte Entwicklungsdaten lesend an. Geräte und interne Sperrzeiten können im isolierten Development-Branch gespeichert werden. Alle Änderungen sind an die Administratorrolle gebunden und werden protokolliert. Die öffentliche Kundenbuchung bleibt deaktiviert, bis Inventar, Lieferpuffer und Angebotsregeln abschließend festgelegt sind.</p></section>
   </main>
   <dialog class="day-detail-dialog" id="day-detail-dialog" aria-labelledby="day-dialog-heading">
     <div class="day-dialog-inner">
       <div class="day-dialog-heading"><div><span class="eyebrow">TAGESDETAILS · ENTWICKLUNGSUMGEBUNG</span><h2 id="day-dialog-heading" data-dialog-day-title>Ausgewählter Tag</h2></div><button type="button" class="day-dialog-close" data-close-day aria-label="Tagesdetails schließen">×</button></div>
       <div class="day-dialog-entries" data-dialog-entries></div>
-      <p class="day-dialog-note">Lokale Entwürfe blockieren keine echten Termine. Leere Tage sind keine Verfügbarkeitszusage.</p>
+      <p class="day-dialog-note">Nur ausdrücklich gespeicherte Belegungen blockieren Geräte. Leere Tage sind keine verbindliche öffentliche Verfügbarkeitszusage.</p>
       <button type="button" class="plan-primary" data-plan-selected>Sperrzeit für diesen Tag planen</button>
     </div>
   </dialog>
-  <footer class="footer"><span>FOTOPOLIS STUDIO · VERWALTUNG 3.8</span><span>Geschützter Entwicklungsbereich · keine Produktivbuchungen</span></footer>
+  <footer class="footer"><span>FOTOPOLIS STUDIO · VERWALTUNG 4.0</span><span>Geschützter Entwicklungsbereich · keine Produktivbuchungen</span></footer>
  </div>
 </div>
 </body>
