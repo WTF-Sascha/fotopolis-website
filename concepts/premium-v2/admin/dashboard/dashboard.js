@@ -170,7 +170,7 @@ async function loadCalendar(){
     const data=await response.json();
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;
-    $("#setup-assistant").hidden=resources.length>0;
+    $("#setup-assistant").hidden=resources.length>0||adminRole==="viewer";
     $("[data-export-inventory]").disabled=!["owner","manager"].includes(adminRole)||resources.length===0;
     $("[data-export-calendar]").disabled=!["owner","manager"].includes(adminRole)||allocations.length===0;
     $("[data-count=resources]").textContent=String(resources.length);
