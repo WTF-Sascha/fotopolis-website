@@ -1,0 +1,118 @@
+name: FOTOPOLIS Admin Studio 3.3 Review QA
+on:
+  push:
+    branches: [design/premium-v2]
+    paths:
+      - "concepts/premium-v2/admin/**"
+      - "scripts/premium-admin-qa.mjs"
+      - "scripts/build-premium-preview.py"
+      - "scripts/build-admin-auth.mjs"
+      - "scripts/premium-admin-login-qa.mjs"
+      - "scripts/test-admin-auth.mjs"
+      - "scripts/test-admin-token.mjs"
+      - "scripts/premium-admin-dashboard-qa.mjs"
+      - "scripts/premium-inventory-draft-qa.mjs"
+      - "scripts/premium-admin-planning-qa.mjs"
+      - "scripts/premium-admin-day-dialog-qa.mjs"
+      - "scripts/test-admin-planning.mjs"
+      - "scripts/premium-admin-password-flow-qa.mjs"
+      - "netlify/functions/fotopolis-admin-overview.mjs"
+      - "concepts/premium-v2/admin/login/**"
+      - "netlify/functions/fotopolis-admin-session.mjs"
+      - "netlify/functions/fotopolis-admin-inventory.mjs"
+      - "scripts/test-admin-inventory.mjs"
+      - "scripts/test-admin-blocks.mjs"
+      - "netlify/functions/fotopolis-admin-blocks.mjs"
+      - "netlify/functions/fotopolis-admin-reservations.mjs"
+      - "scripts/test-admin-reservations.mjs"
+      - "netlify/functions/fotopolis-admin-activity.mjs"
+      - "scripts/test-admin-activity.mjs"
+      - "scripts/premium-admin-persistence-ui-qa.mjs"
+      - "scripts/test-admin-csv.mjs"
+      - "scripts/test-admin-health.mjs"
+      - "netlify/functions/fotopolis-admin-health.mjs"
+      - "package.json"
+      - ".github/workflows/admin-studio-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  demo-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install test browser
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Compile exact Netlify branch-preview output
+        run: python3 scripts/build-premium-preview.py
+      - name: Bundle official Neon Auth login client
+        run: npm run build:auth
+      - name: Start isolated review server
+        run: |
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-admin-test.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8766/admin/ >/dev/null
+      - name: Verify responsive calendar, controls and zero persisted data
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-qa.mjs
+      - name: Fail-closed admin session authorization unit checks
+        run: npm run test:auth-unit
+      - name: Local CSV escaping and spreadsheet safety
+        run: node --test scripts/test-admin-csv.mjs
+      - name: Owner-only database connection diagnostics
+        run: node --test scripts/test-admin-health.mjs
+      - name: Private activity log authorization
+        run: node --test scripts/test-admin-activity.mjs
+      - name: Internal booking holds, buffers and no-customer-data rules
+        run: node --test scripts/test-admin-reservations.mjs
+      - name: Calendar mutations reject anonymous and unsafe requests
+        run: node --test scripts/test-admin-blocks.mjs
+      - name: Inventory gateway rejects anonymous and unsafe mutations
+        run: node --test scripts/test-admin-inventory.mjs
+      - name: Session JWT extraction and recovery QA (no real credentials)
+        run: node --test scripts/test-admin-token.mjs
+      - name: Responsive sign-in page and mode-switch QA (no emails sent)
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-login-qa.mjs
+      - name: Protected owner dashboard - anonymous access and secret isolation
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-dashboard-qa.mjs
+      - name: Berlin-time validation and planning conflicts
+        run: node --test scripts/test-admin-planning.mjs
+      - name: Planning calendar, responsive UX and local export
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-planning-qa.mjs
+      - name: Admin device and schedule persistence UI contract (mock callbacks)
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-persistence-ui-qa.mjs
+      - name: Viewport day dialog and date-jump integration (mocked login)
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-day-dialog-qa.mjs
+      - name: Inventory preview editor, mobile and desktop QA
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-inventory-draft-qa.mjs
+      - name: Password setup OTP browser contract against mocked Neon Auth
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-password-flow-qa.mjs
+      - name: Archive admin review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fotopolis-admin-studio-3-3
+          path: concepts/premium-v2/qa-screenshots/admin-studio/
+          if-no-files-found: warn
+          retention-days: 30

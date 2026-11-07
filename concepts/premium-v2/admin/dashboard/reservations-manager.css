@@ -1,0 +1,10 @@
+/* FOTOPOLIS Studio 4.0 – internal reservation management */
+#bookings{scroll-margin-top:20px}
+.reservation-entry{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 16px;border:1px solid #d8e2e5;border-left:3px solid #c09a60;border-radius:6px;background:#fff;margin:9px 0}
+.reservation-entry strong{color:#173a53;font-size:12px}
+.reservation-entry p{font-size:11px;color:#617786;line-height:1.5;margin:5px 0}
+.reservation-entry small{display:block;color:#907344;font-size:10px;line-height:1.5}
+.reservation-actions{display:flex;gap:8px;flex-wrap:wrap}
+.reservation-actions button{min-height:35px;padding:8px 12px}
+.reservation-list{margin-top:14px}
+@media(max-width:620px){.reservation-entry{align-items:flex-start;flex-direction:column}.reservation-actions{width:100%}.reservation-actions button{flex:1}}

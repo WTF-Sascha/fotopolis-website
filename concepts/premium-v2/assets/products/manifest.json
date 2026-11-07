@@ -1,0 +1,65 @@
+{
+  "version": "2.3",
+  "sourceDescription": "Verified user GitHub uploads copied from main without modifying main",
+  "sourceOriginals": [
+    {
+      "path": "concepts/premium-v2/assets/incoming/upload-a.png",
+      "sha256": "7539ff8fb703d94f461b8a88f49059d236357ee31815e7e7a71a975c501e609b"
+    },
+    {
+      "path": "concepts/premium-v2/assets/incoming/upload-b.png",
+      "sha256": "9c77a0fb7d61b80a69c5dad885ed5f0e58324a1c0080c77882a71f518c10a3e4"
+    },
+    {
+      "path": "concepts/premium-v2/assets/incoming/upload-c.png",
+      "sha256": "8df769dc97ca651520991c6d53cad794daa2d3896bd7f6b87e85743a463b2ee1"
+    }
+  ],
+  "products": [
+    {
+      "filename": "fotobox-event-1672.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 344472,
+      "sha256": "ff7a1db74919e2d64f9919c4d82136357ae1b03b4347cab221a801811b8830d1",
+      "source": "upload-b.png"
+    },
+    {
+      "filename": "fotobox-event-800.webp",
+      "width": 800,
+      "height": 450,
+      "bytes": 120708,
+      "sha256": "6a23627fa229b91bccd6922bd1a16beb43ee8682de788e8e2e98f30e10274e80",
+      "source": "upload-b.png"
+    },
+    {
+      "filename": "fotowohnwagen-gartenparty-1448.webp",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 460504,
+      "sha256": "056ed5c167fb2e1954d0ebf00747ecfd77a21588bd162ef861a8f37e3cf776cc",
+      "source": "upload-c.png"
+    },
+    {
+      "filename": "fotowohnwagen-gartenparty-760.webp",
+      "width": 760,
+      "height": 570,
+      "bytes": 165140,
+      "sha256": "67c11ea6edc7df2ba342e6c8c3054d8abb2ef384e06d9b638c161d8d0bb7b8c6",
+      "source": "upload-c.png"
+    }
+  ],
+  "mirror": {
+    "original": "upload-a.png",
+    "sha256": "7539ff8fb703d94f461b8a88f49059d236357ee31815e7e7a71a975c501e609b",
+    "approvedDerivative": "fotospiegel-hero-lossless.webp",
+    "approvedDerivativeSha256": "c9a493de7b479b13253e1c7ba91da6d8fc5cd775f918c84c5881a71efe640241",
+    "pixelMeanDifference": [
+      0,
+      0,
+      0
+    ]
+  },
+  "visualType": "studio visualization, not documentary event photography",
+  "encoding": "WebP quality 94, method 6; loss-aware format only, proportional Lanczos for small responsive variants; source PNGs retained"
+}

@@ -1,0 +1,103 @@
+name: FOTOPOLIS Premium V2 Visual QA
+on:
+  push:
+    branches: [design/premium-v2]
+    paths:
+      - "concepts/premium-v2/**"
+      - "scripts/premium-concept-qa.mjs"
+      - "scripts/build-premium-preview.py"
+      - "scripts/build_premium_pages.py"
+      - "scripts/premium-route-qa.mjs"
+      - "scripts/premium-layout-gate.mjs"
+      - "scripts/premium-package-qa.mjs"
+      - "scripts/premium-step4-qa.mjs"
+      - "scripts/premium-step5-qa.mjs"
+      - "scripts/premium-studio3-qa.mjs"
+      - "scripts/premium-studio-finish-qa.mjs"
+      - "scripts/premium-admin-qa.mjs"
+      - "scripts/build-admin-auth.mjs"
+      - "netlify/functions/**"
+      - "package.json"
+      - "scripts/premium-concept-contact.py"
+      - ".github/workflows/premium-concept-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install browser and contact sheet dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+          python3 -m pip install --quiet --break-system-packages pillow
+      - name: Start isolated review server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory . >/tmp/fotopolis-concept-server.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/concepts/premium-v2/ >/dev/null
+      - name: Verify rendered website at five widths
+        run: node scripts/premium-concept-qa.mjs
+      - name: Build the exact Netlify preview
+        run: python3 scripts/build-premium-preview.py
+      - name: Bundle the official Neon Auth login client
+        run: npm run build:auth
+      - name: Serve Netlify build output
+        run: |
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-preview-server.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8766/ >/dev/null
+      - name: QA the actual deploy output on five screen sizes
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+          QA_OUT_DIR: concepts/premium-v2/qa-screenshots/deploy-output
+        run: node scripts/premium-concept-qa.mjs
+      - name: Verify subpages, mobile submenu, navigation and accessible focus
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-route-qa.mjs
+      - name: Roadmap quality gate - all 12 routes at 9 widths and screenshot evidence
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-layout-gate.mjs
+      - name: Verify package planner and truthful request flow on six screen sizes
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-package-qa.mjs
+      - name: Step 4 QA - occasion stories, rights-aware gallery and trust at six widths
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-step4-qa.mjs
+      - name: Step 5 QA - event contact form, validation and local request drafts
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-step5-qa.mjs
+      - name: Studio 3.0 premium UX gate - eight viewports and full journeys
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-studio3-qa.mjs
+      - name: Studio completion UX audit - first fold, callback and lean routes
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-studio-finish-qa.mjs
+      - name: Step 7 QA - Premium Admin Studio month/week, filters and in-memory security
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-qa.mjs
+      - name: Render visual contact sheet
+        if: always()
+        run: python3 scripts/premium-concept-contact.py
+      - name: Store review screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fotopolis-premium-v2-visual-review
+          path: concepts/premium-v2/qa-screenshots/
+          if-no-files-found: warn
+          retention-days: 30
