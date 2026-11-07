@@ -67,18 +67,6 @@
     <article><span>TERMINE IM ZEITRAUM</span><strong data-count="bookings">–</strong><small>Bestätigt oder vorgemerkt</small></article>
     <article><span>INTERNE SPERRZEITEN</span><strong data-count="blocks">–</strong><small>Blockierungen und Wartung</small></article>
    </section>
-   <section class="setup-card" id="setup-assistant" hidden aria-labelledby="setup-heading">
-     <span class="eyebrow">DEIN STUDIO EINRICHTEN</span>
-     <h2 id="setup-heading">Dein Studio Schritt für Schritt in Betrieb nehmen.</h2>
-     <p>Richte deine Verwaltung in fünf Schritten ein. Jeder Fortschritt wird anhand deiner Zugriffsrechte und tatsächlich gespeicherter Geräte und Termine überprüft.</p>
-     <div class="setup-progress"><strong data-setup-progress>Ersteinrichtung wird geprüft …</strong><span>Persönlicher Verwaltungsbereich</span></div>
-     <ol class="setup-steps" data-setup-steps aria-label="Fortschritt der Ersteinrichtung" aria-live="polite"></ol>
-     <div class="setup-actions">
-       <button type="button" class="setup-check-button" data-setup-health-check>Systemrechte prüfen</button>
-       <a class="primary-button" data-setup-next href="#inventory">Echtes Mietgerät anlegen</a>
-     </div>
-     <p class="setup-status" data-setup-status role="status" aria-live="polite"></p>
-   </section>
    <section class="operations-agenda" id="agenda" aria-labelledby="agenda-heading">
     <div class="operations-agenda-top"><div><span class="eyebrow">BETRIEBSÜBERSICHT</span><h2 id="agenda-heading">Termine im gewählten Zeitraum</h2></div><a href="#calendar" class="agenda-calendar-link">Kalender öffnen ↗</a></div>
     <p class="agenda-note">Gespeicherte Einsätze und Reservierungen im angezeigten Kalenderzeitraum.</p>
@@ -132,7 +120,19 @@
     <div><span class="eyebrow">ADMINISTRATORKONTO</span><h2 id="account-heading">Mein Konto & Sicherheit</h2><p>Dein persönlicher Zugang mit abgestuften Verwaltungsrechten.</p><dl><div><dt>E-Mail-Adresse</dt><dd data-user-email>–</dd></div><div><dt>Berechtigung</dt><dd data-user-role>–</dd></div><div><dt>Umgebung</dt><dd>Geschützter Verwaltungsbereich</dd></div></dl></div>
     <div class="account-actions"><a href="/admin/login/?mode=reset" class="primary-button">Passwort festlegen / ändern ↗</a><button type="button" class="secondary-button" data-health-check hidden>Systemstatus prüfen</button><div class="health-status" data-health-status aria-live="polite"></div><button type="button" class="secondary-button" data-signout>Abmelden</button></div>
    </section>
-   <section class="security-note"><strong>Interne Verwaltung</strong><p>Die Geräte- und Terminverwaltung ist nur für berechtigte Mitarbeiter zugänglich. Vormerkungen berücksichtigen die gewählten Logistikpuffer. Kundenanfragen, Angebote und endgültige Buchungsbestätigungen werden separat abgestimmt.</p></section>
+      <section class="setup-card" id="setup-assistant" hidden aria-labelledby="setup-heading">
+     <span class="eyebrow">DEIN STUDIO EINRICHTEN</span>
+     <h2 id="setup-heading">Dein Studio Schritt für Schritt in Betrieb nehmen.</h2>
+     <p>Richte deine Verwaltung in fünf Schritten ein. Jeder Fortschritt wird anhand deiner Zugriffsrechte und tatsächlich gespeicherter Geräte und Termine überprüft.</p>
+     <div class="setup-progress"><strong data-setup-progress>Ersteinrichtung wird geprüft …</strong><span>Persönlicher Verwaltungsbereich</span></div>
+     <ol class="setup-steps" data-setup-steps aria-label="Fortschritt der Ersteinrichtung" aria-live="polite"></ol>
+     <div class="setup-actions">
+       <button type="button" class="setup-check-button" data-setup-health-check>Systemrechte prüfen</button>
+       <a class="primary-button" data-setup-next href="#inventory">Echtes Mietgerät anlegen</a>
+     </div>
+     <p class="setup-status" data-setup-status role="status" aria-live="polite"></p>
+   </section>
+<section class="security-note"><strong>Interne Verwaltung</strong><p>Die Geräte- und Terminverwaltung ist nur für berechtigte Mitarbeiter zugänglich. Vormerkungen berücksichtigen die gewählten Logistikpuffer. Kundenanfragen, Angebote und endgültige Buchungsbestätigungen werden separat abgestimmt.</p></section>
   </main>
   <dialog class="day-detail-dialog" id="day-detail-dialog" aria-labelledby="day-dialog-heading">
     <div class="day-dialog-inner">

@@ -560,7 +560,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<p class="contact-privacy">'
                 f'{e(flow["legalNotice"])}</p>'
                 '</form><aside class="contact-recap" aria-labelledby="contact-recap-title">'
-                '<span class="kicker">DEINE VORSCHAU</span>'
+                '<span class="kicker">DEINE ANFRAGE</span>'
                 '<h3 id="contact-recap-title">Dein Event auf einen Blick.</h3>'
                 '<p>Die Zusammenfassung aktualisiert sich direkt. '
                 'Es wird nichts versendet oder reserviert.</p>'
