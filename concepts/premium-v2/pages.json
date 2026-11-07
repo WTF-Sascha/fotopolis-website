@@ -60,6 +60,15 @@
       "related": [
         "fotospiegel",
         "fotowohnwagen"
+      ],
+      "displayTitle": "Fotobox",
+      "signature": "Ein Klassiker. Unendlich viele Momente.",
+      "mood": "SPONTAN · PERSÖNLICH · UNVERGESSLICH",
+      "requestIntro": "Sichere dir die Möglichkeit für spontane Erinnerungen – wir prüfen deinen Wunschtermin für die Fotobox.",
+      "highlights": [
+        "18-MP-DSLR-Kamera",
+        "Professionelles Blitzlicht",
+        "Individuelle Fotoerinnerungen"
       ]
     },
     {
@@ -120,6 +129,15 @@
       "related": [
         "fotobox",
         "fotowohnwagen"
+      ],
+      "displayTitle": "Foto Mirror",
+      "signature": "Ein Auftritt mit Wow-Effekt.",
+      "mood": "INTERAKTIV · ELEGANT · BESONDERS",
+      "requestIntro": "Plane deinen besonderen Auftritt mit dem Foto Mirror. Wir prüfen deinen Wunschtermin persönlich.",
+      "highlights": [
+        "Intuitiver Touchscreen",
+        "Interaktive Fotoeffekte",
+        "Beleuchteter Spiegelrahmen"
       ]
     },
     {
@@ -180,6 +198,15 @@
       "related": [
         "fotobox",
         "fotospiegel"
+      ],
+      "displayTitle": "Fotowohnwagen",
+      "signature": "Ein Ort voller Geschichten.",
+      "mood": "VINTAGE · GEMÜTLICH · EINZIGARTIG",
+      "requestIntro": "Frag deinen Wunschtermin für den Fotowohnwagen an – wir stimmen auch Zufahrt und Stellfläche mit dir ab.",
+      "highlights": [
+        "Einzigartiger Retro-Charakter",
+        "Gemütlicher Erlebnisraum",
+        "Aufstellung individuell geplant"
       ]
     },
     {
