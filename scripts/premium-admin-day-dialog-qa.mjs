@@ -40,7 +40,7 @@ try{
   });
   await page.goto(new URL("admin/dashboard/",base).href,{waitUntil:"domcontentloaded"});
   await page.locator("#dashboard-app").waitFor({state:"visible",timeout:12000});
-  assert.equal(await page.locator('[data-planning-manager] .plan-primary').count(),1);checks++;
+  assert.equal(await page.locator('[data-planning-manager] .plan-header .plan-primary:visible').count(),1);checks++;
   await page.locator("[data-calendar-grid] .day").first().click();
   assert.equal(await page.locator("#day-detail-dialog").isVisible(),true);checks++;
   const bounds=await page.locator("#day-detail-dialog").boundingBox();
