@@ -55,13 +55,13 @@ assert "../../" not in html
 assert html.count("<h1") == 1
 assert not any("/assets/images/LEG-"+n in html for n in ("060.webp","073.webp","046.webp")), "Unreleased people images must not appear"
 assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 1  # single mirror product card
-assert '<section class="v4-hero"' in html and 'data-v4-product-rail' in html, "Missing Reference Edition home"
+assert '<section class="v4-hero v45-hero"' in html and 'data-v4-product-rail' in html, "Missing Reference Edition home"
 assert 'class="v45-home"' in html and 'class="v45-final-cta"' in html, "Missing approved 4.5 homepage"
 assert all(x not in html for x in ('id="studio-berater"','data-advisor-occasion','class="home-trust','class="v4-hero-meta','class="gallery section','class="v4-advantages','class="v4-date-cta')), "Retired homepage components remain"
 assert html.count('class="v4-product-card"') == 3, "Three product cards required"
 assert [html.index('id="'+x+'"') for x in ("fotobox","fotowohnwagen","fotospiegel")] == sorted(html.index('id="'+x+'"') for x in ("fotobox","fotowohnwagen","fotospiegel")), "Product order mismatch"
 assert 'href="/kontakt/"' in html and 'href="#erlebnisse"' in html, "Enquiry links missing"
-assert '/assets/images/fotobox-event-1672.webp' in html.split('<section class="v4-hero"',1)[1].split("</section>",1)[0], "Approved hero visual required"
+assert '/assets/images/fotobox-event-1672.webp' in html.split('<section class="v4-hero v45-hero"',1)[1].split("</section>",1)[0], "Approved hero visual required"
 assert all('id="'+a+'"' in html and 'href="/'+a+'/"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Product routes and anchors required"
 assert "LEG-019.webp" not in html and "LEG-014.webp" not in html, "No misleading legacy product visuals"
 assert "pending-approved-file" not in html and "legacy-reference" not in html, "Outdated placeholder"
