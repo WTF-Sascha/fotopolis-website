@@ -13,12 +13,6 @@ const check=(label,pass,detail="")=>{
   const ok=!!pass;results.push({label,pass:ok,detail});
   if(!ok)console.error("STUDIO3_FAIL",label,detail);
 };
-const scenarios=[
-  ["hochzeit","Fotospiegel","/fotospiegel/","Hochzeit"],
-  ["geburtstag","Fotobox","/fotobox/","Geburtstag / Jubiläum"],
-  ["business","Fotospiegel","/fotospiegel/","Firmenfeier / Business"],
-  ["party","Fotowohnwagen","/fotowohnwagen/","Motto- / Gartenparty"]
-];
 for(const width of widths){
  const page=await browser.newPage({viewport:{width,height:900},reducedMotion:"reduce"});
  const errors=[],writes=[];
@@ -52,25 +46,17 @@ for(const width of widths){
  check(width+" approved photo-led hero",await page.locator(".v4-hero img[src*=fotobox-event-1672]").count()===1);
  check(width+" collapsed redundant storytelling",await page.locator(".intro.section,.interlude.section").count()===0);
  check(width+" three original product scenes",await page.locator(".v4-product-card img").count()===3);
- check(width+" studio advisor controls",await page.locator("[data-advisor-occasion]").count()===4);
- check(width+" advisor default ready",await page.locator('[data-advisor-occasion="hochzeit"]').getAttribute("aria-pressed")==="true");
- for(const [occasion,product,destination,occasionLabel] of scenarios){
-   await page.locator('[data-advisor-occasion="'+occasion+'"]').click();
-   const pressed=await page.locator('[data-advisor-occasion="'+occasion+'"]').getAttribute("aria-pressed");
-   const pressedCount=await page.locator('[data-advisor-occasion][aria-pressed="true"]').count();
-   const link=await page.locator("[data-advisor-detail]").getAttribute("href");
-   const requestUrl=await page.locator("[data-advisor-enquiry]").getAttribute("href");
-   const params=new URL(requestUrl,"http://localhost/").searchParams;
-   check(width+" advisor "+occasion+" choice",pressed==="true"&&pressedCount===1);
-   check(width+" advisor "+occasion+" destination",link===destination);
-   check(width+" advisor "+occasion+" inquiry context",params.get("produkt")===product&&params.get("anlass")===occasionLabel);
-   check(width+" advisor "+occasion+" content",!!(await page.locator("[data-advisor-description]").innerText()).trim());
- }
+ check(width+" three direct product cards",await page.locator(".v4-product-card").count()===3);
+ check(width+" product order",[...await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.map(n=>n.id))].join(",")==="fotobox,fotowohnwagen,fotospiegel");
+ check(width+" detail links",(await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.every(n=>n.getAttribute("href")==="/"+n.id+"/"))));
+ check(width+" no occasion advisor",await page.locator("#studio-berater,[data-advisor-occasion]").count()===0);
+ check(width+" minimal home sections",await page.locator("main > section").count()===3);
+ check(width+" final booking inquiry link",(await page.locator(".v45-final-cta a.button").getAttribute("href"))==="/kontakt/");
  d=await facts();
  check(width+" home no overflow/clipping",!d.overflow&&d.clippedHeadings.length===0,JSON.stringify(d));
  check(width+" home images loaded",d.brokenImages.length===0,d.brokenImages.join(","));
- check(width+" three trust facts",await page.locator(".home-trust-grid article").count()===3);
- check(width+" no static click traps",await page.locator('.advisor-choice button:not([type="button"])').count()===0);
+ check(width+" no duplicated home information",await page.locator(".home-trust,.v4-advantages,.v4-hero-meta,.v4-date-cta,main .gallery").count()===0);
+ check(width+" direct product navigation accessible",await page.locator(".v4-product-card[aria-label]").count()===3);
  if(capture.includes(width)){
    await page.evaluate(async()=>{
      for(const img of document.images)img.loading="eager";
@@ -116,7 +102,7 @@ for(const width of widths){
      check(width+" contact has no obscuring overlay",await page.locator(".mobile-quick-cta").count()===0);
    }
  }
- // End-to-end URL selection from website's recommendation to enquiry.
+ // Existing direct product/occasion URLs on the contact page continue to work.
  await visit("kontakt/?produkt=Fotowohnwagen&anlass=Motto-%20%2F%20Gartenparty");
  check(width+" full context preselection",
    await page.locator('select[name="produkt"]').inputValue()==="Fotowohnwagen"&&
