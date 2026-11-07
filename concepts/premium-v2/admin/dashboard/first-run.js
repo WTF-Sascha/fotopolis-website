@@ -73,7 +73,7 @@ export function setupFirstRun({root,onHealthCheck}){
        first.id==="active"?"Gerät aktivieren":"Interne Terminverwaltung öffnen";
    }
    check.disabled=checking;
-   check.textContent=checking?"Prüfe Entwicklungsdienste …":
+   check.textContent=checking?"Prüfe Systemdienste …":
      current.health?"Systemrechte erneut prüfen":"Systemrechte prüfen";
    if(view.complete)message.textContent="Dein interner Arbeitsbereich ist eingerichtet. Alle fünf Einrichtungsschritte wurden überprüft.";
  }
