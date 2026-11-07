@@ -27,6 +27,10 @@ test("browser explicitly supplies event buffers in Europe/Berlin",()=>{
  assert.ok(prepareHold({resourceId:id,start:"2026-12-01T12:00",end:"2026-12-01T14:00",before:"",after:"0"},[device]).error);
  assert.ok(prepareHold({resourceId:id,start:"2026-12-01T12:00",end:"2026-12-01T14:00",before:"0",after:"0"},[{...device,enabled:false}]).error);
  assert.ok(prepareHold({resourceId:id,start:"2026-10-25T02:30",end:"2026-10-25T03:30",before:"0",after:"0"},[device]).error);
+ const collision={resource_id:id,allocation_state:"held",
+   occupied_from:"2026-12-01T10:30:00.000Z",occupied_until:"2026-12-01T12:00:00.000Z"};
+ assert.match(prepareHold({resourceId:id,start:"2026-12-01T12:00",end:"2026-12-01T14:00",before:"60",after:"30"},[device],[collision]).error,/belegt/);
+ assert.ok(prepareHold({resourceId:id,start:"2026-12-01T12:00",end:"2026-12-01T14:00",before:"60",after:"30"},[device],[{...collision,allocation_state:"cancelled"}]).value);
 });
 test("no anonymous writes, no production endpoint",async()=>{
  for(const method of ["POST","PATCH"]){
