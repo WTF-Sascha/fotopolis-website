@@ -69,6 +69,12 @@ for(const width of widths){
       formWithinViewport:!!card&&card.getBoundingClientRect().width<=innerWidth
     };
   });
+  if([375,1440].includes(width)){
+   await page.evaluate(()=>window.scrollTo({top:0,behavior:"instant"}));
+   const filename=slug+"-"+width+"-hero.png";
+   await page.screenshot({path:path.join(output,filename),animations:"disabled",fullPage:false});
+   shots.push(filename);
+  }
   check(width,slug,"HTTP 200",result.status()===200,result.status());
   check(width,slug,"premium story and highlights",info.specCount===3&&info.faqCount===3);
   check(width,slug,"one direct product request",info.formCount===1&&info.sectionCount===1);
