@@ -16,6 +16,8 @@ export function validateCalendarChange(value,method){
       !iso.test(value.startUtc)||!iso.test(value.endUtc))return {error:"Invalid block information"};
    const start=new Date(value.startUtc),end=new Date(value.endUtc);
    if(!Number.isFinite(start.getTime())||!Number.isFinite(end.getTime())||
+       start.toISOString().slice(0,19)!==value.startUtc.slice(0,19)||
+       end.toISOString().slice(0,19)!==value.endUtc.slice(0,19)||
        end-start<15*60000||end-start>14*86400000)return {error:"Time window must be between 15 minutes and 14 days"};
    return {value:{resourceId:value.resourceId,kind:value.kind,startUtc:start.toISOString(),endUtc:end.toISOString()}};
  }
