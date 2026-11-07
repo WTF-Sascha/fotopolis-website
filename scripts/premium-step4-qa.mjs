@@ -51,7 +51,7 @@ for(const width of widths){
  check(width+" no unverified people",await page.locator('[data-gallery-kind="moments"]').count()===0);
  check(width+" approved product source class",await page.locator('[data-gallery-kind="products"]').count()===3);
  check(width+" source notes exist",await page.locator(".curated-item figcaption small").count()===3);
- check(width+" visualization notice",(await page.locator("[data-gallery-rights]").innerText()).includes("Produktvisualisierungen"));
+ check(width+" branded gallery closing copy",(await page.locator("[data-gallery-rights]").innerText()).includes("drei Fotoerlebnisse"));
  check(width+" gallery images intact",!data.brokenImages.length&&data.logo==="/assets/fotopolis-logo-original.png",data.brokenImages.join(" | "));
  check(width+" gallery no overflow/clipped headings",!data.overflow&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" preview robots noindex",data.noindex);
