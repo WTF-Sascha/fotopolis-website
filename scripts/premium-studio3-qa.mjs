@@ -49,9 +49,9 @@ for(const width of widths){
  check(width+" home 200",res.status()===200);
  check(width+" accessible hero and brand",d.h1===1&&d.logo==="/assets/fotopolis-logo-original.png");
  check(width+" new CSS and preview robots",d.css&&d.noIndex);
- check(width+" hero remains photo-free",await page.locator(".hero.hero-editorial img").count()===0);
+ check(width+" approved photo-led hero",await page.locator(".v4-hero img[src*=fotobox-event-1672]").count()===1);
  check(width+" collapsed redundant storytelling",await page.locator(".intro.section,.interlude.section").count()===0);
- check(width+" three original product scenes",await page.locator("[data-product-image]").count()===3);
+ check(width+" three original product scenes",await page.locator(".v4-product-card img").count()===3);
  check(width+" studio advisor controls",await page.locator("[data-advisor-occasion]").count()===4);
  check(width+" advisor default ready",await page.locator('[data-advisor-occasion="hochzeit"]').getAttribute("aria-pressed")==="true");
  for(const [occasion,product,destination,occasionLabel] of scenarios){
