@@ -1,0 +1,249 @@
+/* FOTOPOLIS · Product Detail Studio 6.0
+   Distinctive but coherent editorial pages for BOX, MIRROR and CAMPER.
+   Only the three product routes load this stylesheet. */
+.route-fotobox{--product-accent:#d7b780;--product-soft:#f1e4ce;--product-glow:#365977}
+.route-fotospiegel{--product-accent:#e3c596;--product-soft:#f4e8d6;--product-glow:#476b7d}
+.route-fotowohnwagen{--product-accent:#d7b780;--product-soft:#efe3cc;--product-glow:#49666c}
+.route-fotobox,.route-fotospiegel,.route-fotowohnwagen{background:#faf7f0}
+.route-fotobox main,.route-fotospiegel main,.route-fotowohnwagen main{min-width:0}
+.route-fotobox .studio-page-hero,.route-fotospiegel .studio-page-hero,.route-fotowohnwagen .studio-page-hero{
+ background:radial-gradient(ellipse at 100% 12%,var(--product-glow),#0c2b42 49%,#061827 100%);
+}
+.route-fotobox .studio-page-hero-grid,.route-fotospiegel .studio-page-hero-grid,.route-fotowohnwagen .studio-page-hero-grid{
+ min-height:0;gap:clamp(33px,5vw,92px);
+}
+.route-fotobox .studio-page-hero-copy,.route-fotospiegel .studio-page-hero-copy,.route-fotowohnwagen .studio-page-hero-copy{max-width:780px}
+.route-fotobox .studio-page-hero h1,.route-fotospiegel .studio-page-hero h1,.route-fotowohnwagen .studio-page-hero h1{
+ font-size:clamp(49px,5vw,82px);line-height:1.10;letter-spacing:-.05em;text-wrap:balance;
+}
+.route-fotobox .studio-page-hero p,.route-fotospiegel .studio-page-hero p,.route-fotowohnwagen .studio-page-hero p{
+ max-width:570px;font-size:clamp(15px,1.25vw,18px);line-height:1.75;color:#d8e4e8;
+}
+.route-fotobox .studio-page-hero-media,.route-fotospiegel .studio-page-hero-media,.route-fotowohnwagen .studio-page-hero-media{
+ height:clamp(350px,33vw,500px);border:1px solid rgba(232,197,141,.6);
+ background:radial-gradient(ellipse at 50% 28%,#385671,#0b283f 70%,#061626 100%);
+ border-radius:220px 220px 22px 22px;
+}
+.route-fotobox .studio-page-hero-media img,.route-fotospiegel .studio-page-hero-media img,.route-fotowohnwagen .studio-page-hero-media img{
+ object-fit:contain;padding:40px 18px 44px;filter:none;
+}
+.route-fotobox .studio-route-jumps,.route-fotospiegel .studio-route-jumps,.route-fotowohnwagen .studio-route-jumps{
+ background:#faf7f1;box-shadow:none;border-color:#e5dccc;
+}
+.route-fotobox .studio-route-jumps a,.route-fotospiegel .studio-route-jumps a,.route-fotowohnwagen .studio-route-jumps a{background:#fffdf9}
+#product-details,#product-highlights,#terminanfrage{scroll-margin-top:26px}
+/* First editorial chapter, no duplicate product photography. */
+.product-v6-overview{padding:clamp(60px,7vw,108px) 0 clamp(65px,7vw,98px);background:#faf7f1}
+.product-identity-stage{
+ display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);
+ gap:0;background:#fffdf9;border:1px solid #e8ddce;overflow:hidden;
+ border-radius:25px;box-shadow:0 22px 54px rgba(12,35,52,.075);
+}
+.product-identity-art{
+ position:relative;isolation:isolate;min-height:410px;
+ display:flex;flex-direction:column;justify-content:space-between;
+ padding:35px clamp(28px,3.7vw,58px);
+ overflow:hidden;
+ background:radial-gradient(circle at 65% 45%,#264962,#082439 63%,#05192b);
+}
+.product-identity-art:before,.product-identity-art:after{
+ content:"";position:absolute;aspect-ratio:1;border:1px solid rgba(232,198,142,.25);
+ border-radius:50%;z-index:-1;pointer-events:none;
+}
+.product-identity-art:before{width:365px;top:45px;left:calc(50% - 182px)}
+.product-identity-art:after{width:275px;top:90px;left:calc(50% - 137px)}
+.product-identity-art-top,.product-identity-art-label{font-size:10px;line-height:1.6;letter-spacing:.17em;font-weight:800;color:#e2c492}
+.product-identity-art-label{max-width:270px}
+.product-identity-number{
+ display:block;align-self:center;font:italic 400 clamp(128px,18vw,236px)/1 Georgia,"Iowan Old Style",serif;
+ letter-spacing:-.11em;color:#f2d49b;text-shadow:0 14px 45px #0006;
+ margin-left:-.1em;
+}
+.product-story{align-self:center;min-width:0;padding:clamp(35px,5vw,76px)}
+.product-story .kicker{display:block;margin-bottom:24px}
+.product-story h2{
+ font:500 clamp(40px,4.1vw,60px)/1.12 Georgia,"Iowan Old Style",serif;
+ letter-spacing:-.048em;color:#0d2a3f;margin:0 0 25px;text-wrap:balance;
+ overflow-wrap:break-word;
+}
+.product-story p{font-size:clamp(15px,1.22vw,17px);line-height:1.8;color:#536978;max-width:570px;margin:0 0 29px}
+.product-pills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:31px}
+.product-pills span{padding:9px 13px;border:1px solid #e6dac8;border-radius:999px;background:#faf7f1;color:#304b5d;font-size:11px;font-weight:720;line-height:1.4}
+.product-editorial-link{
+ display:inline-flex;align-items:center;gap:16px;color:#916931;font-size:13px;
+ text-decoration:none;font-weight:800;padding:0 0 8px;border-bottom:1px solid #bf9657;
+ transition:gap .2s ease,color .2s ease;
+}
+.product-editorial-link:hover{gap:22px;color:#5d421c}
+.product-highlights-intro{
+ display:flex;align-items:end;justify-content:space-between;gap:30px;margin:clamp(68px,6vw,100px) 0 27px;
+}
+.product-highlights-intro h2{
+ font:500 clamp(39px,4.2vw,62px)/1.13 Georgia,serif;letter-spacing:-.048em;
+ color:#112e43;margin:12px 0 0;text-wrap:balance;
+}
+.product-highlights-intro h2 em{font-style:normal;color:#ba965b}
+.product-highlights-intro p{color:#64747d;font-size:13px;line-height:1.7;max-width:310px;margin:0}
+.product-v6-overview .product-specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;margin:0}
+.product-v6-overview .product-spec{
+ min-height:245px;padding:clamp(25px,3vw,38px);border:1px solid #e6daca;
+ border-radius:18px;background:#fffdf9;box-shadow:0 14px 30px rgba(10,31,50,.035);
+ transition:transform .25s ease,border-color .25s ease;overflow:hidden;
+}
+.product-v6-overview .product-spec:hover{transform:translateY(-4px);border-color:#caab76}
+.product-v6-overview .product-spec:before{
+ top:20px;right:25px;font:italic 500 36px Georgia,serif;color:#c4a477;opacity:.55;
+}
+.product-v6-overview .product-spec .kicker{display:block;padding-right:48px}
+.product-v6-overview .product-spec h3{margin:57px 0 11px;font:500 clamp(23px,2vw,30px)/1.15 Georgia,serif;letter-spacing:-.035em;color:#17364b}
+.product-v6-overview .product-spec p{font-size:13px;line-height:1.74;color:#60717a}
+/* Short planning track replaces repetitive marketing cards. */
+.product-v6-steps{background:#fffdf9;padding:34px 0;border-top:1px solid #e8decf;border-bottom:1px solid #e8decf}
+.product-v6-steps .inner{display:flex;align-items:center;gap:clamp(20px,3vw,42px)}
+.product-v6-steps .kicker{flex:0 0 auto;max-width:140px}
+.product-v6-step-track{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.product-v6-step{display:flex;align-items:center;gap:13px;min-width:0}
+.product-v6-step span{
+ display:grid;place-items:center;flex:0 0 35px;width:35px;height:35px;
+ border:1px solid #d6bb90;border-radius:50%;color:#a47c42;font-size:11px;font-weight:800;
+}
+.product-v6-step strong{font-size:12px;line-height:1.4;font-weight:730;color:#314c5c;overflow-wrap:anywhere}
+.route-fotobox .page-body,.route-fotospiegel .page-body,.route-fotowohnwagen .page-body{
+ background:#faf7f1;padding:clamp(55px,6vw,90px) 0;
+}
+.route-fotobox .page-body .page-grid,.route-fotospiegel .page-body .page-grid,.route-fotowohnwagen .page-body .page-grid{
+ display:block;max-width:1080px;margin:auto;
+}
+.route-fotobox .page-body .page-article,.route-fotospiegel .page-body .page-article,.route-fotowohnwagen .page-body .page-article{width:100%;max-width:none}
+.route-fotobox .page-body .studio-details-heading,.route-fotospiegel .page-body .studio-details-heading,.route-fotowohnwagen .page-body .studio-details-heading{
+ font:500 clamp(33px,3.9vw,53px)/1.14 Georgia,serif;letter-spacing:-.045em;color:#142e42;
+ margin:0 0 25px;
+}
+.route-fotobox .studio-disclosure,.route-fotospiegel .studio-disclosure,.route-fotowohnwagen .studio-disclosure{
+ border:1px solid #e4d9cb!important;border-radius:13px!important;
+ background:#fffdf9!important;margin-bottom:11px!important;
+ box-shadow:0 8px 23px rgba(11,33,50,.045)!important;
+}
+.route-fotobox .studio-disclosure summary,.route-fotospiegel .studio-disclosure summary,.route-fotowohnwagen .studio-disclosure summary{
+ padding:20px 22px!important;line-height:1.4;color:#15354a;font-size:16px!important;min-height:62px;
+}
+.route-fotobox .studio-disclosure p,.route-fotospiegel .studio-disclosure p,.route-fotowohnwagen .studio-disclosure p{font-size:14px;line-height:1.78;padding:0 23px 22px}
+/* The product-specific booking enquiry, not a false availability calendar. */
+.product-enquiry{
+ background:radial-gradient(ellipse at 88% 12%,#294e65,#0a2c45 43%,#061827 100%);
+ color:#f9f6ee;padding:clamp(67px,7vw,112px) 0 clamp(72px,7vw,120px);position:relative;
+}
+.product-enquiry:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(139deg,rgba(239,208,158,.014) 0 1px,transparent 1px 118px)}
+.product-enquiry>.inner{position:relative;z-index:1}
+.product-enquiry-topline{display:flex;justify-content:space-between;align-items:center;gap:25px;padding-bottom:23px;border-bottom:1px solid rgba(226,196,144,.26)}
+.product-enquiry-topline .kicker{color:#e8c992}
+.product-enquiry-seal{font-size:9px;letter-spacing:.2em;color:#b9cccf;font-weight:750}
+.product-enquiry-heading{display:flex;align-items:end;justify-content:space-between;gap:30px;margin:30px 0 45px}
+.product-enquiry-heading h2{font:500 clamp(40px,4.8vw,70px)/1.09 Georgia,"Iowan Old Style",serif;letter-spacing:-.05em;color:#fff8e9;max-width:790px;margin:0;text-wrap:balance}
+.product-enquiry-heading h2 em{font-style:normal;color:#edcc94}
+.product-enquiry-heading p{color:#d3e0e5;font-size:14px;line-height:1.74;max-width:345px;margin:0}
+.product-enquiry-grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr);align-items:start;gap:22px}
+.product-request-form{
+ min-width:0;background:#fffdf9;border-radius:19px;padding:clamp(23px,3vw,43px);
+ border:1px solid #dfd1bc;box-shadow:0 28px 58px rgba(0,10,23,.24);color:#153246;
+}
+.product-form-heading{display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin:0 0 20px}
+.product-form-heading span{font-size:11px;font-weight:850;letter-spacing:.12em;color:#986e35}
+.product-form-heading small{font-size:11px;color:#76838b}
+.product-form-heading-second{padding-top:29px;border-top:1px solid #eee3d5;margin-top:29px}
+.product-request-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 17px}
+.product-field{display:flex;flex-direction:column;min-width:0;gap:8px}
+.product-field-wide{grid-column:1/-1}
+.product-field label{font-size:12px;font-weight:760;line-height:1.4;color:#263e4e}
+.product-field label span{color:#a7783b}
+.product-field input,.product-field select,.product-field textarea{
+ appearance:auto;min-width:0;width:100%;max-width:100%;
+ background:#fbf8f2;border:1px solid #d9cfbf;border-radius:10px;
+ color:#163347;font:500 15px/1.4 system-ui,-apple-system,sans-serif;
+ min-height:50px;padding:12px 13px;outline:none;
+}
+.product-field textarea{resize:vertical;min-height:100px}
+.product-field input:focus,.product-field select:focus,.product-field textarea:focus{
+ border-color:#ae8652;box-shadow:0 0 0 3px rgba(195,151,84,.2);outline:none;
+}
+.product-field input[aria-invalid="true"]{border-color:#ac4138;background:#fff5f3}
+.product-field small{font-size:11px;color:#657580;line-height:1.48}
+.product-request-assurance{font-size:11px;line-height:1.64;color:#657580;border-top:1px solid #eee3d4;padding-top:20px;margin:25px 0 0}
+.product-request-recap{
+ min-width:0;position:relative;overflow:hidden;border-radius:19px;
+ padding:clamp(27px,3.2vw,46px);
+ background:linear-gradient(155deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
+ border:1px solid rgba(233,199,143,.45);box-shadow:0 18px 50px rgba(0,8,20,.14);
+ color:#f7f1e4;
+}
+.product-recap-index{font-size:10px;letter-spacing:.16em;font-weight:850;color:#e4c391}
+.product-recap-mark{position:absolute;right:25px;top:20px;color:rgba(237,207,154,.16);font:italic 500 78px Georgia,serif}
+.product-request-recap h3{font:500 clamp(36px,3.3vw,50px)/1.12 Georgia,serif;letter-spacing:-.04em;margin:27px 0 29px;color:#fff7e8}
+.product-recap-data{margin:0 0 27px;border-top:1px solid rgba(232,198,143,.25)}
+.product-recap-data div{display:flex;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid rgba(232,198,143,.18);align-items:flex-start}
+.product-recap-data dt{font-size:11px;color:#b9cbd1;font-weight:700}
+.product-recap-data dd{font-size:13px;color:#f9e4bd;text-align:right;margin:0;font-weight:760;overflow-wrap:anywhere}
+.product-request-submit.button.gold{width:100%;display:flex;justify-content:center;align-items:center;gap:12px;font-size:13px;white-space:normal;text-align:center;min-height:55px}
+.product-request-copy{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:45px;border:1px solid rgba(230,194,131,.53);background:transparent;color:#f2dbb2;border-radius:999px;padding:10px 18px;margin-top:12px;font:700 12px system-ui;cursor:pointer}
+.product-request-copy:hover{background:rgba(255,255,255,.07)}
+.product-request-full{display:inline-flex;gap:8px;font-size:12px;color:#f1d49e;font-weight:750;margin-top:19px;text-decoration:underline;text-underline-offset:4px}
+.product-request-status{min-height:0;font-size:12px;line-height:1.55;color:#f3ce90;margin:14px 0 0}
+.product-request-status:empty{display:none}
+.product-request-notice{font-size:11px;line-height:1.74;color:#c4d1d7;padding-top:20px;margin:22px 0 0;border-top:1px solid rgba(235,200,145,.22)}
+@media(max-width:1020px){
+ .product-enquiry-heading{flex-direction:column;align-items:flex-start}
+ .product-enquiry-heading p{max-width:610px}
+ .product-enquiry-grid{grid-template-columns:minmax(0,1.1fr) minmax(270px,.9fr)}
+ .product-v6-step-track{gap:10px}
+}
+@media(max-width:760px){
+ .route-fotobox .studio-page-hero h1,.route-fotospiegel .studio-page-hero h1,.route-fotowohnwagen .studio-page-hero h1{font-size:clamp(40px,9vw,58px)}
+ .route-fotobox .studio-page-hero-media,.route-fotospiegel .studio-page-hero-media,.route-fotowohnwagen .studio-page-hero-media{height:clamp(300px,83vw,400px)}
+ .product-v6-overview{padding:48px 0 58px}
+ .product-identity-stage{grid-template-columns:1fr;border-radius:18px}
+ .product-identity-art{min-height:215px;padding:23px}
+ .product-identity-art:before{width:230px;top:0;left:calc(50% - 115px)}
+ .product-identity-art:after{width:175px;top:25px;left:calc(50% - 87px)}
+ .product-identity-number{font-size:125px;line-height:.9}
+ .product-story{padding:30px 23px 35px}
+ .product-story .kicker{margin-bottom:17px}
+ .product-story h2{font-size:clamp(37px,8.9vw,49px);margin-bottom:16px}
+ .product-story p{font-size:14px;line-height:1.75;margin-bottom:21px}
+ .product-pills{gap:7px;margin-bottom:24px}
+ .product-pills span{font-size:10px;padding:8px 10px}
+ .product-highlights-intro{flex-direction:column;align-items:flex-start;margin:57px 0 20px;gap:15px}
+ .product-highlights-intro h2{font-size:clamp(36px,8.7vw,47px)}
+ .product-highlights-intro p{font-size:12px;max-width:550px}
+ .product-v6-overview .product-specs{grid-template-columns:1fr;gap:12px}
+ .product-v6-overview .product-spec{min-height:0;padding:26px}
+ .product-v6-overview .product-spec h3{margin:24px 0 10px;font-size:26px}
+ .product-v6-steps{padding:25px 0}
+ .product-v6-steps .inner{flex-direction:column;align-items:stretch;gap:18px}
+ .product-v6-step-track{grid-template-columns:1fr;gap:13px}
+ .product-v6-step{gap:13px}
+ .product-v6-step span{width:32px;height:32px;flex-basis:32px}
+ .route-fotobox .page-body,.route-fotospiegel .page-body,.route-fotowohnwagen .page-body{padding:51px 0 60px}
+ .product-enquiry{padding:55px 0 79px}
+ .product-enquiry-seal{display:none}
+ .product-enquiry-heading{margin:25px 0 29px;gap:17px}
+ .product-enquiry-heading h2{font-size:clamp(37px,9.1vw,53px);line-height:1.13}
+ .product-enquiry-heading p{font-size:13px}
+ .product-enquiry-grid{grid-template-columns:1fr;gap:16px}
+ .product-request-form{padding:24px 19px}
+ .product-form-heading{flex-direction:column;align-items:flex-start;gap:5px}
+ .product-request-fields{gap:16px}
+ .product-request-recap{padding:27px 23px}
+ .product-request-recap h3{margin:20px 0}
+}
+@media(max-width:420px){
+ .product-request-fields{grid-template-columns:1fr;gap:17px}
+ .product-field-wide{grid-column:auto}
+ .product-identity-art{min-height:190px}
+ .product-identity-number{font-size:110px}
+ .product-story h2{font-size:36px}
+ .product-enquiry-heading h2{font-size:36px}
+ .product-recap-data div{gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .product-v6-overview .product-spec,.product-editorial-link{transition:none}
+}
