@@ -1,0 +1,45 @@
+// Presentation acceptance QA against the exact generated Deploy Preview files.
+// No network access, user accounts or write operations.
+import assert from "node:assert/strict";
+import {readFileSync,existsSync} from "node:fs";
+const base="preview-build/";
+const publicRoutes=["","fotobox/","fotospiegel/","fotowohnwagen/",
+ "pakete/","galerie/","anlaesse/","ueber-uns/","faq/","kontakt/","impressum/","datenschutz/"];
+const protectedRoutes=["admin/","admin/login/","admin/dashboard/"];
+const forbidden=/STUDIO DEVELOPMENT|STUDIO REVIEW|WEBSITE DEVELOPMENT|INTERNES STUDIO-REVIEW|ENTWICKLUNGSVORSCHAU|DESIGN-PREVIEW|DEVELOPMENT ·|INTERNE ENTWICKLUNGSPREVIEW|Geschützter Entwicklungsbereich|keine Produktivseite|Preview · keine Live-Buchbarkeit/i;
+let checks=0;
+for(const route of [...publicRoutes,...protectedRoutes]){
+ const target=base+route+"index.html";
+ assert.ok(existsSync(target),"Missing presentation route: "+target);
+ const html=readFileSync(target,"utf8");
+ assert.ok(html.includes('name="robots" content="noindex'),"Unreviewed site unexpectedly indexable: "+route);
+ assert.doesNotMatch(html,forbidden,"Prototype label on "+route);
+ assert.ok(html.includes("FOTOPOLIS"),"Brand disappeared from "+route);
+ if(publicRoutes.includes(route))assert.doesNotMatch(html,/LEG-(?:060|073|046)\.webp/i,"Unapproved person images in "+route);
+ checks+=4;
+}
+const home=readFileSync(base+"index.html","utf8");
+const gallery=readFileSync(base+"galerie/index.html","utf8");
+const admin=readFileSync(base+"admin/index.html","utf8");
+const login=readFileSync(base+"admin/login/index.html","utf8");
+const dashboard=readFileSync(base+"admin/dashboard/index.html","utf8");
+const contact=readFileSync(base+"kontakt/index.html","utf8");
+const legal=readFileSync(base+"impressum/index.html","utf8");
+const privacy=readFileSync(base+"datenschutz/index.html","utf8");
+assert.match(home,/Drei Erlebniswelten/);checks++;
+assert.match(gallery,/PRODUKTVISUALISIERUNG/);checks++;
+assert.equal((gallery.match(/class="curated-item"/g)||[]).length,3);checks++;
+assert.ok(!existsSync(base+"assets/images/LEG-060.webp"),"Unapproved photo should not be published");checks++;
+assert.ok(!existsSync(base+"admin/admin.js"),"Retired browser-only admin prototype must not ship");checks++;
+assert.match(admin,/url=\/admin\/login\//);checks++;
+assert.match(login,/id="auth-form"/);checks++;
+assert.match(dashboard,/id="dashboard-app" hidden/);checks++;
+assert.match(dashboard,/data-reservations-manager/);checks++;
+assert.match(contact,/E-Mail-Entwurf/);checks++;
+assert.match(legal,/Angaben in Vorbereitung/);checks++;
+assert.match(privacy,/Angaben in Vorbereitung/);checks++;
+const hero=home.split('<section class="hero hero-editorial"',2)[1]?.split("</section>",1)[0]||"";
+assert.doesNotMatch(hero,/<img\b/i,"Freigegebener bildfreier Hero darf nicht verändert werden");checks++;
+const logo="/assets/fotopolis-logo-original.png";
+assert.ok(home.includes(logo)&&dashboard.includes(logo)&&login.includes(logo));checks++;
+console.log("PRESENTATION RELEASE GATE PASS – "+checks+" checks, clean routes and no unapproved person photos. Live launch remains blocked independently.");
