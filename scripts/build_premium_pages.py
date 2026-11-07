@@ -15,7 +15,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
     assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9", "3.0", "3.1")
-    header = re.search(r'<header class="site-header">.*?</header>', home_html, re.S)
+    header = re.search(r'<header class="site-header(?: [^"]*)?">.*?</header>', home_html, re.S)
     footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
     assert header and footer and ribbon, "Navigation/footer source missing"
@@ -654,6 +654,33 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<div class="v4-page-actions"><a class="button gold" '
                 'href="/kontakt/">Event anfragen <span aria-hidden="true">→</span></a></div>'
             )
+        # One distinctive editorial hero family across all customer pages.
+        studio_hero_media = ""
+        if slug in ("fotobox", "fotospiegel", "fotowohnwagen", "galerie"):
+            if slug == "galerie":
+                hero_image = "fotospiegel-hero-lossless.webp"
+                hero_alt = "FOTOPOLIS Mirror in elegantem Eventambiente"
+                hero_label = "FOTOPOLIS MOMENTE"
+            else:
+                hero_image = p["image"]
+                hero_alt = p["imageAlt"]
+                hero_label = "FOTOPOLIS " + {"fotobox":"BOX","fotospiegel":"MIRROR","fotowohnwagen":"CAMPER"}[slug]
+            studio_hero_media = (
+                '<figure class="studio-page-hero-media">'
+                '<span class="studio-hero-media-index" aria-hidden="true">FOTOPOLIS / SOCIAL EVENTS</span>'
+                f'<img src="/assets/images/{e(hero_image)}" alt="{e(hero_alt)}" '
+                'loading="eager" decoding="async">'
+                f'<figcaption>{e(hero_label)}</figcaption>'
+                '</figure>'
+            )
+        else:
+            studio_hero_media = (
+                '<div class="studio-page-hero-art" aria-hidden="true">'
+                '<span class="studio-orbit-one"></span><span class="studio-orbit-two"></span>'
+                '<span class="studio-orbit-center">F<span class="studio-orbit-point">.</span></span>'
+                '<span class="studio-orbit-caption">MEMORIES IN MOTION</span>'
+                '</div>'
+            )
         seo_title = f'{e(p["title"])} | FOTOPOLIS'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -665,21 +692,23 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<link rel="stylesheet" href="/styles.css">'
             '<link rel="stylesheet" href="/studio-polish.css">'
             '<link rel="stylesheet" href="/reference-v4.css">'
+            '<link rel="stylesheet" href="/studio-v5.css">'
             '<script defer src="/site.js"></script>'
-            '<script defer src="/reference-v4.js"></script>' +
+            '<script defer src="/reference-v4.js"></script>'
+            '<script defer src="/studio-v5.js"></script>' +
             ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
             ('<script defer src="/gallery-viewer.js"></script>' if slug == "galerie" else '') +
             ('<script defer src="/contact-flow.js"></script>' if slug == "kontakt" else '') +
             f'</head><body class="route-{slug}{" is-contact-route" if slug == "kontakt" else ""}">'
             '<a class="skip" href="#content">Zum Inhalt springen</a>'
             + ribbon.group(0) + header.group(0) +
-            '<main id="content"><section class="page-hero"><div class="inner">'
+            '<main id="content"><section class="page-hero studio-page-hero"><div class="inner studio-page-hero-grid"><div class="studio-page-hero-copy">'
             '<nav class="page-breadcrumbs" aria-label="Brotkrumennavigation">'
             '<a href="/">Start</a><span aria-hidden="true">/</span>'
             f'<span aria-current="page">{e(p["title"])}</span></nav>'
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
             f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>' +
-            v4_product_actions + '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
+            v4_product_actions + '</div>' + studio_hero_media + '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
             f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
             + closing_cta
             + '</main>' + footer.group(0) + '</body></html>'
