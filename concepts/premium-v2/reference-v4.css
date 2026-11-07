@@ -315,3 +315,158 @@ h1 em,h2 em,h3 em{font-weight:500;font-style:normal;color:#c49d5d}
   .v4-hero h1{font-size:clamp(34px,10vw,39px)}
   .v4-advantage h3{font-size:16px}
 }
+
+
+/* Reference V4.2 — screenshot-derived mobile corrections, 2026-11-07.
+   A dedicated layout avoids the old 3-column/wrapping chapter-band selectors.
+   Do not change the approved source images or the original logo. */
+.v4-hero-meta{
+  position:relative;
+  background:#e9deca;
+  color:#4b4438;
+  border-block:1px solid #ddcdb3;
+}
+.v4-hero-meta-inner{
+  display:grid;
+  grid-template-columns:minmax(0,.83fr) minmax(0,.95fr) minmax(0,1.15fr) minmax(0,2.25fr);
+  align-items:center;
+  gap:0;
+  padding-block:13px;
+}
+.v4-hero-meta-inner > *{min-width:0}
+.v4-hero-meta-item{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:10px 12px;
+  border-right:1px solid rgba(148,111,58,.3);
+  text-align:center;
+  color:#4b4438;
+  text-decoration:none;
+  font-size:clamp(10px,.85vw,12px);
+  line-height:1.35;
+  font-weight:800;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  white-space:normal;
+  overflow-wrap:break-word;
+  hyphens:auto;
+  transition:color .2s ease,background .2s ease;
+}
+.v4-hero-meta-item:hover,
+.v4-hero-meta-item:focus-visible{
+  color:#071b30;
+  background:rgba(211,170,100,.18);
+}
+.v4-hero-meta-item:focus-visible{
+  outline:2px solid #95703e;
+  outline-offset:-3px;
+}
+.v4-hero-meta-claim{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:10px 12px;
+  text-align:center;
+  font-size:clamp(9px,.79vw,11px);
+  font-weight:750;
+  line-height:1.45;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:#645641;
+  white-space:normal;
+  overflow-wrap:break-word;
+}
+.v4-hero h1{
+  text-wrap:balance;
+  overflow:visible;
+}
+#start{scroll-margin-top:112px}
+@media(max-width:1100px){
+  .v4-hero-meta-inner{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    row-gap:0;
+    padding-block:11px 12px;
+  }
+  .v4-hero-meta-item--camper{border-right:0}
+  .v4-hero-meta-claim{
+    grid-column:1 / -1;
+    border-top:1px solid rgba(148,111,58,.24);
+    margin-top:4px;
+    padding-top:12px;
+    min-height:36px;
+    letter-spacing:.11em;
+  }
+}
+@media(max-width:760px){
+  .v4-hero-meta-inner{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-areas:
+      "box mirror"
+      "camper camper"
+      "claim claim";
+    row-gap:3px;
+    column-gap:10px;
+    padding-block:12px 15px;
+  }
+  .v4-hero-meta-item{
+    border-right:0;
+    min-height:42px;
+    padding:9px 6px;
+    font-size:clamp(10px,2.7vw,12px);
+    letter-spacing:.075em;
+  }
+  .v4-hero-meta-item--box{grid-area:box}
+  .v4-hero-meta-item--mirror{grid-area:mirror}
+  .v4-hero-meta-item--camper{
+    grid-area:camper;
+    justify-self:center;
+    width:100%;
+    max-width:260px;
+  }
+  .v4-hero-meta-claim{
+    grid-area:claim;
+    grid-column:auto;
+    width:100%;
+    margin-top:5px;
+    min-height:37px;
+    padding:11px 4px 1px;
+    font-size:clamp(9px,2.15vw,11px);
+    line-height:1.45;
+    letter-spacing:.075em;
+    border-top:1px solid rgba(148,111,58,.25);
+    text-wrap:balance;
+  }
+  /* The header is in document flow. Mobile hero starts below it;
+     avoid compensating twice for its height and accidentally hiding content. */
+  .v4-hero-content{
+    padding-top:clamp(56px,10vw,76px);
+    padding-bottom:clamp(81px,16vw,104px);
+    min-width:0;
+  }
+  .v4-hero h1{
+    max-width:min(100%,360px);
+    font-size:clamp(35px,9.25vw,53px);
+    line-height:1.14;
+    margin-block:16px 19px;
+    padding-block:.06em;
+    hyphens:auto;
+    overflow-wrap:break-word;
+  }
+  .v4-hero h1 strong{font-weight:600}
+  .v4-hero p{max-width:min(100%,360px)}
+  .v4-hero-actions{min-width:0}
+  #start{scroll-margin-top:105px}
+}
+@media(max-width:375px){
+  .v4-hero-content{padding-top:52px}
+  .v4-hero h1{font-size:clamp(34px,9.4vw,38px);max-width:100%}
+  .v4-hero-meta-inner{column-gap:4px}
+  .v4-hero-meta-item{font-size:10px;letter-spacing:.06em}
+  .v4-hero-meta-claim{font-size:9px;letter-spacing:.04em}
+}
+@media(prefers-reduced-motion:reduce){
+  .v4-hero-meta-item{transition:none}
+}
