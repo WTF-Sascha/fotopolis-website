@@ -39,3 +39,4 @@ jobs:
           test -f preview-build/fotowohnwagen/index.html
           test -f preview-build/galerie/index.html
           node scripts/premium-presentation-qa.mjs
+          node scripts/standalone-brand-qa.mjs
