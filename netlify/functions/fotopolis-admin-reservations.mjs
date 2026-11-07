@@ -6,7 +6,11 @@ const preview="https://deploy-preview-2--fotopolis-preview.netlify.app";
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
 const utc=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
 const exact=(v,keys)=>Object.keys(v).every(k=>keys.includes(k));
-function moment(x){return typeof x==="string"&&utc.test(x)?new Date(x):null}
+function moment(x){
+ if(typeof x!=="string"||!utc.test(x))return null;
+ const value=new Date(x);
+ return Number.isFinite(value.getTime())&&value.toISOString().slice(0,19)===x.slice(0,19)?value:null;
+}
 export function validateHoldAction(value,method){
  if(!value||typeof value!=="object"||Array.isArray(value))return {error:"Invalid reservation payload"};
  if(method==="POST"){
