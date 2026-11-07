@@ -24,7 +24,9 @@ test("resource creation validates and normalizes while remaining inactive by ser
 });
 test("resource update only permits id and name",()=>{
  assert.ok(validateResourceDraft({id:"00000000-0000-4000-8000-000000000001",name:"New Name"},"PATCH").value);
- assert.ok(validateResourceDraft({id:"00000000-0000-4000-8000-000000000001",name:"New Name",enabled:true},"PATCH").error);
+ assert.deepEqual(validateResourceDraft({id:"00000000-0000-4000-8000-000000000001",enabled:true},"PATCH").value,{id:"00000000-0000-4000-8000-000000000001",name:null,enabled:true});
+ assert.ok(validateResourceDraft({id:"00000000-0000-4000-8000-000000000001",enabled:"true"},"PATCH").error);
+ assert.ok(validateResourceDraft({id:"00000000-0000-4000-8000-000000000001",name:"New Name",admin_role:"owner"},"PATCH").error);
  assert.ok(validateResourceDraft({id:"bad",name:"New Name"},"PATCH").error);
 });
 test("anonymous cannot create or change inventory",async()=>{
