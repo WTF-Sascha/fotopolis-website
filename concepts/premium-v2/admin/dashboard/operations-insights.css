@@ -1,0 +1,27 @@
+/* Studio 4.1 – editorial operations overview and precise inventory filtering.
+   Respect approved marine/champagne identity; no third-party UI resources. */
+.operations-agenda{margin:22px 0 24px;background:#fff;border:1px solid #e2e0db;border-radius:7px;padding:27px 31px;box-shadow:0 8px 25px #081f3410}
+.operations-agenda-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.operations-agenda .eyebrow{color:#997742}
+.operations-agenda h2{font-size:clamp(18px,2.4vw,25px);color:#16384e;margin:8px 0 2px;letter-spacing:-.035em}
+.agenda-note{font-size:11px;color:#75848d;line-height:1.7;margin:9px 0 15px}
+.agenda-calendar-link{font-size:11px;font-weight:800;color:#936e35;text-decoration:none}
+.agenda-calendar-link:hover,.agenda-calendar-link:focus-visible{text-decoration:underline;text-underline-offset:3px}
+.agenda-list{display:grid;gap:10px}
+.agenda-empty{padding:18px 19px;border:1px dashed #d9d2c4;border-radius:5px;color:#70808b;background:#fcfaf7;font-size:12px;line-height:1.7}
+.agenda-entry{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:13px;padding:14px 16px;border:1px solid #e2e4e3;border-radius:6px;background:#fdfdfb}
+.agenda-entry>div{flex:1;min-width:140px}
+.agenda-entry strong{display:block;font-size:12px;color:#173c53}
+.agenda-entry p{font-size:11px;color:#5c7280;margin:5px 0 0;line-height:1.55}
+.agenda-entry small{font-size:10px;color:#8b754f;line-height:1.6}
+.agenda-chip{display:inline-block;border-radius:3px;background:#edf3f6;color:#385d72;font-size:9px;font-weight:800;padding:5px 8px;margin:0 0 8px}
+.agenda-chip[data-kind="maintenance"],.agenda-chip[data-kind="internal_block"]{background:#f5ecdc;color:#826537}
+.agenda-entry button{background:#fff;border:1px solid #bdc6c8;color:#163c55;min-height:38px;border-radius:5px;font-size:11px;font-weight:800;padding:9px 12px;cursor:pointer}
+.agenda-entry button:hover,.agenda-entry button:focus-visible{border-color:#ae8f58;background:#fdf9ef}
+.inventory-filter-bar{display:grid;grid-template-columns:minmax(140px,1.6fr) repeat(2,minmax(112px,1fr));gap:11px;margin:18px 0 9px}
+.inventory-filter-bar label{display:grid;align-content:start;gap:5px;font-size:10px;font-weight:800;color:#425969}
+.inventory-filter-bar input,.inventory-filter-bar select{width:100%;min-height:40px;border:1px solid #c4cdd1;background:#fff;color:#153850;border-radius:5px;font-size:12px;padding:10px}
+.inventory-filter-bar input:focus-visible,.inventory-filter-bar select:focus-visible{outline:2px solid #b7975c;outline-offset:1px}
+.inventory-filter-summary{font-size:10px;color:#687f89;margin:9px 0 4px;line-height:1.5}
+@media(max-width:870px){.inventory-filter-bar{grid-template-columns:1fr 1fr}.inventory-filter-bar label:first-child{grid-column:1/-1}}
+@media(max-width:570px){.operations-agenda{padding:20px 17px}.agenda-entry{align-items:flex-start}.agenda-entry button{width:100%}.inventory-filter-bar{grid-template-columns:1fr}.inventory-filter-bar label:first-child{grid-column:auto}}
