@@ -64,3 +64,9 @@
 
 .plan-inventory-link{display:inline-block;margin:0 0 12px;color:#91713e;font-weight:800;font-size:11px;text-decoration:underline;text-underline-offset:3px}
 .plan-inventory-link:hover,.plan-inventory-link:focus-visible{color:#173c58}
+
+#activity{scroll-margin-top:20px}
+.activity-entry{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:11px 0;border-bottom:1px solid #e8e5df}
+.activity-entry strong{font-size:11px;font-weight:800;color:#183e57}
+.activity-entry time{font-size:10px;color:#758c99}
+@media(max-width:570px){.activity-entry{align-items:flex-start;flex-direction:column}}
