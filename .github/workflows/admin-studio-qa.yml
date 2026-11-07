@@ -29,6 +29,8 @@ on:
       - "scripts/test-admin-activity.mjs"
       - "scripts/premium-admin-persistence-ui-qa.mjs"
       - "scripts/test-admin-csv.mjs"
+      - "scripts/test-admin-operations-insights.mjs"
+      - "scripts/premium-admin-operations-qa.mjs"
       - "scripts/test-admin-health.mjs"
       - "netlify/functions/fotopolis-admin-health.mjs"
       - "package.json"
@@ -64,6 +66,12 @@ jobs:
         run: node scripts/premium-admin-qa.mjs
       - name: Fail-closed admin session authorization unit checks
         run: npm run test:auth-unit
+      - name: Operations search and safe agenda selectors
+        run: node --test scripts/test-admin-operations-insights.mjs
+      - name: Premium device search and calendar agenda across five breakpoints
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-operations-qa.mjs
       - name: Local CSV escaping and spreadsheet safety
         run: node --test scripts/test-admin-csv.mjs
       - name: Owner-only database connection diagnostics
