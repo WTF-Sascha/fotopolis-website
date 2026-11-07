@@ -2,6 +2,7 @@ import {createAuthClient} from "@neondatabase/auth";
 import {getAdminJwt} from "../session-token.js";
 import {setupInventoryManager} from "./inventory-manager.js";
 import {setupPlanningManager} from "./planning-manager.js";
+import {setupReservationsManager} from "./reservations-manager.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -22,7 +23,7 @@ const keyFromInstant=(timestamp)=>{
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
 const current=new Date(keyFromInstant(today)+"T12:00:00.000Z");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
-let inventoryManager=null,planningManager=null,loadPending=false,adminRole="viewer";
+let inventoryManager=null,planningManager=null,reservationsManager=null,loadPending=false,adminRole="viewer";
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -169,11 +170,11 @@ async function loadCalendar(){
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;
     $("[data-count=resources]").textContent=String(resources.length);
-    renderInventory();inventoryManager?.refresh();planningManager?.refresh();renderCalendar();
+    renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
   }catch(e){
     resources=[];allocations=[];
-    renderInventory();inventoryManager?.refresh();planningManager?.refresh();renderCalendar();
+    renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Kalenderdaten nicht verfügbar · Keine Verfügbarkeitsaussage möglich";
     $("[data-period]").textContent="Laden fehlgeschlagen";
     const wrap=$("[data-day-details]");wrap.replaceChildren();
@@ -239,6 +240,29 @@ async function saveBlock(method,payload){
   await loadCalendar();
   return answer.allocation;
 }
+async function saveReservation(method,payload){
+ const token=await getAdminJwt(client,await client.getSession());
+ if(!token)throw Error("Anmeldung abgelaufen. Bitte melde dich erneut an.");
+ let res;
+ try{
+   res=await fetch("/api/fotopolis/admin/reservations",{
+     method,headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+     cache:"no-store",credentials:"same-origin",body:JSON.stringify(payload)
+   });
+ }catch{throw Error("Verbindung zur internen Terminverwaltung unterbrochen.")}
+ let answer={};try{answer=await res.json()}catch{}
+ if(!res.ok){
+   const errors={400:"Bitte Gerät, Veranstaltungszeit und beide Logistikpuffer prüfen.",
+     401:"Deine Anmeldung ist abgelaufen.",403:"Für diese Aktion fehlen Administratorrechte.",
+     404:"Das aktive Gerät oder die Vormerkung wurde nicht gefunden.",
+     409:"Das Gerät ist im gewählten Belegungsfenster bereits belegt.",
+     503:"Der Reservierungsdienst ist vorübergehend nicht erreichbar."};
+   throw Error(errors[res.status]||"Interne Vormerkung fehlgeschlagen (HTTP "+res.status+").");
+ }
+ if(!answer.saved||!answer.allocation)throw Error("Keine Speicherbestätigung erhalten.");
+ await loadCalendar();
+ return answer.allocation;
+}
 async function authenticate(){
   try{
     const r=await client.getSession();
@@ -271,6 +295,12 @@ async function authenticate(){
       onChange:()=>renderCalendar(),
       createBlock:body.role==="viewer"?undefined:(data)=>saveBlock("POST",data),
       cancelBlock:body.role==="viewer"?undefined:(id)=>saveBlock("PATCH",{id,action:"cancel"})
+    });
+    reservationsManager ||= setupReservationsManager({
+      root:$("[data-reservations-manager]"),getResources:()=>resources,
+      getAllocations:()=>allocations,
+      createHold:body.role==="viewer"?undefined:(payload)=>saveReservation("POST",payload),
+      changeHold:body.role==="viewer"?undefined:(id,action)=>saveReservation("PATCH",{id,action})
     });
     await loadCalendar();
     updateNavigation();
