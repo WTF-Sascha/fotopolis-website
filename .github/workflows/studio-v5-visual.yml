@@ -49,6 +49,11 @@ jobs:
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
         run: node scripts/studio-v5-quality.mjs
+      - name: Produce contact sheet for human visual inspection
+        if: always()
+        run: |
+          python3 -m pip install --quiet pillow
+          python3 scripts/studio-v5-contact-sheet.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
