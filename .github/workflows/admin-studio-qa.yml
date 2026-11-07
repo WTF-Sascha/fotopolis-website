@@ -21,6 +21,8 @@ on:
       - "netlify/functions/fotopolis-admin-session.mjs"
       - "netlify/functions/fotopolis-admin-inventory.mjs"
       - "scripts/test-admin-inventory.mjs"
+      - "scripts/test-admin-blocks.mjs"
+      - "netlify/functions/fotopolis-admin-blocks.mjs"
       - "package.json"
       - ".github/workflows/admin-studio-qa.yml"
   workflow_dispatch:
@@ -54,6 +56,8 @@ jobs:
         run: node scripts/premium-admin-qa.mjs
       - name: Fail-closed admin session authorization unit checks
         run: npm run test:auth-unit
+      - name: Calendar mutations reject anonymous and unsafe requests
+        run: node --test scripts/test-admin-blocks.mjs
       - name: Inventory gateway rejects anonymous and unsafe mutations
         run: node --test scripts/test-admin-inventory.mjs
       - name: Session JWT extraction and recovery QA (no real credentials)
