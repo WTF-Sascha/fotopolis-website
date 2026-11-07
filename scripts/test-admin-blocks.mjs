@@ -14,6 +14,7 @@ test("only maintenance/internal blocks with exact UTC fields accepted",()=>{
  assert.ok(validateCalendarChange({...payload,endUtc:"2026-12-01T12:10:00.000Z"},"POST").error);
  assert.ok(validateCalendarChange({...payload,endUtc:"2027-01-01T12:00:00.000Z"},"POST").error);
  assert.ok(validateCalendarChange({...payload,resourceId:"not-a-uuid"},"POST").error);
+ assert.ok(validateCalendarChange({...payload,startUtc:"2026-02-30T12:00:00.000Z"},"POST").error);
 });
 test("block cancellation is explicit and cannot edit times or bookings",()=>{
  assert.deepEqual(validateCalendarChange({id,action:"cancel"},"PATCH").value,{id,action:"cancel"});
