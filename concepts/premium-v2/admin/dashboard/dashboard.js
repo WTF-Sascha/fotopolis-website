@@ -244,6 +244,7 @@ async function saveBlock(method,payload){
     throw Error(messages[res.status]||"Terminänderung fehlgeschlagen (HTTP "+res.status+").");
   }
   if(!answer.saved||!answer.allocation)throw Error("Der Server hat die Änderung nicht bestätigt.");
+  if(method==="POST"){selected=keyFromInstant(payload.startUtc);cursor=fromKey(selected);}
   await loadCalendar();
   void loadActivity();
   return answer.allocation;
@@ -268,6 +269,7 @@ async function saveReservation(method,payload){
    throw Error(errors[res.status]||"Interne Vormerkung fehlgeschlagen (HTTP "+res.status+").");
  }
  if(!answer.saved||!answer.allocation)throw Error("Keine Speicherbestätigung erhalten.");
+ if(method==="POST"){selected=keyFromInstant(payload.eventStartUtc);cursor=fromKey(selected);}
  await loadCalendar();
  void loadActivity();
  return answer.allocation;
