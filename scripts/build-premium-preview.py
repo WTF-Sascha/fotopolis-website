@@ -12,7 +12,7 @@ product_photos = ["fotobox-event-1672.webp","fotobox-event-800.webp","fotowohnwa
 if target.exists():
     shutil.rmtree(target)
 (target / "assets/images").mkdir(parents=True)
-for name in ("styles.css", "studio-polish.css", "site.js", "package-planner.js", "gallery-viewer.js", "contact-flow.js", "reference-v4.css", "reference-v4.js", "studio-v5.css", "studio-v5.js"):
+for name in ("styles.css", "studio-polish.css", "site.js", "package-planner.js", "gallery-viewer.js", "contact-flow.js", "reference-v4.css", "reference-v4.js", "studio-v5.css", "studio-v5.js", "product-v6.css", "product-enquiry-v6.js"):
     shutil.copy2(source / name, target / name)
 shutil.copy2(root / "site/assets/fotopolis-logo-original.png",
              target / "assets/fotopolis-logo-original.png")
@@ -83,6 +83,20 @@ assert routes == [
     "fotobox","fotospiegel","fotowohnwagen","pakete","galerie",
     "anlaesse","ueber-uns","faq","kontakt","impressum","datenschutz"
 ], f"Unexpected route inventory: {routes}"
+# Product Studio 6.0: prove there is one on-page enquiry per product,
+# no repeated product photo inside the story and no unconnected booking CTA.
+for slug in ("fotobox", "fotospiegel", "fotowohnwagen"):
+    product_html = (target / slug / "index.html").read_text(encoding="utf-8")
+    assert product_html.count('data-product-request-section') == 1, f"Missing inline enquiry: {slug}"
+    assert product_html.count('data-product-request ') == 1, f"Missing real form: {slug}"
+    assert 'id="terminanfrage"' in product_html and 'href="#terminanfrage"' in product_html, f"Broken term link: {slug}"
+    assert 'name="datum" type="date"' in product_html and 'name="email" type="email"' in product_html, f"Missing request fields: {slug}"
+    assert 'data-product-request-email' in product_html and 'data-product-request-copy' in product_html, f"Missing email/copy actions: {slug}"
+    assert '/product-v6.css' in product_html and '/product-enquiry-v6.js' in product_html
+    assert 'class="page-aside"' not in product_html and 'class="page-end"' not in product_html, f"Redundant CTAs: {slug}"
+    assert 'class="product-identity-stage"' in product_html and 'class="product-specs"' in product_html
+    assert 'class="product-stage-media"' not in product_html, f"Duplicated product picture: {slug}"
+
 
 # The legacy browser-only admin prototype is retired from the deploy.
 # /admin/ now leads exclusively to the protected Neon Auth sign-in screen.
