@@ -22,7 +22,7 @@ const keyFromInstant=(timestamp)=>{
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
 const current=new Date(keyFromInstant(today)+"T12:00:00.000Z");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
-let inventoryManager=null,planningManager=null,loadPending=false;
+let inventoryManager=null,planningManager=null,loadPending=false,adminRole="viewer";
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -45,7 +45,13 @@ function renderInventory(){
    const sub=document.createElement("div");sub.className="inventory-label";sub.textContent=(types[r.product_type]||r.product_type)+" · "+r.resource_code;
    desc.append(name,sub);
    const flag=document.createElement("span");flag.className="not-configured";flag.textContent=r.enabled?"Aktiv":"Deaktiviert";
-   row.append(num,desc,flag);list.append(row);
+   row.append(num,desc,flag);
+   if(["owner","manager"].includes(adminRole)){
+     const action=document.createElement("button");action.type="button";action.className="inventory-edit-button";
+     action.textContent="Bearbeiten";action.setAttribute("aria-label",r.display_name+" bearbeiten");
+     action.addEventListener("click",()=>inventoryManager?.editSaved(r));row.append(action);
+   }
+   list.append(row);
  });
 }
 function filteredAllocations(){
@@ -182,6 +188,31 @@ function lock(msg){
   app.hidden=true;gate.hidden=false;message.textContent=msg;loginBack.hidden=false;
   jwt="";resources=[];allocations=[];
 }
+async function saveInventory(method,payload){
+  const session=await client.getSession();
+  const token=await getAdminJwt(client,session);
+  if(!token)throw Error("Die Anmeldung muss erneuert werden. Bitte melde dich erneut an.");
+  let res;
+  try{
+    res=await fetch("/api/fotopolis/admin/inventory",{
+      method,headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      credentials:"same-origin",cache:"no-store",body:JSON.stringify(payload)
+    });
+  }catch{throw Error("Verbindungsfehler beim Speichern. Bitte Internetverbindung prüfen.")}
+  let result={};try{result=await res.json()}catch{}
+  if(!res.ok){
+    const messages={
+      400:"Bitte Geräteeingaben prüfen.",401:"Deine Sitzung ist abgelaufen. Bitte neu anmelden.",
+      403:"Für diese Aktion fehlt die Administratorberechtigung.",
+      404:"Gerät nicht gefunden.",409:"Diese Gerätekennung ist bereits vergeben.",
+      503:"Die Datenbank-Speicherung ist zurzeit nicht verfügbar."
+    };
+    throw Error(messages[res.status]||"Speichern fehlgeschlagen (HTTP "+res.status+").");
+  }
+  if(!result.saved||!result.resource)throw Error("Die Datenbank hat die Speicherung nicht bestätigt.");
+  await loadCalendar();
+  return result.resource;
+}
 async function authenticate(){
   try{
     const r=await client.getSession();
@@ -195,13 +226,19 @@ async function authenticate(){
     if(!resp.ok)throw Error("Berechtigung nicht prüfbar");
     const body=await resp.json();
     if(!body.authorized||!["owner","manager","viewer"].includes(body.role))throw Error("Berechtigung ungültig");
-    jwt=token;
+    jwt=token;adminRole=body.role;
     $("[data-user-email]").textContent=r.data.user.email||"–";
     $("[data-user-role]").textContent=roleLabels[body.role];
     $("[data-role-label]").textContent=roleLabels[body.role];
     $("#top-role").textContent=roleLabels[body.role].toUpperCase();
     gate.hidden=true;app.hidden=false;
-    inventoryManager ||= setupInventoryManager({root:$("[data-inventory-manager]"),getResources:()=>resources,onChange:()=>{planningManager?.refresh();renderCalendar()}});
+    inventoryManager ||= setupInventoryManager({
+      root:$("[data-inventory-manager]"),getResources:()=>resources,
+      onChange:()=>{planningManager?.refresh();renderCalendar()},
+      createResource:body.role==="viewer"?undefined:(record)=>saveInventory("POST",record),
+      updateResource:body.role==="viewer"?undefined:(patch)=>saveInventory("PATCH",patch),
+      canActivate:body.role==="owner"
+    });
     planningManager ||= setupPlanningManager({root:$("[data-planning-manager]"),getResources:()=>resources,getInventoryDrafts:()=>inventoryManager?.getDrafts()||[],getAllocations:()=>allocations,onChange:()=>renderCalendar()});
     await loadCalendar();
     updateNavigation();
