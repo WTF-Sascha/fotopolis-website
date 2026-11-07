@@ -109,7 +109,7 @@ for(const width of widths){
  data=await facts();
  check(width+" home HTTP",response.status()===200);
  check(width+" minimal homepage has no trust or occasion recommendations",await page.locator(".home-trust,.studio-advisor,[data-advisor-occasion]").count()===0);
- check(width+" three dedicated product links",(await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")).join(",")))==="/fotobox/,/fotowohnwagen/,/fotospiegel/");
+ check(width+" three dedicated product links",(await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")).join(",")))==="/fotobox/,/fotospiegel/,/fotowohnwagen/");
  check(width+" enquiry section links to contact",await page.locator('.v45-final-cta a[href="/kontakt/"]').count()===1);
  check(width+" approved image-led hero",await page.locator(".v4-hero img[src*=fotobox-event-1672]").count()===1);
  check(width+" home stable",!data.overflow&&!data.brokenImages.length&&!data.headingsClipped.length,JSON.stringify(data));
