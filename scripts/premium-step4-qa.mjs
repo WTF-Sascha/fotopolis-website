@@ -104,14 +104,13 @@ for(const width of widths){
   const p="ueber-uns-"+width+".png";
   await page.screenshot({path:path.join(out,p),fullPage:true,animations:"disabled"});screenshots.push(p);
  }
- // Home includes new cross-link to occasions and transparent trust component.
+ // Update 4.5: occasion stories and the trust narrative live on dedicated subpages.
  response=await visit("");
  data=await facts();
  check(width+" home HTTP",response.status()===200);
- check(width+" home trust strip",await page.locator(".home-trust-grid article").count()===3);
- check(width+" home occasion and about crosslinks",
-   await page.locator('.home-trust-links a[href="/anlaesse/"]').count()===1&&
-   await page.locator('.home-trust-links a[href="/kontakt/"]').count()===1);
+ check(width+" minimal homepage has no trust or occasion recommendations",await page.locator(".home-trust,.studio-advisor,[data-advisor-occasion]").count()===0);
+ check(width+" three dedicated product links",(await page.locator(".v4-product-card").evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")).join(",")))==="/fotobox/,/fotowohnwagen/,/fotospiegel/");
+ check(width+" enquiry section links to contact",await page.locator('.v45-final-cta a[href="/kontakt/"]').count()===1);
  check(width+" approved image-led hero",await page.locator(".v4-hero img[src*=fotobox-event-1672]").count()===1);
  check(width+" home stable",!data.overflow&&!data.brokenImages.length&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" no unexpected data writes",writes.length===0,writes.join("|"));
