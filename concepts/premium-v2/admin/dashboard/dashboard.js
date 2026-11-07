@@ -170,6 +170,7 @@ async function loadCalendar(){
     const data=await response.json();
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;
+    $("#setup-assistant").hidden=resources.length>0;
     $("[data-export-inventory]").disabled=!["owner","manager"].includes(adminRole)||resources.length===0;
     $("[data-export-calendar]").disabled=!["owner","manager"].includes(adminRole)||allocations.length===0;
     $("[data-count=resources]").textContent=String(resources.length);
@@ -177,6 +178,7 @@ async function loadCalendar(){
     $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
   }catch(e){
     resources=[];allocations=[];
+    $("#setup-assistant").hidden=true;
     $("[data-export-inventory]").disabled=true;$("[data-export-calendar]").disabled=true;
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Kalenderdaten nicht verfügbar · Keine Verfügbarkeitsaussage möglich";
