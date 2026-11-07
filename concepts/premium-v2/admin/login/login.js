@@ -107,11 +107,11 @@ async function finishLogin(){
  const errors={
    401:"Der Sitzungsschlüssel wurde vom Server abgelehnt (401). Melde dich bitte erneut an.",
    403:"Dein Konto ist angemeldet, aber die Administratorrolle wurde abgelehnt (403).",
-   404:"Der Verwaltungsdienst ist unter dieser Vorschau nicht verfügbar (404).",
+   404:"Der Verwaltungsdienst ist derzeit nicht erreichbar (404).",
    503:"Die Berechtigungsprüfung ist vorübergehend nicht erreichbar (503)."
  };
  $("#access-info").textContent=result.stage==="jwt"
-    ?"Die Anmeldung besteht, aber Neon hat keinen gültigen Sitzungsschlüssel für die Verwaltungs-API geliefert. Melde dich bitte erneut an."
+    ?"Der Sitzungsschlüssel konnte nicht überprüft werden. Bitte melde dich erneut an."
     :result.stage==="network"
     ?"Die Verwaltungs-API ist aufgrund eines Verbindungsproblems nicht erreichbar."
     :errors[result.status]||"Berechtigungsprüfung nicht abgeschlossen (HTTP "+result.status+").";

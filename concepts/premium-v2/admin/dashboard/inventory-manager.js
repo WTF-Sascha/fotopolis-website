@@ -27,11 +27,11 @@ export function setupInventoryManager({root,getResources,onChange,createResource
   if(!root)throw Error("Missing inventory editor root");
   const drafts=[];
   const persistent=typeof createResource==="function";
-  const lead=el("p","inventory-manager-lead",persistent?"Lege physisch vorhandene Geräte dauerhaft in Neon an. Neue Geräte bleiben zunächst deaktiviert, bis du sie ausdrücklich aktivierst.":"Geräte als lokale Entwürfe vorbereiten. Es wird noch nichts in Neon gespeichert oder zur Buchung freigegeben.");
+  const lead=el("p","inventory-manager-lead",persistent?"Lege deine Mietgeräte einzeln an. Neue Geräte bleiben zunächst deaktiviert und können anschließend für die interne Disposition freigegeben werden.":"Geräte als lokale Entwürfe vorbereiten. Es wird noch nichts in Neon gespeichert oder zur Buchung freigegeben.");
   const actions=el("div","inventory-manager-actions");
   const newButton=el("button","inventory-manager-primary",persistent?"+ Mietgerät anlegen":"+ Gerät vorbereiten");
   newButton.type="button";
-  const status=el("span","inventory-manager-state",persistent?"GESCHÜTZTE DATENBANK · NEON":"ENTWURF · NICHT GESPEICHERT");
+  const status=el("span","inventory-manager-state",persistent?"GESCHÜTZTE GERÄTEVERWALTUNG":"ENTWURF · NICHT GESPEICHERT");
   actions.append(newButton,status);
   const operationStatus=el("p","inventory-manager-feedback","");
   operationStatus.setAttribute("role","status");operationStatus.setAttribute("aria-live","polite");
@@ -69,7 +69,7 @@ export function setupInventoryManager({root,getResources,onChange,createResource
     field("inventory-code","Interne Gerätekennung",code),
     field("inventory-name","Gerätename",name),
     feedback,formActions,
-    el("p","inventory-manager-explainer",persistent?"Das neue Gerät wird dauerhaft, aber zunächst deaktiviert in der Entwicklungsdatenbank gespeichert. Kein öffentliches Buchungsangebot.":"Beim Neuladen verschwinden sämtliche Entwürfe. Keine Buchungen, keine Datenbankänderungen."));
+    el("p","inventory-manager-explainer",persistent?"Das neue Gerät wird dauerhaft gespeichert und zunächst als deaktiviert geführt.":"Beim Neuladen verschwinden sämtliche Entwürfe. Keine Buchungen, keine Datenbankänderungen."));
   const editor=el("div","inventory-manager-saved-editor");
   root.replaceChildren(lead,actions,operationStatus,editor,draftList,form);
   function render(){
@@ -107,7 +107,7 @@ export function setupInventoryManager({root,getResources,onChange,createResource
     },[...getResources(),...drafts]);
     if(result.error){feedback.textContent=result.error;return}
     if(persistent){
-      submit.disabled=true;feedback.textContent="Speichere das Gerät in Neon …";
+      submit.disabled=true;feedback.textContent="Gerät wird gespeichert …";
       try{
         await createResource(result.value);
         feedback.textContent="";operationStatus.textContent="Gerät dauerhaft gespeichert. Es ist bis zur Aktivierung nicht buchbar.";

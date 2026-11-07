@@ -15,11 +15,11 @@ export function studioReadiness({role,loaded,resources=[],allocations=[],health=
  const steps=[
    {id:"account",title:"Administratorzugang bestätigt",complete:true,detail:"Anmeldung und Owner-Berechtigung wurden geprüft",target:"#account"},
    {id:"system",title:"Systemrechte geprüft",complete:healthVerified,
-     detail:healthVerified?"Alle vier Development-Dienste mit passenden Datenbankrechten verifiziert":
+     detail:healthVerified?"Alle vier Systemdienste und Berechtigungen geprüft":
        health===null?"Datenbankverbindungen und Schreibrechte noch nicht geprüft":
        "Mindestens ein Dienst ist nicht vollständig eingerichtet oder nicht erreichbar",target:"#account"},
    {id:"devices",title:"Echtes Mietgerät gespeichert",complete:loaded&&deviceCount>0,
-     detail:!loaded?"Geschützter Gerätebestand wird geladen":deviceCount+" tatsächliche Geräte in Neon",target:"#inventory"},
+     detail:!loaded?"Geschützter Gerätebestand wird geladen":deviceCount+" Geräte im Bestand",target:"#inventory"},
    {id:"active",title:"Mietgerät ausdrücklich aktiviert",complete:loaded&&activeCount>0,
      detail:!loaded?"Gerätestatus wird geladen":activeCount+" aktive Mietgeräte",target:"#inventory"},
    {id:"schedule",title:"Erste interne Belegung gespeichert",complete:loaded&&occupiedCount>0,
@@ -75,11 +75,11 @@ export function setupFirstRun({root,onHealthCheck}){
    check.disabled=checking;
    check.textContent=checking?"Prüfe Entwicklungsdienste …":
      current.health?"Systemrechte erneut prüfen":"Systemrechte prüfen";
-   if(view.complete)message.textContent="Die dokumentierten Erstinbetriebnahme-Schritte wurden anhand aktueller Entwicklungsdaten bestätigt. Keine Freigabe für öffentliche Buchungen.";
+   if(view.complete)message.textContent="Dein interner Arbeitsbereich ist eingerichtet. Alle fünf Einrichtungsschritte wurden überprüft.";
  }
  check.addEventListener("click",async()=>{
    if(checking||current.role!=="owner")return;
-   checking=true;message.textContent="Prüfe die vier geschützten Entwicklungsdienste und ihre minimalen Datenbankrechte …";
+   checking=true;message.textContent="Prüfe die geschützten Systemdienste und Zugriffsrechte …";
    refresh();
    try{
      const health=await onHealthCheck();
@@ -87,7 +87,7 @@ export function setupFirstRun({root,onHealthCheck}){
      current.health=health;
      const okay=studioReadiness(current).steps.find(x=>x.id==="system").complete;
      message.textContent=okay?"Alle vier Dienste mit den erforderlichen Berechtigungen erreichbar.":
-       "Mindestens ein Entwicklungsdienst ist noch nicht vollständig bereit. Details stehen unter „Mein Konto & Sicherheit“.";
+       "Mindestens ein Systemdienst ist noch nicht vollständig bereit. Prüfe den Status unter „Mein Konto & Sicherheit“.";
    }catch{
      current.health={previewOnly:true,services:{}};
      message.textContent="Die Prüfung ist nicht möglich. Es wurden keine Daten oder Geräte geändert.";

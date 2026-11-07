@@ -15,10 +15,10 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  const plans=[];
  const persistent=typeof createBlock==="function";
  const heading=node("div","plan-header");
- const message=node("p","plan-help",persistent?"Wartungen und interne Sperrzeiten dauerhaft speichern. Die Datenbank verhindert automatisch Überschneidungen mit echten Belegungen.":"Sperrzeiten und Wartungen vorplanen, ohne echte Termine zu verändern. Vorschauentwürfe werden nie gespeichert.");
+ const message=node("p","plan-help",persistent?"Plane Wartungen und interne Sperrzeiten für einzelne Mietgeräte. Überschneidungen mit bestehenden Belegungen werden beim Speichern verhindert.":"Sperrzeiten und Wartungen vorplanen, ohne echte Termine zu verändern. Vorschauentwürfe werden nie gespeichert.");
  const inventoryLink=node("a","plan-inventory-link","Noch kein Gerät erfasst? Zuerst Geräte-Entwurf vorbereiten ↗");
  inventoryLink.href="#inventory";
- const info=node("span","plan-nonpersistent",persistent?"NEON · VERBINDLICHE INTERNE SPERRZEITEN":"LOKALE PLANUNG · NICHT GESPEICHERT");
+ const info=node("span","plan-nonpersistent",persistent?"INTERNE GERÄTESPERRZEITEN":"LOKALE PLANUNG · NICHT GESPEICHERT");
  const create=button("+ Sperrzeit planen","plan-primary");
  heading.append(create,info);
  const status=node("p","plan-status","");
@@ -63,7 +63,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
    select.replaceChildren();
    const placeholder=node("option",null,"Gerät auswählen");placeholder.value="";select.append(placeholder);
    for(const device of getResources()){
-     const option=node("option",null,device.display_name+" · "+device.resource_code+" · Entwicklungsbestand");
+     const option=node("option",null,device.display_name+" · "+device.resource_code+" · Gerätebestand");
      option.value="real:"+device.id;select.append(option);
    }
    for(const device of getInventoryDrafts()){
@@ -89,7 +89,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
        const body=node("div");
        body.append(node("strong",null,(dev?.display_name||"Gerät")+" · "+planningKinds[a.allocation_kind]),
          node("p",null,localBerlinTime(a.event_start_at).replace("T"," ")+" bis "+localBerlinTime(a.event_end_at).replace("T"," ")+" Uhr"),
-         node("small",null,"In Neon gespeichert · wirksame Gerätesperre"));
+         node("small",null,"Gespeichert · Gerät gesperrt"));
        const cancelSaved=button("Sperre aufheben");
        cancelSaved.setAttribute("aria-label","Gespeicherte Sperre für "+(dev?.display_name||"Gerät")+" aufheben");
        cancelSaved.addEventListener("click",async()=>{
@@ -145,7 +145,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
      save.disabled=true;feedback.textContent="Prüfe Belegung und speichere die Sperre …";
      try{
        await createBlock({resourceId:checked.value.resourceRef.slice(5),kind:checked.value.kind,startUtc:checked.value.startUtc,endUtc:checked.value.endUtc});
-       feedback.textContent="";status.textContent="Sperrzeit dauerhaft in Neon gespeichert.";
+       feedback.textContent="";status.textContent="Die Sperrzeit wurde gespeichert.";
        form.hidden=true;notify();create.focus();
      }catch(e){feedback.textContent=e?.message||"Die Sperrzeit konnte nicht gespeichert werden.";}
      finally{save.disabled=false;}

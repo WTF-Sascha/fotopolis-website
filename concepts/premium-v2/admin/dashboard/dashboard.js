@@ -42,7 +42,7 @@ function renderInventory(){
  const list=$("[data-inventory]");list.replaceChildren();
  const result=$("[data-inventory-results]");
  if(!resources.length){
-   result.textContent="0 Geräte im bestätigten Entwicklungsbestand";
+   result.textContent="0 Geräte im Bestand";
    const p=document.createElement("p");p.className="no-inventory";
    p.textContent="Noch keine Geräte registriert. Sobald der tatsächliche FOTOPOLIS-Bestand freigegeben ist, erscheinen die Geräte hier.";
    list.append(p);return;
@@ -151,14 +151,14 @@ function fillEntries(target,real,planned){
  target.replaceChildren();
  if(!real.length&&!planned.length){
    const p=document.createElement("p");p.className="day-dialog-empty";
-   p.textContent="Für diesen Tag sind im geladenen Entwicklungszeitraum keine Belegungen hinterlegt. Das ist keine verbindliche Verfügbarkeitszusage.";
+   p.textContent="Für diesen Tag sind keine internen Einträge im ausgewählten Zeitraum hinterlegt.";
    target.append(p);return;
  }
  for(const a of real){
    const row=document.createElement("article");row.className="day-dialog-entry";
    const title=document.createElement("strong");title.textContent=description(a);
    const meta=document.createElement("p");
-   meta.textContent=fmtTime.format(new Date(a.event_start_at))+" – "+fmtTime.format(new Date(a.event_end_at))+" · In Neon hinterlegt";
+   meta.textContent=fmtTime.format(new Date(a.event_start_at))+" – "+fmtTime.format(new Date(a.event_end_at))+" · Gespeichert";
    row.append(title,meta);target.append(row);
  }
  for(const p of planned){
@@ -236,7 +236,7 @@ async function loadCalendar(){
     $("[data-export-calendar]").disabled=!["owner","manager"].includes(adminRole)||allocations.length===0;
     $("[data-count=resources]").textContent=String(resources.length);
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
-    $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
+    $("[data-calendar-sync]").textContent="Kalender aktualisiert · "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr";
   }catch(e){
     resources=[];allocations=[];calendarLoaded=false;
     firstRun?.refresh({loaded:false,resources:[],allocations:[]});
@@ -386,7 +386,7 @@ async function loadActivity(){
    if(!data.readOnly||!Array.isArray(data.records))throw Error("invalid response");
    if(!data.records.length){
      const p=document.createElement("p");p.className="plan-empty";
-     p.textContent="Noch keine Änderungen im Entwicklungsbestand protokolliert.";target.append(p);return;
+     p.textContent="Es sind noch keine Verwaltungsänderungen protokolliert.";target.append(p);return;
    }
    const labels={create_booking:"Interne Vormerkung angelegt",update_booking:"Vormerkung bestätigt",
      cancel_booking:"Vormerkung storniert",create_block:"Sperrzeit angelegt",
@@ -406,7 +406,7 @@ async function authenticate(){
     const r=await client.getSession();
     if(r.error||!r.data?.user||!r.data?.session){location.replace("/admin/login/?next=dashboard");return}
     const token=await getAdminJwt(client,r);
-    if(!token){lock("Neon hat keinen gültigen Sitzungsschlüssel geliefert. Bitte melde dich erneut an.");return}
+    if(!token){lock("Deine Anmeldung konnte nicht bestätigt werden. Bitte melde dich erneut an.");return}
     const resp=await fetch("/api/fotopolis/admin/session",{method:"GET",headers:{Authorization:"Bearer "+token},cache:"no-store",credentials:"same-origin"});
     if(resp.status===401){lock("Anmeldenachweis abgelehnt (401). Bitte melde dich erneut an.");return}
     if(resp.status===403){lock("Administratorrolle abgelehnt (403). Bitte kontaktiere die Administration.");return}
