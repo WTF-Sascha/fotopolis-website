@@ -70,21 +70,24 @@ assert routes == [
     "anlaesse","ueber-uns","faq","kontakt","impressum","datenschutz"
 ], f"Unexpected route inventory: {routes}"
 
-# Roadmap 7: publish a separate, explicitly demo-only Admin Studio route.
-# No source SQL, credentials, DB client or writable endpoint enters this folder.
+# The legacy browser-only admin prototype is retired from the deploy.
+# /admin/ now leads exclusively to the protected Neon Auth sign-in screen.
 admin_source = source / "admin"
 admin_target = target / "admin"
 admin_target.mkdir(exist_ok=True)
-for name in ("index.html", "admin.css", "admin.js"):
-    shutil.copy2(admin_source / name, admin_target / name)
-admin_html = (admin_target / "index.html").read_text(encoding="utf-8")
-assert 'name="robots" content="noindex,nofollow,noarchive"' in admin_html
-assert "/assets/fotopolis-logo-original.png" in admin_html
-assert 'data-calendar-grid' in admin_html and 'data-block-dialog' in admin_html
-assert 'STUDIO REVIEW' in admin_html and 'keine echten Buchungen' in admin_html
-admin_js = (admin_target / "admin.js").read_text(encoding="utf-8")
-assert all(forbidden not in admin_js for forbidden in ("fetch(", "localStorage", "sessionStorage", "DATABASE_URL", "service_role", "supabase", "neon.tech"))
-assert "data-product-filter" in admin_html and "data-view" in admin_html
+shutil.copy2(admin_source / "admin.css", admin_target / "admin.css")
+admin_html = """<!doctype html><html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>FOTOPOLIS · Verwaltung</title>
+<meta http-equiv="refresh" content="0; url=/admin/login/"></head>
+<body><main><h1>FOTOPOLIS Verwaltung</h1>
+<p><a href="/admin/login/">Zur geschützten Anmeldung</a></p>
+</main></body></html>"""
+(admin_target / "index.html").write_text(admin_html, encoding="utf-8")
+assert 'url=/admin/login/' in admin_html
+assert not (admin_target / "admin.js").exists(), "Legacy demo must never ship"
 assert not any((target / x).exists() for x in ("database", "database_url", ".env"))
 
 # Roadmap 7.5: optional Neon Auth first-account verification route.

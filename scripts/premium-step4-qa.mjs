@@ -99,7 +99,7 @@ for(const width of widths){
  check(width+" about HTTP",response.status()===200);
  check(width+" exactly four trust facts",await page.locator(".trust-fact").count()===4);
  check(width+" exactly three process steps",await page.locator(".trust-step").count()===3);
- check(width+" explicit no fabricated testimonials",(await page.locator(".trust-review-policy").innerText()).includes("keine Sternebewertungen"));
+ check(width+" honest testimonials policy",(await page.locator(".trust-review-policy").innerText()).includes("nur, wenn sie nachweisbar"));
  check(width+" trust page stable",!data.overflow&&!data.brokenImages.length&&!data.headingsClipped.length,JSON.stringify(data));
  if(snapshots.has(width)){
   const p="ueber-uns-"+width+".png";

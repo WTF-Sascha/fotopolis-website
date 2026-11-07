@@ -562,7 +562,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '</form><aside class="contact-recap" aria-labelledby="contact-recap-title">'
                 '<span class="kicker">DEINE VORSCHAU</span>'
                 '<h3 id="contact-recap-title">Dein Event auf einen Blick.</h3>'
-                '<p>Die Vorschau aktualisiert sich direkt. '
+                '<p>Die Zusammenfassung aktualisiert sich direkt. '
                 'Es wird nichts versendet oder reserviert.</p>'
                 '<pre data-contact-summary aria-live="polite"></pre>'
                 '<div class="contact-actions">'
