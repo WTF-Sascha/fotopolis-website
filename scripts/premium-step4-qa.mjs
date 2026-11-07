@@ -55,7 +55,7 @@ for(const width of widths){
  check(width+" gallery images intact",!data.brokenImages.length&&data.logo==="/assets/fotopolis-logo-original.png",data.brokenImages.join(" | "));
  check(width+" gallery no overflow/clipped headings",!data.overflow&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" preview robots noindex",data.noindex);
- check(width+" no redundant gallery filters",await page.locator("[data-gallery-filter]").count()===0);
+ check(width+" four product gallery filters",await page.locator("[data-v4-gallery-filter]").count()===4);
  check(width+" all product visualizations visible",await page.locator('[data-gallery-kind="products"]:visible').count()===3);
  check(width+" no unapproved person images",await page.locator('[data-gallery-kind="moments"]:visible').count()===0);
  const opener=page.locator('[data-gallery-kind="products"] [data-gallery-open]').first();
@@ -112,7 +112,7 @@ for(const width of widths){
  check(width+" home occasion and about crosslinks",
    await page.locator('.home-trust-links a[href="/anlaesse/"]').count()===1&&
    await page.locator('.home-trust-links a[href="/kontakt/"]').count()===1);
- check(width+" hero remains image-free",await page.locator(".hero.hero-editorial img").count()===0);
+ check(width+" approved image-led hero",await page.locator(".v4-hero img[src*=fotobox-event-1672]").count()===1);
  check(width+" home stable",!data.overflow&&!data.brokenImages.length&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" no unexpected data writes",writes.length===0,writes.join("|"));
  check(width+" zero browser JS errors",errors.length===0,errors.join("|"));
