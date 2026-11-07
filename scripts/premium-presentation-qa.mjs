@@ -50,7 +50,7 @@ assert.doesNotMatch(legal,/Angaben in Vorbereitung|bisherige Website/i);checks++
 assert.match(privacy,/Verantwortliche Stelle/);checks++;
 assert.match(privacy,/Kontaktaufnahme und Eventanfragen/);checks++;
 assert.doesNotMatch(privacy,/Angaben in Vorbereitung|bisherige Website/i);checks++;
-const hero=home.split('<section class="v4-hero"',2)[1]?.split("</section>",1)[0]||"";
+const hero=home.split('<section class="v4-hero v45-hero"',2)[1]?.split("</section>",1)[0]||"";
 assert.match(hero,/<img\b[^>]*fotobox-event-1672\.webp/i,"Approved photo-led hero must be present");checks++;
 const logo="/assets/fotopolis-logo-original.png";
 assert.ok(home.includes(logo)&&dashboard.includes(logo)&&login.includes(logo));checks++;
