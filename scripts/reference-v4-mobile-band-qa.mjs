@@ -63,6 +63,8 @@ for(const width of widths){
   assertion(width,"box and mirror on same first row",sameRow(data.box,data.mirror),{box:data.box,mirror:data.mirror});
   assertion(width,"camper occupies its own row",below(data.camper,data.box)&&below(data.camper,data.mirror),{camper:data.camper,box:data.box,mirror:data.mirror});
   assertion(width,"claim is below camper",below(data.claim,data.camper),{claim:data.claim,camper:data.camper});
+  assertion(width,"claim spans both mobile grid columns",data.claim.width>=data.inner.width-3,{claimWidth:data.claim.width,innerWidth:data.inner.width});
+  assertion(width,"claim is centered below both products",Math.abs((data.claim.x+data.claim.width/2)-(data.inner.x+data.inner.width/2))<=3,{claim:data.claim,inner:data.inner});
   assertion(width,"rows fully fit beige background",data.meta&&data.inner&&data.meta.bottom>=data.claim.bottom-2,{meta:data.meta,claim:data.claim});
   assertion(width,"mobile navigation present",data.bottomNav==="grid",data.bottomNav);
  }else if(width<=1100){
