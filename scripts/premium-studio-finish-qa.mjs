@@ -19,29 +19,18 @@ for (const width of widths){
  page.on("request",request=>{if(!["GET","HEAD"].includes(request.method())) writes.push(request.method()+" "+request.url());});
  const visit=route=>page.goto(new URL(route,base).toString(),{waitUntil:"networkidle",timeout:40000});
  await visit("");
- const occasion=page.locator('[data-advisor-occasion="party"]');
- await occasion.click();
- const selected=await page.locator("[data-advisor-title]").innerText();
- check(width+" party advice rendered",selected.includes("Fotowohnwagen"));
- if(width<=900){
-  const focus=await page.locator(".advisor-result").evaluate(el=>document.activeElement===el);
-  const bounds=await page.locator(".advisor-result").evaluate(el=>{
-   const r=el.getBoundingClientRect();
-   return {top:r.top,bottom:r.bottom,height:r.height,visible:r.top<innerHeight&&r.bottom>0};
-  });
-  check(width+" advisor reveals response with keyboard focus",focus&&bounds.visible,JSON.stringify(bounds));
- }
- if(width<=900){
-   await page.locator("[data-advisor-reset]").click();
-   const reset=await page.locator('[data-advisor-occasion="party"]').evaluate(el=>{
-      const r=el.getBoundingClientRect();
-      return {focused:document.activeElement===el,visible:r.top<innerHeight&&r.bottom>0};
-   });
-   check(width+" advisor can return directly to selected occasion",reset.focused&&reset.visible,JSON.stringify(reset));
- }
- const destination=await page.locator("[data-advisor-enquiry]").getAttribute("href");
- check(width+" advice transfers product and occasion",destination.includes("Fotowohnwagen")&&
-   decodeURIComponent(destination).includes("Motto- / Gartenparty"),String(destination));
+ const home=await page.evaluate(()=>({
+   heroCTAs:[...document.querySelectorAll(".v45-hero .v4-hero-actions a")].map(x=>x.getAttribute("href")),
+   productOrder:[...document.querySelectorAll(".v4-product-card")].map(x=>x.id),
+   productRoutes:[...document.querySelectorAll(".v4-product-card")].map(x=>x.getAttribute("href")),
+   sections:document.querySelectorAll("main > section").length,
+   deprecated:document.querySelectorAll("#studio-berater,.studio-advisor,.home-trust,.v4-hero-meta,.v4-advantages,.v4-date-cta,.gallery.section").length
+ }));
+ check(width+" single discovery CTA",home.heroCTAs.length===1&&home.heroCTAs[0]==="#erlebnisse");
+ check(width+" products in approved order",home.productOrder.join(",")==="fotobox,fotowohnwagen,fotospiegel");
+ check(width+" dedicated product routes",home.productRoutes.join(",")==="/fotobox/,/fotowohnwagen/,/fotospiegel/");
+ check(width+" only three public home sections",home.sections===3&&home.deprecated===0);
+ check(width+" bottom enquiry CTA",(await page.locator(".v45-final-cta a.button").getAttribute("href"))==="/kontakt/");
  // Contact must not repeat hero, route-jumps, and a second closing conversion card.
  const res=await visit("kontakt/?produkt=Fotowohnwagen&anlass=Motto-%20%2F%20Gartenparty");
  check(width+" contact HTTP 200",res.status()===200);
