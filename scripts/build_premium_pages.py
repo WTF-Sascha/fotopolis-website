@@ -681,7 +681,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<a href="/">Start</a><span aria-hidden="true">/</span>'
             f'<span aria-current="page">{e(p["title"])}</span></nav>'
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
-            f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>'
+            f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>' +
             v4_product_actions + '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
             f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
             + closing_cta
