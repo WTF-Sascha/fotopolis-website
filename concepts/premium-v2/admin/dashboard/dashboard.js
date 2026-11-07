@@ -3,6 +3,7 @@ import {getAdminJwt} from "../session-token.js";
 import {setupInventoryManager} from "./inventory-manager.js";
 import {setupPlanningManager} from "./planning-manager.js";
 import {setupReservationsManager} from "./reservations-manager.js";
+import {downloadCsv} from "./csv-export.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -169,11 +170,14 @@ async function loadCalendar(){
     const data=await response.json();
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
     resources=data.resources;allocations=data.allocations;
+    $("[data-export-inventory]").disabled=!["owner","manager"].includes(adminRole)||resources.length===0;
+    $("[data-export-calendar]").disabled=!["owner","manager"].includes(adminRole)||allocations.length===0;
     $("[data-count=resources]").textContent=String(resources.length);
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
   }catch(e){
     resources=[];allocations=[];
+    $("[data-export-inventory]").disabled=true;$("[data-export-calendar]").disabled=true;
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Kalenderdaten nicht verfügbar · Keine Verfügbarkeitsaussage möglich";
     $("[data-period]").textContent="Laden fehlgeschlagen";
@@ -374,6 +378,27 @@ function updateNavigation(){
 }
 window.addEventListener("hashchange",updateNavigation);
 $("[data-refresh-calendar]").addEventListener("click",()=>void loadCalendar());
+$("[data-export-inventory]").addEventListener("click",()=>{
+ if(!["owner","manager"].includes(adminRole)||!resources.length)return;
+ downloadCsv("fotopolis-geraetebestand.csv",["Gerätekennung","Gerätename","Produktart","Status"],resources.map(r=>
+  [r.resource_code,r.display_name,types[r.product_type]||r.product_type,r.enabled?"Aktiv":"Deaktiviert"]));
+});
+$("[data-export-calendar]").addEventListener("click",()=>{
+ if(!["owner","manager"].includes(adminRole)||!allocations.length)return;
+ const entries=filteredAllocations();
+ const category={booking:"Interne Reservierung",internal_block:"Sperrzeit",maintenance:"Wartung"};
+ const state={held:"Vorgemerkt",confirmed:"Bestätigt",blocked:"Gesperrt",cancelled:"Storniert"};
+ const dt=v=>keyFromInstant(v)+" "+fmtTime.format(new Date(v));
+ downloadCsv("fotopolis-terminuebersicht-"+selected.slice(0,7)+".csv",
+  ["Gerät","Kategorie","Status","Veranstaltung Beginn","Veranstaltung Ende","Belegt ab","Belegt bis"],
+  entries.map(a=>{
+    const r=resources.find(r=>r.id===a.resource_id);
+    return [r?.display_name||"Unbekanntes Gerät",category[a.allocation_kind]||a.allocation_kind,
+      state[a.allocation_state]||a.allocation_state,dt(a.event_start_at),
+      dt(a.event_end_at),dt(a.occupied_from),dt(a.occupied_until)];
+  }));
+});
+
 $("[data-date-go]").addEventListener("click",async()=>{
  const date=$("#admin-jump-date").value;
  if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return;
