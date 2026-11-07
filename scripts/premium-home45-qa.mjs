@@ -72,11 +72,11 @@ for(const width of widths){
  });
  check(width,"HTTP 200",res.status()===200,res.status());
  check(width,"three page sections",facts.sections===3,facts.sections);
- check(width,"only one hero action",JSON.stringify(facts.heroLinks)===JSON.stringify(["#erlebnisse"]),facts.heroLinks);
+ check(width,"no redundant hero action",facts.heroLinks.length===0,facts.heroLinks);
  check(width,"headline fully starts below sticky header",facts.h1&&facts.hero&&facts.header&&facts.h1.top>facts.hero.top+24&&facts.hero.top>=facts.header.bottom-2&&facts.h1.bottom<facts.hero.bottom-20,{hero:facts.hero,h1:facts.h1,header:facts.header});
  check(width,"one visible H1",facts.h1s===1&&facts.heroHeadline?.includes("Momente,"));
  check(width,"deleted recommendation and duplicate sections",facts.legacy===0&&!facts.legacyJS,facts.legacy);
- check(width,"correct order",facts.order.join(",")==="fotobox,fotowohnwagen,fotospiegel",facts.order);
+ check(width,"correct order",facts.order.join(",")==="fotobox,fotospiegel,fotowohnwagen",facts.order);
  check(width,"direct product detail routes",facts.cards.every(x=>x.href==="/"+x.id+"/"));
  check(width,"all product media loaded",facts.cards.every(x=>x.naturalWidth>0)&&facts.brokenImages.length===0,facts.brokenImages);
  check(width,"equipment photos never cropped or recolored",facts.cards.every(x=>x.fit==="contain"&&x.filter==="none"),facts.cards);
@@ -110,18 +110,19 @@ for(const width of widths){
   const back=await rail.evaluate(el=>el.scrollLeft);
   check(width,"previous button scrolls back",back<after,{after,back});
  }
- await page.locator(".v45-hero .v4-hero-actions a").click();
- check(width,"hero CTA jumps to products",new URL(page.url()).hash==="#erlebnisse",page.url());
- const visible=await page.evaluate(()=>{
-  const title=document.querySelector("#experiences-title")?.getBoundingClientRect();
-  const header=document.querySelector(".site-header")?.getBoundingClientRect();
-  return !!title&&title.top>=header.bottom-14&&title.top<innerHeight-50;
+ const adjacent=await page.evaluate(()=>{
+  const hero=document.querySelector(".v45-hero");
+  const products=document.querySelector(".v45-products");
+  const r=hero?.getBoundingClientRect(),p=products?.getBoundingClientRect();
+  return !!r&&!!p&&hero.nextElementSibling===products&&Math.abs(r.bottom-p.top)<3;
  });
- check(width,"product heading accessible after jump",visible);
+ check(width,"product cards directly follow hero",adjacent);
+ await page.locator("#experiences-title").scrollIntoViewIfNeeded();
+ check(width,"product heading accessible",await page.locator("#experiences-title").isVisible());
  await page.locator(".v45-final-cta a.button").click();
  check(width,"bottom CTA opens contact page",new URL(page.url()).pathname==="/kontakt/",page.url());
  if([375,1024].includes(width)){
-  for(const slug of ["fotobox","fotowohnwagen","fotospiegel"]){
+  for(const slug of ["fotobox","fotospiegel","fotowohnwagen"]){
    await page.goto(base,{waitUntil:"networkidle"});
    await page.locator('.v4-product-card#'+slug).click();
    check(width,slug+" card routes to detail",new URL(page.url()).pathname==="/"+slug+"/",page.url());
