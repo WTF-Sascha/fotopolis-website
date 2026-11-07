@@ -4,7 +4,7 @@ on:
     branches: ["design/premium-v2"]
     paths:
       - "scripts/reference-v4-audit.mjs"
-      - "scripts/reference-v4-mobile-band-qa.mjs"
+      - "scripts/premium-home45-qa.mjs"
       - "concepts/premium-v2/index.html"
       - "concepts/premium-v2/reference-v4.css"
       - "concepts/premium-v2/reference-v4.js"
@@ -39,16 +39,16 @@ jobs:
           SITE_BASE_URL: http://127.0.0.1:8766/
           QA_STRICT: "0"
         run: node scripts/reference-v4-audit.mjs
-      - name: Regression test Android hero and beige info band at 14 widths
+      - name: Regression test minimal home 4.5, real links and images at 15 widths
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
-        run: node scripts/reference-v4-mobile-band-qa.mjs
+        run: node scripts/premium-home45-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: fotopolis-v4-deep-audit
           path: |
             concepts/premium-v2/qa-screenshots/reference-v4-audit/
-            concepts/premium-v2/qa-screenshots/mobile-band/
+            concepts/premium-v2/qa-screenshots/home45/
           retention-days: 30
           if-no-files-found: warn
