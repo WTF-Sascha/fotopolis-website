@@ -28,7 +28,7 @@ export function filterInventory(resources,{query="",type="all",state="all"}={}){
 export function calendarAgenda(allocations,resources,{from=null,limit=6,product="all"}={}){
  if(!Array.isArray(allocations)||!Array.isArray(resources))return [];
  const deviceIndex=new Map(resources.map(r=>[r.id,r]));
- const reference=from instanceof Date?from.getTime():Number.isFinite(new Date(from).getTime())?new Date(from).getTime():null;
+ const reference=from==null?null:(from instanceof Date?from.getTime():Number.isFinite(new Date(from).getTime())?new Date(from).getTime():null);
  const result=[];
  for(const a of allocations){
    if(a?.allocation_state==="cancelled")continue;
