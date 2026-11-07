@@ -15,7 +15,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  const plans=[];
  const persistent=typeof createBlock==="function";
  const heading=node("div","plan-header");
- const message=node("p","plan-help",persistent?"Plane Wartungen und interne Sperrzeiten für einzelne Mietgeräte. Überschneidungen mit bestehenden Belegungen werden beim Speichern verhindert.":"Sperrzeiten und Wartungen vorplanen, ohne echte Termine zu verändern. Vorschauentwürfe werden nie gespeichert.");
+ const message=node("p","plan-help",persistent?"Plane Wartungen und interne Sperrzeiten für einzelne Mietgeräte. Überschneidungen mit bestehenden Belegungen werden beim Speichern verhindert.":"Sperrzeiten und Wartungen vorbereiten. Nicht gespeicherte Einträge beeinflussen keine bestehenden Termine.");
  const inventoryLink=node("a","plan-inventory-link","Noch kein Gerät erfasst? Zuerst Geräte-Entwurf vorbereiten ↗");
  inventoryLink.href="#inventory";
  const info=node("span","plan-nonpersistent",persistent?"INTERNE GERÄTESPERRZEITEN":"LOKALE PLANUNG · NICHT GESPEICHERT");
