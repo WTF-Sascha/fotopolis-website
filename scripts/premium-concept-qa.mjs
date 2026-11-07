@@ -49,10 +49,10 @@ for(const [label,width,height] of sizes){
  check(label+" no body overflow",info.pageWidth<=width+2,info.pageWidth+" / "+width);
  check(label+" original approved logo",["../../site/assets/fotopolis-logo-original.png","/assets/fotopolis-logo-original.png"].includes(info.logo),info.logo);
  check(label+" photographic hero",info.heroImage?.includes("fotobox-event-1672.webp"),info.heroImage);
- check(label+" single discovery hero CTA",JSON.stringify(info.heroCTAs)===JSON.stringify(["#erlebnisse"]),JSON.stringify(info.heroCTAs));
- check(label+" 3 product cards with real routes",JSON.stringify(info.productCards.map(x=>x.id))===JSON.stringify(["fotobox","fotowohnwagen","fotospiegel"])&&info.productCards.every(x=>x.href==="/"+x.id+"/"),JSON.stringify(info.productCards.map(x=>x.id)));
- check(label+" approved device images",info.productCards[0].image?.includes("fotobox-event-1672.webp")&&info.productCards[1].image?.includes("fotowohnwagen-gartenparty-1448.webp")&&info.productCards[2].image?.includes("fotospiegel-hero-lossless.webp"));
- check(label+" approved uploads unchanged",info.productCards[0].status==="approved-user-upload"&&info.productCards[1].status==="approved-user-upload");
+ check(label+" no redundant hero CTA",info.heroCTAs.length===0,JSON.stringify(info.heroCTAs));
+ check(label+" 3 product cards with real routes",JSON.stringify(info.productCards.map(x=>x.id))===JSON.stringify(["fotobox","fotospiegel","fotowohnwagen"])&&info.productCards.every(x=>x.href==="/"+x.id+"/"),JSON.stringify(info.productCards.map(x=>x.id)));
+ check(label+" approved device images",info.productCards[0].image?.includes("fotobox-event-1672.webp")&&info.productCards[1].image?.includes("fotospiegel-hero-lossless.webp")&&info.productCards[2].image?.includes("fotowohnwagen-gartenparty-1448.webp"));
+ check(label+" approved uploads unchanged",info.productCards[0].status==="approved-user-upload"&&info.productCards[2].status==="approved-user-upload");
  check(label+" imagery completely loaded",info.allImages.every(x=>x.valid),info.allImages.filter(x=>!x.valid).map(x=>x.src).join(","));
  check(label+" imagery not recolored",info.productFilters.every(x=>x==="none"));
  check(label+" descriptive alt for products",info.productCards.every(x=>x.alt?.length>22));
@@ -80,10 +80,10 @@ for(const [label,width,height] of sizes){
   await page.keyboard.press("Escape");
   check(label+" menu closes by Escape",await toggle.getAttribute("aria-expanded")==="false");
  }
- await page.locator('.v4-hero-actions a[href="#erlebnisse"]').click();
- check(label+" hero discovery anchor",new URL(page.url()).hash==="#erlebnisse",page.url());
+ check(label+" product section follows hero",await page.locator(".v45-hero + .v45-products").count()===1);
+ check(label+" no hidden discovery action",await page.locator(".v45-hero a").count()===0);
  if(width===1440){
-  for(const id of ["fotobox","fotowohnwagen","fotospiegel"]){
+  for(const id of ["fotobox","fotospiegel","fotowohnwagen"]){
    await page.locator(".v4-product-card#"+id).screenshot({path:path.join(out,"desktop-1440-product-"+id+".png"),animations:"disabled"});
   }
  }
