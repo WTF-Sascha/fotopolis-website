@@ -26,9 +26,9 @@ for (const width of widths){
    sections:document.querySelectorAll("main > section").length,
    deprecated:document.querySelectorAll("#studio-berater,.studio-advisor,.home-trust,.v4-hero-meta,.v4-advantages,.v4-date-cta,.gallery.section").length
  }));
- check(width+" single discovery CTA",home.heroCTAs.length===1&&home.heroCTAs[0]==="#erlebnisse");
- check(width+" products in approved order",home.productOrder.join(",")==="fotobox,fotowohnwagen,fotospiegel");
- check(width+" dedicated product routes",home.productRoutes.join(",")==="/fotobox/,/fotowohnwagen/,/fotospiegel/");
+ check(width+" no discovery CTA",home.heroCTAs.length===0);
+ check(width+" products in approved order",home.productOrder.join(",")==="fotobox,fotospiegel,fotowohnwagen");
+ check(width+" dedicated product routes",home.productRoutes.join(",")==="/fotobox/,/fotospiegel/,/fotowohnwagen/");
  check(width+" only three public home sections",home.sections===3&&home.deprecated===0);
  check(width+" bottom enquiry CTA",(await page.locator(".v45-final-cta a.button").getAttribute("href"))==="/kontakt/");
  // Contact must not repeat hero, route-jumps, and a second closing conversion card.
