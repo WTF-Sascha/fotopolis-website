@@ -27,7 +27,7 @@ export function setupInventoryManager({root,getResources,onChange,createResource
   if(!root)throw Error("Missing inventory editor root");
   const drafts=[];
   const persistent=typeof createResource==="function";
-  const lead=el("p","inventory-manager-lead",persistent?"Lege deine Mietgeräte einzeln an. Neue Geräte bleiben zunächst deaktiviert und können anschließend für die interne Disposition freigegeben werden.":"Geräte als lokale Entwürfe vorbereiten. Es wird noch nichts in Neon gespeichert oder zur Buchung freigegeben.");
+  const lead=el("p","inventory-manager-lead",persistent?"Lege deine Mietgeräte einzeln an. Neue Geräte bleiben zunächst deaktiviert und können anschließend für die interne Disposition freigegeben werden.":"Du kannst Geräte zunächst lokal planen. Einträge werden erst nach erfolgreichem Speichern übernommen.");
   const actions=el("div","inventory-manager-actions");
   const newButton=el("button","inventory-manager-primary",persistent?"+ Mietgerät anlegen":"+ Gerät vorbereiten");
   newButton.type="button";
