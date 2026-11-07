@@ -59,3 +59,11 @@ body{min-width:320px}
 .health-row strong{font-weight:800;color:#e7aa8b}
 .health-row strong[data-ok="true"]{color:#9fddb6}
 [data-health-check]:disabled{opacity:.55;cursor:progress}
+
+.setup-card{margin:22px 0;padding:27px 30px;background:#112c42;color:#fff;border:1px solid #34526a;border-radius:7px;box-shadow:0 12px 34px #071b301a}
+.setup-card .eyebrow{color:#dbbd86}
+.setup-card h2{font-size:clamp(19px,2.4vw,27px);letter-spacing:-.035em;line-height:1.2;margin:11px 0}
+.setup-card p{max-width:800px;font-size:12px;color:#bfd0d9;line-height:1.75;margin:0 0 19px}
+.setup-card .primary-button{display:inline-block;background:#d8b778;color:#102d43;border-color:#d8b778;text-decoration:none;padding:11px 17px;border-radius:5px;font-size:11px;font-weight:800}
+.setup-card .primary-button:hover,.setup-card .primary-button:focus-visible{background:#eed2a0}
+@media(max-width:570px){.setup-card{padding:22px 18px}.setup-card .primary-button{display:block;text-align:center}}
