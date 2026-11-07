@@ -75,6 +75,39 @@ for(const width of widths){
   const name="home-"+width+".png";
   await page.screenshot({path:path.join(OUT,name),fullPage:true,animations:"disabled"});
   photos.push(name);
+ }
+ // A fixed mobile navigation can cover a correctly positioned band.
+ // Scroll it into the usable viewport, check hit-testing, then screenshot.
+ await page.evaluate(()=>{
+  const band=document.querySelector(".v4-hero-meta");
+  const header=document.querySelector(".site-header");
+  const h=header?.getBoundingClientRect().height||0;
+  const y=scrollY+band.getBoundingClientRect().top-h-16;
+  window.scrollTo({top:Math.max(0,y),behavior:"instant"});
+ });
+ const inView=await page.evaluate(()=>{
+  const el=document.querySelector(".v4-hero-meta-claim");
+  const band=document.querySelector(".v4-hero-meta");
+  const header=document.querySelector(".site-header");
+  const fixed=document.querySelector(".v4-mobile-nav");
+  const r=el.getBoundingClientRect();
+  const br=band.getBoundingClientRect();
+  const hr=header.getBoundingClientRect();
+  const fixedVisible=fixed&&getComputedStyle(fixed).display!=="none";
+  const nr=fixedVisible?fixed.getBoundingClientRect():null;
+  const x=r.left+r.width/2,y=r.top+r.height/2;
+  const atCenter=document.elementFromPoint(x,y);
+  return {
+   claimVisible:r.top>hr.bottom+4&&r.bottom<(nr?.top??innerHeight)-8,
+   bandVisible:br.top>hr.bottom+4&&br.bottom<(nr?.top??innerHeight)-8,
+   hitTest:atCenter===el||el.contains(atCenter),
+   claim:{top:r.top,bottom:r.bottom},
+   navTop:nr?.top??null,headerBottom:hr.bottom
+  };
+ });
+ assertion(width,"entire band visible clear of sticky and bottom navigation",inView.bandVisible,inView);
+ assertion(width,"claim visible without occlusion",inView.claimVisible&&inView.hitTest,inView);
+ if([320,375,412,760,768,1440].includes(width)){
   const band="beige-band-"+width+".png";
   await page.locator(".v4-hero-meta").screenshot({path:path.join(OUT,band),animations:"disabled"});
   photos.push(band);
