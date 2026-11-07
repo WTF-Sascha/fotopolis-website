@@ -21,9 +21,10 @@ export function prepareHold(input,devices,existing=[]){
    eventEndUtc:end.toISOString(),occupiedFromUtc:occupiedFrom.toISOString(),
    occupiedUntilUtc:occupiedUntil.toISOString()}};
 }
-export function setupReservationsManager({root,getResources,getAllocations,createHold,changeHold}){
+export function setupReservationsManager({root,getResources,getAllocations,createHold,changeHold,checkOccupancy}){
  if(!root)throw Error("Reservation area missing");
  const allowed=typeof createHold==="function";
+ const canCheck=allowed&&typeof checkOccupancy==="function";
  const lead=el("p","Erfasse interne Vormerkungen ohne Kundendaten, E-Mail-Versand oder öffentliche Buchungsfreigabe. Jede Vormerkung blockiert das Gerät inklusive ausdrücklich festgelegter Logistikpuffer.","plan-help");
  const status=el("p","", "plan-status");status.setAttribute("role","status");
  const list=el("div",undefined,"reservation-list");
@@ -37,16 +38,31 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
  const before=document.createElement("input");before.type="number";before.min=0;before.max=1440;before.step=15;before.required=true;before.placeholder="0";
  const after=document.createElement("input");after.type="number";after.min=0;after.max=1440;after.step=15;after.required=true;after.placeholder="0";
  const error=el("p","", "plan-error");error.setAttribute("role","status");
+ const preflight=el("p","", "occupancy-preflight");
+ preflight.setAttribute("role","status");preflight.setAttribute("aria-live","polite");
+ preflight.dataset.occupancyPreflight="true";
+ const check=button("Belegung vorab prüfen","plan-secondary");
+ check.hidden=!canCheck;
+ let checkRevision=0;
+ function invalidatePreflight(){
+   checkRevision++;
+   preflight.textContent="";
+   preflight.removeAttribute("data-result");
+ }
+ for(const field of [device,start,end,before,after]){
+   field.addEventListener("input",invalidatePreflight);
+   field.addEventListener("change",invalidatePreflight);
+ }
  const controls=el("div",undefined,"plan-form-buttons");
  const submit=el("button","Vormerkung verbindlich speichern","plan-primary");submit.type="submit";
- const cancel=button("Abbrechen");controls.append(submit,cancel);
+ const cancel=button("Abbrechen");controls.append(check,submit,cancel);
  form.append(el("h3","Neue interne Reservierung"),
    el("p","Das Start-/Endfenster beschreibt die Veranstaltungszeit. Beide Pufferfelder sind Pflicht – auch wenn 0 Minuten richtig sind.","plan-help"),
    field("Aktiviertes Mietgerät",device,"booking-device"),field("Beginn (Ortszeit)",start,"booking-start"),
    field("Ende (Ortszeit)",end,"booking-end"),
    field("Vorlauf: Anfahrt / Aufbau in Minuten",before,"booking-before"),
    field("Nachlauf: Abbau / Rückfahrt in Minuten",after,"booking-after"),
-   error,controls,
+   preflight,error,controls,
    el("p","Dies ist eine interne Vormerkung ohne Kundenbezug. Verbindliche Außenbuchungen werden erst separat freigegeben.","plan-help")
  );
  root.replaceChildren(lead,action,status,form,list);
@@ -92,8 +108,29 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
      list.append(item);
    }
  }
+ check.addEventListener("click",async()=>{
+   if(!canCheck)return;
+   const parsed=prepareHold({resourceId:device.value,start:start.value,end:end.value,
+     before:before.value,after:after.value},getResources(),[]);
+   if(parsed.error){preflight.dataset.result="invalid";preflight.textContent=parsed.error;return}
+   invalidatePreflight();
+   const revision=checkRevision;
+   check.disabled=true;
+   preflight.dataset.result="pending";preflight.textContent="Prüfe das vollständige Belegungsfenster in Neon …";
+   try{
+     const result=await checkOccupancy(parsed.value);
+     if(revision!==checkRevision)return;
+     if(result?.readOnly!==true||result?.previewOnly!==true||typeof result.deviceActive!=="boolean"||typeof result.hasConflict!=="boolean")throw Error("Ungültige Antwort der Verfügbarkeitsprüfung.");
+     if(!result.deviceActive){preflight.dataset.result="inactive";preflight.textContent="Das Gerät ist deaktiviert und darf nicht intern vorgemerkt werden.";}
+     else if(result.hasConflict){preflight.dataset.result="conflict";preflight.textContent="Konflikt: In der Entwicklungsdatenbank besteht bereits eine überschneidende Buchung, Sperrzeit oder Wartung.";}
+     else{preflight.dataset.result="clear";preflight.textContent="Kein Konflikt zum Prüfzeitpunkt gefunden. Beim Speichern entscheidet die Datenbank erneut; dies ist keine Buchungszusage.";}
+   }catch(err){
+     if(revision!==checkRevision)return;
+     preflight.dataset.result="error";preflight.textContent=err?.message||"Die Vorprüfung ist momentan nicht erreichbar.";
+   }finally{check.disabled=false}
+ });
  function openForDate(day){
-   choices();form.reset();error.textContent="";form.hidden=false;
+   choices();form.reset();error.textContent="";invalidatePreflight();form.hidden=false;
    const chosen=typeof day==="string"&&/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(day)
      ?day:localBerlinTime(new Date()).slice(0,10);
    start.value=chosen+"T12:00";end.value=chosen+"T14:00";
