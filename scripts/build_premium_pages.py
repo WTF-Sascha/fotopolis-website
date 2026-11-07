@@ -726,7 +726,6 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             v4_product_actions = (
                 '<div class="v4-page-actions">'
                 '<a class="button gold" href="#terminanfrage">Wunschtermin anfragen <span aria-hidden="true">→</span></a>'
-                '<a class="v4-hero-outline" href="#product-details">Produkt entdecken <span aria-hidden="true">↓</span></a>'
                 '</div>'
             )
         elif slug == "galerie":
@@ -761,7 +760,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<span class="studio-orbit-caption">MEMORIES IN MOTION</span>'
                 '</div>'
             )
-        seo_title = f'{e(p["title"])} | FOTOPOLIS'
+        seo_title = f'{e(p.get("displayTitle", p["title"]))} | FOTOPOLIS'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
