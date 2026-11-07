@@ -105,7 +105,7 @@ assert 'POSTGRES' not in login_html and 'password=' not in login_html
 dashboard_source = admin_source / "dashboard"
 dashboard_target = admin_target / "dashboard"
 dashboard_target.mkdir(exist_ok=True)
-for name in ("index.html", "dashboard.css", "inventory-manager.css", "inventory-manager.js", "planning-manager.css", "planning-manager.js", "planning-logic.js", "reservations-manager.css", "reservations-manager.js"):
+for name in ("index.html", "dashboard.css", "inventory-manager.css", "inventory-manager.js", "planning-manager.css", "planning-manager.js", "planning-logic.js", "reservations-manager.css", "reservations-manager.js", "csv-export.js"):
     shutil.copy2(dashboard_source / name, dashboard_target / name)
 dashboard_html = (dashboard_target / "index.html").read_text(encoding="utf-8")
 assert 'id="dashboard-app" hidden' in dashboard_html
