@@ -10,8 +10,10 @@
 <link rel="icon" href="../../site/favicon.ico" sizes="any">
 <link rel="stylesheet" href="./styles.css">
 <link rel="stylesheet" href="./studio-polish.css">
+<link rel="stylesheet" href="./reference-v4.css">
 <script defer src="./site.js"></script>
 <script defer src="./studio-guide.js"></script>
+<script defer src="./reference-v4.js"></script>
 </head>
 <body>
 <a class="skip" href="#content">Zum Inhalt springen</a>
@@ -43,24 +45,47 @@
   </div>
 </header>
 <main id="content">
-<section class="hero hero-editorial" id="start" aria-labelledby="hero-title">
-  <div class="inner hero-layout">
-    <div class="hero-copy">
-      <div class="chapter"><span>FOTOPOLIS</span><span class="hairline"></span><span>Fotoerlebnisse für besondere Events</span></div>
-      <h1 id="hero-title">Für Momente, <em>die bleiben.</em></h1>
-      <p>Fotobox, Fotospiegel oder Fotowohnwagen: Entdecke das Fotoerlebnis, das zu deiner Feier und deinen Gästen passt.</p>
-      <div class="hero-buttons"><a class="button gold" href="#erlebnisse">Fotoerlebnisse entdecken <span aria-hidden="true">↗</span></a><a class="button muted-button" href="/kontakt/">Event unverbindlich anfragen <span aria-hidden="true">↗</span></a></div>
-      <div class="hero-bottom"><span class="fine-line" aria-hidden="true"></span><span>Entdecken · Vergleichen · Gemeinsam planen</span></div>
-    </div>
-    <nav class="hero-guide" aria-label="Direkt zu den Fotoerlebnissen">
-      <div class="hero-guide-heading"><span class="hero-guide-eyebrow">ENTDECKE FOTOPOLIS</span><p>Drei Erlebniswelten.<br><em>Ein besonderer Anlass.</em></p></div>
-      <a class="hero-guide-link" href="#fotowohnwagen"><span class="guide-number">01</span><span>Der Fotowohnwagen<small>Ein Erlebnis für sich</small></span><span class="guide-arrow" aria-hidden="true">↗</span></a>
-      <a class="hero-guide-link" href="#fotobox"><span class="guide-number">02</span><span>Die Fotobox<small>Gemeinsam Spaß haben</small></span><span class="guide-arrow" aria-hidden="true">↗</span></a>
-      <a class="hero-guide-link" href="#fotospiegel"><span class="guide-number">03</span><span>Der Fotospiegel<small>Interaktiv &amp; besonders</small></span><span class="guide-arrow" aria-hidden="true">↗</span></a>
-    </nav>
-  </div>
+<section class="v4-hero" id="start" aria-labelledby="hero-title">
+ <div class="v4-hero-visual"><img src="./assets/products/fotobox-event-1672.webp" width="1672" height="941" fetchpriority="high" decoding="async" alt="FOTOPOLIS Fotobox im festlichen Eventambiente"></div>
+ <div class="v4-hero-shade" aria-hidden="true"></div>
+ <div class="inner v4-hero-content">
+  <span class="v4-hero-kicker">Fotopolis · Fotoerlebnisse mit Charakter</span>
+  <h1 id="hero-title">Premium <strong>Fotoerlebnisse</strong><br>für dein Event.</h1>
+  <p>Fotobox, Fotospiegel und Fotowohnwagen – drei besondere Möglichkeiten für Erinnerungen, die bleiben.</p>
+  <div class="v4-hero-actions"><a class="button gold" href="/kontakt/">Jetzt Event anfragen <span aria-hidden="true">→</span></a><a class="v4-hero-outline" href="#erlebnisse">Erlebnisse entdecken <span aria-hidden="true">↓</span></a></div>
+ </div>
 </section>
 <div class="chapter-band" aria-label="FOTOPOLIS Leistungen"><div class="inner"><span>FOTOBOX</span><i></i><span>FOTOSPIEGEL</span><i></i><span>FOTOWOHNWAGEN</span><i></i><span>FÜR PRIVATE UND GESCHÄFTLICHE EVENTS</span></div></div>
+
+<section class="v4-products section" id="erlebnisse" aria-labelledby="experiences-title">
+ <div class="inner" data-v4-product-rail>
+  <div class="v4-section-intro"><div><span class="kicker">UNSERE DREI ERLEBNISWELTEN</span><h2 id="experiences-title">Für Augenblicke, <em>die bleiben.</em></h2></div><p>Entdecke das passende Highlight für deinen Anlass – mit Bildern unserer freigegebenen Produktvisualisierungen.</p></div>
+  <div class="v4-product-track" data-v4-track aria-label="Fotoerlebnisse – horizontal wischbar auf Mobilgeräten">
+    <a class="v4-product-card" id="fotobox" data-product="fotobox" data-asset-status="approved-user-upload" href="/fotobox/">
+      <div class="v4-product-photo"><img src="./assets/products/fotobox-event-1672.webp" srcset="./assets/products/fotobox-event-800.webp 800w, ./assets/products/fotobox-event-1672.webp 1672w" sizes="(max-width:760px) 75vw, 33vw" width="1672" height="941" alt="FOTOPOLIS Fotobox im festlich dekorierten Eventambiente" loading="lazy" decoding="async"><span class="v4-product-tag">FOTOPOLIS BOX</span></div>
+      <div class="v4-product-body"><div><h3>Fotobox</h3><p>Der Klassiker für gemeinsame Momente.</p></div><span class="v4-product-arrow" aria-hidden="true">›</span></div>
+    </a>
+    <a class="v4-product-card" id="fotospiegel" data-product="fotospiegel" href="/fotospiegel/">
+      <div class="v4-product-photo"><img src="./assets/fotospiegel-hero-lossless.webp" width="840" height="1050" alt="FOTOPOLIS Fotospiegel mit beleuchtetem Rahmen und Startbildschirm" loading="lazy" decoding="async" data-asset-status="approved"><span class="v4-product-tag">FOTOPOLIS MIRROR</span></div>
+      <div class="v4-product-body"><div><h3>Fotospiegel</h3><p>Interaktiv, elegant und voller Wow-Momente.</p></div><span class="v4-product-arrow" aria-hidden="true">›</span></div>
+    </a>
+    <a class="v4-product-card" id="fotowohnwagen" data-product="fotowohnwagen" data-asset-status="approved-user-upload" href="/fotowohnwagen/">
+      <div class="v4-product-photo"><img src="./assets/products/fotowohnwagen-gartenparty-1448.webp" srcset="./assets/products/fotowohnwagen-gartenparty-760.webp 760w, ./assets/products/fotowohnwagen-gartenparty-1448.webp 1448w" sizes="(max-width:760px) 75vw, 33vw" width="1448" height="814" alt="Originalgetreu inszenierter FOTOPOLIS Fotowohnwagen bei einer Gartenparty" loading="lazy" decoding="async"><span class="v4-product-tag">FOTOPOLIS CAMPER</span></div>
+      <div class="v4-product-body"><div><h3>Fotowohnwagen</h3><p>Die charmante Fotolounge auf Rädern.</p></div><span class="v4-product-arrow" aria-hidden="true">›</span></div>
+    </a>
+  </div>
+  <div class="v4-rail-controls"><span class="v4-rail-count" data-v4-count aria-live="polite">1 / 3</span><div class="v4-rail-buttons"><button type="button" aria-label="Vorheriges Fotoerlebnis" data-v4-prev>←</button><button type="button" aria-label="Nächstes Fotoerlebnis" data-v4-next>→</button></div></div>
+ </div>
+</section>
+<section class="v4-advantages" aria-labelledby="v4-advantages-title"><div class="inner">
+ <div class="v4-advantage-shell"><h2 class="sr-only" id="v4-advantages-title">Deine Vorteile mit FOTOPOLIS</h2><div class="v4-advantage-grid">
+  <article class="v4-advantage"><span class="v4-advantage-icon" aria-hidden="true">◇</span><div><h3>Besondere Qualität</h3><p>Stilvolle Fotoerlebnisse für besondere Anlässe.</p></div></article>
+  <article class="v4-advantage"><span class="v4-advantage-icon" aria-hidden="true">♧</span><div><h3>Für jeden Anlass</h3><p>Hochzeit, Geburtstag, Firmenfeier und mehr.</p></div></article>
+  <article class="v4-advantage"><span class="v4-advantage-icon" aria-hidden="true">▤</span><div><h3>Individuell geplant</h3><p>Wir stimmen Wünsche und Details persönlich ab.</p></div></article>
+  <article class="v4-advantage"><span class="v4-advantage-icon" aria-hidden="true">♡</span><div><h3>Alles im Blick</h3><p>Klare Informationen zu Ablauf und Angebot.</p></div></article>
+ </div></div>
+</div></section>
+<div class="inner"><div class="v4-date-cta"><span aria-hidden="true">▦</span><div><h2>Wunschtermin anfragen</h2><p>Wir prüfen die Verfügbarkeit individuell – keine automatische Buchungszusage.</p></div><a class="button gold" href="/kontakt/">Anfragen <span aria-hidden="true">→</span></a></div></div>
 
 <section class="studio-advisor section" id="studio-berater" aria-labelledby="advisor-title">
  <div class="inner advisor-shell" data-studio-advisor>
@@ -94,25 +119,6 @@
  </div>
 </section>
 
-<section class="experiences section" id="erlebnisse" aria-labelledby="experiences-title">
- <div class="inner">
-  <div class="section-heading"><span class="kicker">FOTOPOLIS ERLEBNISWELTEN</span><h2 id="experiences-title">Drei Erlebnisse. <em>Deine Wahl.</em></h2><p>Entdecke die Unterschiede – ohne mühsames Suchen.</p></div>
-  <article class="spotlight" id="fotowohnwagen">
-    <div class="spotlight-image"><img src="./assets/products/fotowohnwagen-gartenparty-1448.webp" srcset="./assets/products/fotowohnwagen-gartenparty-760.webp 760w, ./assets/products/fotowohnwagen-gartenparty-1448.webp 1448w" sizes="(max-width: 630px) 100vw, (max-width: 900px) 95vw, (max-width: 1500px) 54vw, 740px" width="1448" height="1086" loading="lazy" decoding="async" alt="FOTOPOLIS Fotowohnwagen vollständig sichtbar auf einer stimmungsvollen Gartenparty mit Wimpelgirlande und festlicher Beleuchtung" data-product-image="fotowohnwagen" data-asset-status="approved-user-upload"></div>
-    <div class="spotlight-copy"><span class="kicker">01 / FOTOPOLIS CAMPER</span><h3>Ein kleiner Ort.<br><em>Voller großer Momente.</em></h3><p>Der Fotowohnwagen macht das Fotografieren zu einem eigenen Erlebnis. Ein ungewöhnlicher Treffpunkt, an dem Gäste für einen Moment ganz unter sich sind.</p><a class="editorial-link" href="/fotowohnwagen/">Fotowohnwagen entdecken <span>↗</span></a><span class="image-note">Studio-Visualisierung · Gartenparty · Tatsächliche Ausstattung kann abweichen</span></div>
-  </article>
-  <div class="duo">
-    <article class="experience-card" id="fotobox" data-product="fotobox" data-asset-status="approved-user-upload">
-      <div class="card-photo fotobox-card-photo"><img src="./assets/products/fotobox-event-1672.webp" srcset="./assets/products/fotobox-event-800.webp 800w, ./assets/products/fotobox-event-1672.webp 1672w" sizes="(max-width: 630px) 100vw, (max-width: 900px) 48vw, (max-width: 1500px) 45vw, 680px" width="1672" height="941" loading="lazy" decoding="async" alt="FOTOPOLIS Fotobox mit Kamera und Touchscreen-Startanzeige in einer festlich geschmückten Geburtstagsszene, als ganzes Gerät sichtbar" data-product-image="fotobox"></div>
-      <div class="card-body"><span class="kicker">02 / FOTOPOLIS BOX</span><h3>Die Fotobox.<br><em>Einfach zusammen lachen.</em></h3><p>Ein spontaner Schnappschuss, der zum Lieblingsmoment wird. Für alle, die zusammen feiern.</p><a class="editorial-link" href="/fotobox/">Fotobox entdecken <span>↗</span></a><small>Studio-Visualisierung · Festliche Produktinszenierung</small></div>
-    </article>
-    <article class="experience-card" id="fotospiegel">
-      <div class="card-photo mirror-card-photo"><img src="./assets/fotospiegel-hero-lossless.webp" width="840" height="1050" loading="lazy" decoding="async" alt="Originalgetreue Studio-Visualisierung des FOTOPOLIS-Fotospiegels mit rückseitiger LED-Beleuchtung und Startanzeige" data-product-image="fotospiegel" data-asset-status="approved"></div>
-      <div class="card-body"><span class="kicker">03 / FOTOPOLIS MIRROR</span><h3>Der Fotospiegel.<br><em>Ein Moment mit dir.</em></h3><p>Ein interaktives Fotoerlebnis, bei dem der Spiegel selbst zum Mittelpunkt wird.</p><a class="editorial-link" href="/fotospiegel/">Fotospiegel entdecken <span>↗</span></a><small>Studio-Visualisierung des Fotospiegels · kein reales Referenzfoto</small></div>
-    </article>
-  </div>
- </div>
-</section>
 
 <section class="home-trust section" aria-labelledby="home-trust-title">
  <div class="inner">
