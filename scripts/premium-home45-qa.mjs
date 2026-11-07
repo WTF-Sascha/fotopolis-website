@@ -64,6 +64,8 @@ for(const width of widths){
    legacy:document.querySelectorAll(".studio-advisor,#studio-berater,.v4-hero-meta,.v4-advantages,.v4-date-cta,.home-trust,main > .gallery").length,
    legacyJS:!!document.querySelector('script[src*="studio-guide"]'),
    order:productItems.map(c=>c.id),cards:productItems,
+   menuProducts:[...document.querySelectorAll("#nav-erlebnisse a")].map(a=>a.getAttribute("href")),
+   footerProducts:[...document.querySelectorAll(".footer-navigation > div:first-child a")].slice(0,3).map(a=>a.getAttribute("href")),
    navVisible:nav?getComputedStyle(nav).display!=="none":false,
    brokenImages:[...document.images].filter(img=>!img.complete||img.naturalWidth===0).map(i=>i.getAttribute("src")),
    badAnchors:anchors,
@@ -77,6 +79,8 @@ for(const width of widths){
  check(width,"one visible H1",facts.h1s===1&&facts.heroHeadline?.includes("Momente,"));
  check(width,"deleted recommendation and duplicate sections",facts.legacy===0&&!facts.legacyJS,facts.legacy);
  check(width,"correct order",facts.order.join(",")==="fotobox,fotospiegel,fotowohnwagen",facts.order);
+ check(width,"header product menu follows same order",facts.menuProducts.join(",")==="/fotobox/,/fotospiegel/,/fotowohnwagen/",facts.menuProducts);
+ check(width,"footer product links follow same order",facts.footerProducts.join(",")==="/fotobox/,/fotospiegel/,/fotowohnwagen/",facts.footerProducts);
  check(width,"direct product detail routes",facts.cards.every(x=>x.href==="/"+x.id+"/"));
  check(width,"all product media loaded",facts.cards.every(x=>x.naturalWidth>0)&&facts.brokenImages.length===0,facts.brokenImages);
  check(width,"equipment photos never cropped or recolored",facts.cards.every(x=>x.fit==="contain"&&x.filter==="none"),facts.cards);
