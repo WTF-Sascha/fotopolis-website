@@ -1,11 +1,12 @@
 import {chromium} from "playwright";
 import assert from "node:assert/strict";
+import {mkdirSync} from "node:fs";
 
 const base=process.env.SITE_BASE_URL||"http://127.0.0.1:8766/";
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 let checks=0;
 try{
- for(const width of [375,1440]){
+ for(const width of [320,375,430,1440]){
   const ctx=await browser.newContext({viewport:{width,height:900},timezoneId:"Europe/Berlin",locale:"de-DE"});
   const page=await ctx.newPage(),writes=[],errors=[];
   page.on("request",r=>{if(r.method()!=="GET"&&r.url().includes("/api/fotopolis/"))writes.push(r.url())});
@@ -86,6 +87,12 @@ try{
   await page.waitForFunction(()=>window.qaHolds[0].allocation_state==="confirmed");checks++;
   assert.deepEqual(writes,[]);checks++;
   assert.deepEqual(errors,[]);checks++;
+  const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));
+  assert.ok(size.scroll<=size.width+2,"Horizontal overflow at "+width);checks++;
+  if([320,1440].includes(width)){
+    mkdirSync("concepts/premium-v2/qa-screenshots/admin-studio",{recursive:true});
+    await page.locator("#bookings").screenshot({path:"concepts/premium-v2/qa-screenshots/admin-studio/reservations-"+width+".png"});
+  }
   await ctx.close();
  }
  console.log("STUDIO 4.0 PERSISTENCE UI CONTRACT SUCCESS – "+checks+" checks across mobile and desktop, mock callbacks and zero real mutations.");
