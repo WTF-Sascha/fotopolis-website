@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const gallery = document.querySelector("[data-curated-gallery]");
   const dialog = document.querySelector("[data-gallery-dialog]");
   if (!gallery || !dialog) return;
-  const filters = [...document.querySelectorAll("[data-gallery-filter]")];
   const items = [...gallery.querySelectorAll("[data-gallery-item]")];
   const large = dialog.querySelector("[data-gallery-large]");
   const title = dialog.querySelector("[data-gallery-dialog-title]");
@@ -17,15 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeIndex = 0;
 
   const visibleItems = () => items.filter(el => !el.hidden);
-  function setFilter(kind) {
-    if (!["all", "moments", "products"].includes(kind)) return;
-    for (const button of filters) {
-      button.setAttribute("aria-pressed", String(button.dataset.galleryFilter === kind));
-    }
-    for (const item of items) {
-      item.hidden = kind !== "all" && item.dataset.galleryKind !== kind;
-    }
-  }
   function showItem(index) {
     const shown = visibleItems();
     if (!shown.length) return;
@@ -38,9 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     large.alt = thumb.alt;
     title.textContent = caption.querySelector("strong").textContent;
     note.textContent = caption.querySelector("small").textContent;
-  }
-  for (const button of filters) {
-    button.addEventListener("click", () => setFilter(button.dataset.galleryFilter));
   }
   for (const item of items) {
     const button = item.querySelector("[data-gallery-open]");
@@ -72,5 +59,4 @@ document.addEventListener("DOMContentLoaded", () => {
       showItem(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
     }
   });
-  setFilter("all");
 });

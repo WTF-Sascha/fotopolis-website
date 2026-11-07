@@ -378,11 +378,6 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<span class="kicker">DIE FOTOPOLIS ERLEBNISWELTEN</span>'
                 '<h2 id="curated-gallery-title">Drei Möglichkeiten. <em>Dein Moment.</em></h2>'
                 '<p>Entdecke unsere Fotoerlebnisse in ausgewählten Produktinszenierungen.</p></div>'
-                '<div class="gallery-filters" role="group" aria-label="Galerieansicht wählen">'
-                '<button class="gallery-filter" type="button" data-gallery-filter="all" '
-                'aria-pressed="true">Alle Eindrücke</button>'
-                '<button class="gallery-filter" type="button" data-gallery-filter="products" '
-                'aria-pressed="false">Produktwelten</button></div>'
                 '<div class="curated-grid" data-curated-gallery>'
             )
             for item in p["galleryCollection"]:

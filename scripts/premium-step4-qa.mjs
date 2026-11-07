@@ -55,9 +55,9 @@ for(const width of widths){
  check(width+" gallery images intact",!data.brokenImages.length&&data.logo==="/assets/fotopolis-logo-original.png",data.brokenImages.join(" | "));
  check(width+" gallery no overflow/clipped headings",!data.overflow&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" preview robots noindex",data.noindex);
- await page.locator('[data-gallery-filter="products"]').click();
- check(width+" product filter count",await page.locator('[data-gallery-kind="products"]:visible').count()===3);
- check(width+" filter hides unverified person photos",await page.locator('[data-gallery-kind="moments"]:visible').count()===0);
+ check(width+" no redundant gallery filters",await page.locator("[data-gallery-filter]").count()===0);
+ check(width+" all product visualizations visible",await page.locator('[data-gallery-kind="products"]:visible').count()===3);
+ check(width+" no unapproved person images",await page.locator('[data-gallery-kind="moments"]:visible').count()===0);
  const opener=page.locator('[data-gallery-kind="products"] [data-gallery-open]').first();
  await opener.click();
  check(width+" accessible dialog open",await page.locator("[data-gallery-dialog]").evaluate(x=>x.open));
@@ -71,8 +71,7 @@ for(const width of widths){
  await page.keyboard.press("Escape");
  check(width+" Escape closes dialog",!(await page.locator("[data-gallery-dialog]").evaluate(x=>x.open)));
  check(width+" focus restored",await opener.evaluate(x=>document.activeElement===x));
- await page.locator('[data-gallery-filter="all"]').click();
- check(width+" all images restored",await page.locator(".curated-item:visible").count()===3);
+ check(width+" all approved images remain visible",await page.locator(".curated-item:visible").count()===3);
  data=await facts();
  check(width+" no broken assets after modal cycle",data.brokenImages.length===0,data.brokenImages.join("|"));
  if(snapshots.has(width)){
