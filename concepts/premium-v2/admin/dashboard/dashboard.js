@@ -212,6 +212,7 @@ async function saveInventory(method,payload){
   }
   if(!result.saved||!result.resource)throw Error("Die Datenbank hat die Speicherung nicht bestätigt.");
   await loadCalendar();
+  void loadActivity();
   return result.resource;
 }
 async function saveBlock(method,payload){
@@ -238,6 +239,7 @@ async function saveBlock(method,payload){
   }
   if(!answer.saved||!answer.allocation)throw Error("Der Server hat die Änderung nicht bestätigt.");
   await loadCalendar();
+  void loadActivity();
   return answer.allocation;
 }
 async function saveReservation(method,payload){
@@ -261,7 +263,42 @@ async function saveReservation(method,payload){
  }
  if(!answer.saved||!answer.allocation)throw Error("Keine Speicherbestätigung erhalten.");
  await loadCalendar();
+ void loadActivity();
  return answer.allocation;
+}
+async function loadActivity(){
+ const target=$("[data-activity-list]");
+ if(!target)return;
+ target.replaceChildren();
+ if(!["owner","manager"].includes(adminRole)){
+   target.textContent="Änderungsprotokolle sind nur für die Administration sichtbar.";return;
+ }
+ try{
+   const token=await getAdminJwt(client,await client.getSession());
+   if(!token)throw Error("session");
+   const response=await fetch("/api/fotopolis/admin/activity",{
+     method:"GET",headers:{"Authorization":"Bearer "+token},
+     credentials:"same-origin",cache:"no-store"
+   });
+   if(!response.ok)throw Error("fetch");
+   const data=await response.json();
+   if(!data.readOnly||!Array.isArray(data.records))throw Error("invalid response");
+   if(!data.records.length){
+     const p=document.createElement("p");p.className="plan-empty";
+     p.textContent="Noch keine Änderungen im Entwicklungsbestand protokolliert.";target.append(p);return;
+   }
+   const labels={create_booking:"Interne Vormerkung angelegt",update_booking:"Vormerkung bestätigt",
+     cancel_booking:"Vormerkung storniert",create_block:"Sperrzeit angelegt",
+     remove_block:"Sperrzeit aufgehoben",change_resource:"Mietgerät geändert"};
+   const format=new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",
+     day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+   for(const record of data.records){
+     const line=document.createElement("div");line.className="activity-entry";
+     const name=document.createElement("strong");name.textContent=labels[record.action]||"Verwaltungsänderung";
+     const date=document.createElement("time");date.textContent=format.format(new Date(record.created_at));
+     line.append(name,date);target.append(line);
+   }
+ }catch{target.textContent="Das Änderungsprotokoll ist momentan nicht erreichbar. Die übrige Verwaltung bleibt verfügbar."}
 }
 async function authenticate(){
   try{
@@ -303,6 +340,7 @@ async function authenticate(){
       changeHold:body.role==="viewer"?undefined:(id,action)=>saveReservation("PATCH",{id,action})
     });
     await loadCalendar();
+    await loadActivity();
     updateNavigation();
     const anchor=location.hash&&document.querySelector(location.hash);
     if(anchor)requestAnimationFrame(()=>anchor.scrollIntoView({block:"start"}));
