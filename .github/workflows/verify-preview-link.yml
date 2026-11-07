@@ -1,0 +1,32 @@
+name: Verify FOTOPOLIS preview link is publicly reachable
+on:
+  push:
+    branches: ["design/premium-v2"]
+    paths: [".github/workflows/verify-preview-link.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  external-preview-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check real HTTP responses and current homepage copy
+        shell: bash
+        run: |
+          set +e
+          for url in \
+            "https://deploy-preview-2--fotopolis-preview.netlify.app/" \
+            "https://6aefa4b8f0432a926e0868de--fotopolis-preview.netlify.app/" \
+            "https://fotopolis-preview.netlify.app/"; do
+            echo "BEGIN_URL $url"
+            out=$(mktemp)
+            code=$(curl --location --silent --show-error --connect-timeout 12 --max-time 25 -A "Mozilla/5.0 FOTOPOLIS-preview-QA" --output "$out" --write-out "%{http_code}" "$url" 2>&1)
+            echo "HTTP_STATUS $code"
+            echo "BYTES $(wc -c < "$out")"
+            if grep -qi "Momente, .*die bleiben" "$out"; then echo "HAS_45_HERO true"; else echo "HAS_45_HERO false"; fi
+            if grep -qi "FOTOPOLIS" "$out"; then echo "HAS_FOTOPOLIS true"; else echo "HAS_FOTOPOLIS false"; fi
+            if grep -qi "Site not found" "$out"; then echo "NETLIFY_404_BODY true"; fi
+            echo "END_URL $url"
+            rm "$out"
+          done
