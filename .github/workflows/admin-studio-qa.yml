@@ -35,6 +35,8 @@ on:
       - "scripts/test-admin-operations-insights.mjs"
       - "scripts/premium-admin-operations-qa.mjs"
       - "scripts/test-admin-health.mjs"
+      - "scripts/test-admin-first-run.mjs"
+      - "scripts/premium-admin-first-run-qa.mjs"
       - "netlify/functions/fotopolis-admin-health.mjs"
       - "package.json"
       - ".github/workflows/admin-studio-qa.yml"
@@ -77,6 +79,12 @@ jobs:
         run: node scripts/premium-admin-operations-qa.mjs
       - name: Local CSV escaping and spreadsheet safety
         run: node --test scripts/test-admin-csv.mjs
+      - name: First-run readiness milestones and column-level database grants
+        run: node --test scripts/test-admin-first-run.mjs
+      - name: Studio 4.3 onboarding on desktop and mobile
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/premium-admin-first-run-qa.mjs
       - name: Owner-only database connection diagnostics
         run: node --test scripts/test-admin-health.mjs
       - name: Private activity log authorization
