@@ -15,8 +15,8 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
     data = json.loads((source / "pages.json").read_text(encoding="utf-8"))
     assert data["status"] == "preview-only"
     assert data["version"] in ("2.5", "2.6", "2.7", "2.8", "2.9", "3.0", "3.1")
-    header = re.search(r'<header class="site-header(?: [^"]*)?">.*?</header>', home_html, re.S)
-    footer = re.search(r'<footer class="footer">.*?</footer>', home_html, re.S)
+    header = re.search(r'<header class="site-header[^"]*"[^>]*>.*?</header>', home_html, re.S)
+    footer = re.search(r'<footer class="footer[^"]*"[^>]*>.*?</footer>', home_html, re.S)
     ribbon = re.search(r'<div class="review-bar">.*?</div></div>', home_html, re.S)
     assert header and footer and ribbon, "Navigation/footer source missing"
     generated = []
