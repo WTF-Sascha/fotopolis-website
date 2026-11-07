@@ -213,6 +213,32 @@ async function saveInventory(method,payload){
   await loadCalendar();
   return result.resource;
 }
+async function saveBlock(method,payload){
+  const token=await getAdminJwt(client,await client.getSession());
+  if(!token)throw Error("Anmeldung abgelaufen. Bitte melde dich erneut an.");
+  let res;
+  try{
+    res=await fetch("/api/fotopolis/admin/blocks",{
+      method,headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      credentials:"same-origin",cache:"no-store",body:JSON.stringify(payload)
+    });
+  }catch{throw Error("Verbindung zur Terminverwaltung unterbrochen.")}
+  let answer={};try{answer=await res.json()}catch{}
+  if(!res.ok){
+    const messages={
+      400:"Bitte gültiges Gerät und gültigen Zeitraum auswählen.",
+      401:"Anmeldung abgelaufen. Bitte erneut anmelden.",
+      403:"Dir fehlen die benötigten Administratorrechte.",
+      404:"Gerät oder aktive Sperrzeit nicht gefunden.",
+      409:"Für dieses Gerät besteht bereits eine überschneidende Belegung.",
+      503:"Der Datenbank-Terminservice ist nicht verfügbar."
+    };
+    throw Error(messages[res.status]||"Terminänderung fehlgeschlagen (HTTP "+res.status+").");
+  }
+  if(!answer.saved||!answer.allocation)throw Error("Der Server hat die Änderung nicht bestätigt.");
+  await loadCalendar();
+  return answer.allocation;
+}
 async function authenticate(){
   try{
     const r=await client.getSession();
@@ -239,7 +265,13 @@ async function authenticate(){
       updateResource:body.role==="viewer"?undefined:(patch)=>saveInventory("PATCH",patch),
       canActivate:body.role==="owner"
     });
-    planningManager ||= setupPlanningManager({root:$("[data-planning-manager]"),getResources:()=>resources,getInventoryDrafts:()=>inventoryManager?.getDrafts()||[],getAllocations:()=>allocations,onChange:()=>renderCalendar()});
+    planningManager ||= setupPlanningManager({
+      root:$("[data-planning-manager]"),getResources:()=>resources,
+      getInventoryDrafts:()=>inventoryManager?.getDrafts()||[],getAllocations:()=>allocations,
+      onChange:()=>renderCalendar(),
+      createBlock:body.role==="viewer"?undefined:(data)=>saveBlock("POST",data),
+      cancelBlock:body.role==="viewer"?undefined:(id)=>saveBlock("PATCH",{id,action:"cancel"})
+    });
     await loadCalendar();
     updateNavigation();
     const anchor=location.hash&&document.querySelector(location.hash);
