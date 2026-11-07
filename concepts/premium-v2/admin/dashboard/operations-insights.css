@@ -25,3 +25,9 @@
 .inventory-filter-summary{font-size:10px;color:#687f89;margin:9px 0 4px;line-height:1.5}
 @media(max-width:870px){.inventory-filter-bar{grid-template-columns:1fr 1fr}.inventory-filter-bar label:first-child{grid-column:1/-1}}
 @media(max-width:570px){.operations-agenda{padding:20px 17px}.agenda-entry{align-items:flex-start}.agenda-entry button{width:100%}.inventory-filter-bar{grid-template-columns:1fr}.inventory-filter-bar label:first-child{grid-column:auto}}
+
+.day-action-row,.day-dialog-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px;align-items:center}
+.day-action-row .text-button{border:1px solid #bfccd0;border-radius:5px;padding:10px 12px;min-height:39px;color:#193e57;background:#fff;font-size:11px;font-weight:800;cursor:pointer}
+.day-action-row .text-button:hover,.day-action-row .text-button:focus-visible{border-color:#af8d55;background:#fdf8ef}
+.day-dialog-actions .plan-primary,.day-dialog-actions .plan-secondary{flex:1;min-width:165px}
+@media(max-width:570px){.day-action-row button,.day-dialog-actions button{width:100%}}
