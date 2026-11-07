@@ -318,6 +318,7 @@ async function authenticate(){
     const body=await resp.json();
     if(!body.authorized||!["owner","manager","viewer"].includes(body.role))throw Error("Berechtigung ungültig");
     jwt=token;adminRole=body.role;
+    $("[data-health-check]").hidden=body.role!=="owner";
     $("[data-user-email]").textContent=r.data.user.email||"–";
     $("[data-user-role]").textContent=roleLabels[body.role];
     $("[data-role-label]").textContent=roleLabels[body.role];
@@ -377,6 +378,34 @@ function updateNavigation(){
  }
 }
 window.addEventListener("hashchange",updateNavigation);
+$("[data-health-check]").addEventListener("click",async()=>{
+ if(adminRole!=="owner")return;
+ const button=$("[data-health-check]"),target=$("[data-health-status]");
+ button.disabled=true;target.textContent="Verbindungen werden serverseitig geprüft …";
+ try{
+   const token=await getAdminJwt(client,await client.getSession());
+   if(!token)throw Error("session");
+   const response=await fetch("/api/fotopolis/admin/health",{
+     method:"GET",headers:{"Authorization":"Bearer "+token},
+     cache:"no-store",credentials:"same-origin"
+   });
+   if(!response.ok)throw Error("unavailable");
+   const body=await response.json();
+   if(!body.previewOnly||!body.services)throw Error("unexpected");
+   const names={inventory:"Geräte",blocks:"Sperrzeiten",reservations:"Vormerkungen",calendar:"Kalender"};
+   target.replaceChildren();
+   for(const [name,label] of Object.entries(names)){
+     const data=body.services[name];
+     const line=document.createElement("div");line.className="health-row";
+     const title=document.createElement("span");title.textContent=label;
+     const state=document.createElement("strong");
+     state.textContent=data?.connected?"Verbunden":data?.configured?"Verbindung gestört":"Nicht konfiguriert";
+     state.dataset.ok=String(data?.connected===true);
+     line.append(title,state);target.append(line);
+   }
+ }catch{target.textContent="Die Systemdiagnose ist aktuell nicht erreichbar."}
+ finally{button.disabled=false}
+});
 $("[data-refresh-calendar]").addEventListener("click",()=>void loadCalendar());
 $("[data-export-inventory]").addEventListener("click",()=>{
  if(!["owner","manager"].includes(adminRole)||!resources.length)return;
