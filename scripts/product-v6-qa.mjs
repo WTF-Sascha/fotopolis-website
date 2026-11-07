@@ -139,10 +139,25 @@ for(const width of widths){
   check(width,slug,"no visitor POST or PUT",writes.length===0,writes);
   if([320,375,430,1440].includes(width)){
    await page.goto(new URL(slug+"/",origin).toString(),{waitUntil:"networkidle"});
-   await page.locator("#terminanfrage").scrollIntoViewIfNeeded();
+   await page.evaluate(()=>{
+     document.querySelector("#terminanfrage")?.scrollIntoView({block:"start",behavior:"instant"});
+   });
    const file=slug+"-"+width+"-request.png";
    await page.screenshot({path:path.join(output,file),animations:"disabled",fullPage:false});
    shots.push(file);
+   await page.evaluate(()=>{
+     document.querySelector(".product-request-recap")?.scrollIntoView({block:"start",behavior:"instant"});
+   });
+   const visible=await page.evaluate(()=>{
+     const button=document.querySelector(".product-request-submit")?.getBoundingClientRect();
+     const nav=document.querySelector(".v4-mobile-nav")?.getBoundingClientRect();
+     return {buttonBottom:button?.bottom,navTop:nav?.top};
+   });
+   if(width<=430)check(width,slug,"enquiry action not covered by bottom navigation",
+     Number(visible.buttonBottom)<=Number(visible.navTop)-5,visible);
+   const recapFile=slug+"-"+width+"-actions.png";
+   await page.screenshot({path:path.join(output,recapFile),animations:"disabled",fullPage:false});
+   shots.push(recapFile);
   }
   errors.length=0;
  }
