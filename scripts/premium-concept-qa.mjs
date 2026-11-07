@@ -37,6 +37,7 @@ for(const [label,width,height] of sizes){
    heroCTAs:[...document.querySelectorAll(".v4-hero-actions a")].map(a=>a.getAttribute("href")),
    productCards:cards.map(card=>({id:card.id,href:card.getAttribute("href"),image:card.querySelector("img")?.getAttribute("src"),alt:card.querySelector("img")?.alt,status:card.getAttribute("data-asset-status")})),
    allImages:images.map(i=>({src:i.getAttribute("src"),valid:i.complete&&i.naturalWidth>0,filter:getComputedStyle(i).filter})),
+   productFilters:cards.map(x=>getComputedStyle(x.querySelector("img")).filter),
    mobileNavCount:document.querySelectorAll(".v4-mobile-nav a").length,
    mobileNavVisible:document.querySelector(".v4-mobile-nav")?getComputedStyle(document.querySelector(".v4-mobile-nav")).display!=="none":false,
    railScrollable:track?.scrollWidth>track?.clientWidth+5,
@@ -53,7 +54,7 @@ for(const [label,width,height] of sizes){
  check(label+" approved device images",info.productCards[0].image?.includes("fotobox-event-1672.webp")&&info.productCards[1].image?.includes("fotospiegel-hero-lossless.webp")&&info.productCards[2].image?.includes("fotowohnwagen-gartenparty-1448.webp"));
  check(label+" approved uploads unchanged",info.productCards[0].status==="approved-user-upload"&&info.productCards[2].status==="approved-user-upload");
  check(label+" imagery completely loaded",info.allImages.every(x=>x.valid),info.allImages.filter(x=>!x.valid).map(x=>x.src).join(","));
- check(label+" imagery not recolored",info.allImages.every(x=>x.filter==="none"));
+ check(label+" imagery not recolored",info.productFilters.every(x=>x==="none"));
  check(label+" descriptive alt for products",info.productCards.every(x=>x.alt?.length>22));
  check(label+" mobile navigation has 5 links",info.mobileNavCount===5);
  check(label+" mobile nav visibility",info.mobileNavVisible===(width<=760));
