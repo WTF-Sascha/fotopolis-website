@@ -92,10 +92,16 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
      list.append(item);
    }
  }
- action.addEventListener("click",()=>{
+ function openForDate(day){
    choices();form.reset();error.textContent="";form.hidden=false;
+   const chosen=typeof day==="string"&&/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(day)
+     ?day:localBerlinTime(new Date()).slice(0,10);
+   start.value=chosen+"T12:00";end.value=chosen+"T14:00";
+   // Buffers are deliberately empty: a real operator must choose both.
+   before.value="";after.value="";
    form.scrollIntoView({block:"nearest",behavior:"smooth"});device.focus();
- });
+ }
+ action.addEventListener("click",()=>openForDate());
  cancel.addEventListener("click",()=>{form.hidden=true;error.textContent="";action.focus()});
  form.addEventListener("submit",async event=>{
    event.preventDefault();
@@ -108,5 +114,5 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
    finally{submit.disabled=false}
  });
  refresh();
- return {refresh};
+ return {refresh,openForDate};
 }
