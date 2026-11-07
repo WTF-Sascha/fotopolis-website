@@ -77,3 +77,9 @@ Der bestätigte Owner-Login wurde um echte persistente Geräteanlage, Umbenennun
 Die zugehörigen DB-Funktionsrechte wurden ausschließlich im FOTOPOLIS-`development`-Branch eingerichtet, nicht auf `production`. Technische SQL-Verifikation, rollbackgeschützte Inventartests und automatisierte Browser-Vertragstests liegen vor. **Eine Live-End-to-End-Abnahme der neuen Schreibprozesse mit dem Benutzerkonto steht noch aus**; ein grüner CI-Lauf allein bedeutet keine vollständig produktive Freigabe. Kein `main`-Merge und keine Änderung der Live-Domain.
 
 Ausführliche Übergabe: [FOTOPOLIS Studio 4.0](./FOTOPOLIS_STUDIO_4_0_HANDOVER.md).
+
+## Update 07.11.2026 – Studio 4.1 (Admin-Bedienqualität)
+
+Die isolierte Studio-4.0-Verwaltung erhält eine kombinierte Geräte-Suche (Name, Kennung und Art), eigene Filter für Gerätestatus und -kategorie, sowie eine Einsatzübersicht aus den **tatsächlich geladenen** Kalenderbelegungen. Termine lassen sich direkt aus der Übersicht im Kalendertag-Dialog öffnen und autorisierte Administratoren können von dort eine interne Vormerkung für den gewählten Tag vorbereiten. Veranstaltungsdatum wird vorbelegt, Logistikpuffer **nicht**. Die neue Übersicht macht keine öffentliche Verfügbarkeitszusage. Stornierte Belegungen bleiben aus der Einsatzübersicht ausgeschlossen.
+
+Einsatz- und Geräteanzeige führen keine Datenbank-Mutation aus; Tests nutzen ausschließlich HTTP-Mocks. Der echte Gerätebestand bleibt unverändert bis zur ausdrücklichen Erfassung realer Einheiten durch FOTOPOLIS. Abnahmegrenzen: [Studio 4.1 Operations](./FOTOPOLIS_STUDIO_4_1_OPERATIONS_POLISH.md). Öffentliche Buchungen bleiben deaktiviert, PR #2 bleibt Draft und `main` unverändert.
