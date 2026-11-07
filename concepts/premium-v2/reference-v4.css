@@ -205,3 +205,113 @@ h1 em,h2 em,h3 em{font-weight:500;font-style:normal;color:#c49d5d}
 }
 @media(min-width:761px){.v4-mobile-nav{display:none}}
 @media(prefers-reduced-motion:reduce){.v4-product-card,.v4-product-photo img{transition:none}}
+
+
+/* V4.1: visual regression hardening — important products must never be cropped.
+   Cover is reserved for atmospheric BACKGROUNDS, not equipment images. */
+.v4-product-photo{
+  display:grid;
+  place-items:center;
+  isolation:isolate;
+  background:radial-gradient(ellipse at 50% 40%,#24455a 0%,#0c273d 65%,#051827 100%);
+}
+.v4-product-photo::before{
+  position:absolute;
+  inset:0;
+  content:"";
+  z-index:0;
+  pointer-events:none;
+  background:radial-gradient(ellipse at 50% 85%,rgba(216,173,106,.29),transparent 58%);
+}
+.v4-product-photo img,
+.v4-product-card[data-product="fotospiegel"] .v4-product-photo img,
+.v4-product-card[data-product="fotowohnwagen"] .v4-product-photo img{
+  position:relative;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  padding:20px 12px 9px;
+  filter:none;
+  transform:none;
+}
+.v4-product-card:hover .v4-product-photo img{transform:none}
+.v4-product-tag{z-index:2}
+.curated-item[data-gallery-kind="products"] .curated-open img{
+  object-fit:contain;
+  object-position:center;
+  filter:none;
+}
+.v4-product-body{min-width:0;gap:9px;align-items:center}
+.v4-product-body>div{min-width:0;flex:1 1 auto}
+.v4-product-body h3{
+  max-width:100%;
+  font-size:clamp(19px,2.1vw,28px);
+  line-height:1.22;
+  text-wrap:balance;
+  hyphens:auto;
+  overflow-wrap:break-word;
+}
+.v4-product-body p{overflow-wrap:break-word;line-height:1.52}
+.v4-product-arrow{margin-left:auto;flex-shrink:0}
+.v4-advantage,.v4-advantage>div,.v4-date-cta>div,
+.product-stage-copy,.advisor-intro,.advisor-result,.page-hero .inner,
+.contact-layout,.contact-form,.contact-recap,
+.package-card,.occasion-card,.trust-fact,.page-article{min-width:0}
+:is(.v4-hero h1,.v4-section-intro h2,.v4-advantage h3,.v4-date-cta h2,
+.page-hero h1,.product-stage-copy h2,.section-heading h2,.gallery-heading h2,
+.advisor-intro h2,.advisor-recommendation h3,.home-trust h2,
+.spotlight-copy h3,.experience-card h3,.page-end h2){
+  overflow:visible;
+  line-height:1.18;
+  padding-block:.055em;
+  overflow-wrap:break-word;
+  text-wrap:balance;
+}
+.page-hero h1{max-width:min(720px,100%);hyphens:auto}
+:is(.button,.v4-hero-outline,.nav-cta){
+  min-width:0;
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:break-word;
+  text-align:center;
+}
+.v4-product-card,.v4-product-photo,.v4-advantage-shell,.v4-date-cta{min-width:0}
+.v4-gallery-filters button{min-height:44px}
+.contact-fields>*{min-width:0}
+.contact-form input,.contact-form textarea,.contact-form select{max-width:100%;min-width:0}
+.v4-mobile-nav a{overflow-wrap:normal;white-space:normal}
+#contact-date{scroll-margin-top:clamp(115px,18vh,180px)}
+@media(max-width:760px){
+  .v4-product-photo img{padding:17px 9px 8px}
+  .v4-product-body{gap:7px}
+  .v4-product-body h3{font-size:clamp(18px,5vw,23px);line-height:1.22}
+  .v4-product-body p{font-size:11px}
+  .v4-advantage-shell{overflow:visible}
+  .v4-advantage h3{font-size:clamp(16px,4.1vw,20px);line-height:1.21}
+  .v4-advantage p{overflow-wrap:break-word}
+  .v4-date-cta{
+    display:grid;
+    grid-template-columns:30px minmax(0,1fr) auto;
+    align-items:center;
+    gap:10px;
+  }
+  .v4-date-cta>span{font-size:26px}
+  .v4-date-cta>div{min-width:0}
+  .v4-date-cta h2{font-size:clamp(16px,4.2vw,20px);line-height:1.16}
+  .v4-date-cta p{font-size:11px;line-height:1.45}
+  .v4-date-cta a{margin:0;white-space:normal}
+  .v4-hero h1{line-height:1.12;hyphens:auto;padding-block:.065em}
+  .page-hero h1{line-height:1.15;padding-block:.07em}
+  .v4-gallery-filters{padding-bottom:14px}
+  .curated-item[data-gallery-kind="products"] .curated-open img{object-fit:contain;padding:10px}
+}
+@media(max-width:375px){
+  .v4-date-cta{grid-template-columns:28px minmax(0,1fr);gap:10px 12px}
+  .v4-date-cta>a{grid-column:2;justify-self:start;margin-top:4px}
+  .v4-product-body h3{font-size:19px}
+  .v4-hero h1{font-size:clamp(34px,10vw,39px)}
+  .v4-advantage h3{font-size:16px}
+}
