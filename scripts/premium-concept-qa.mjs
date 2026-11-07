@@ -49,10 +49,10 @@ for(const [label,width,height] of sizes){
  check(label+" no body overflow",info.pageWidth<=width+2,info.pageWidth+" / "+width);
  check(label+" original approved logo",["../../site/assets/fotopolis-logo-original.png","/assets/fotopolis-logo-original.png"].includes(info.logo),info.logo);
  check(label+" photographic hero",info.heroImage?.includes("fotobox-event-1672.webp"),info.heroImage);
- check(label+" two working hero CTAs",JSON.stringify(info.heroCTAs)===JSON.stringify(["/kontakt/","#erlebnisse"]),JSON.stringify(info.heroCTAs));
- check(label+" 3 product cards with real routes",JSON.stringify(info.productCards.map(x=>x.id))===JSON.stringify(["fotobox","fotospiegel","fotowohnwagen"])&&info.productCards.every(x=>x.href==="/"+x.id+"/"),JSON.stringify(info.productCards.map(x=>x.id)));
- check(label+" approved device images",info.productCards[0].image?.includes("fotobox-event-1672.webp")&&info.productCards[1].image?.includes("fotospiegel-hero-lossless.webp")&&info.productCards[2].image?.includes("fotowohnwagen-gartenparty-1448.webp"));
- check(label+" approved uploads unchanged",info.productCards[0].status==="approved-user-upload"&&info.productCards[2].status==="approved-user-upload");
+ check(label+" single discovery hero CTA",JSON.stringify(info.heroCTAs)===JSON.stringify(["#erlebnisse"]),JSON.stringify(info.heroCTAs));
+ check(label+" 3 product cards with real routes",JSON.stringify(info.productCards.map(x=>x.id))===JSON.stringify(["fotobox","fotowohnwagen","fotospiegel"])&&info.productCards.every(x=>x.href==="/"+x.id+"/"),JSON.stringify(info.productCards.map(x=>x.id)));
+ check(label+" approved device images",info.productCards[0].image?.includes("fotobox-event-1672.webp")&&info.productCards[1].image?.includes("fotowohnwagen-gartenparty-1448.webp")&&info.productCards[2].image?.includes("fotospiegel-hero-lossless.webp"));
+ check(label+" approved uploads unchanged",info.productCards[0].status==="approved-user-upload"&&info.productCards[1].status==="approved-user-upload");
  check(label+" imagery completely loaded",info.allImages.every(x=>x.valid),info.allImages.filter(x=>!x.valid).map(x=>x.src).join(","));
  check(label+" imagery not recolored",info.productFilters.every(x=>x==="none"));
  check(label+" descriptive alt for products",info.productCards.every(x=>x.alt?.length>22));
@@ -61,6 +61,9 @@ for(const [label,width,height] of sizes){
  check(label+" mobile product swipe",info.railScrollable===(width<=760));
  check(label+" no broken in-page anchors",info.brokenAnchors.length===0,info.brokenAnchors.join(","));
  check(label+" one real H1",info.h1===1,String(info.h1));
+ check(label+" three content sections only",await page.locator("main > section").count()===3);
+ check(label+" no deprecated advisor, gallery or info band",await page.locator("#studio-berater,.studio-advisor,.home-trust,.v4-hero-meta,.v4-advantages,.v4-date-cta,main > .gallery").count()===0);
+ check(label+" contact CTA on footer section",(await page.locator(".v45-final-cta a.button").getAttribute("href"))==="/kontakt/");
  check(label+" no uncaught JS errors",errors.length===0,errors.join(" | "));
  if(width>=1024)check(label+" hero balanced",info.heroHeight<=800,String(info.heroHeight));
  if(width<=760){
@@ -80,7 +83,7 @@ for(const [label,width,height] of sizes){
  await page.locator('.v4-hero-actions a[href="#erlebnisse"]').click();
  check(label+" hero discovery anchor",new URL(page.url()).hash==="#erlebnisse",page.url());
  if(width===1440){
-  for(const id of ["fotobox","fotospiegel","fotowohnwagen"]){
+  for(const id of ["fotobox","fotowohnwagen","fotospiegel"]){
    await page.locator(".v4-product-card#"+id).screenshot({path:path.join(out,"desktop-1440-product-"+id+".png"),animations:"disabled"});
   }
  }
