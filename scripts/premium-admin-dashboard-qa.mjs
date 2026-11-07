@@ -29,7 +29,17 @@ try{
     }else{
       assert.ok(url.includes("/admin/login/"),"Anonymous must be redirected to login");checks+=2;
     }
-    const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:window.innerWidth}));
+    let size;
+    // Anonymous login may redirect while Playwright evaluates viewport metrics.
+    for(let attempt=0;attempt<3;attempt++){
+      try{
+        size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:window.innerWidth}));
+        break;
+      }catch(error){
+        if(attempt===2||!/Execution context was destroyed|Cannot find context/.test(error.message))throw error;
+        await page.waitForLoadState("domcontentloaded");
+      }
+    }
     assert.ok(size.scroll<=size.width+2,"Mobile overflow "+width);checks++;
     assert.deepEqual(errors,[],"Browser JS errors "+width+": "+errors.join(";"));checks++;
     // Static VISUAL SHELL only. Never mocks an actual authorized JWT or
