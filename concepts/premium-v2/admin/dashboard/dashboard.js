@@ -372,6 +372,8 @@ mobile.querySelectorAll("a").forEach(x=>x.addEventListener("click",()=>{mobile.h
 // Keep context visible on mobile and desktop. Navigation is never an auth bypass.
 function updateNavigation(){
  const target=location.hash||"#overview";
+ const labels={"#overview":"Übersicht","#calendar":"Terminplaner","#inventory":"Gerätebestand","#planning":"Sperrzeiten","#bookings":"Vormerkungen","#activity":"Änderungsprotokoll","#account":"Mein Konto"};
+ $(".crumbs strong").textContent=labels[target]||"Übersicht";
  for(const a of document.querySelectorAll('.sidebar-nav a, #dashboard-mobile-menu a')){
    const isActive=a.getAttribute("href")===target;
    a.classList.toggle("active",isActive);
