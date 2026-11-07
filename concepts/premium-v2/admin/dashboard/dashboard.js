@@ -44,7 +44,7 @@ function renderInventory(){
  if(!resources.length){
    result.textContent="0 Geräte im Bestand";
    const p=document.createElement("p");p.className="no-inventory";
-   p.textContent="Noch keine Geräte registriert. Sobald der tatsächliche FOTOPOLIS-Bestand freigegeben ist, erscheinen die Geräte hier.";
+   p.textContent="Noch keine Mietgeräte erfasst. Lege dein erstes Gerät im Bereich Gerätebestand an.";
    list.append(p);return;
  }
  const matching=filterInventory(resources,{
