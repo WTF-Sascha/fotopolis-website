@@ -1,0 +1,59 @@
+name: FOTOPOLIS Product Studio 6.0 Functional and Visual QA
+on:
+  push:
+    branches: ["design/premium-v2"]
+    paths:
+      - "concepts/premium-v2/pages.json"
+      - "concepts/premium-v2/product-v6.css"
+      - "concepts/premium-v2/product-enquiry-v6.js"
+      - "concepts/premium-v2/contact-flow.js"
+      - "scripts/build_premium_pages.py"
+      - "scripts/build-premium-preview.py"
+      - "scripts/product-v6-qa.mjs"
+      - ".github/workflows/product-v6-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  product-v6-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate generator, frontend syntax and build
+        run: |
+          python3 -m py_compile scripts/build_premium_pages.py scripts/build-premium-preview.py
+          node --check concepts/premium-v2/product-enquiry-v6.js
+          node --check concepts/premium-v2/contact-flow.js
+          node --check scripts/product-v6-qa.mjs
+          python3 scripts/build-premium-preview.py
+          for name in fotobox fotospiegel fotowohnwagen; do
+            test -f "preview-build/$name/index.html"
+            grep -q 'id="terminanfrage"' "preview-build/$name/index.html"
+          done
+      - name: Install Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Serve preview
+        run: |
+          python3 -m http.server 8766 --directory preview-build --bind 127.0.0.1 >/tmp/fotopolis-v6.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8766/fotobox/ >/dev/null
+      - name: Test 3 products, 7 breakpoints and real enquiry interaction
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/product-v6-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fotopolis-product-v6-qa
+          path: concepts/premium-v2/qa-screenshots/products-v6/
+          retention-days: 30
+          if-no-files-found: warn
