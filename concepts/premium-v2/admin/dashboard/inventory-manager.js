@@ -169,4 +169,3 @@ export function setupInventoryManager({root,getResources,onChange,createResource
   }
   return {refresh:render,getDraftCount:()=>drafts.length,getDrafts:()=>drafts.map(x=>({...x})),editSaved};
 }
-}
