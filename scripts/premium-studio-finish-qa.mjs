@@ -97,12 +97,14 @@ for (const width of widths){
    images.push(filename);
   }
  }
- for(const route of ["fotobox/","fotospiegel/","fotowohnwagen/"]){
+ for(const [route,label] of [["fotobox/","Fotobox"],["fotospiegel/","Fotospiegel"],["fotowohnwagen/","Fotowohnwagen"]]){
   await visit(route);
-  check(width+" "+route+" retains single context panel",await page.locator(".page-aside").count()===1);
-  check(width+" "+route+" media not obscured by mobile CTA",await page.locator(".mobile-quick-cta").count()===0);
-  const a=await page.locator(".page-aside a.button").getAttribute("href");
-  check(width+" "+route+" correct preselected contact route",decodeURIComponent(a).includes("produkt="));
+  check(width+" "+route+" no generic context panel",await page.locator(".page-aside,.page-end,.product-stage-media").count()===0);
+  check(width+" "+route+" inline enquiry",(await page.locator("[data-product-request]").count())===1);
+  check(width+" "+route+" correct product in request",(await page.locator("[data-product-request]").getAttribute("data-product"))===label);
+  check(width+" "+route+" no floating CTA",await page.locator(".mobile-quick-cta").count()===0);
+  check(width+" "+route+" hero request anchor",(await page.locator('.v4-page-actions .button.gold').getAttribute("href"))==="#terminanfrage");
+  check(width+" "+route+" unique enquiry section",(await page.locator("#terminanfrage").count())===1);
  }
  check(width+" no JS runtime errors",errors.length===0,errors.join("|"));
  await page.close();
