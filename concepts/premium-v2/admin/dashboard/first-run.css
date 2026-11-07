@@ -19,3 +19,6 @@
 .setup-card.is-complete{border-color:#66826f}
 @media(max-width:760px){.setup-steps{grid-template-columns:1fr}.setup-step{min-height:0}}
 @media(max-width:470px){.setup-actions>*{width:100%;text-align:center}}
+
+/* The semantic HTML hidden attribute must win over shared CTA display rules. */
+#setup-assistant[hidden],#setup-assistant .setup-actions [hidden]{display:none!important}
