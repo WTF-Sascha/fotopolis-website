@@ -46,10 +46,10 @@ for(const width of widths) {
       const footerGrid=document.querySelector(".footer-grid");
       const topItems=footerGrid?[...footerGrid.children].filter(x=>x!==footer):[];
       const firstTopMax=Math.max(...topItems.map(x=>x.getBoundingClientRect().bottom),0);
-      const stage=document.querySelector(".product-stage");
-      const media=rect(document.querySelector(".product-stage-media"));
-      const copy=rect(document.querySelector(".product-stage-copy"));
-      const mediaImg=document.querySelector("[data-approved-product]");
+      const stage=document.querySelector(".product-identity-stage");
+      const media=rect(document.querySelector(".product-identity-art"));
+      const copy=rect(document.querySelector(".product-story"));
+      const mediaImg=document.querySelector(".studio-page-hero-media img");
       const badControls=[...document.querySelectorAll(".button,.mobile-toggle,.nav-trigger")]
         .filter(el=>{const cs=getComputedStyle(el),r=el.getBoundingClientRect();return cs.display!=="none"&&r.width>0&&r.height>0&&r.height<42;})
         .map(el=>({label:el.textContent.trim().slice(0,45),height:Math.round(el.getBoundingClientRect().height)}));
@@ -68,9 +68,9 @@ for(const width of widths) {
         badControls,overflowCards,badImages,
         footerPresent:!!footer,
         footerOverlap:!!footer&&footer.getBoundingClientRect().top<firstTopMax-1,
-        productMedia:!!stage,
-        stageOverlap:innerWidth>960&&media&&copy&&overlaps(media,copy,2),
-        stageStackBad:innerWidth<=960&&media&&copy&&copy.y<media.b-2,
+        productMedia:!!stage&&!!media&&!!copy,
+        stageOverlap:innerWidth>760&&media&&copy&&overlaps(media,copy,2),
+        stageStackBad:innerWidth<=760&&media&&copy&&copy.y<media.b-2,
         mediaImg:mediaImg?{src:mediaImg.getAttribute("src"),alt:mediaImg.alt,fit:getComputedStyle(mediaImg).objectFit,filter:getComputedStyle(mediaImg).filter}:null,
         packageCards:document.querySelectorAll(".package-card").length,
         packageTable:!!comparison&&!!table,
