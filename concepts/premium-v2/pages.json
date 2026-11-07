@@ -21,7 +21,7 @@
         },
         {
           "heading": "Vor deinem Event",
-          "body": "Wir klären Platzbedarf, Stromversorgung, Aufstellzeit und die gewünschte Nutzungsdauer gemeinsam. Eine automatische Buchung findet in dieser Preview nicht statt."
+          "body": "Wir klären Platzbedarf, Stromversorgung, Aufstellzeit und die gewünschte Nutzungsdauer persönlich mit dir."
         }
       ],
       "tagline": "Fotografie, die Menschen zusammenbringt.",
@@ -426,50 +426,21 @@
       "slug": "galerie",
       "title": "Galerie",
       "eyebrow": "GALERIE · MOMENTE & PRODUKTVISUALISIERUNGEN",
-      "headline": "Erinnerungen bekommen hier einen Platz.",
-      "lead": "Entdecke bisherige Eventaufnahmen und die freigegebenen Produktvisualisierungen. Eventfotos werden ausschließlich für die interne Designprüfung gezeigt; ihre Bild- und Personenfreigaben stehen noch aus.",
-      "gallery": [
-        "LEG-060.webp",
-        "LEG-073.webp",
-        "LEG-046.webp"
-      ],
+      "headline": "Drei Erlebnisse. Eine Bildwelt.",
+      "lead": "Entdecke Fotobox, Fotospiegel und Fotowohnwagen in ausgewählten Produktvisualisierungen.",
       "blocks": [
         {
-          "heading": "Die Bildauswahl wird noch geprüft",
-          "body": "Die früheren Veranstaltungsfotos sind Vorschau-Material und kein freigegebenes Portfolio. Produktdarstellungen sind klar als Visualisierungen gekennzeichnet. Vor einer Veröffentlichung prüfen wir Bildrechte, Personenfreigaben und Bildunterschriften."
+          "heading": "Produktdarstellungen",
+          "body": "Die gezeigten Szenen illustrieren die Fotoerlebnisse. Verbindliche Angaben zu Ausstattung, Gestaltung und Verfügbarkeit erhältst du in deinem persönlichen Angebot."
         }
       ],
       "galleryCollection": [
-        {
-          "file": "LEG-060.webp",
-          "kind": "moments",
-          "label": "Ein besonderer Tag",
-          "alt": "Hochzeitspaar bei einem Foto-Shooting",
-          "note": "Eventaufnahme · Personenfreigabe ausstehend",
-          "rights": "unverified"
-        },
-        {
-          "file": "LEG-073.webp",
-          "kind": "moments",
-          "label": "Gemeinsam lachen",
-          "alt": "Gruppe von Gästen mit Hüten und Accessoires beim Fotografieren",
-          "note": "Eventaufnahme · Personenfreigabe ausstehend",
-          "rights": "unverified"
-        },
-        {
-          "file": "LEG-046.webp",
-          "kind": "moments",
-          "label": "Die Mottofeier",
-          "alt": "Drei verkleidete Gäste bei einer Halloweenfeier",
-          "note": "Eventaufnahme · Personenfreigabe ausstehend",
-          "rights": "unverified"
-        },
         {
           "file": "fotobox-event-1672.webp",
           "kind": "products",
           "label": "FOTOPOLIS BOX",
           "alt": "Freigegebene Fotobox-Visualisierung in einer festlichen Geburtstagsszene",
-          "note": "Freigegebene Produktvisualisierung · kein reales Referenzfoto",
+          "note": "Produktvisualisierung · illustrative Inszenierung",
           "rights": "approved-product"
         },
         {
@@ -477,7 +448,7 @@
           "kind": "products",
           "label": "FOTOPOLIS MIRROR",
           "alt": "Freigegebene Fotospiegel-Studiovisualisierung",
-          "note": "Freigegebene Produktvisualisierung · kein reales Referenzfoto",
+          "note": "Produktvisualisierung · illustrative Inszenierung",
           "rights": "approved-product"
         },
         {
@@ -485,11 +456,11 @@
           "kind": "products",
           "label": "FOTOPOLIS CAMPER",
           "alt": "Freigegebene Fotowohnwagen-Visualisierung auf einer Gartenparty",
-          "note": "Freigegebene Produktvisualisierung · kein reales Referenzfoto",
+          "note": "Produktvisualisierung · illustrative Inszenierung",
           "rights": "approved-product"
         }
       ],
-      "galleryNotice": "Interne Designvorschau: Eventaufnahmen sind nicht für den Live-Einsatz freigegeben. Es werden weder neue Fotos generiert noch bestehende Motive verändert."
+      "galleryNotice": "Die gezeigten Motive sind Produktvisualisierungen. Die tatsächliche Ausstattung wird individuell abgestimmt."
     },
     {
       "slug": "anlaesse",
@@ -660,7 +631,7 @@
           "description": "Verfügbarkeiten, Lieferumfang und Preis erst nach individueller Klärung verbindlich festhalten."
         }
       ],
-      "reviewPolicy": "Für diese Entwicklungsvorschau werden keine Sternebewertungen, Kundenstimmen, Referenzlogos oder Veranstaltungszahlen ohne verifizierbaren Nachweis veröffentlicht."
+      "reviewPolicy": "Wir veröffentlichen Kundenstimmen, Referenzlogos und Veranstaltungszahlen nur, wenn sie nachweisbar und freigegeben sind."
     },
     {
       "slug": "faq",
@@ -679,7 +650,7 @@
         ],
         [
           "Kann ich direkt online buchen?",
-          "Nein. In dieser Design-Preview gibt es keine verbindlichen Online-Buchungen oder Live-Verfügbarkeiten. Der Buchungskalender ist ein späterer Entwicklungsschritt."
+          "Du kannst dein Wunschdatum unverbindlich anfragen. Die konkrete Verfügbarkeit und alle Buchungsdetails bestätigen wir anschließend persönlich."
         ],
         [
           "Wie viel Platz wird benötigt?",
@@ -704,11 +675,11 @@
       "blocks": [
         {
           "heading": "Direkt per E-Mail",
-          "body": "Du kannst uns auch ohne Formular an kontakt@fotopolis-mieten.de schreiben. Diese Adresse stammt aus dem bisherigen Webauftritt und ist vor dem Livegang erneut zu bestätigen."
+          "body": "Du kannst uns jederzeit direkt an kontakt@fotopolis-mieten.de schreiben oder deine Anfrage über das Formular vorbereiten."
         },
         {
           "heading": "Wie geht es weiter?",
-          "body": "FOTOPOLIS klärt nach einer von dir selbst versendeten Anfrage die Details individuell. Eine Eingabe in dieser Entwicklungsvorschau ist weder eine Buchung noch eine Reservierung. Es gibt keine Live-Verfügbarkeitsprüfung."
+          "body": "Nach dem Versand deiner Anfrage werden Verfügbarkeit, Leistungsumfang und das passende Angebot persönlich abgestimmt."
         }
       ],
       "contactFlow": {
@@ -748,16 +719,16 @@
           "Lieferung und Aufbau",
           "Digitale Fotoübergabe"
         ],
-        "legalNotice": "Preview-Hinweis: Deine Eingaben bleiben im Browser, bis du selbst dein E-Mail-Programm öffnest und den Entwurf versendest. Keine Online-Buchung, kein automatischer E-Mail-Versand, keine Speicherung.",
+        "legalNotice": "Deine Eingaben werden nicht an einen Server übertragen. Die Anfrage wird als E-Mail-Entwurf vorbereitet und erst versendet, wenn du sie in deinem E-Mail-Programm bestätigst.",
         "responseNote": "Verfügbarkeit, Leistungsumfang, Anfahrt, Aufbau, Preise und Rückmeldung werden individuell geklärt. Hier wird keine konkrete Reaktionszeit zugesagt."
       }
     },
     {
       "slug": "impressum",
       "title": "Impressum",
-      "eyebrow": "RECHTLICHES · ENTWICKLUNGSVORSCHAU",
-      "headline": "Rechtliche Angaben vor Livegang prüfen.",
-      "lead": "Diese Seite ist eine isolierte, nicht produktive Design-Preview. Ein juristisch geprüftes Impressum für den neuen Auftritt wird vor Freigabe ergänzt.",
+      "eyebrow": "RECHTLICHE INFORMATIONEN",
+      "headline": "Impressum",
+      "lead": "Die vollständigen Anbieterangaben werden vor der öffentlichen Veröffentlichung ergänzt und rechtlich geprüft.",
       "blocks": [
         {
           "heading": "Bisherige Pflichtangaben",
@@ -768,13 +739,13 @@
     {
       "slug": "datenschutz",
       "title": "Datenschutz",
-      "eyebrow": "RECHTLICHES · ENTWICKLUNGSVORSCHAU",
-      "headline": "Datenschutz vor Veröffentlichung finalisieren.",
-      "lead": "Die neue Website wird zunächst ausschließlich zur Designprüfung bereitgestellt. Die finale Datenschutzerklärung wird erst nach technischer Festlegung aller Funktionen geprüft.",
+      "eyebrow": "RECHTLICHE INFORMATIONEN",
+      "headline": "Datenschutz",
+      "lead": "Die endgültige Datenschutzerklärung wird vor der öffentlichen Veröffentlichung anhand der tatsächlich genutzten Dienste und Verarbeitungen geprüft.",
       "blocks": [
         {
-          "heading": "Status der Preview",
-          "body": "Es werden keine direkten Online-Buchungen, Kontaktformulare mit Serverversand oder Analytics-Integrationen in diesem Schritt aktiviert. Die spätere Kalender- und Anfragetechnik erhält eine eigene Datenschutzprüfung."
+          "heading": "Verarbeitung von Anfragen",
+          "body": "Kontaktanfragen werden derzeit als E-Mail-Entwurf im eigenen E-Mail-Programm vorbereitet. Das Formular sendet selbst keine Daten an FOTOPOLIS."
         }
       ]
     }

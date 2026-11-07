@@ -76,8 +76,8 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 )
         if slug in ("impressum","datenschutz"):
             content = (
-                '<div class="page-legal-notice"><strong>Entwurf – kein veröffentlichungsreifer Rechtstext.</strong> '
-                'Vor einem Livegang muss die verantwortliche Stelle diese Angaben prüfen und freigeben.</div>'
+                '<div class="page-legal-notice"><strong>Angaben in Vorbereitung.</strong> '
+                'Diese Rechtstexte müssen vor der öffentlichen Veröffentlichung rechtlich geprüft und freigegeben werden.</div>'
                 + content
             )
         # Roadmap point 2: shared premium product stage + source-labelled features.
@@ -366,35 +366,29 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
         elif p.get("galleryCollection"):
             assert slug == "galerie"
             allow = {
-                "LEG-060.webp": "moments",
-                "LEG-073.webp": "moments",
-                "LEG-046.webp": "moments",
                 "fotobox-event-1672.webp": "products",
                 "fotospiegel-hero-lossless.webp": "products",
                 "fotowohnwagen-gartenparty-1448.webp": "products",
             }
-            assert len(p["galleryCollection"]) == len(allow) == 6
+            assert len(p["galleryCollection"]) == len(allow) == 3
             assert {item["file"] for item in p["galleryCollection"]} == set(allow)
             rich_sections += (
                 '<section class="curated-gallery section" aria-labelledby="curated-gallery-title">'
                 '<div class="inner"><div class="section-heading">'
-                '<span class="kicker">BILDER MIT KLARER HERKUNFT</span>'
-                '<h2 id="curated-gallery-title">Zwei Blickwinkel. <em>Eine Bildwelt.</em></h2>'
-                '<p>Unterscheide zwischen historischen Eventaufnahmen und freigegebenen '
-                'Produktvisualisierungen. Alle Bilder bleiben unverändert.</p></div>'
+                '<span class="kicker">DIE FOTOPOLIS ERLEBNISWELTEN</span>'
+                '<h2 id="curated-gallery-title">Drei Möglichkeiten. <em>Dein Moment.</em></h2>'
+                '<p>Entdecke unsere Fotoerlebnisse in ausgewählten Produktinszenierungen.</p></div>'
                 '<div class="gallery-filters" role="group" aria-label="Galerieansicht wählen">'
                 '<button class="gallery-filter" type="button" data-gallery-filter="all" '
                 'aria-pressed="true">Alle Eindrücke</button>'
-                '<button class="gallery-filter" type="button" data-gallery-filter="moments" '
-                'aria-pressed="false">Eventmomente</button>'
                 '<button class="gallery-filter" type="button" data-gallery-filter="products" '
                 'aria-pressed="false">Produktwelten</button></div>'
                 '<div class="curated-grid" data-curated-gallery>'
             )
             for item in p["galleryCollection"]:
                 assert item["kind"] == allow[item["file"]]
-                assert (item["rights"] == "unverified") == (item["kind"] == "moments")
-                category = "INTERNE EVENTAUFNAHME" if item["kind"] == "moments" else "PRODUKTVISUALISIERUNG"
+                assert item["rights"] == "approved-product" and item["kind"] == "products"
+                category = "PRODUKTVISUALISIERUNG"
                 rich_sections += (
                     f'<figure class="curated-item" data-gallery-item data-gallery-kind="{e(item["kind"])}">'
                     '<button class="curated-open" type="button" data-gallery-open '
@@ -415,7 +409,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 'aria-label="Fotogalerie Großansicht">'
                 '<button type="button" class="gallery-dialog-close" data-gallery-close '
                 'aria-label="Großansicht schließen">×</button>'
-                '<div class="gallery-dialog-media"><img data-gallery-large src="/assets/images/LEG-060.webp" alt="Interne Eventaufnahme"></div>'
+                '<div class="gallery-dialog-media"><img data-gallery-large src="/assets/images/fotobox-event-1672.webp" alt="Fotobox-Produktvisualisierung"></div>'
                 '<div class="gallery-dialog-foot"><div>'
                 '<strong data-gallery-dialog-title></strong>'
                 '<small data-gallery-dialog-note></small>'
@@ -648,7 +642,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '</div></section>'
             if slug in ("fotobox", "fotospiegel", "fotowohnwagen") else ""
         )
-        seo_title = f'{e(p["title"])} | FOTOPOLIS – Entwicklungsvorschau'
+        seo_title = f'{e(p["title"])} | FOTOPOLIS'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'

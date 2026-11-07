@@ -7,7 +7,7 @@ import re, shutil, hashlib
 root = Path(__file__).resolve().parents[1]
 source = root / "concepts/premium-v2"
 target = root / "preview-build"
-photos = ("LEG-060.webp", "LEG-073.webp", "LEG-046.webp")
+photos = ()  # Legacy event photos lack verified releases; do not publish.
 product_photos = ["fotobox-event-1672.webp","fotobox-event-800.webp","fotowohnwagen-gartenparty-1448.webp","fotowohnwagen-gartenparty-760.webp"]
 if target.exists():
     shutil.rmtree(target)
@@ -51,7 +51,7 @@ html = html.replace('<script defer src="./studio-guide.js"></script>',
 # Strictly forbid accidental publication of unreviewed paths or source-only links.
 assert "../../" not in html
 assert html.count("<h1") == 1
-assert all(("/assets/images/" + name) in html for name in photos)
+assert not any("/assets/images/LEG-"+n in html for n in ("060.webp","073.webp","046.webp")), "Unreleased people images must not appear"
 assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 1  # product card only
 assert '<section class="hero hero-editorial"' in html and '<nav class="hero-guide"' in html, "Missing photo-free editorial hero"
 assert "<img" not in html.split('<section class="hero hero-editorial"',1)[1].split("</section>",1)[0], "No images allowed in hero"
@@ -138,4 +138,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print(f"FOTOPOLIS V3.6: {len(routes)} editorial pages + isolated Admin Studio demo and accessible dropdown navigation; image-free hero and approved assets remain unchanged")
+print(f"FOTOPOLIS STUDIO: {len(routes)} editorial pages and isolated admin management; approved photo-free hero and product visualizations unchanged")

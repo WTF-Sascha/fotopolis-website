@@ -47,18 +47,14 @@ for(const width of widths){
  response=await visit("galerie/");
  data=await facts();
  check(width+" gallery HTTP",response.status()===200);
- check(width+" gallery six labelled images",await page.locator(".curated-item").count()===6);
- check(width+" event source class",await page.locator('[data-gallery-kind="moments"]').count()===3);
+ check(width+" gallery three approved images",await page.locator(".curated-item").count()===3);
+ check(width+" no unverified people",await page.locator('[data-gallery-kind="moments"]').count()===0);
  check(width+" approved product source class",await page.locator('[data-gallery-kind="products"]').count()===3);
- check(width+" source notes exist",await page.locator(".curated-item figcaption small").count()===6);
- check(width+" photo rights warning",(await page.locator("[data-gallery-rights]").innerText()).includes("nicht für den Live-Einsatz"));
+ check(width+" source notes exist",await page.locator(".curated-item figcaption small").count()===3);
+ check(width+" visualization notice",(await page.locator("[data-gallery-rights]").innerText()).includes("Produktvisualisierungen"));
  check(width+" gallery images intact",!data.brokenImages.length&&data.logo==="/assets/fotopolis-logo-original.png",data.brokenImages.join(" | "));
  check(width+" gallery no overflow/clipped headings",!data.overflow&&!data.headingsClipped.length,JSON.stringify(data));
  check(width+" preview robots noindex",data.noindex);
- await page.locator('[data-gallery-filter="moments"]').click();
- check(width+" moments filter active",await page.locator('[data-gallery-filter="moments"]').getAttribute("aria-pressed")==="true");
- check(width+" moments filter count",await page.locator(".curated-item:visible").count()===3);
- check(width+" filter hides products",await page.locator('[data-gallery-kind="products"]:visible').count()===0);
  await page.locator('[data-gallery-filter="products"]').click();
  check(width+" product filter count",await page.locator('[data-gallery-kind="products"]:visible').count()===3);
  check(width+" filter hides unverified person photos",await page.locator('[data-gallery-kind="moments"]:visible').count()===0);
@@ -76,7 +72,7 @@ for(const width of widths){
  check(width+" Escape closes dialog",!(await page.locator("[data-gallery-dialog]").evaluate(x=>x.open)));
  check(width+" focus restored",await opener.evaluate(x=>document.activeElement===x));
  await page.locator('[data-gallery-filter="all"]').click();
- check(width+" all images restored",await page.locator(".curated-item:visible").count()===6);
+ check(width+" all images restored",await page.locator(".curated-item:visible").count()===3);
  data=await facts();
  check(width+" no broken assets after modal cycle",data.brokenImages.length===0,data.brokenImages.join("|"));
  if(snapshots.has(width)){

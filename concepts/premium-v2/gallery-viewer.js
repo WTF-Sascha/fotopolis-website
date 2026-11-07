@@ -60,8 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target === dialog) dialog.close();
   });
   dialog.addEventListener("close", () => {
-    large.src = "/assets/images/LEG-060.webp";
-    large.alt = "Interne Eventaufnahme";
+    large.src = "/assets/images/fotobox-event-1672.webp";
+    large.alt = "FOTOPOLIS Fotobox – Produktvisualisierung";
     if (opener?.isConnected && !opener.closest("[data-gallery-item]")?.hidden) {
       opener.focus();
     }
