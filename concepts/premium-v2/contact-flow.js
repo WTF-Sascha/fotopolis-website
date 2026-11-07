@@ -193,5 +193,28 @@ document.addEventListener("DOMContentLoaded", () => {
       .find(x=>x.value === occasion && x.value !== "");
     if(option)option.selected=true;
   }
+  // Product-page Wunschtermin links populate the existing detailed wizard.
+  // Keep personal contact information out of URL parameters.
+  const date = query.get("datum");
+  if(date && /^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+    const field=form.querySelector('[name="datum"]');
+    if(field) field.value=date;
+  }
+  const time=query.get("tageszeit");
+  if(time) {
+    const field=form.querySelector('[name="tageszeit"]');
+    const option=[...field.options].find(x=>x.value===time);
+    if(option)field.value=option.value;
+  }
+  const place=query.get("ort");
+  if(place) {
+    const field=form.querySelector('[name="ort"]');
+    if(field)field.value=place.slice(0,120);
+  }
+  const details=query.get("details");
+  if(details) {
+    const field=form.querySelector('[name="details"]');
+    if(field)field.value=details.slice(0,800);
+  }
   update();
 });
