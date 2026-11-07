@@ -71,6 +71,11 @@
      <p>Lege zunächst eine tatsächlich vorhandene Fotobox, einen Fotospiegel oder einen Fotowohnwagen an. Neue Geräte bleiben sicher deaktiviert, bis du sie ausdrücklich freigibst. Es wurden keine fiktiven Bestände angelegt.</p>
      <a class="primary-button" href="#inventory">Erstes Mietgerät anlegen</a>
    </section>
+   <section class="operations-agenda" id="agenda" aria-labelledby="agenda-heading">
+    <div class="operations-agenda-top"><div><span class="eyebrow">BETRIEBSÜBERSICHT · NEON DEVELOPMENT</span><h2 id="agenda-heading">Termine im gewählten Zeitraum</h2></div><a href="#calendar" class="agenda-calendar-link">Kalender öffnen ↗</a></div>
+    <p class="agenda-note">Nur tatsächlich gespeicherte Belegungen aus dem aktuell geladenen Kalender. Kein öffentlicher Verfügbarkeitsnachweis.</p>
+    <div class="agenda-list" data-agenda role="status" aria-live="polite"><p>Die Termine werden geladen …</p></div>
+   </section>
    <section class="calendar-shell" id="calendar" aria-labelledby="calendar-heading">
     <div class="calendar-heading">
      <div><span class="eyebrow">BUCHUNGSÜBERSICHT</span><h2 id="calendar-heading">Dein Terminplaner</h2></div>
@@ -90,7 +95,14 @@
    </section>
    <section class="bottom-grid">
     <article class="detail-card"><span class="eyebrow">TAGESÜBERSICHT</span><h2 data-day-title>Ausgewählter Tag</h2><div data-day-details><p>Wähle ein Datum im Kalender aus.</p></div><button type="button" class="text-button" data-plan-day>Für diesen Tag Sperrzeit planen ↗</button></article>
-    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Hier erscheinen die tatsächlich in Neon registrierten Fotoboxen, Fotospiegel und Fotowohnwagen. Mit der geschützten Geräteverwaltung darunter kannst du echte Mietgeräte anlegen, umbenennen und als Hauptadministrator aktivieren oder deaktivieren.</p><button type="button" data-export-inventory class="inventory-edit-button" disabled>Gerätebestand als CSV</button><div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
+    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Hier erscheinen die tatsächlich in Neon registrierten Fotoboxen, Fotospiegel und Fotowohnwagen. Mit der geschützten Geräteverwaltung darunter kannst du echte Mietgeräte anlegen, umbenennen und als Hauptadministrator aktivieren oder deaktivieren.</p><button type="button" data-export-inventory class="inventory-edit-button" disabled>Gerätebestand als CSV</button>
+    <div class="inventory-filter-bar" role="search" aria-label="Gerätebestand durchsuchen">
+      <label>Gerät suchen<input type="search" data-inventory-search autocomplete="off" placeholder="Name oder Kennung" aria-label="Gerätename oder Kennung suchen"></label>
+      <label>Produktart<select data-inventory-type><option value="all">Alle Arten</option><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
+      <label>Gerätestatus<select data-inventory-state><option value="all">Alle Status</option><option value="active">Aktiv</option><option value="inactive">Deaktiviert</option></select></label>
+    </div>
+    <p class="inventory-filter-summary" data-inventory-results role="status" aria-live="polite">Geräte werden geladen …</p>
+    <div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
    </section>
    <section class="operations-card" id="planning" aria-labelledby="planning-heading">
      <span class="eyebrow">INTERNE BETRIEBSPLANUNG · STUDIO 4.0</span>
