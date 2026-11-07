@@ -21,3 +21,13 @@
 .inventory-manager-feedback{color:#9b5b32;font-size:11px;line-height:1.6;margin:0}
 .inventory-manager-form-actions{display:flex;flex-wrap:wrap;gap:9px}
 @media(max-width:570px){.inventory-manager-form{padding:14px}.inventory-manager-draft{align-items:flex-start;flex-direction:column}.inventory-manager-draft button{align-self:flex-start}.inventory-manager-form-actions button{flex:1}}
+
+.inventory-edit-button{border:1px solid #c4b18e;background:#fcfaf5;color:#25475c;border-radius:5px;min-height:35px;padding:8px 11px;font-size:10px;font-weight:800;cursor:pointer}
+.inventory-edit-button:hover,.inventory-edit-button:focus-visible{background:#f1e3c9}
+.inventory-manager-saved-editor{min-width:0}
+.inventory-manager-toggle-label{display:flex!important;align-items:center;flex-wrap:wrap;gap:9px!important}
+.inventory-manager-toggle-label input{width:18px!important;min-height:18px!important;accent-color:#b18c4c}
+.inventory-manager-toggle-label small{color:#806b4f;font-size:10px;font-weight:500}
+.inventory-list-row{flex-wrap:wrap}
+.inventory-manager-feedback{overflow-wrap:anywhere}
+@media(max-width:570px){.inventory-edit-button{margin-left:auto}}
