@@ -378,14 +378,20 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                 '<span class="kicker">DIE FOTOPOLIS ERLEBNISWELTEN</span>'
                 '<h2 id="curated-gallery-title">Drei Möglichkeiten. <em>Dein Moment.</em></h2>'
                 '<p>Entdecke unsere Fotoerlebnisse in ausgewählten Produktinszenierungen.</p></div>'
-                '<div class="curated-grid" data-curated-gallery>'
+                '<div class="v4-gallery-filters" role="group" aria-label="Fotoerlebnisse filtern">'
+                '<button type="button" data-v4-gallery-filter="alle" aria-pressed="true">Alle</button>'
+                '<button type="button" data-v4-gallery-filter="fotobox" aria-pressed="false">Fotobox</button>'
+                '<button type="button" data-v4-gallery-filter="fotospiegel" aria-pressed="false">Fotospiegel</button>'
+                '<button type="button" data-v4-gallery-filter="fotowohnwagen" aria-pressed="false">Fotowohnwagen</button>'
+                '</div><div class="curated-grid" data-curated-gallery>'
             )
             for item in p["galleryCollection"]:
                 assert item["kind"] == allow[item["file"]]
                 assert item["rights"] == "approved-product" and item["kind"] == "products"
                 category = "PRODUKTVISUALISIERUNG"
                 rich_sections += (
-                    f'<figure class="curated-item" data-gallery-item data-gallery-kind="{e(item["kind"])}">'
+                    f'<figure class="curated-item" data-gallery-item data-gallery-kind="{e(item["kind"])}" '
+                    f'data-v4-product="{e({"fotobox-event-1672.webp":"fotobox","fotospiegel-hero-lossless.webp":"fotospiegel","fotowohnwagen-gartenparty-1448.webp":"fotowohnwagen"}[item["file"]])}">'
                     '<button class="curated-open" type="button" data-gallery-open '
                     f'aria-label="{e(item["label"])} – Bild vergrößern">'
                     f'<img src="/assets/images/{e(item["file"])}" '
@@ -637,6 +643,20 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '</div></section>'
             if slug in ("fotobox", "fotospiegel", "fotowohnwagen") else ""
         )
+        # The product hero offers a personal enquiry, not live booking.
+        v4_product_actions = ""
+        if slug in ("fotobox", "fotospiegel", "fotowohnwagen"):
+            v4_product_actions = (
+                '<div class="v4-page-actions">'
+                f'<a class="button gold" href="/kontakt/?produkt={e(p["title"])}">Jetzt anfragen <span aria-hidden="true">→</span></a>'
+                '<a class="v4-hero-outline" href="#product-details">Details entdecken <span aria-hidden="true">↓</span></a>'
+                '</div>'
+            )
+        elif slug == "galerie":
+            v4_product_actions = (
+                '<div class="v4-page-actions"><a class="button gold" '
+                'href="/kontakt/">Event anfragen <span aria-hidden="true">→</span></a></div>'
+            )
         seo_title = f'{e(p["title"])} | FOTOPOLIS'
         page_html = (
             '<!doctype html><html lang="de"><head><meta charset="utf-8">'
@@ -647,7 +667,9 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<link rel="icon" href="/favicon.ico">'
             '<link rel="stylesheet" href="/styles.css">'
             '<link rel="stylesheet" href="/studio-polish.css">'
-            '<script defer src="/site.js"></script>' +
+            '<link rel="stylesheet" href="/reference-v4.css">'
+            '<script defer src="/site.js"></script>'
+            '<script defer src="/reference-v4.js"></script>' +
             ('<script defer src="/package-planner.js"></script>' if slug == "pakete" else '') +
             ('<script defer src="/gallery-viewer.js"></script>' if slug == "galerie" else '') +
             ('<script defer src="/contact-flow.js"></script>' if slug == "kontakt" else '') +
@@ -660,7 +682,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'<span aria-current="page">{e(p["title"])}</span></nav>'
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
             f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>'
-            '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
+            v4_product_actions + '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
             f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
             + closing_cta
             + '</main>' + footer.group(0) + '</body></html>'
