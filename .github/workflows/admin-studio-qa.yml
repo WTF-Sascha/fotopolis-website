@@ -28,6 +28,7 @@ on:
       - "netlify/functions/fotopolis-admin-activity.mjs"
       - "scripts/test-admin-activity.mjs"
       - "scripts/premium-admin-persistence-ui-qa.mjs"
+      - "scripts/test-admin-csv.mjs"
       - "package.json"
       - ".github/workflows/admin-studio-qa.yml"
   workflow_dispatch:
@@ -61,6 +62,8 @@ jobs:
         run: node scripts/premium-admin-qa.mjs
       - name: Fail-closed admin session authorization unit checks
         run: npm run test:auth-unit
+      - name: Local CSV escaping and spreadsheet safety
+        run: node --test scripts/test-admin-csv.mjs
       - name: Private activity log authorization
         run: node --test scripts/test-admin-activity.mjs
       - name: Internal booking holds, buffers and no-customer-data rules
