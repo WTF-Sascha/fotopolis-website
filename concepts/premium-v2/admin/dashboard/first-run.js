@@ -22,7 +22,7 @@ export function studioReadiness({role,loaded,resources=[],allocations=[],health=
      detail:!loaded?"Geschützter Gerätebestand wird geladen":deviceCount+" tatsächliche Geräte in Neon",target:"#inventory"},
    {id:"active",title:"Mietgerät ausdrücklich aktiviert",complete:loaded&&activeCount>0,
      detail:!loaded?"Gerätestatus wird geladen":activeCount+" aktive Mietgeräte",target:"#inventory"},
-   {id:"schedule",title:"Erste interne Belegung bestätigt",complete:loaded&&occupiedCount>0,
+   {id:"schedule",title:"Erste interne Belegung gespeichert",complete:loaded&&occupiedCount>0,
      detail:!loaded?"Geschützter Kalender wird geladen":
        occupiedCount+" aktive Sperrzeiten oder interne Vormerkungen im geladenen Zeitraum",
      target:"#bookings"}
