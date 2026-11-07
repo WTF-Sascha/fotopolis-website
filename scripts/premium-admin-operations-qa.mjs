@@ -69,7 +69,13 @@ try{
   await page.locator("#day-detail-dialog").waitFor({state:"visible",timeout:10000});
   assert.match(await page.locator("[data-dialog-day-title]").innerText(),/16. Dezember 2026/);checks++;
   assert.equal(await page.locator("[data-dialog-entries] .day-dialog-entry").count(),1);checks++;
-  await page.locator("[data-close-day]").click();
+  await page.locator("[data-reserve-selected]").click();
+  assert.equal(await page.locator("#day-detail-dialog").isVisible(),false);checks++;
+  assert.equal(await page.locator("#bookings .plan-form").isVisible(),true);checks++;
+  assert.equal(await page.locator("#booking-start").inputValue(),"2026-12-16T12:00");checks++;
+  assert.equal(await page.locator("#booking-end").inputValue(),"2026-12-16T14:00");checks++;
+  assert.equal(await page.locator("#booking-before").inputValue(),"");checks++;
+  assert.equal(await page.locator("#booking-after").inputValue(),"");checks++;
   const dims=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));
   assert.ok(dims.scroll<=dims.width+2,"Horizontal overflow at "+width);checks++;
   assert.deepEqual(writes,[]);checks++;
