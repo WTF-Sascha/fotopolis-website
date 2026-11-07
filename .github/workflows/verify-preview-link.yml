@@ -2,7 +2,13 @@ name: Verify FOTOPOLIS preview link is publicly reachable
 on:
   push:
     branches: ["design/premium-v2"]
-    paths: [".github/workflows/verify-preview-link.yml"]
+    paths:
+      - ".github/workflows/verify-preview-link.yml"
+      - "concepts/premium-v2/index.html"
+      - "concepts/premium-v2/studio-v5.css"
+      - "concepts/premium-v2/studio-v5.js"
+      - "scripts/build-premium-preview.py"
+      - "scripts/build_premium_pages.py"
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,8 +33,9 @@ jobs:
                   cards = re.findall(r'class="v4-product-card" id="([^"]+)"', body)
                   no_hero_cta = 'Fotoerlebnisse entdecken' not in body and 'class="v4-hero-actions"' not in body
                   right_copy = "Momente," in body and "Foto Mirror" in body
-                  print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy}")
-                  if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy:
+                  studio = 'class="site-header studio-header"' in body and 'href="/studio-v5.css"' in body and 'src="/studio-v5.js"' in body
+                  print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy} STUDIO5={studio}")
+                  if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy and studio:
                       print("PUBLIC_PREVIEW_VERIFIED", url)
                       break
                   last = f"HTTP {code}: wrong or stale 4.5.1 homepage"
