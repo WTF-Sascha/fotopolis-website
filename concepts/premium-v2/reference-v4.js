@@ -49,13 +49,13 @@ document.addEventListener("DOMContentLoaded",()=>{
   const navItems=[
     {url:"/",label:"Start",icon:'<path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'},
     {url:"/#erlebnisse",label:"Produkte",icon:'<path d="m12 2 9 5-9 5-9-5 9-5Zm-9 10 9 5 9-5M3 17l9 5 9-5"/>'},
-    {url:"/kontakt/",label:"Termin",icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 15h4"/>'},
+    {url:"/kontakt/#contact-date",label:"Termin",icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 15h4"/>'},
     {url:"/galerie/",label:"Galerie",icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m21 16-5-5L5 21"/>'},
     {url:"/kontakt/",label:"Kontakt",icon:'<path d="M20.5 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.7 0-3.1-.4-4.3-1.1L3 21l1.7-4.8A8.5 8.5 0 1 1 20.5 11.5Z"/>'}
   ];
   const bar=document.createElement("nav");
   bar.className="v4-mobile-nav";
   bar.setAttribute("aria-label","Mobile Schnellnavigation");
-  bar.innerHTML=navItems.map((item,i)=>'<a href="'+item.url+'"'+((path==="/"&&i===0)||(path.startsWith("/fotobox")&&i===1)||(path.startsWith("/fotospiegel")&&i===1)||(path.startsWith("/fotowohnwagen")&&i===1)||(path==="/galerie/"&&i===3)||(path==="/kontakt/"&&i===4)?' aria-current="page"':"")+'><svg viewBox="0 0 24 24" aria-hidden="true">'+item.icon+'</svg><span>'+item.label+'</span></a>').join("");
+  bar.innerHTML=navItems.map((item,i)=>'<a href="'+item.url+'"'+((path==="/"&&i===0)||(path.startsWith("/fotobox")&&i===1)||(path.startsWith("/fotospiegel")&&i===1)||(path.startsWith("/fotowohnwagen")&&i===1)||(path==="/galerie/"&&i===3)||(path==="/kontakt/"&&i===4&&location.hash!=="#contact-date")||(path==="/kontakt/"&&i===2&&location.hash==="#contact-date")?' aria-current="page"':"")+'><svg viewBox="0 0 24 24" aria-hidden="true">'+item.icon+'</svg><span>'+item.label+'</span></a>').join("");
   document.body.append(bar);
 });
