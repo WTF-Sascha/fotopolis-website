@@ -12,7 +12,7 @@ product_photos = ["fotobox-event-1672.webp","fotobox-event-800.webp","fotowohnwa
 if target.exists():
     shutil.rmtree(target)
 (target / "assets/images").mkdir(parents=True)
-for name in ("styles.css", "studio-polish.css", "site.js", "studio-guide.js", "package-planner.js", "gallery-viewer.js", "contact-flow.js"):
+for name in ("styles.css", "studio-polish.css", "site.js", "studio-guide.js", "package-planner.js", "gallery-viewer.js", "contact-flow.js", "reference-v4.css", "reference-v4.js"):
     shutil.copy2(source / name, target / name)
 shutil.copy2(root / "site/assets/fotopolis-logo-original.png",
              target / "assets/fotopolis-logo-original.png")
@@ -48,14 +48,18 @@ html = html.replace('<script defer src="./site.js"></script>',
                     '<script defer src="/site.js"></script>')
 html = html.replace('<script defer src="./studio-guide.js"></script>',
                     '<script defer src="/studio-guide.js"></script>')
+html = html.replace('<link rel="stylesheet" href="./reference-v4.css">',
+                    '<link rel="stylesheet" href="/reference-v4.css">')
+html = html.replace('<script defer src="./reference-v4.js"></script>',
+                    '<script defer src="/reference-v4.js"></script>')
 # Strictly forbid accidental publication of unreviewed paths or source-only links.
 assert "../../" not in html
 assert html.count("<h1") == 1
 assert not any("/assets/images/LEG-"+n in html for n in ("060.webp","073.webp","046.webp")), "Unreleased people images must not appear"
 assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 2  # product card plus approved showcase gallery
-assert '<section class="hero hero-editorial"' in html and '<nav class="hero-guide"' in html, "Missing photo-free editorial hero"
-assert "<img" not in html.split('<section class="hero hero-editorial"',1)[1].split("</section>",1)[0], "No images allowed in hero"
-assert all('href="#'+a+'"' in html and 'id="'+a+'"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Hero guide anchors must match products"
+assert '<section class="v4-hero"' in html and 'data-v4-product-rail' in html, "Missing Reference Edition home"
+assert '/assets/images/fotobox-event-1672.webp' in html.split('<section class="v4-hero"',1)[1].split("</section>",1)[0], "Approved hero visual required"
+assert all('id="'+a+'"' in html and 'href="/'+a+'/"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Product routes and anchors required"
 assert "LEG-019.webp" not in html and "LEG-014.webp" not in html, "No misleading legacy product visuals"
 assert "pending-approved-file" not in html and "legacy-reference" not in html, "Outdated placeholder"
 assert html.count('data-asset-status="approved-user-upload"') == 2, "Both approved scenes needed"
@@ -141,4 +145,4 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
     assert (target / ref.lstrip("/")).exists(), f"Missing preview asset {ref}"
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
-print(f"FOTOPOLIS STUDIO: {len(routes)} editorial pages and isolated admin management; approved photo-free hero and product visualizations unchanged")
+print(f"FOTOPOLIS STUDIO: {len(routes)} editorial pages and isolated admin management; approved product photography and Reference Edition V4 layout")
