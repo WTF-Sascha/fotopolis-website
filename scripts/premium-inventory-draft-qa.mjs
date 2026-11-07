@@ -43,10 +43,10 @@ try{
   await page.locator("#inventory-code").fill("!");
   await page.locator("#inventory-name").fill("Fotobox Preview");
   await page.locator('.inventory-manager-form button[type="submit"]').click();
-  assert.match(await page.locator(".inventory-manager-feedback").innerText(),/Gerätekennung/);completed++;
+  assert.match(await page.locator(".inventory-manager-form .inventory-manager-feedback").innerText(),/Gerätekennung/);completed++;
   await page.locator("#inventory-code").fill("BOX-EXIST");
   await page.locator('.inventory-manager-form button[type="submit"]').click();
-  assert.match(await page.locator(".inventory-manager-feedback").innerText(),/bereits/);completed++;
+  assert.match(await page.locator(".inventory-manager-form .inventory-manager-feedback").innerText(),/bereits/);completed++;
   await page.locator("#inventory-code").fill("BOX-001");
   await page.locator('.inventory-manager-form button[type="submit"]').click();
   assert.equal(await page.locator(".inventory-manager-draft").count(),1);completed++;
