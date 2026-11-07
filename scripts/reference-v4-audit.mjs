@@ -22,7 +22,7 @@ for (const width of widths){
  page.on("pageerror",error=>runtime.push(error.message));
  for (const slug of routes) {
   const label=labelOf(width,slug);
-  const res=await page.goto(new URL(slug?slug+"/":"",BASE),{waitUntil:"networkidle",timeout:40000});
+  const res=await page.goto(new URL(slug?slug+"/":"",BASE).toString(),{waitUntil:"networkidle",timeout:40000});
   await page.evaluate(async()=>{for(const img of document.images)img.loading="eager";await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})))});
   const info=await page.evaluate(()=>{
    const visible=el=>{let s=getComputedStyle(el),r=el.getBoundingClientRect();return r.width>1&&r.height>1&&!["none","hidden"].includes(s.display)&&s.visibility!=="hidden"&&s.opacity!=="0"};
@@ -115,7 +115,7 @@ for (const width of widths){
   await page.keyboard.press("Escape");
   check("menu",width+"px escape closes",(await menu.getAttribute("aria-expanded"))==="false");
  }
- await page.goto(new URL("galerie/",BASE),{waitUntil:"networkidle"});
+ await page.goto(new URL("galerie/",BASE).toString(),{waitUntil:"networkidle"});
  const filters=page.locator("[data-v4-gallery-filter]");
  const three=await page.locator("[data-gallery-item]:visible").count();
  await filters.nth(2).click();
