@@ -10,23 +10,25 @@ function node(tag,cls,text){
 function button(text,cls="plan-secondary"){
  const e=node("button",cls,text);e.type="button";return e;
 }
-export function setupPlanningManager({root,getResources,getInventoryDrafts,getAllocations,onChange}){
+export function setupPlanningManager({root,getResources,getInventoryDrafts,getAllocations,onChange,createBlock,cancelBlock}){
  if(!root)throw Error("Planning root missing");
  const plans=[];
+ const persistent=typeof createBlock==="function";
  const heading=node("div","plan-header");
- const message=node("p","plan-help","Sperrzeiten und Wartungen vorplanen, ohne echte Termine zu verändern. Vorschauentwürfe werden nie gespeichert.");
+ const message=node("p","plan-help",persistent?"Wartungen und interne Sperrzeiten dauerhaft speichern. Die Datenbank verhindert automatisch Überschneidungen mit echten Belegungen.":"Sperrzeiten und Wartungen vorplanen, ohne echte Termine zu verändern. Vorschauentwürfe werden nie gespeichert.");
  const inventoryLink=node("a","plan-inventory-link","Noch kein Gerät erfasst? Zuerst Geräte-Entwurf vorbereiten ↗");
  inventoryLink.href="#inventory";
- const info=node("span","plan-nonpersistent","LOKALE PLANUNG · NICHT GESPEICHERT");
+ const info=node("span","plan-nonpersistent",persistent?"NEON · VERBINDLICHE INTERNE SPERRZEITEN":"LOKALE PLANUNG · NICHT GESPEICHERT");
  const create=button("+ Sperrzeit planen","plan-primary");
  heading.append(create,info);
  const status=node("p","plan-status","");
  status.setAttribute("role","status");status.setAttribute("aria-live","polite");
+ const savedRows=node("div","plan-list");
  const rows=node("div","plan-list");
  const form=node("form","plan-form");
  form.hidden=true;form.noValidate=true;
  const title=node("h3",null,"Neue Sperrzeit vorbereiten");
- const help=node("p","plan-help","Die Zeiten gelten für Europe/Berlin. Eine Sperre ist erst nach gesonderter Datenbankfreigabe wirksam.");
+ const help=node("p","plan-help",persistent?"Alle Uhrzeiten beziehen sich auf Europe/Berlin. Gespeicherte Sperren verhindern weitere Belegungen des Geräts für denselben Zeitraum.":"Die Zeiten gelten für Europe/Berlin. Eine Sperre ist erst nach gesonderter Datenbankfreigabe wirksam.");
  function field(labelText,input,id){
    const label=node("label",null,labelText);input.id=id;label.htmlFor=id;
    label.append(input);return label;
@@ -42,10 +44,10 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  const feedback=node("p","plan-error","");
  feedback.setAttribute("role","status");feedback.setAttribute("aria-live","polite");
  const buttons=node("div","plan-form-buttons");
- const save=node("button","plan-primary","Entwurf hinzufügen");save.type="submit";
+ const save=node("button","plan-primary",persistent?"Sperrzeit speichern":"Entwurf hinzufügen");save.type="submit";
  const cancel=button("Abbrechen");
  buttons.append(save,cancel);
- const hint=node("p","plan-help","Konflikte werden nur gegen aktuell geladene Kalenderdaten und lokale Entwürfe geprüft. Das ist keine verbindliche Verfügbarkeitszusage.");
+ const hint=node("p","plan-help",persistent?"Die Datenbank führt eine eigene Konfliktprüfung aus. Existierende Buchungen werden nicht verändert.":"Konflikte werden nur gegen aktuell geladene Kalenderdaten und lokale Entwürfe geprüft. Das ist keine verbindliche Verfügbarkeitszusage.");
  form.append(title,help,field("Mietgerät",select,"block-resource"),
    field("Grund",kind,"block-kind"),field("Beginn",start,"block-start"),
    field("Ende",end,"block-end"),field("Interne Notiz",note,"block-note"),
@@ -55,7 +57,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  download.disabled=true;
  const clear=button("Alle Entwürfe verwerfen");clear.disabled=true;
  exports.append(download,clear);
- root.replaceChildren(message,inventoryLink,heading,form,status,rows,exports);
+ root.replaceChildren(message,inventoryLink,heading,form,status,savedRows,rows,exports);
  function choices(){
    const previously=select.value;
    select.replaceChildren();
@@ -75,6 +77,29 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  function getDrafts(){return plans.map(p=>({...p}));}
  function refresh(){
    choices();
+   savedRows.replaceChildren();
+   if(persistent){
+     const loaded=getAllocations().filter(a=>["internal_block","maintenance"].includes(a.allocation_kind)&&a.allocation_state==="blocked");
+     const title=node("h3","plan-list-heading","Gespeicherte Sperrzeiten im Kalender ("+loaded.length+")");
+     savedRows.append(title);
+     if(!loaded.length)savedRows.append(node("p","plan-empty","Keine aktiven Sperrzeiten im aktuell geladenen Kalenderzeitraum."));
+     for(const a of loaded){
+       const dev=getResources().find(r=>r.id===a.resource_id);
+       const row=node("article","plan-entry");
+       const body=node("div");
+       body.append(node("strong",null,(dev?.display_name||"Gerät")+" · "+planningKinds[a.allocation_kind]),
+         node("p",null,localBerlinTime(a.event_start_at).replace("T"," ")+" bis "+localBerlinTime(a.event_end_at).replace("T"," ")+" Uhr"),
+         node("small",null,"In Neon gespeichert · wirksame Gerätesperre"));
+       const cancelSaved=button("Sperre aufheben");
+       cancelSaved.setAttribute("aria-label","Gespeicherte Sperre für "+(dev?.display_name||"Gerät")+" aufheben");
+       cancelSaved.addEventListener("click",async()=>{
+         if(!window.confirm("Diese gespeicherte Sperrzeit wirklich aufheben?"))return;
+         cancelSaved.disabled=true;status.textContent="Änderung wird gespeichert …";
+         try{await cancelBlock(a.id);status.textContent="Die Sperrzeit wurde dauerhaft aufgehoben.";}catch(e){status.textContent=e?.message||"Aufheben nicht möglich.";cancelSaved.disabled=false;}
+       });
+       row.append(body,cancelSaved);savedRows.append(row);
+     }
+   }
    rows.replaceChildren();
    download.disabled=plans.length===0;clear.disabled=plans.length===0;
    if(plans.length===0){
@@ -109,12 +134,23 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
  }
  create.addEventListener("click",()=>openForDate());
  cancel.addEventListener("click",()=>{form.hidden=true;feedback.textContent="";create.focus()});
- form.addEventListener("submit",event=>{
+ form.addEventListener("submit",async event=>{
    event.preventDefault();
    const checked=validateBlockDraft({
      resourceRef:select.value,kind:kind.value,note:note.value,start:start.value,end:end.value
    },{resources:getResources(),deviceDrafts:getInventoryDrafts(),allocations:getAllocations(),drafts:plans});
    if(checked.error){feedback.textContent=checked.error;return}
+   if(persistent){
+     if(!checked.value.resourceRef.startsWith("real:")){feedback.textContent="Bitte dieses Gerät zuerst dauerhaft in der Geräteverwaltung speichern.";return}
+     save.disabled=true;feedback.textContent="Prüfe Belegung und speichere die Sperre …";
+     try{
+       await createBlock({resourceId:checked.value.resourceRef.slice(5),kind:checked.value.kind,startUtc:checked.value.startUtc,endUtc:checked.value.endUtc});
+       feedback.textContent="";status.textContent="Sperrzeit dauerhaft in Neon gespeichert.";
+       form.hidden=true;notify();create.focus();
+     }catch(e){feedback.textContent=e?.message||"Die Sperrzeit konnte nicht gespeichert werden.";}
+     finally{save.disabled=false;}
+     return;
+   }
    if(plans.length>=30){feedback.textContent="Maximal 30 gleichzeitige Planungsentwürfe.";return}
    plans.push(checked.value);
    form.hidden=true;status.textContent="Entwurf vorgemerkt. Keine echte Termin- oder Datenbankänderung.";
@@ -138,6 +174,7 @@ export function setupPlanningManager({root,getResources,getInventoryDrafts,getAl
    plans.splice(0);refresh();notify();
    status.textContent="Alle Entwürfe verworfen.";
  });
+ if(persistent){exports.hidden=true;}
  refresh();
  return {refresh,openForDate,getDrafts};
 }
