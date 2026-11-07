@@ -4,6 +4,7 @@ import {setupInventoryManager} from "./inventory-manager.js";
 import {setupPlanningManager} from "./planning-manager.js";
 import {setupReservationsManager} from "./reservations-manager.js";
 import {downloadCsv} from "./csv-export.js";
+import {filterInventory,calendarAgenda,occupancyLabels} from "./operations-insights.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -24,7 +25,7 @@ const keyFromInstant=(timestamp)=>{
 const isoKey=d=>[d.getUTCFullYear(),String(d.getUTCMonth()+1).padStart(2,"0"),String(d.getUTCDate()).padStart(2,"0")].join("-");
 const current=new Date(keyFromInstant(today)+"T12:00:00.000Z");
 let cursor=current, selected=isoKey(current),view="month",resources=[],allocations=[],jwt="",busy=false;
-let inventoryManager=null,planningManager=null,reservationsManager=null,loadPending=false,adminRole="viewer";
+let inventoryManager=null,planningManager=null,reservationsManager=null,loadPending=false,adminRole="viewer",calendarLoaded=false;
 const fromKey=s=>new Date(s+"T12:00:00.000Z");
 const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};
 const startOfWeek=d=>addDays(d,-((d.getUTCDay()+6)%7));
@@ -38,8 +39,25 @@ function visibleDays(){
 }
 function renderInventory(){
  const list=$("[data-inventory]");list.replaceChildren();
- if(!resources.length){const p=document.createElement("p");p.className="no-inventory";p.textContent="Noch keine Geräte registriert. Sobald der tatsächliche FOTOPOLIS-Bestand freigegeben ist, erscheinen die Geräte hier.";list.append(p);return}
- resources.forEach(r=>{
+ const result=$("[data-inventory-results]");
+ if(!resources.length){
+   result.textContent="0 Geräte im bestätigten Entwicklungsbestand";
+   const p=document.createElement("p");p.className="no-inventory";
+   p.textContent="Noch keine Geräte registriert. Sobald der tatsächliche FOTOPOLIS-Bestand freigegeben ist, erscheinen die Geräte hier.";
+   list.append(p);return;
+ }
+ const matching=filterInventory(resources,{
+   query:$("[data-inventory-search]").value,
+   type:$("[data-inventory-type]").value,
+   state:$("[data-inventory-state]").value
+ });
+ result.textContent=matching.length+" von "+resources.length+" registrierten Geräten angezeigt";
+ if(!matching.length){
+   const p=document.createElement("p");p.className="no-inventory";
+   p.textContent="Kein Gerät entspricht dieser Suche. Die Filter verändern den gespeicherten Gerätebestand nicht.";
+   list.append(p);return;
+ }
+ matching.forEach(r=>{
    const row=document.createElement("div");row.className="inventory-list-row";
    const num=document.createElement("span");num.className="inventory-icon";num.textContent="◈";
    const desc=document.createElement("div");
@@ -55,6 +73,48 @@ function renderInventory(){
    }
    list.append(row);
  });
+}
+function renderAgenda(){
+ const target=$("[data-agenda]");target.replaceChildren();
+ if(!calendarLoaded){
+   const info=document.createElement("p");info.className="agenda-empty";
+   info.textContent="Kalenderdaten sind derzeit nicht bestätigt. Keine Verfügbarkeitsaussage möglich.";
+   target.append(info);return;
+ }
+ const agenda=calendarAgenda(allocations,resources,{
+   product:$("[data-product-filter]").value,limit:6
+ });
+ if(!agenda.length){
+   const p=document.createElement("p");p.className="agenda-empty";
+   p.textContent="Im aktuell geladenen Zeitraum sind keine gespeicherten Belegungen vorhanden. Das ist keine Aussage zur allgemeinen Verfügbarkeit.";
+   target.append(p);return;
+ }
+ for(const item of agenda){
+   const row=document.createElement("article");row.className="agenda-entry";
+   const content=document.createElement("div");
+   const tag=document.createElement("span");tag.className="agenda-chip";
+   tag.dataset.kind=item.kind;
+   tag.textContent=occupancyLabels[item.kind]+(item.kind==="booking"?(item.state==="confirmed"?" · bestätigt":" · vorgemerkt"):"");
+   const title=document.createElement("strong");
+   title.textContent=item.resourceName+" · "+item.resourceCode;
+   const when=document.createElement("p");
+   when.textContent="Veranstaltung: "+fmtDay.format(new Date(item.event_start_at))+" · "+fmtTime.format(new Date(item.event_start_at))+"–"+fmtTime.format(new Date(item.event_end_at))+" Uhr";
+   const occupied=document.createElement("small");
+   occupied.textContent="Gerät belegt: "+fmtDay.format(new Date(item.occupied_from))+" "+fmtTime.format(new Date(item.occupied_from))+" bis "+fmtDay.format(new Date(item.occupied_until))+" "+fmtTime.format(new Date(item.occupied_until))+" Uhr";
+   content.append(tag,title,when,occupied);
+   const go=document.createElement("button");go.type="button";
+   go.textContent="Im Kalender anzeigen";
+   go.setAttribute("aria-label",item.resourceName+" im Kalender öffnen");
+   go.addEventListener("click",async()=>{
+     const day=keyFromInstant(item.event_start_at);
+     selected=day;cursor=fromKey(day);
+     await loadCalendar();
+     if(!calendarLoaded||app.hidden)return;
+     $("#calendar").scrollIntoView({block:"start",behavior:"smooth"});
+     openDayDialog();
+   });
+   row.append(content,go);target.append(row);
+ }
 }
 function filteredAllocations(){
   const kind=$("[data-product-filter]").value;
@@ -152,7 +212,7 @@ function renderCalendar(){
  const inVisible=filteredAllocations().filter(a=>days.some(d=>{const k=isoKey(d);return k>=keyFromInstant(a.occupied_from)&&k<=keyFromInstant(new Date(a.occupied_until).getTime()-1)}));
  $("[data-count=bookings]").textContent=String(inVisible.filter(a=>a.allocation_kind==="booking"&&a.allocation_state!=="cancelled").length);
  $("[data-count=blocks]").textContent=String(inVisible.filter(a=>a.allocation_kind!=="booking"&&a.allocation_state!=="cancelled").length);
- renderDetails();
+ renderDetails();renderAgenda();
 }
 async function loadCalendar(){
   if(busy){loadPending=true;return}
@@ -169,7 +229,7 @@ async function loadCalendar(){
     if(!response.ok)throw Error("Übersicht aktuell nicht verfügbar ("+response.status+")");
     const data=await response.json();
     if(!data.readOnly||!Array.isArray(data.resources)||!Array.isArray(data.allocations))throw Error("Ungültige Serverantwort");
-    resources=data.resources;allocations=data.allocations;
+    resources=data.resources;allocations=data.allocations;calendarLoaded=true;
     $("#setup-assistant").hidden=resources.length>0||adminRole==="viewer";
     $("[data-export-inventory]").disabled=!["owner","manager"].includes(adminRole)||resources.length===0;
     $("[data-export-calendar]").disabled=!["owner","manager"].includes(adminRole)||allocations.length===0;
@@ -177,7 +237,7 @@ async function loadCalendar(){
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
     $("[data-calendar-sync]").textContent="Mit Neon verbunden · Aktualisiert "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit"}).format(new Date())+" Uhr · Nur Entwicklungsdaten";
   }catch(e){
-    resources=[];allocations=[];
+    resources=[];allocations=[];calendarLoaded=false;
     $("#setup-assistant").hidden=true;
     $("[data-export-inventory]").disabled=true;$("[data-export-calendar]").disabled=true;
     renderInventory();inventoryManager?.refresh();planningManager?.refresh();reservationsManager?.refresh();renderCalendar();
@@ -193,7 +253,7 @@ async function loadCalendar(){
 }
 function lock(msg){
   app.hidden=true;gate.hidden=false;message.textContent=msg;loginBack.hidden=false;
-  jwt="";resources=[];allocations=[];
+  jwt="";resources=[];allocations=[];calendarLoaded=false;
 }
 async function saveInventory(method,payload){
   const session=await client.getSession();
@@ -354,6 +414,11 @@ async function authenticate(){
     const anchor=location.hash&&document.querySelector(location.hash);
     if(anchor)requestAnimationFrame(()=>anchor.scrollIntoView({block:"start"}));
   }catch(e){lock("Die geschützte Verwaltung ist aktuell nicht erreichbar. Deine Daten bleiben gesperrt.")}
+}
+for(const selector of ["[data-inventory-search]","[data-inventory-type]","[data-inventory-state]"]){
+  const control=$(selector);
+  control.addEventListener("input",renderInventory);
+  control.addEventListener("change",renderInventory);
 }
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",async()=>{
   view=b.dataset.view;
