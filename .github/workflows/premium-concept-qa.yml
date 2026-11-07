@@ -15,6 +15,7 @@ on:
       - "scripts/premium-studio3-qa.mjs"
       - "scripts/premium-studio-finish-qa.mjs"
       - "scripts/premium-admin-qa.mjs"
+      - "scripts/premium-presentation-qa.mjs"
       - "scripts/build-admin-auth.mjs"
       - "netlify/functions/**"
       - "package.json"
@@ -48,6 +49,8 @@ jobs:
         run: python3 scripts/build-premium-preview.py
       - name: Bundle the official Neon Auth login client
         run: npm run build:auth
+      - name: Presentation release gate – clean routes and approved imagery
+        run: node scripts/premium-presentation-qa.mjs
       - name: Serve Netlify build output
         run: |
           python3 -m http.server 8766 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-preview-server.log 2>&1 &
