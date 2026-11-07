@@ -113,6 +113,9 @@ assert '/admin/dashboard/dashboard-bundle.js' in dashboard_html
 assert '/admin/dashboard/inventory-manager.css' in dashboard_html
 assert '/admin/dashboard/planning-manager.css' in dashboard_html
 assert '/admin/dashboard/reservations-manager.css' in dashboard_html
+assert '/admin/dashboard/operations-insights.css' in dashboard_html
+assert 'data-agenda' in dashboard_html
+assert 'data-inventory-search' in dashboard_html
 assert 'data-reservations-manager' in dashboard_html
 assert 'data-planning-manager' in dashboard_html
 assert 'day-detail-dialog' in dashboard_html
