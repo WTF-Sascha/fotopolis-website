@@ -496,3 +496,76 @@ h1 em,h2 em,h3 em{font-weight:500;font-style:normal;color:#c49d5d}
  .legal-section.page-content-block{padding:21px;border-radius:17px}
  .legal-section h2{font-size:22px}
 }
+
+
+/* FOTOPOLIS 4.5 · simplified premium homepage.
+   Scope all changes to .v45-home: product subpages and admin stay untouched. */
+.v45-home {background:var(--v4-cream)}
+.v45-home .v45-hero{min-height:560px}
+.v45-home .v45-hero .v4-hero-content{padding-top:clamp(96px,11vw,160px);padding-bottom:clamp(95px,9vw,135px)}
+.v45-home .v45-hero h1{max-width:740px;font-size:clamp(55px,6.2vw,91px);line-height:1.09;letter-spacing:-.045em;text-wrap:balance}
+.v45-home .v45-hero p{max-width:505px;line-height:1.63}
+.v45-home .v45-hero .v4-hero-actions .button{max-width:100%;min-height:54px;padding-inline:29px;gap:20px}
+.v45-home .v45-products{padding:clamp(48px,6vw,80px) 0 clamp(64px,7vw,98px);scroll-margin-top:115px}
+.v45-home .v45-products .v4-section-intro{gap:24px;margin-bottom:34px}
+.v45-home .v45-products .v4-section-intro h2{font-size:clamp(39px,4.3vw,63px);line-height:1.15;max-width:750px}
+.v45-home .v45-products .v4-section-intro p{font-size:14px;line-height:1.65;max-width:320px}
+.v45-home .v4-product-track{gap:20px}
+.v45-home .v4-product-card{border-radius:22px;overflow:hidden;background:#fffdfa;border:1px solid #e7dfd4;box-shadow:0 20px 42px #10283c18}
+.v45-home .v4-product-card:focus-visible{outline:3px solid #bc9558;outline-offset:4px}
+.v45-home .v4-product-photo{height:clamp(245px,25vw,360px);background:radial-gradient(ellipse at 50% 30%,#2b4a61 0%,#0d2a42 60%,#071b30 100%);display:grid;place-items:center}
+.v45-home .v4-product-photo img{width:100%;height:100%;object-fit:contain;object-position:center;padding:20px 13px 12px;transform:none;filter:none}
+.v45-home .v4-product-card:hover .v4-product-photo img{transform:none}
+.v45-home .v4-product-tag{padding:7px 12px;font-size:10px}
+.v45-home .v4-product-body{padding:20px 19px 24px;align-items:flex-start;min-height:140px;gap:10px}
+.v45-home .v4-product-body>div{min-width:0;display:flex;flex:1;flex-direction:column}
+.v45-home .v4-product-body h3{font-size:clamp(24px,2.25vw,31px);line-height:1.15;overflow-wrap:break-word;margin:0}
+.v45-home .v4-product-body p{font-size:13px;line-height:1.5;color:#506172;margin:9px 0 19px}
+.v45-home .v45-card-action{display:inline-flex;align-items:center;gap:8px;margin-top:auto;color:#a67c3f;font-weight:750;font-size:12px;letter-spacing:.01em}
+.v45-home .v4-product-arrow{margin-top:2px}
+.v45-final-cta{padding:clamp(48px,6vw,80px) 0;background:linear-gradient(120deg,#071b30,#0c314d);border-top:1px solid rgba(206,164,95,.35)}
+.v45-final-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:30px}
+.v45-final-cta h2{font:600 clamp(33px,3.5vw,52px)/1.15 Georgia,"Iowan Old Style",serif;color:#fff6e5;letter-spacing:-.035em;margin:10px 0}
+.v45-final-cta h2 em{font-style:normal;color:#e2bc81}
+.v45-final-cta p{color:#d4dfe7;font-size:14px;line-height:1.6}
+.v45-final-cta a.button{flex:0 0 auto;min-height:54px;gap:22px;padding-inline:29px}
+.v45-home .v4-rail-buttons button:focus-visible{outline:2px solid #8f6731;outline-offset:2px}
+@media(max-width:900px){
+ .v45-final-cta-inner{align-items:flex-start}
+ .v45-final-cta h2{max-width:520px}
+}
+@media(max-width:760px){
+ .v45-home .v45-hero{min-height:480px}
+ .v45-home .v45-hero .v4-hero-content{padding:clamp(66px,12vw,92px) 21px 93px}
+ .v45-home .v45-hero h1{max-width:min(100%,390px);font-size:clamp(39px,10.1vw,59px);line-height:1.12;margin:17px 0 21px;text-wrap:balance}
+ .v45-home .v45-hero p{font-size:clamp(14px,3.8vw,16px);max-width:min(100%,355px);line-height:1.56}
+ .v45-home .v45-hero .v4-hero-actions{display:flex;align-items:flex-start}
+ .v45-home .v45-hero .v4-hero-actions .button{min-height:50px;max-width:100%;font-size:13px;padding:12px 21px;gap:14px}
+ .v45-home .v45-products{padding:44px 0 58px;scroll-margin-top:110px}
+ .v45-home .v45-products .inner{padding-right:0}
+ .v45-home .v45-products .v4-section-intro{padding-right:20px;margin-bottom:22px}
+ .v45-home .v45-products .v4-section-intro h2{font-size:clamp(33px,8.3vw,45px);line-height:1.17}
+ .v45-home .v45-products .v4-section-intro p{font-size:12px;line-height:1.55}
+ .v45-home .v4-product-track{display:flex;gap:14px;overflow-x:auto;scroll-padding-inline:1px 22px;scroll-snap-type:x mandatory;scrollbar-width:none;padding:5px 26px 20px 1px;overscroll-behavior-inline:contain}
+ .v45-home .v4-product-card{flex:0 0 min(77vw,310px);scroll-snap-align:start}
+ .v45-home .v4-product-photo{height:clamp(195px,59vw,265px)}
+ .v45-home .v4-product-photo img{padding:18px 11px 11px}
+ .v45-home .v4-product-body{min-height:140px;padding:18px 16px 21px}
+ .v45-home .v4-product-body h3{font-size:clamp(22px,5.8vw,27px)}
+ .v45-home .v4-product-body p{font-size:12px;line-height:1.5;margin:9px 0 19px}
+ .v45-home .v4-rail-controls{padding-right:22px;margin-top:8px}
+ .v45-final-cta{padding:49px 0 55px}
+ .v45-final-cta-inner{display:flex;flex-direction:column;align-items:flex-start;gap:23px}
+ .v45-final-cta h2{font-size:clamp(33px,8vw,43px);line-height:1.16}
+ .v45-final-cta a.button{max-width:100%;min-height:51px;padding-inline:24px}
+}
+@media(max-width:360px){
+ .v45-home .v45-hero h1{font-size:clamp(36px,10vw,40px);max-width:100%}
+ .v45-home .v45-hero .v4-hero-content{padding-top:60px}
+ .v45-home .v4-product-card{flex-basis:80vw}
+ .v45-home .v4-product-body h3{font-size:21px}
+ .v45-home .v45-products .v4-section-intro h2{font-size:33px}
+}
+@media(prefers-reduced-motion:reduce){
+ .v45-home .v4-product-card{transition:none}
+}
