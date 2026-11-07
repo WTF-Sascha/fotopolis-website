@@ -53,3 +53,9 @@ body{min-width:320px}
   .day-extra{font-size:8px;text-align:center}
   .day.is-today .day-number{width:24px;height:24px;margin:-6px 0 -2px}
 }
+
+.health-status{font-size:10px;color:#cbdae4;line-height:1.5}
+.health-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:7px 0;border-bottom:1px solid #345269}
+.health-row strong{font-weight:800;color:#e7aa8b}
+.health-row strong[data-ok="true"]{color:#9fddb6}
+[data-health-check]:disabled{opacity:.55;cursor:progress}
