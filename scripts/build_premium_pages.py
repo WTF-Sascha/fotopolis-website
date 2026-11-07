@@ -772,7 +772,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             '<link rel="stylesheet" href="/styles.css">'
             '<link rel="stylesheet" href="/studio-polish.css">'
             '<link rel="stylesheet" href="/reference-v4.css">'
-            '<link rel="stylesheet" href="/studio-v5.css">'
+            '<link rel="stylesheet" href="/studio-v5.css">' +
             ('<link rel="stylesheet" href="/product-v6.css">' if slug in ("fotobox","fotospiegel","fotowohnwagen") else '') +
             '<script defer src="/site.js"></script>'
             '<script defer src="/reference-v4.js"></script>'
