@@ -39,6 +39,11 @@ try{
       const images=cards.map(c=>c.querySelector("img"));
       return {
         heroWidth:hero?.naturalWidth??0,
+        heroSrc:hero?.getAttribute("src")??"",
+        heroFit:hero?getComputedStyle(hero).objectFit:"",
+        mirrorHeroLink:document.querySelectorAll('.mirror-hero-link[href="/fotospiegel/"]').length,
+        heroBounds:hero?{w:hero.getBoundingClientRect().width,h:hero.getBoundingClientRect().height}:null,
+        heroSectionHeight:document.querySelector(".v45-hero")?.getBoundingClientRect().height??0,
         cards:cards.map(c=>c.id),
         productPhotoWidths:images.map(i=>i?.naturalWidth??0),
         broken:images.filter(i=>!i||!i.complete||!i.naturalWidth).map(i=>i?.src),
@@ -49,6 +54,9 @@ try{
       };
     });
     ok(home.heroWidth>200,"Hero image missing at "+width);
+    ok(home.heroSrc.includes("fotospiegel-hero-lossless.webp")&&home.heroFit==="contain","Flagship Foto Mirror not fully visible at "+width);
+    ok(home.mirrorHeroLink===1,"Direct Mirror CTA missing at "+width);
+    ok((home.heroBounds?.h??0)>240&&home.heroSectionHeight<850,"Hero scale or excess vertical whitespace at "+width);
     ok(home.cards.join(",")==="fotobox,fotospiegel,fotowohnwagen","Products reordered at "+width);
     ok(home.productPhotoWidths.every(x=>x>200),"One or more product images not loaded at "+width);
     ok(home.isPhotoFirst&&!home.fullCatalogOnHome,"Gallery displaced photo-first home at "+width);
