@@ -92,8 +92,14 @@ for(const width of widths){
    check(width+" "+route+" usable bounds",!d.overflow&&!d.clippedHeadings.length,JSON.stringify(d));
    check(width+" "+route+" images",!d.brokenImages.length,d.brokenImages.join(","));
    const jumps=await page.locator(".studio-route-jumps a").count();
-   check(width+" "+route+" concise contextual navigation",
-     route==="kontakt/"?jumps===0:jumps>=2);
+   const isProduct=["fotobox/","fotospiegel/","fotowohnwagen/"].includes(route);
+   check(width+" "+route+" context-appropriate navigation",
+     (route==="kontakt/"||isProduct)?jumps===0:jumps>=2);
+   if(isProduct){
+     check(width+" "+route+" inline product enquiry",await page.locator("#terminanfrage [data-product-request]").count()===1);
+     check(width+" "+route+" useful hero CTA",
+       await page.locator('main .v4-page-actions a.button.gold[href="#terminanfrage"]').count()===1);
+   }
    const paths=await page.locator('.studio-route-jumps a[href^="#"]').evaluateAll(nodes=>
       nodes.map(n=>n.getAttribute("href")).filter(h=>!document.getElementById(h.slice(1))));
    check(width+" "+route+" valid quicklinks",paths.length===0,paths.join(","));
