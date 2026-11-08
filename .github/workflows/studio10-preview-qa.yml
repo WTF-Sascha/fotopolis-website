@@ -1,0 +1,57 @@
+name: FOTOPOLIS Studio 10 – Preview QA
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'concepts/premium-v2/**'
+      - 'scripts/**'
+      - 'netlify.toml'
+      - '.github/workflows/studio10-preview-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-visual-and-functional-qa:
+    name: Static build + 7 viewport browser QA
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout isolated candidate
+        uses: actions/checkout@v4
+      - name: Python build runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node test runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install image processor
+        run: python -m pip install --disable-pip-version-check "Pillow>=10,<12"
+      - name: Install pinned browser test tooling
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Build isolated static preview from source originals
+        run: python3 scripts/build-premium-preview.py
+      - name: Run source and artwork quality gate
+        run: node scripts/visual-release-qa.mjs
+      - name: Launch local static server and check 98 browser combinations
+        run: |
+          python3 -m http.server 8765 --directory preview-build >/tmp/fotopolis-studio10-server.log 2>&1 &
+          node scripts/studio10-browser-qa.mjs
+      - name: Upload screenshots and browser test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio10-browser-qa-${{ github.run_number }}
+          path: |
+            studio10-browser-results/
+            preview-build/qa/studio10-before-after.webp
+            preview-build/qa/studio10-zoom-300pct.webp
+            preview-build/qa/studio10-report.json
+          if-no-files-found: warn
+          retention-days: 14

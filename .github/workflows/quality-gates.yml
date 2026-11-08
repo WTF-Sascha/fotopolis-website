@@ -32,9 +32,9 @@ jobs:
         run: node scripts/qa.mjs --technical
 
   premium:
-    name: Premium release gate
+    name: Generated preview integrity gate
     if: github.event_name != 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,8 +42,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check premium blockers
-        run: node scripts/qa.mjs --premium
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install image processor
+        run: python -m pip install --disable-pip-version-check "Pillow>=10,<12"
+      - name: Build actual public preview from approved sources
+        run: python3 scripts/build-premium-preview.py
+      - name: Check all active routes, product images, 32 designs and secure forms
+        run: node scripts/visual-release-qa.mjs
 
   browser:
     name: Rendered Browser QA and screenshots

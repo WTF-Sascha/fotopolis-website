@@ -68,3 +68,45 @@ for(const file of ["fotospiegel-hero-lossless.webp","fotobox-event-1672.webp","f
 }
 check(has("admin/login/index.html")&&has("admin/dashboard/index.html"),"Admin route unexpectedly absent");
 console.log("PASS Studio 9.5: "+routes.length+" public pages, "+resolved+" resolved local assets, all 32 source designs, 3 enquiry flows, black-gold screens, image-zoom audit and admin route integrity.");
+
+
+// Studio 10 structural QA. A successful automated gate does NOT replace
+// Playwright/real-device testing or visual approval of the printed artwork.
+const studio10CSS = read("studio10-premium.css");
+check(studio10CSS.includes("--fp10-onyx") &&
+      studio10CSS.includes("--fp10-gold") &&
+      !/#071b30|#123b5c|#102d45/i.test(studio10CSS),
+      "Studio 10 theme tokens must use new Black & Champagne palette");
+for (const path of routes) {
+  const html = read(path);
+  check(html.includes('<link rel="stylesheet" href="/studio10-premium.css">'),
+        path + ": Studio 10 theme missing");
+  check(html.includes('name="theme-color" content="#15120f"'),
+        path + ": PWA theme colour still uses previous palette");
+  check(html.indexOf("/studio10-premium.css") > html.indexOf("/brand-finish.css"),
+        path + ": Studio 10 stylesheet order invalid");
+}
+const studio10Report = JSON.parse(read("qa/studio10-report.json"));
+check(studio10Report.automated.templates === 32 &&
+      studio10Report.templates.length === 32,
+      "Studio 10 32-template audit missing");
+check(studio10Report.visualReview === "pending" &&
+      studio10Report.responsiveBrowserReview === "pending" &&
+      studio10Report.formRegressionReview === "pending",
+      "Automated test must not imply unperformed visual or browser tests passed");
+check(has("qa/studio10-before-after.webp") &&
+      has("qa/studio10-zoom-300pct.webp") &&
+      has("qa/studio10-review.html"),
+      "Studio 10 before/after review artifacts missing");
+for (let i=1; i<=32; i++) {
+  const id = "FP-" + String(i).padStart(3,"0");
+  check(studio10Report.templates[i-1].id === id,
+        id + ": audit report order incorrect");
+  check(has("qa/zoom/fp-" + String(i).padStart(3,"0") + ".webp"),
+        id + ": 300 percent source/candidate close-up missing");
+}
+const studio10SW = read("service-worker.js");
+check(studio10SW.includes("fotopolis-studio-2026-11-08-v10-premium-candidate") &&
+      studio10SW.includes("'/studio10-premium.css'"),
+      "Installed PWA must receive the Studio 10 style update");
+console.log("PASS Studio 10 structural QA: 14 public routes, CI token checks, 32 source-linked artwork comparisons and PWA updates. PENDING: human visual approval, responsive browser tests, live form regression.");
