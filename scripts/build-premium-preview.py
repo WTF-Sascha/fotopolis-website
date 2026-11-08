@@ -127,7 +127,7 @@ assert 'href="/kontakt/"' in html and 'id="erlebnisse"' in html, "Contact page o
 assert 'Fotoerlebnisse entdecken' not in html and 'class="v4-hero-actions"' not in html, "Redundant hero discovery CTA remains"
 assert 'studio-header' in html and 'studio-v5.css' in html and 'studio-v5.js' in html, "New premium studio system missing"
 assert html.count('class="studio-product-index"') == 3, "Editorial index missing from product cards"
-assert '/assets/images/fotospiegel-hero-lossless.webp' in html.split('<section class="v4-hero v45-hero"',1)[1].split("</section>",1)[0] and 'mirror-hero-link' in html, "Approved flagship Foto Mirror hero required"
+assert '/assets/images/fotospiegel-hero-lossless.webp' in html.split('<section class="v4-hero v45-hero"',1)[1].split("</section>",1)[0] and 'mirror-hero-link' not in html, "Original Mirror background hero required"
 assert all('id="'+a+'"' in html and 'href="/'+a+'/"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Product routes and anchors required"
 assert "LEG-019.webp" not in html and "LEG-014.webp" not in html, "No misleading legacy product visuals"
 assert "pending-approved-file" not in html and "legacy-reference" not in html, "Outdated placeholder"
