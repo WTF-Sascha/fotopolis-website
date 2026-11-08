@@ -176,61 +176,47 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
                     f'<p class="legal-paragraph">{safe_body}</p></section>'
                 )
             content += '</div>'
-        # Product 6.0: one real photograph in hero, one editorial story,
-        # concise product facts and a short transparent planning sequence.
+        # Studio Edition 7.0 – editorial product story without redundant photo,
+        # giant decorative number panels or a second planning journey.
         rich_sections = ""
         if p.get("features"):
-            assert p["slug"] in ("fotobox", "fotospiegel", "fotowohnwagen")
+            assert slug in ("fotobox", "fotospiegel", "fotowohnwagen")
             number = {"fotobox": "01", "fotospiegel": "02", "fotowohnwagen": "03"}[slug]
-            display = e(p["displayTitle"])
             rich_sections += (
-                '<section class="product-premium product-v6-overview" id="product-details" '
-                'aria-labelledby="product-story-title">'
-                '<div class="inner"><div class="product-identity-stage">'
-                '<div class="product-identity-art" aria-hidden="true">'
-                '<span class="product-identity-art-top">FOTOPOLIS / SOCIAL EVENTS</span>'
-                f'<span class="product-identity-number">{number}</span>'
-                f'<span class="product-identity-art-label">{e(p["mood"])}</span>'
-                '</div><div class="product-story">'
-                '<span class="kicker">WAS DIESES ERLEBNIS AUSMACHT</span>'
+                '<section class="s7-product-story" id="product-details" aria-labelledby="product-story-title">'
+                '<div class="inner">'
+                '<div class="s7-story-meta"><span class="kicker">DAS ERLEBNIS</span>'
+                f'<span>{number} / 03 &nbsp;·&nbsp; FOTOPOLIS</span></div>'
+                '<div class="s7-story-layout">'
+                '<div class="s7-story-lead">'
                 f'<h2 id="product-story-title">{e(p["tagline"])}</h2>'
                 f'<p>{e(p["story"])}</p>'
-                '<div class="product-pills" aria-label="Die Besonderheiten">'
+                '</div><ul class="s7-story-points" aria-label="Das zeichnet dieses Fotoerlebnis aus">'
             )
-            for item in p["highlights"]:
-                rich_sections += f'<span>{e(item)}</span>'
-            rich_sections += (
-                '</div><a class="product-editorial-link" href="#terminanfrage">'
-                'Wunschtermin anfragen <span aria-hidden="true">↗</span></a>'
-                '</div></div>'
-                '<div class="product-highlights-intro" id="product-highlights">'
-                '<div><span class="kicker">DIE DETAILS</span>'
-                f'<h2>{display} <em>auf einen Blick.</em></h2></div>'
-                '<p>Drei ausgewählte Besonderheiten. '
-                'Den genauen Leistungsumfang klären wir im persönlichen Angebot.</p>'
-                '</div><div class="product-specs" aria-label="Produktmerkmale">'
-            )
-            for feature in p["features"]:
+            for idx, point in enumerate(p["highlights"], 1):
                 rich_sections += (
-                    '<article class="product-spec">'
-                    f'<span class="kicker">{e(feature["label"])}</span>'
+                    '<li><span aria-hidden="true">✓</span>'
+                    f'<strong>{e(point)}</strong></li>'
+                )
+            rich_sections += (
+                '</ul></div>'
+                '<div class="s7-feature-section" id="product-highlights">'
+                '<div class="s7-feature-topline">'
+                '<span class="kicker">DIE BESONDERHEITEN</span>'
+                '<p>Alles Wichtige auf einen Blick. Die genaue Ausstattung '
+                'und die Leistungen stimmen wir für dein Event persönlich ab.</p>'
+                '</div><div class="s7-feature-grid product-specs">'
+            )
+            for idx, feature in enumerate(p["features"], 1):
+                rich_sections += (
+                    '<article class="s7-feature product-spec">'
+                    '<div class="s7-feature-header">'
+                    f'<span class="s7-feature-number">{idx:02d}</span>'
+                    f'<span class="kicker">{e(feature["label"])}</span></div>'
                     f'<h3>{e(feature["title"])}</h3>'
                     f'<p>{e(feature["text"])}</p></article>'
                 )
-            rich_sections += '</div></div></section>'
-            rich_sections += (
-                '<section class="product-v6-steps" id="product-steps" '
-                'aria-label="So läuft deine Anfrage ab"><div class="inner">'
-                '<span class="kicker">SO EINFACH GEHT ES</span>'
-                '<div class="product-v6-step-track">'
-            )
-            for number, step in enumerate(p["process"], 1):
-                rich_sections += (
-                    '<div class="product-v6-step">'
-                    f'<span>{number:02d}</span>'
-                    f'<strong>{e(step["title"])}</strong></div>'
-                )
-            rich_sections += '</div></div></section>'
+            rich_sections += '</div></div></div></section>'
 
         elif p.get("packageCards"):
             rich_sections += (
@@ -700,7 +686,7 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             ],
         }
         route_jumps = ""
-        if slug in quick_nav:
+        if slug in quick_nav and slug not in ("fotobox","fotospiegel","fotowohnwagen"):
             route_jumps = (
                 '<nav class="studio-route-jumps" aria-label="Auf dieser Seite">'
                 '<div class="inner"><span>ENTDECKEN</span>'
@@ -789,9 +775,10 @@ def build_pages(source: Path, target: Path, home_html: str) -> list[str]:
             f'<span aria-current="page">{e(p.get("displayTitle", p["title"]))}</span></nav>'
             f'<span class="kicker">{e(p["eyebrow"])}</span>'
             f'<h1>{e(p["headline"])}</h1><p>{e(p["lead"])}</p>' +
-            v4_product_actions + '</div>' + studio_hero_media + '</div></section>' + route_jumps + rich_sections + '<div class="page-body"><div class="inner page-grid">'
-            f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
+            v4_product_actions + '</div>' + studio_hero_media + '</div></section>' + route_jumps + rich_sections
             + (render_product_enquiry(p) if slug in ("fotobox","fotospiegel","fotowohnwagen") else "")
+            + '<div class="page-body"><div class="inner page-grid">'
+            f'<div class="page-article">{content}</div>' + side_panel + '</div></div>'
             + closing_cta
             + '</main>' + footer.group(0) + '</body></html>'
         )
