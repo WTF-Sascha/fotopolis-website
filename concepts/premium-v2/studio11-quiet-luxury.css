@@ -275,7 +275,8 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 /* Packages and planner: remove inherited navy, clarify selection and reading. */
 .compare-block,.planner-form,.planner-result,.contact-layout { border-radius: 9px !important; }
 .compare-table thead { background: var(--fp11-espresso) !important; color: var(--fp11-porcelain); }
-.compare-table thead th { color: #f7f3ec; }
+.compare-table thead th { background: var(--fp11-espresso) !important; color: #f7f3ec !important; }
+.compare-scroll:focus-visible { outline: 3px solid var(--fp11-focus); outline-offset: 3px; }
 .compare-table tbody tr:nth-child(even) { background: #f2ebe2; }
 .compare-table :is(th,td) { padding-block: 14px; border-color: var(--fp11-border); }
 .package-card,.planning-card,.planner-product,.planner-wish { box-shadow: none !important; }
