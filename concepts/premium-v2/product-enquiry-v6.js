@@ -105,10 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
   const fail=(input,message)=>{
-    input.setAttribute("aria-invalid","true");
-    status.textContent=message;
+    // Change to the appropriate step *before* writing the error.
+    // setStep() clears old status; previously it also hid a fresh error.
     const n=["name","email","notiz"].includes(input.name)?2:1;
     if(Number(section.dataset.currentStep)!==n)setStep(n);
+    input.setAttribute("aria-invalid","true");
+    status.textContent=message;
     input.focus({preventScroll:false});
     input.reportValidity();
     return false;
