@@ -53,7 +53,7 @@ honeypot=(
 )
 
 contact=out/"kontakt/index.html"
-s=add_assets(contact)
+s=add_assets(contact,"studio9-design.js")
 s=replace_one(
     s,'data-contact-flow novalidate>',
     'id="studio9-contact-form" name="'+formname+'" data-netlify="true" netlify-honeypot="website" '
@@ -91,7 +91,7 @@ contact.write_text(s,encoding="utf-8")
 
 for slug,prod in [("fotobox","Fotobox"),("fotospiegel","Fotospiegel"),("fotowohnwagen","Fotowohnwagen")]:
     page=out/slug/"index.html"
-    s=add_assets(page)
+    s=add_assets(page,"studio9-design.js")
     pattern=re.compile(r'<form class="product-request-form" data-product-request data-product="([^"]+)" data-display-product="([^"]+)" novalidate>')
     found=pattern.search(s)
     assert found and found.group(1)==prod, f"Product form changed: {slug}"
@@ -128,15 +128,7 @@ for slug,prod in [("fotobox","Fotobox"),("fotospiegel","Fotospiegel"),("fotowohn
     assert s.count('data-studio9-design-picker')==1 and s.count('name="vorlage"')==1
     page.write_text(s,encoding="utf-8")
 
-# Update privacy source text on the generated informational page. This is not
-# a claim about EU-only storage or an automatic response email.
-privacy_page=out/"datenschutz/index.html"
-s=privacy_page.read_text(encoding="utf-8")
-s=replace_one(s,
-  'Das Anfrageformular erstellt zunächst einen E-Mail-Entwurf in deinem Browser. Eine Nachricht wird erst durch dein aktives Versenden im E-Mail-Programm an uns übermittelt.',
-  'Wenn du eine Anfrage absendest, übertragen wir deine Angaben verschlüsselt über HTTPS an den Formularservice Netlify Forms, wo sie zur Bearbeitung in einem zugriffsgeschützten Postfach gespeichert und automatisiert auf Spam geprüft werden. Die alternative E-Mail-Anfrage bleibt freiwillig. Nicht abgesendete Formulare werden nicht auf unserem Server gespeichert.',
-  "existing data-protection disclosure")
-privacy_page.write_text(s,encoding="utf-8")
+# Privacy source text is now updated in pages.json and built into /datenschutz/.
 
 # Fully built standalone non-JS success route, preserving approved branding.
 home=(out/"index.html").read_text(encoding="utf-8")
