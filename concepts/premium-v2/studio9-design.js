@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   const fromGallery=params.get("produkt");
   for(const root of document.querySelectorAll("[data-studio9-design-picker]")){
     const select=root.querySelector("[data-studio9-design-select]");
-    const image=root.querySelector("[data-studio9-design-preview]");
+    const image=root.querySelector("[data-studio9-template-image]");
     const summary=root.querySelector("[data-studio9-design-summary]");
     const link=root.querySelector("[data-studio9-design-gallery-link]");
     if(!select||!image||!summary||!link)continue;
