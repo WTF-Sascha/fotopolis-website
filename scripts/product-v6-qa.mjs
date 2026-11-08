@@ -40,7 +40,7 @@ for(const width of widths){
     const imgs=[...document.images];
     const formInputs=[...form?.querySelectorAll("input,select,textarea")||[]];
     const heroImg=$(".studio-page-hero-media img");
-    const buttons=[...document.querySelectorAll(".product-request-submit,.product-request-copy")];
+    const buttons=[...document.querySelectorAll(".s7-next-button,.product-request-submit,.product-request-copy")];
     const headings=[...document.querySelectorAll("h1,h2,h3")];
     const badHeaders=headings.filter(x=>x.clientWidth>0&&x.scrollWidth>x.clientWidth+3).map(x=>x.textContent.trim().slice(0,90));
     const mobileNav=$(".v4-mobile-nav");
@@ -55,7 +55,10 @@ for(const width of widths){
       photoCount:imgs.filter(x=>x.src.includes("/assets/images/")).length,
       badPhotos:imgs.filter(x=>!x.complete||!x.naturalWidth).map(x=>x.getAttribute("src")),
       duplicateStage:document.querySelectorAll(".product-stage-media,.page-aside,.page-end").length,
-      specCount:document.querySelectorAll(".product-v6-overview .product-spec").length,
+      specCount:document.querySelectorAll(".s7-feature.product-spec").length,
+      storyCount:document.querySelectorAll(".s7-story-layout").length,
+      step:document.querySelector("#terminanfrage")?.dataset.currentStep,
+      stepTwoHidden:document.querySelector('[data-product-step="2"]')?.hidden,
       faqCount:document.querySelectorAll(".page-body details").length,
       headlineOverflow:badHeaders,
       formProduct:form?.dataset.product,
@@ -64,7 +67,7 @@ for(const width of widths){
       hasEmailRequired:!!form?.elements.namedItem("email")?.required,
       hasNameRequired:!!form?.elements.namedItem("name")?.required,
       overflowInput:formInputs.filter(x=>x.scrollWidth>x.clientWidth+5&&x.tagName!=="TEXTAREA").map(x=>x.name),
-      buttonHeights:buttons.map(x=>x.getBoundingClientRect().height),
+      buttonHeights:buttons.filter(x=>x.getClientRects().length>0).map(x=>x.getBoundingClientRect().height),
       navVisible:mobileNav?getComputedStyle(mobileNav).display!=="none":false,
       formWithinViewport:!!card&&card.getBoundingClientRect().width<=innerWidth
     };
@@ -76,10 +79,11 @@ for(const width of widths){
    shots.push(filename);
   }
   check(width,slug,"HTTP 200",result.status()===200,result.status());
-  check(width,slug,"premium story and highlights",info.specCount===3&&info.faqCount===3);
+  check(width,slug,"premium story and highlights",info.specCount===3&&info.faqCount===3&&info.storyCount===1);
   check(width,slug,"one direct product request",info.formCount===1&&info.sectionCount===1);
   check(width,slug,"dedicated hero anchor",info.heroLink==="#terminanfrage");
-  check(width,slug,"three useful section shortcuts",info.navLinks.join(",")==="#product-details,#product-highlights,#terminanfrage",info.navLinks);
+  check(width,slug,"no redundant section pills",info.navLinks.length===0,info.navLinks);
+   check(width,slug,"initial step 1 and hidden contact",info.step==="1"&&info.stepTwoHidden);
   check(width,slug,"no repetitive marketing blocks",info.duplicateStage===0,info.duplicateStage);
   check(width,slug,"hero uses original product image",info.photo?.includes(image)&&info.fit==="contain",info.photo);
   check(width,slug,"no duplicate product photo",info.photoCount===1,info.photoCount);
@@ -92,23 +96,41 @@ for(const width of widths){
   check(width,slug,"mobile navigation",info.navVisible===(width<=760));
   check(width,slug,"no runtime errors",errors.length===0,errors);
   const date=page.locator('[data-product-request] [name="datum"]');
-  const mail=page.locator("[data-product-request-email]");
-  await mail.click();
+  const next=page.locator("[data-product-next]");
+  await next.click();
   check(width,slug,"missing date blocked",await date.getAttribute("aria-invalid")==="true");
   const future=await page.evaluate(()=>{
     const dt=new Date();dt.setDate(dt.getDate()+18);
     return [dt.getFullYear(),String(dt.getMonth()+1).padStart(2,"0"),String(dt.getDate()).padStart(2,"0")].join("-");
   });
   await date.fill("2020-01-01");
-  await mail.click();
-  check(width,slug,"expired date blocked",await date.getAttribute("aria-invalid")==="true");
+  await next.click();
+  check(width,slug,"past date blocked",await date.getAttribute("aria-invalid")==="true");
   await date.fill(future);
   await page.locator('[data-product-request] [name="tageszeit"]').selectOption("Abend");
   await page.locator('[data-product-request] [name="ort"]').fill("Ahlen");
   await page.locator('[data-product-request] [name="anlass"]').selectOption("Hochzeit");
+  await next.click();
+  const advanced=await page.evaluate(()=>({
+    step:document.querySelector("#terminanfrage")?.dataset.currentStep,
+    hiddenOne:document.querySelector('[data-product-step="1"]')?.hidden,
+    visibleTwo:!document.querySelector('[data-product-step="2"]')?.hidden,
+    selected:document.querySelector('[data-product-progress="2"]')?.getAttribute("aria-current")
+  }));
+  check(width,slug,"step 2 reached",advanced.step==="2"&&advanced.hiddenOne&&advanced.visibleTwo&&advanced.selected==="step",advanced);
+  const mail=page.locator("[data-product-request-email]");
+  await mail.click();
+  check(width,slug,"missing name blocked",await page.locator('[data-product-request] [name="name"]').getAttribute("aria-invalid")==="true");
   await page.locator('[data-product-request] [name="name"]').fill("Max Mustermann");
+  await page.locator('[data-product-request] [name="email"]').fill("incorrect");
+  await mail.click();
+  check(width,slug,"invalid email blocked",await page.locator('[data-product-request] [name="email"]').getAttribute("aria-invalid")==="true");
   await page.locator('[data-product-request] [name="email"]').fill("max@example.org");
   await page.locator('[data-product-request] [name="notiz"]').fill("Bitte Druckoptionen prüfen.");
+  await page.locator("[data-product-back]").click();
+  check(width,slug,"back keeps date",await date.inputValue()===future);
+  await next.click();
+  check(width,slug,"forward retains email",await page.locator('[data-product-request] [name="email"]').inputValue()==="max@example.org");
   const infoAfter=await page.evaluate(()=>{
     const a=document.querySelector("[data-product-request-email]");
     const full=document.querySelector("[data-product-request-full]");
@@ -165,7 +187,7 @@ for(const width of widths){
 }
 await browser.close();
 const failed=cases.filter(x=>!x.pass);
-const report={version:"6.0",pages:products.length,widths,checks:cases.length,passed:cases.length-failed.length,failed:failed.length,failures:failed,screenshots:shots};
+const report={version:"7.0",pages:products.length,widths,checks:cases.length,passed:cases.length-failed.length,failed:failed.length,failures:failed,screenshots:shots};
 await fs.writeFile(path.join(output,"report.json"),JSON.stringify(report,null,2));
-console.log("PRODUCT_V6_QA",JSON.stringify({pages:report.pages,widths:widths.length,checks:report.checks,failed:report.failed,screenshots:shots.length}));
+console.log("PRODUCT_V7_QA",JSON.stringify({pages:report.pages,widths:widths.length,checks:report.checks,failed:report.failed,screenshots:shots.length}));
 if(failed.length)process.exitCode=1;
