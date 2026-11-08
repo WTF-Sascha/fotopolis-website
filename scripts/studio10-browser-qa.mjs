@@ -56,7 +56,7 @@ try {
             headerBackground: header ? getComputedStyle(header).backgroundColor : "",
             blueThemeMeta: document.querySelector('meta[name="theme-color"]')?.content || "",
             stylesheet: !!document.querySelector('link[href="/studio10-premium.css"]'),
-            brokenImages: [...document.images].filter(img => img.complete && !img.naturalWidth).map(img => img.src)
+            brokenImages: [...document.images].filter(img => img.getAttribute("src")?.trim() && img.complete && !img.naturalWidth).map(img => img.currentSrc || img.src)
           };
         });
         const problems = [];
