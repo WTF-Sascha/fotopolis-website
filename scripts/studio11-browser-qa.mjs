@@ -274,7 +274,14 @@ try {
               problems.push(label+" calculated contrast "+ratio+" < 4.5");
           }
         }
-        if(checkWidths.has(width))await shot(page,key,"studio11");
+        if(checkWidths.has(width)){
+          // Interaction tests may scroll to cards or menu controls. Re-establish
+          // a genuine first-fold position before capturing comparison evidence.
+          await page.evaluate(()=>window.scrollTo({top:0,left:0,behavior:"instant"}));
+          await page.waitForFunction(()=>window.scrollY===0,{timeout:5000});
+          await page.waitForTimeout(100);
+          await shot(page,key,"studio11");
+        }
         records.push({route,width,status:problems.length?"fail":"pass",...data,problems});
         errors.push(...problems.map(x=>key+": "+x));
       }catch(e){
