@@ -1,5 +1,5 @@
 /* FOTOPOLIS Studio PWA — network-first for always-current installed versions. */
-const CACHE='fotopolis-studio-2026-11-08-v2';
+const CACHE='fotopolis-studio-2026-11-08-v3';
 const SHELL=[
   '/', '/offline.html', '/manifest.webmanifest',
   '/pwa-update.js', '/favicon.ico',
