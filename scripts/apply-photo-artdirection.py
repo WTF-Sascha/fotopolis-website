@@ -17,6 +17,7 @@ out_assets.mkdir(parents=True,exist_ok=True)
 for name in ("fp-box-screen-overlay.svg", "fp-mirror-screen-overlay.svg"):
     copy2(assets/name,out_assets/name)
 copy2(source / "brand-photo.css",target/"brand-photo.css")
+copy2(source / "brand-photo-lightbox.js",target/"brand-photo-lightbox.js")
 
 counts={"hero":0,"cards":0,"detail":0,"gallery":0}
 def branded_img(img_markup):
@@ -57,6 +58,12 @@ for page in pages:
         s=re.sub(r'<div class="v4-product-photo">\s*<img\b[^>]*>',lambda m:inject(m,"cards"),s)
     s=re.sub(r'<figure class="studio-page-hero-media">.*?<img\b[^>]*>',lambda m:inject(m,"detail"),s,flags=re.S)
     s=re.sub(r'<button class="curated-open"[^>]*>\s*<img\b[^>]*>',lambda m:inject(m,"gallery"),s)
+    if page==target/"galerie/index.html":
+        assert '<div class="gallery-dialog-media"><img data-gallery-large ' in s
+        s=s.replace('</head>','<script defer src="/brand-photo-lightbox.js"></script></head>',1)
+        pat=r'(<div class="gallery-dialog-media"><img data-gallery-large[^>]*>)'
+        s,n=re.subn(pat,lambda m:m.group(1)+'<img class="fp-photo-mark" data-photo-large-overprint src="/assets/branding/fp-box-screen-overlay.svg" alt="" aria-hidden="true" decoding="async">',s,count=1)
+        assert n==1
     page.write_text(s,encoding="utf-8")
 
 assert counts["hero"]==1,counts
@@ -72,5 +79,6 @@ sw=swpath.read_text(encoding="utf-8")
 assert "fotopolis-studio-2026-11-08-v6-gold" in sw
 sw=sw.replace("fotopolis-studio-2026-11-08-v6-gold","fotopolis-studio-2026-11-08-v7-gold-photos")
 sw=sw.replace("'/brand-gold.css',","'/brand-gold.css', '/brand-photo.css', '/assets/branding/fp-box-screen-overlay.svg', '/assets/branding/fp-mirror-screen-overlay.svg',")
+sw=sw.replace("'/brand-photo.css',","'/brand-photo.css', '/brand-photo-lightbox.js',")
 swpath.write_text(sw,encoding="utf-8")
 print(f"PHOTO BRAND: {len(pages)} public pages; screen overprints {counts}; original equipment media preserved.")

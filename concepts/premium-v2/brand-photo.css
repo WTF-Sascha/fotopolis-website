@@ -89,3 +89,16 @@
 @media(prefers-reduced-transparency:reduce){
  .v4-hero-visual::after{background:none}
 }
+
+/* Gallery lightbox keeps the same brand screen overprint as the thumbnails. */
+.gallery-dialog-media{position:relative;background:#17120e!important;isolation:isolate}
+.gallery-dialog-media>img.fp-photo-mark{
+ position:absolute!important;inset:12px!important;
+ width:calc(100% - 24px)!important;height:calc(100% - 24px)!important;
+ max-width:none!important;max-height:none!important;
+ object-fit:contain!important;object-position:center!important;
+ filter:none!important;padding:0!important;pointer-events:none!important;z-index:2!important;
+}
+.gallery-dialog-media>img.fp-photo-mark[hidden]{display:none!important}
+.gallery-lightbox{background:#18120e!important;border-color:#987443!important}
+.gallery-lightbox::backdrop{background:rgba(8,6,4,.93)!important}
