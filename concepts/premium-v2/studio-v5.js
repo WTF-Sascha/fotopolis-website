@@ -32,6 +32,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
   }
 
+  // On mobile, the permanent bottom navigation must never cover the
+  // virtual keyboard, active inputs or inline validation feedback.
+  const syncFormFocus=()=>{
+    const focused=document.activeElement;
+    const isTyping=focused instanceof HTMLElement &&
+      focused.matches("input,textarea,select") &&
+      !!focused.closest("[data-product-request],[data-contact-flow],.planner-form,.contact-form");
+    document.body.classList.toggle("form-focus-active",isTyping);
+  };
+  document.addEventListener("focusin",syncFormFocus);
+  document.addEventListener("focusout",()=>requestAnimationFrame(syncFormFocus));
+  syncFormFocus();
+
   // Distinctive active-state marker for the enclosing product menu on subpages.
   const current=location.pathname;
   if(/^\/(fotobox|fotospiegel|fotowohnwagen)\/$/.test(current)){
