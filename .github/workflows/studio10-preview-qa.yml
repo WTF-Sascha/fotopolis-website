@@ -1,4 +1,4 @@
-name: FOTOPOLIS Studio 10 – Preview QA
+name: FOTOPOLIS Studio 11 – Quiet Luxury Preview QA
 
 on:
   pull_request:
@@ -15,12 +15,17 @@ permissions:
 
 jobs:
   isolated-visual-and-functional-qa:
-    name: Static build + 7 viewport browser QA
+    name: Studio 10 baseline vs Studio 11 / 98 browser viewports
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
-      - name: Checkout isolated candidate
+      - name: Checkout isolated Studio 11 candidate
         uses: actions/checkout@v4
+      - name: Checkout immutable Studio 10 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: f689a209929e25bdd6b6d8717675277d0ec52eb8
+          path: .studio10-baseline
       - name: Python build runtime
         uses: actions/setup-python@v5
         with:
@@ -31,25 +36,29 @@ jobs:
           node-version: '22'
       - name: Install image processor
         run: python -m pip install --disable-pip-version-check "Pillow>=10,<12"
-      - name: Install pinned browser test tooling
+      - name: Install pinned browser tooling
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Build isolated static preview from source originals
+      - name: Build Studio 10 original baseline
+        run: python3 .studio10-baseline/scripts/build-premium-preview.py
+      - name: Build Studio 11 candidate from originals
         run: python3 scripts/build-premium-preview.py
-      - name: Run source and artwork quality gate
+      - name: Run source, artwork and static design quality gates
         run: node scripts/visual-release-qa.mjs
-      - name: Launch local static server and check 98 browser combinations
+      - name: Compare 14 routes over 7 viewports and capture real browser screenshots
         run: |
-          python3 -m http.server 8765 --directory preview-build >/tmp/fotopolis-studio10-server.log 2>&1 &
-          node scripts/studio10-browser-qa.mjs
-      - name: Upload screenshots and browser test report
+          python3 -m http.server 8764 --directory .studio10-baseline/preview-build >/tmp/studio10-baseline.log 2>&1 &
+          python3 -m http.server 8765 --directory preview-build >/tmp/studio11-candidate.log 2>&1 &
+          node scripts/studio11-browser-qa.mjs
+      - name: Archive verifiable before/after screenshot evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: studio10-browser-qa-${{ github.run_number }}
+          name: studio11-browser-qa-${{ github.run_number }}
           path: |
-            studio10-browser-results/
+            studio11-browser-results/
+            preview-build/qa/studio11-build-audit.json
             preview-build/qa/studio10-before-after.webp
             preview-build/qa/studio10-zoom-300pct.webp
             preview-build/qa/studio10-report.json
