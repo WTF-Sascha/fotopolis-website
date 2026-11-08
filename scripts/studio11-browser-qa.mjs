@@ -164,6 +164,14 @@ try {
           if(data.headerRect.height>95||data.logoRect.left>width*.30)
             problems.push("Mobile header oversized or logo not left-aligned");
         }
+        if(route==="/pakete/"){
+          const headerCell=page.locator(".compare-table thead th").first();
+          if(await headerCell.count()){
+            const background=await headerCell.evaluate(el=>getComputedStyle(el).backgroundColor);
+            if(background!=="rgb(48, 37, 29)")
+              problems.push("Package comparison header retains legacy blue: "+background);
+          }else problems.push("Package comparison header missing");
+        }
         if(route==="/pakete/"&&data.plannerLabel){
           const c=contrastRatio(data.plannerLabel.foreground,data.plannerLabel.background);
           if(c!==null&&c<4.5)problems.push("Package planner label contrast "+c+" <4.5");
