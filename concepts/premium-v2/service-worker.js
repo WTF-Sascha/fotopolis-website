@@ -1,9 +1,10 @@
 /* FOTOPOLIS Studio PWA — network-first for always-current installed versions. */
-const CACHE='fotopolis-studio-2026-11-08-v1';
+const CACHE='fotopolis-studio-2026-11-08-v2';
 const SHELL=[
   '/', '/offline.html', '/manifest.webmanifest',
   '/pwa-update.js', '/favicon.ico',
   '/styles.css', '/studio-polish.css', '/reference-v4.css', '/studio-v5.css',
+  '/home-premium-refinement.css', '/assets/design-gallery.css',
   '/site.js', '/reference-v4.js', '/studio-v5.js',
   '/assets/fotopolis-logo-original.png',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png',
