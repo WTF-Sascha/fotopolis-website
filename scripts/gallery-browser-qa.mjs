@@ -63,6 +63,38 @@ try{
     ok(home.isPhotoFirst&&!home.fullCatalogOnHome,"Gallery displaced photo-first home at "+width);
     ok(!home.overflow,"Home horizontal overflow at "+width);
     await page.screenshot({path:output+"/homepage-"+width+".png",fullPage:true,animations:"disabled"});
+    // All arrow icons must be consistently aligned to the label text.
+    if(width<=768){
+      await page.locator("[data-menu-toggle]").click();
+      ok(await page.locator("#mainnav").isVisible(),"Mobile menu failed to open at "+width);
+    }
+    const navIcons=await page.evaluate(()=>{
+      const triggers=[...document.querySelectorAll(".studio-mainnav .nav-trigger")];
+      const cta=document.querySelector(".studio-mainnav .nav-cta");
+      const measure=(el,svg)=>{
+        if(!el||!svg)return false;
+        const range=document.createRange();
+        range.selectNodeContents(el.firstChild);
+        const textRect=range.getBoundingClientRect();
+        const iconRect=svg.getBoundingClientRect();
+        return iconRect.width>=10 && iconRect.height>=10 &&
+          Math.abs((iconRect.top+iconRect.height/2)-(textRect.top+textRect.height/2))<6;
+      };
+      return {
+        count:triggers.length,
+        uniform:triggers.every(btn=>btn.querySelectorAll("svg.nav-chevron").length===1),
+        aligned:triggers.every(btn=>measure(btn,btn.querySelector("svg.nav-chevron"))),
+        noOldGlyph:!triggers.some(btn=>btn.textContent.includes("⌄")),
+        ctaAligned:measure(cta,cta?.querySelector("svg.nav-cta-arrow"))
+      };
+    });
+    ok(navIcons.count===2&&navIcons.uniform&&navIcons.noOldGlyph,"Missing matching dropdown chevrons at "+width);
+    ok(navIcons.aligned&&navIcons.ctaAligned,"Menu chevrons are not vertically aligned at "+width);
+    await page.locator(".studio-mainnav .nav-trigger").first().click();
+    ok(await page.locator(".studio-mainnav .nav-trigger").first().getAttribute("aria-expanded")==="true","First dropdown did not open at "+width);
+    await page.locator(".studio-mainnav .nav-trigger").last().click();
+    ok(await page.locator(".studio-mainnav .nav-trigger").first().getAttribute("aria-expanded")==="false"&&await page.locator(".studio-mainnav .nav-trigger").last().getAttribute("aria-expanded")==="true","Dropdown synchronization failed at "+width);
+
     response=await page.goto(serverUrl("designvorlagen/"),{waitUntil:"networkidle",timeout:45000});
     ok(response?.status()===200,"Design route HTTP error at "+width);
     await page.waitForFunction(()=>document.querySelectorAll("[data-gallery-grid] .gl-card").length===32,{timeout:20000});

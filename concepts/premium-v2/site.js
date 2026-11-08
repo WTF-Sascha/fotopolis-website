@@ -38,7 +38,10 @@ document.addEventListener("DOMContentLoaded",()=>{
       trigger.setAttribute("aria-expanded",String(open));
     });
     group.addEventListener("focusout",event=>{
-      if(!group.contains(event.relatedTarget)){
+      // Keep the expanded panel in place while the user presses another
+      // control in the same navigation. Closing on mousedown/focusout would
+      // move the second dropdown before mouseup and swallow its click.
+      if(!group.contains(event.relatedTarget)&&!nav.contains(event.relatedTarget)){
         group.classList.remove("is-expanded");
         trigger.setAttribute("aria-expanded","false");
       }

@@ -111,6 +111,8 @@ assert '<section class="v4-hero v45-hero"' in html and 'data-v4-product-rail' in
 assert 'class="v45-home"' in html and 'class="v45-final-cta"' in html, "Missing approved 4.5 homepage"
 assert all(x not in html for x in ('id="studio-berater"','data-advisor-occasion','class="home-trust','class="v4-hero-meta','class="gallery section','class="v4-advantages','class="v4-date-cta')), "Retired homepage components remain"
 assert html.count('class="v4-product-card"') == 3, "Three product cards required"
+assert html.count('class="nav-chevron"') == 2, "Two identical menu chevrons required"
+assert html.count('class="nav-cta-arrow"') == 1 and '⌄' not in html.split('</header>',1)[0], "Deprecated text-glyph arrows forbidden"
 # Regression gate: the photo-first premium homepage must never be replaced by the
 # print-template catalog, and the design teaser must remain below the products.
 assert html.count('id="design-teaser-title"') == 1, "Design teaser missing or duplicated"

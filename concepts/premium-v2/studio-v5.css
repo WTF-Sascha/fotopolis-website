@@ -456,3 +456,53 @@ body.menu-open .studio-header-curve{opacity:0;visibility:hidden}
 @media(prefers-reduced-motion:reduce){
  .studio-header .studio-menu-toggle.mobile-toggle span{transition:none!important}
 }
+
+/* Navigation glyph refinement 8.1 – identical vector chevrons centered on text,
+   with consistent hover/open states across desktop and the mobile menu. */
+.studio-header .studio-mainnav.mainnav .nav-trigger{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  line-height:1.25;
+}
+.studio-header .studio-mainnav.mainnav .nav-trigger .nav-chevron{
+  display:block;
+  flex:0 0 12px;
+  width:12px;
+  height:12px;
+  align-self:center;
+  color:#e9c78d;
+  transform:rotate(0);
+  transform-origin:50% 50%;
+  transition:transform .2s ease,color .2s ease;
+}
+.studio-header .studio-mainnav.mainnav .nav-trigger[aria-expanded="true"] .nav-chevron{
+  transform:rotate(180deg);
+  color:#f4dbb0;
+}
+.studio-header .studio-mainnav.mainnav .nav-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  line-height:1.25;
+}
+.studio-header .studio-mainnav.mainnav .nav-cta .nav-cta-arrow{
+  display:block;
+  flex:0 0 14px;
+  width:14px;
+  height:14px;
+  align-self:center;
+}
+@media(max-width:1100px){
+  .studio-header .studio-mainnav.mainnav .nav-group .nav-trigger{
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .studio-header .studio-mainnav.mainnav .nav-trigger .nav-chevron{
+    transition:none;
+  }
+}
