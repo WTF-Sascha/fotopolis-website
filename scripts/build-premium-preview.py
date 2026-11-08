@@ -100,6 +100,17 @@ assert '<section class="v4-hero v45-hero"' in html and 'data-v4-product-rail' in
 assert 'class="v45-home"' in html and 'class="v45-final-cta"' in html, "Missing approved 4.5 homepage"
 assert all(x not in html for x in ('id="studio-berater"','data-advisor-occasion','class="home-trust','class="v4-hero-meta','class="gallery section','class="v4-advantages','class="v4-date-cta')), "Retired homepage components remain"
 assert html.count('class="v4-product-card"') == 3, "Three product cards required"
+# Regression gate: the photo-first premium homepage must never be replaced by the
+# print-template catalog, and the design teaser must remain below the products.
+assert html.count('id="design-teaser-title"') == 1, "Design teaser missing or duplicated"
+assert html.index('id="erlebnisse"') < html.index('id="design-teaser-title"') < html.index('class="v45-final-cta"'), "Design collection displaced the premium product presentation"
+assert 'data-design-gallery' not in html, "Full design catalog must only appear on its own page"
+assert all(html.count(p) >= 1 for p in (
+    'fotobox-event-1672.webp',
+    'fotospiegel-hero-lossless.webp',
+    'fotowohnwagen-gartenparty-1448.webp',
+)), "Approved product photography missing from the homepage"
+
 assert [html.index('id="'+x+'"') for x in ("fotobox","fotospiegel","fotowohnwagen")] == sorted(html.index('id="'+x+'"') for x in ("fotobox","fotospiegel","fotowohnwagen")), "Product order mismatch"
 assert 'href="/kontakt/"' in html and 'id="erlebnisse"' in html, "Contact page or product section missing"
 assert 'Fotoerlebnisse entdecken' not in html and 'class="v4-hero-actions"' not in html, "Redundant hero discovery CTA remains"
