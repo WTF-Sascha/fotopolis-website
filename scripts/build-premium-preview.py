@@ -345,3 +345,6 @@ runpy.run_path(str(root / 'scripts/visual-brand-pro.py'),run_name='__main__')
 
 # Studio 10 candidate is published only on an isolated PR/branch preview.
 runpy.run_path(str(root / 'scripts/apply-studio10.py'), run_name='__main__')
+
+# Studio 11 isolated public-only design, after immutable Studio 10 QA.
+runpy.run_path(str(root / 'scripts/apply-studio11.py'), run_name='__main__')
