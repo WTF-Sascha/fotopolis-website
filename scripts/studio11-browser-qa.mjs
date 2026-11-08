@@ -184,6 +184,20 @@ try {
           if(await page.locator(".fp11-hero-link").count()!==1)
             problems.push("Single Mirror hero action missing");
         }
+        if(route==="/kontakt/"&&width===390){
+          const actions=await page.locator(".contact-recap .contact-actions > *").evaluateAll(nodes=>
+            nodes.filter(el=>el.getBoundingClientRect().width>0)
+              .map(el=>({height:el.getBoundingClientRect().height,
+                         text:(el.textContent||"").trim().slice(0,60)})));
+          if(actions.length<2)
+            problems.push("Contact action controls are missing");
+          for(const action of actions){
+            if(action.height>84)
+              problems.push("Oversized mobile contact action "+action.height+"px: "+action.text);
+            if(action.height<44)
+              problems.push("Undersized mobile contact action "+action.height+"px: "+action.text);
+          }
+        }
         if(route==="/danke/"&&!data.thanksCopy)
           problems.push("Thank-you confirmation copy missing");
         if(route==="/kontakt/"){
