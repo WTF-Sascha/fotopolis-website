@@ -17,6 +17,17 @@ for name in ("styles.css", "studio-polish.css", "site.js", "package-planner.js",
 shutil.copy2(root / "site/assets/fotopolis-logo-original.png",
              target / "assets/fotopolis-logo-original.png")
 shutil.copy2(root / "site/favicon.ico", target / "favicon.ico")
+
+# Premium Design Collection: original motifs remain unchanged in source archive;
+# only approved WebP previews are emitted in this isolated build.
+template_images = sorted((source / "assets/designvorlagen").glob("fp-*.webp"))
+assert len(template_images) == 32, "Exactly 32 unique design previews required"
+(target / "assets/designvorlagen").mkdir(parents=True, exist_ok=True)
+for image in template_images:
+    shutil.copy2(image, target / "assets/designvorlagen" / image.name)
+for filename in ("design-gallery.css", "design-gallery.js", "design-gallery-data.json"):
+    shutil.copy2(source / filename, target / "assets" / filename)
+
 for name in photos:
     shutil.copy2(root / "review-assets/legacy" / name,
                  target / "assets/images" / name)
@@ -36,6 +47,32 @@ html = (source / "index.html").read_text(encoding="utf-8")
 html = html.replace("../../site/assets/fotopolis-logo-original.png",
                     "/assets/fotopolis-logo-original.png")
 html = html.replace("../../site/favicon.ico", "/favicon.ico")
+
+# Preserve the approved premium navigation and add the collection to the existing dropdown.
+design_nav_anchor = '<a href="/anlaesse/"><strong>Anlässe</strong><small>Hochzeit, Geburtstag &amp; Business</small></a>'
+assert design_nav_anchor in html, "Premium navigation anchor changed"
+html = html.replace(
+    design_nav_anchor,
+    design_nav_anchor + '<a href="/designvorlagen/"><strong>Designvorlagen</strong><small>Premium-Looks &amp; Collagen</small></a>',
+    1,
+)
+# A compact, editorial selection creates a route into the full design collection.
+design_teaser = (
+    '<section class="fpv2-preview-section" aria-labelledby="design-teaser-title"><div class="inner fpv2-preview-inner">'
+    '<div class="fpv2-preview-heading"><div><span class="kicker">FOTOPOLIS / DESIGN COLLECTION</span>'
+    '<h2 id="design-teaser-title">Das passende Design <em>für deinen Moment.</em></h2></div>'
+    '<p>Für Hochzeiten, Geburtstage und Firmenfeiern – entdecke 32 individuelle Fotolayouts.</p></div>'
+    '<div class="fpv2-preview-grid">'
+    '<a href="/designvorlagen/?vorlage=FP-023"><img src="/assets/designvorlagen/fp-023.webp" loading="lazy" decoding="async" width="1536" height="1024" alt="Edles Marineblau-Champagnergold Design"><span>Signature Gold</span></a>'
+    '<a href="/designvorlagen/?vorlage=FP-028"><img src="/assets/designvorlagen/fp-028.webp" loading="lazy" decoding="async" width="1536" height="1024" alt="Romantische Hochzeit Designvorlage"><span>Romantic Wedding</span></a>'
+    '<a href="/designvorlagen/?vorlage=FP-031"><img src="/assets/designvorlagen/fp-031.webp" loading="lazy" decoding="async" width="1536" height="1024" alt="Designvorlage für Firmenevents"><span>Company Gala</span></a>'
+    '</div><a class="button gold fpv2-preview-cta" href="/designvorlagen/">Alle 32 Designvorlagen ansehen <span aria-hidden="true">↗</span></a>'
+    '</div></section>'
+)
+assert '<section class="v45-final-cta"' in html
+html = html.replace('<section class="v45-final-cta"', design_teaser + '<section class="v45-final-cta"', 1)
+html = html.replace("</head>", '<link rel="stylesheet" href="/assets/design-gallery.css"></head>', 1)
+
 html = html.replace("../../review-assets/legacy/", "/assets/images/")
 html = html.replace("./assets/fotospiegel-hero-lossless.webp",
                     "/assets/images/fotospiegel-hero-lossless.webp")
@@ -79,6 +116,78 @@ assert all("/assets/images/" + name in html for name in product_photos), "Respon
 # This runs only for Netlify deploy-preview / branch-deploy contexts, never production.
 from build_premium_pages import build_pages
 routes = build_pages(source, target, html)
+
+# Build the premium design route from the proven gallery module but with the
+# CURRENT premium-v2 header/footer and its accessible mobile navigation.
+gallery_source = (source / "designvorlagen-template.html").read_text(encoding="utf-8")
+gallery_match = re.search(r'<main id="main" data-design-gallery>(.*?)</main>', gallery_source, re.S)
+gallery_header = re.search(r'<header\b.*?</header>', html, re.S)
+gallery_footer = re.search(r'<footer\b.*?</footer>', html, re.S)
+gallery_ribbon = re.search(r'<div class="review-bar">.*?</div></div>', html, re.S)
+assert gallery_match and gallery_header and gallery_footer and gallery_ribbon
+gallery_html = (
+    '<!doctype html><html lang="de"><head><meta charset="utf-8">'
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'
+    '<meta name="robots" content="noindex,nofollow">'
+    '<meta name="theme-color" content="#071B30">'
+    '<title>Premium-Designvorlagen | FOTOPOLIS</title>'
+    '<meta name="description" content="32 exklusive FOTOPOLIS Fotolayouts für Hochzeiten, Feiern und Firmenevents.">'
+    '<link rel="icon" href="/favicon.ico">'
+    '<link rel="stylesheet" href="/styles.css">'
+    '<link rel="stylesheet" href="/studio-polish.css">'
+    '<link rel="stylesheet" href="/reference-v4.css">'
+    '<link rel="stylesheet" href="/studio-v5.css">'
+    '<link rel="stylesheet" href="/assets/design-gallery.css">'
+    '<script defer src="/site.js"></script>'
+    '<script defer src="/assets/design-gallery.js"></script>'
+    '</head><body class="gl-page"><a class="skip" href="#content">Zum Inhalt springen</a>'
+    + gallery_ribbon.group(0) + gallery_header.group(0)
+    + '<main id="content" data-design-gallery>' + gallery_match.group(1) + '</main>'
+    + gallery_footer.group(0) + '</body></html>'
+)
+assert gallery_html.count("<h1") == 1
+gallery_dest = target / "designvorlagen"
+gallery_dest.mkdir(exist_ok=True)
+(gallery_dest / "index.html").write_text(gallery_html, encoding="utf-8")
+
+# Contextual teaser: existing product enquiry sections and the gallery of event
+# photography stay intact; nothing is changed in their original source manifest.
+product_names = {"fotobox": "Fotobox", "fotospiegel": "Fotospiegel", "fotowohnwagen": "Fotowohnwagen"}
+for product_slug, display_name in product_names.items():
+    path = target / product_slug / "index.html"
+    product_html = path.read_text(encoding="utf-8")
+    gallery_link = "/designvorlagen/?produkt=" + display_name
+    teaser = (
+        '<section class="fpv2-preview-section fpv2-preview-compact" aria-label="Fotodesign für dein Event">'
+        '<div class="inner fpv2-preview-inner"><div class="fpv2-preview-heading"><div>'
+        '<span class="kicker">DEIN FOTO · DEIN DESIGN</span>'
+        '<h2>Ein Foto. <em>Dein Signature-Look.</em></h2></div>'
+        '<p>32 Premium-Layouts für Hochzeiten, Geburtstage und geschäftliche Veranstaltungen.</p>'
+        '</div><a class="button gold fpv2-preview-cta" href="' + gallery_link + '">'
+        'Designvorlagen entdecken <span aria-hidden="true">↗</span></a></div></section>'
+    )
+    product_html = product_html.replace("</head>", '<link rel="stylesheet" href="/assets/design-gallery.css"></head>', 1)
+    assert product_html.count("</main>") == 1
+    product_html = product_html.replace("</main>", teaser + "</main>", 1)
+    path.write_text(product_html, encoding="utf-8")
+
+# Product gallery and image collection remain separate: photo gallery is for
+# equipment/event imagery; design collection is for printable layouts.
+existing_gallery = target / "galerie/index.html"
+old_gallery = existing_gallery.read_text(encoding="utf-8")
+gallery_cta = (
+    '<section class="fpv2-preview-section fpv2-preview-compact"><div class="inner fpv2-preview-inner">'
+    '<div class="fpv2-preview-heading"><div><span class="kicker">FOTOPOLIS DESIGN COLLECTION</span>'
+    '<h2>Gestaltung, die <em>zu deinem Event passt.</em></h2></div>'
+    '<p>Hier findest du nicht nur Fotoerlebnisse, sondern auch unsere Designvorlagen.</p></div>'
+    '<a class="button gold fpv2-preview-cta" href="/designvorlagen/">Alle 32 Fotodesigns ansehen ↗</a>'
+    '</div></section>'
+)
+assert old_gallery.count("</main>") == 1
+old_gallery = old_gallery.replace("</head>", '<link rel="stylesheet" href="/assets/design-gallery.css"></head>', 1)
+old_gallery = old_gallery.replace("</main>", gallery_cta + "</main>", 1)
+existing_gallery.write_text(old_gallery, encoding="utf-8")
+
 assert routes == [
     "fotobox","fotospiegel","fotowohnwagen","pakete","galerie",
     "anlaesse","ueber-uns","faq","kontakt","impressum","datenschutz"
