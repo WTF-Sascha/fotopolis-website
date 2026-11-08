@@ -335,6 +335,22 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 }
 .studio9-success { background: #edf4ef; color: #254b3b; }
 
+/* Thank-you page: Studio 9's pale text was designed for a dark blue surface.
+   The Studio 10/11 ivory background changed without correcting that inherited text. */
+.studio9-thanks {
+  background: var(--fp11-ivory) !important;
+  color: var(--fp11-ink) !important;
+}
+.studio9-thanks h1 {
+  color: var(--fp11-ink) !important;
+  font-family: var(--fp11-display);
+}
+.studio9-thanks p {
+  color: var(--fp11-secondary) !important;
+  font-size: clamp(16px,1.4vw,18px);
+  line-height: 1.7;
+}
+
 /* Design Collection: individual print artwork is never recoloured by the UI. */
 .gl-page { background: var(--fp11-ivory) !important; color: var(--fp11-ink); }
 .gl-hero { background: var(--fp11-espresso) !important; padding-block: clamp(56px,6vw,78px); }
