@@ -39,4 +39,20 @@ jobs:
           test -f preview-build/fotowohnwagen/index.html
           test -f preview-build/galerie/index.html
           node scripts/premium-presentation-qa.mjs
+          node scripts/gallery-presentation-qa.mjs
           node scripts/standalone-brand-qa.mjs
+
+      - name: Install Chromium for integrated gallery browser QA
+        run: |
+          npm install --no-audit --no-fund --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify premium product imagery and design gallery in real browser
+        run: |
+          python3 -m http.server 8766 --directory preview-build > /tmp/fotopolis-presentation-server.log 2>&1 &
+          SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/gallery-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fotopolis-presentation-gallery-screenshots
+          path: qa-gallery-screenshots/
+          if-no-files-found: ignore
