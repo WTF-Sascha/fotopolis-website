@@ -341,4 +341,4 @@ runpy.run_path(str(root / "scripts/apply-studio9.py"),run_name="__main__")
 runpy.run_path(str(root / 'scripts/apply-gold-brand.py'), run_name='__main__')
 
 # Exact original-asset logo swap only; all other pixels are preserved.
-runpy.run_path(str(root / 'scripts/visual-brand-qa.py'),run_name='__main__')
+runpy.run_path(str(root / 'scripts/visual-brand-pro.py'),run_name='__main__')
