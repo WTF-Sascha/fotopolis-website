@@ -135,6 +135,14 @@ try {
             imageCount:candidates.length,
             body: summarize("body"),
             contactRecap: summarize(".contact-recap"),
+            thanksCopy: (()=>{
+              const el=document.querySelector(".studio9-thanks p");
+              const host=document.querySelector(".studio9-thanks");
+              if(!el||!host)return null;
+              return {foreground:getComputedStyle(el).color,
+                      background:getComputedStyle(host).backgroundColor,
+                      visible:el.getBoundingClientRect().width>0&&el.getBoundingClientRect().height>0};
+            })(),
             darkProductRecap: summarize(".s7-request-summary"),
             layoutGrid: summarize(".gl-grid")
           };
@@ -176,6 +184,8 @@ try {
           if(await page.locator(".fp11-hero-link").count()!==1)
             problems.push("Single Mirror hero action missing");
         }
+        if(route==="/danke/"&&!data.thanksCopy)
+          problems.push("Thank-you confirmation copy missing");
         if(route==="/kontakt/"){
           if(await page.locator('form[name="fotopolis-studio9-anfrage"]').count()!==1)
             problems.push("Real Netlify request form missing");
@@ -253,6 +263,7 @@ try {
         }
         for(const [label,sample] of [
           ["contact_recap",data.contactRecap],
+          ["thanks_copy",data.thanksCopy],
           ["dark_product_recap",data.darkProductRecap]
         ]){
           if(sample&&sample.visible){
