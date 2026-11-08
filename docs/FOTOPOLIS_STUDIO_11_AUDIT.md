@@ -76,3 +76,21 @@ Beim ersten unabhängigen Sichtvergleich der CI-Screenshots wurden folgende Befu
 - **Logo-Retusche:** 300%-Sichtprüfung ergab bei einzelnen Vorlagen unsaubere Übergänge; dies bleibt bewusst ein offener **P0-Asset-Qualitätsmangel**. Kein Retusche-Vorgang auf niedrigwertiger Bildbasis wird als professionelle Lösung ausgegeben.
 
 Die vorliegenden ersten Screenshots sind echte Browseraufnahmen; **nur neu aufgenommene, mit korrigiertem Scrollzustand erstellte First-Fold-Screenshots** dürfen künftig als First-Fold-Evidenz gelten. Ein erfolgreicher DOM-Test ersetzt diese Sichtprüfung nicht.
+
+
+## Fortsetzung 11.0-R3 — Sichtprüfung der echten Browseraufnahmen (08.11.2026)
+
+**Evidenz:** GitHub Actions Run [42528864627](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42528864627), Artefakt `studio11-browser-qa-16`. Dieses Material gehört ausdrücklich zum früheren Commit `bad968c`, **nicht** zu den unten genannten Korrekturen. Der archivierte Lauf meldet 98/98 erfolgreiche Browser-/Viewport-Fälle und enthält 390px/1440px First-Fold- und Fullpage-Aufnahmen beider Versionen. Eine anschließende menschliche Sichtprüfung der 14 Übersichtsbilder zeigte einen Fehler, den der ursprüngliche technische Gate nicht erkennen konnte:
+
+| ID | Priorität | Nachweis | Studio-11-R3-Maßnahme | Abnahme |
+|---|---|---|---|---|
+| A12 | **P0** | **Tatsächliche 390px- und 1440px-First-Fold-Screenshots:** Der Bestätigungstext auf `/danke/` war nahezu weiß auf Ivory. Ursache: `studio9.css` setzte `#dce6e8` für ein ehemals dunkelblaues Layout, während Studio 10 die Fläche auf hell umstellte. | Öffentliche `.studio9-thanks p`-Textfarbe an `--fp11-secondary` angepasst, Textgröße/Zeilenhöhe präzisiert. Browser-QA prüft jetzt für jede Breite den Textkontrast gegen den tatsächlich berechneten Containergrund und verlangt mindestens 4,5:1. | **Korrektur committed, erneuter CI-Lauf erforderlich.** |
+| A13 | P2 | **Codebefund:** Mobile Markenzusätze waren teilweise nur 7–8px, Produkt- und Galerielabels häufig 10–13px. | Mobile Wortmarke, Produkt-Tags, Galeriefilter, Kartentexte und Footer-Leseführung systematisch moderat vergrößert; unverändertes Original-Logo. | **Korrektur committed, visuelle Prüfung der neuen Screenshots erforderlich.** |
+| A14 | P1 | **Testabdeckungslücke:** Die 32 Galerie-Dateien waren gezählt/geladen, aber Such-/Filter- und Modalfunktionen waren nicht interaktiv geprüft. | Browser-QA öffnet auf 390px eine Designvorschau, kontrolliert Fokus, Anfrage-Parameter, Escape, Fokus-Rückgabe, Such-Leerzustand sowie Kategorie- und Reset-Filter. Danach wird vor First-Fold-Aufnahmen explizit auf `scrollY=0` zurückgesetzt. | **Interaktions-Code committed, erneuter CI-Lauf erforderlich.** |
+
+### Separat verbleibende Qualitätsgrenzen
+
+- Aus dem 300%-Zoom-Audit sind erkennbare Halo-/Freistellkanten an mehreren Drucklogos weiterhin offen. Dies ist **kein** bestandener Bildfreigabeprozess; Studio 11 verändert weder die Vorlagen-Originale noch das verbindliche Masterlogo.
+- Web-Vitals, Screenreader, reale Gerätekonfigurationen und echte Netlify-Forms-Einreichung wurden nicht verifiziert.
+- Die QA-Screenshots sind Belege für gerenderte Zustände; ohne unabhängige Sichtabnahme sind sie kein gestalterisches Freigabezertifikat.
+- Für sämtliche nach R3 neu erzeugten Vorher-Nachher-Bilder gilt ausschließlich der **neue** CI-Artefaktstand des aktuellen Commit-Hash als belastbar.
