@@ -473,3 +473,23 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation: none !important; scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Final semantic cleanup: the hero has exactly one understated product action. */
+.fp11-hero-link {
+  display: inline-flex; align-items: center; justify-content: space-between;
+  gap: 24px; min-height: 48px; margin-top: 31px; padding: 11px 0;
+  border-bottom: 1px solid #d4b994; color: #fffcf8 !important;
+  background: transparent; font: 650 14px/1.4 var(--fp11-body);
+  text-decoration: none; letter-spacing: .015em;
+  transition: border-color .2s ease, color .2s ease;
+}
+.fp11-hero-link:hover { border-color: #fff0dc; color: #fff0dc !important; }
+.fp11-hero-link span { font-size: 19px; font-weight: 400; }
+.studio-page-hero.page-hero:has(.studio-page-hero-art) .studio-page-hero-grid {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1060px;
+}
+.studio-page-hero .studio-page-hero-art { display: none !important; }
+@media (max-width:760px) {
+  .fp11-hero-link { margin-top: 21px; min-height: 44px; }
+}
