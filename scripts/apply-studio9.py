@@ -116,6 +116,10 @@ for slug,prod in [("fotobox","Fotobox"),("fotospiegel","Fotospiegel"),("fotowohn
     )
     s=replace_one(s,'<button class="s7-primary-action s7-next-button"',
       picker+'<button class="s7-primary-action s7-next-button"',"product design chooser")
+    s=replace_one(s,
+      'Unverbindliche Terminanfrage – kein automatischer Versand und keine Reservierung.',
+      'Unverbindliche Terminanfrage – Online-Versand nur nach deinem Klick und keine Reservierung.',
+      "product status disclosure")
     s=replace_one(s,'<div class="s7-submit-row">',
       privacy+'<div class="s7-submit-row">'
       '<button class="s7-primary-action studio9-product-submit" type="submit" data-studio9-product-submit>'
