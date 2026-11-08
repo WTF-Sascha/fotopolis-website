@@ -69,3 +69,24 @@
 @media(max-width:780px){.gl-hero{padding:56px 0 49px}.gl-shell{width:min(100% - 34px,1260px)}.gl-title{font-size:48px}.gl-lead{font-size:15px}.gl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gl-toolbar{padding:20px 0}.gl-modal{padding:0}.gl-modal-panel{grid-template-columns:1fr;max-height:100vh;height:100vh;width:100%;border:0;border-radius:0}.gl-modal-img-wrap{padding:15px;min-height:0}.gl-modal-img{max-height:47vh}.gl-modal-info{padding:26px 24px 40px}.gl-close{right:17px;top:15px}}
 @media(max-width:530px){.gl-grid{grid-template-columns:minmax(0,1fr);gap:19px}.gl-card h3{font-size:25px}.gl-categories{flex-wrap:nowrap;overflow:auto;padding-bottom:7px;scrollbar-width:thin}.gl-chip{flex:0 0 auto}.gl-fields{display:grid;grid-template-columns:1fr 1fr}.gl-fields>*{width:100%;min-width:0}.gl-summary{align-items:flex-start}.gl-collection{padding:25px 0 62px}.gl-preview{aspect-ratio:3/2}.gl-title{font-size:43px}.gl-hero-actions>a{width:100%}.gl-note{margin-top:22px}}
 @media(prefers-reduced-motion:reduce){.gl-card,.gl-preview img,.gl-action,.gl-secondary{transition:none!important}}
+
+/* Premium-V2 showroom bridge: editorial teasers do not alter the approved Studio V2 UI. */
+.fpv2-preview-section{padding:clamp(62px,7vw,100px) 0;background:#f3efe6;color:#10263b}
+.fpv2-preview-inner{display:flex;flex-direction:column;gap:24px}
+.fpv2-preview-heading{display:flex;align-items:end;justify-content:space-between;gap:32px}
+.fpv2-preview-heading h2{margin:12px 0 0;font-family:Georgia,serif;font-weight:400;line-height:1.12;font-size:clamp(32px,4.1vw,53px);letter-spacing:-.035em}
+.fpv2-preview-heading h2 em{color:#94733e}
+.fpv2-preview-heading p{font-size:15px;line-height:1.7;color:#53616c;max-width:360px}
+.fpv2-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.fpv2-preview-grid a{display:flex;flex-direction:column;gap:13px;padding:10px 10px 17px;border:1px solid #d8cfbc;background:#fff;box-shadow:0 14px 32px #0516260c;transition:transform .2s ease}
+.fpv2-preview-grid a:hover{transform:translateY(-3px)}
+.fpv2-preview-grid img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.fpv2-preview-grid span{font-family:Georgia,serif;font-size:22px;color:#10263b;padding:0 8px}
+.fpv2-preview-cta{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;max-width:100%}
+.fpv2-preview-compact{padding-block:46px;background:#eef0ec}
+.fpv2-preview-compact .fpv2-preview-inner{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:25px}
+.fpv2-preview-compact .fpv2-preview-heading h2{font-size:clamp(27px,3vw,39px)}
+.design-selected-notice{margin:10px 0 20px;padding:14px 19px;border-left:3px solid #cfa968;background:#f8f3e8;color:#182f42;font-weight:600}
+@media(max-width:820px){.fpv2-preview-heading,.fpv2-preview-compact .fpv2-preview-inner{flex-direction:column;align-items:flex-start}.fpv2-preview-grid{gap:12px}.fpv2-preview-grid span{font-size:17px}}
+@media(max-width:550px){.fpv2-preview-grid{grid-template-columns:1fr}.fpv2-preview-heading h2{font-size:34px}.fpv2-preview-cta{align-self:stretch;justify-content:center;text-align:center}}
+@media(prefers-reduced-motion:reduce){.fpv2-preview-grid a{transition:none}}
