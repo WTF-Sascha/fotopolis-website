@@ -130,6 +130,10 @@ if (studio11Enabled) {
         "Studio 11 public theme reintroduces legacy Navy hex values");
   check(read("index.html").includes('class="fp11-hero-link"'),
         "Single flagship discovery CTA missing");
+  const pwaManifest = JSON.parse(read("manifest.webmanifest"));
+  check(pwaManifest.theme_color.toLowerCase() === "#181512" &&
+        pwaManifest.background_color.toLowerCase() === "#f7f3ec",
+        "Installed PWA manifest must match Studio 11 Obsidian and Ivory palette");
   const audit = JSON.parse(read("qa/studio11-build-audit.json"));
   check(audit.publicRoutes === 14 && audit.unchangedOriginalDesigns === 32 &&
         audit.release.startsWith("NOT APPROVED"),
