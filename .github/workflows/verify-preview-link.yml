@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify the public preview serves Studio 6.0 product pages and direct date requests
+      - name: Verify Studio 7.0 images, editorial layouts and two-step enquiries on public Netlify preview
         shell: bash
         run: |
           python3 - <<'PY'
@@ -57,22 +57,26 @@ jobs:
                           'data-product="'+canonical+'"' in product_html and
                           'href="/product-v6.css"' in product_html and
                           'src="/product-enquiry-v6.js"' in product_html and
-                          'id="terminanfrage"' in product_html)
+                          'id="terminanfrage"' in product_html and
+                          'class="s7-story-layout"' in product_html and
+                          'data-product-step="1"' in product_html and
+                          'data-product-step="2"' in product_html and
+                          product_html.index('id="terminanfrage"') < product_html.index('class="page-body"'))
                       product_results.append(product_valid)
                       print("PRODUCT_ROUTE",slug,"HTTP",product_status,"INLINE_REQUEST",product_valid)
                   req=urllib.request.Request(url+"product-v6.css",headers={"User-Agent":"Mozilla/5.0 FOTOPOLIS-QA"})
                   with urllib.request.urlopen(req,timeout=20) as css_resp:
-                      product_css_ok=css_resp.status==200 and "Product Detail Studio 6.0" in css_resp.read().decode("utf-8",errors="replace")
+                      product_css_ok=css_resp.status==200 and "STUDIO EDITION 7.0" in css_resp.read().decode("utf-8",errors="replace")
                   req=urllib.request.Request(url+"product-enquiry-v6.js",headers={"User-Agent":"Mozilla/5.0 FOTOPOLIS-QA"})
                   with urllib.request.urlopen(req,timeout=20) as js_resp:
-                      product_js_ok=js_resp.status==200 and "data-product-request-email" in js_resp.read().decode("utf-8",errors="replace")
-                  product6=all(product_results) and product_css_ok and product_js_ok
+                      product_js_ok=js_resp.status==200 and "data-product-next" in js_resp.read().decode("utf-8",errors="replace")
+                  product7=all(product_results) and product_css_ok and product_js_ok
                   print("CSS_STATUS", css_code, "CSS_BYTES", len(stylesheet), "CURVE_RULE", ".studio-header-curve-stroke" in stylesheet)
-                  print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy} STUDIO5={studio} WAVE={reference_curve} MENU3={reference_menu} CSS={reference_css} PRODUCT6={product6}")
-                  if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy and studio and reference_curve and reference_menu and reference_css and product6:
+                  print(f"ATTEMPT={attempt+1} STATUS={code} CARD_ORDER={cards} NO_HERO_CTA={no_hero_cta} RIGHT_COPY={right_copy} STUDIO5={studio} WAVE={reference_curve} MENU3={reference_menu} CSS={reference_css} PRODUCT7={product7}")
+                  if code == 200 and cards == ["fotobox","fotospiegel","fotowohnwagen"] and no_hero_cta and right_copy and studio and reference_curve and reference_menu and reference_css and product7:
                       print("PUBLIC_PREVIEW_VERIFIED", url)
                       break
-                  last = f"HTTP {code}: wrong, outdated or incomplete Studio 6.0 product preview"
+                  last = f"HTTP {code}: wrong, outdated or incomplete Studio 7.0 product preview"
               except Exception as exc:
                   last = repr(exc)
                   print(f"ATTEMPT={attempt+1} ERROR={last}")
