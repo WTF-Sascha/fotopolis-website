@@ -27,6 +27,7 @@ for name in ("styles.css", "studio-polish.css", "site.js", "package-planner.js",
 shutil.copy2(root / "site/assets/fotopolis-logo-original.png",
              target / "assets/fotopolis-logo-original.png")
 shutil.copy2(root / "site/favicon.ico", target / "favicon.ico")
+shutil.copy2(source / "home-premium-refinement.css", target / "home-premium-refinement.css")
 
 # Premium Design Collection: original motifs remain unchanged in source archive;
 # only approved WebP previews are emitted in this isolated build.
@@ -81,7 +82,7 @@ design_teaser = (
 )
 assert '<section class="v45-final-cta"' in html
 html = html.replace('<section class="v45-final-cta"', design_teaser + '<section class="v45-final-cta"', 1)
-html = html.replace("</head>", '<link rel="stylesheet" href="/assets/design-gallery.css"></head>', 1)
+html = html.replace("</head>", '<link rel="stylesheet" href="/assets/design-gallery.css"><link rel="stylesheet" href="/home-premium-refinement.css"></head>', 1)
 
 html = html.replace("../../review-assets/legacy/", "/assets/images/")
 html = html.replace("./assets/fotospiegel-hero-lossless.webp",
@@ -105,7 +106,7 @@ html = html.replace('<script defer src="./studio-v5.js"></script>',
 assert "../../" not in html
 assert html.count("<h1") == 1
 assert not any("/assets/images/LEG-"+n in html for n in ("060.webp","073.webp","046.webp")), "Unreleased people images must not appear"
-assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 1  # single mirror product card
+assert html.count("/assets/images/fotospiegel-hero-lossless.webp") == 2  # hero flagship and mirror product card
 assert '<section class="v4-hero v45-hero"' in html and 'data-v4-product-rail' in html, "Missing Reference Edition home"
 assert 'class="v45-home"' in html and 'class="v45-final-cta"' in html, "Missing approved 4.5 homepage"
 assert all(x not in html for x in ('id="studio-berater"','data-advisor-occasion','class="home-trust','class="v4-hero-meta','class="gallery section','class="v4-advantages','class="v4-date-cta')), "Retired homepage components remain"
@@ -126,7 +127,7 @@ assert 'href="/kontakt/"' in html and 'id="erlebnisse"' in html, "Contact page o
 assert 'Fotoerlebnisse entdecken' not in html and 'class="v4-hero-actions"' not in html, "Redundant hero discovery CTA remains"
 assert 'studio-header' in html and 'studio-v5.css' in html and 'studio-v5.js' in html, "New premium studio system missing"
 assert html.count('class="studio-product-index"') == 3, "Editorial index missing from product cards"
-assert '/assets/images/fotobox-event-1672.webp' in html.split('<section class="v4-hero v45-hero"',1)[1].split("</section>",1)[0], "Approved hero visual required"
+assert '/assets/images/fotospiegel-hero-lossless.webp' in html.split('<section class="v4-hero v45-hero"',1)[1].split("</section>",1)[0] and 'mirror-hero-link' in html, "Approved flagship Foto Mirror hero required"
 assert all('id="'+a+'"' in html and 'href="/'+a+'/"' in html for a in ("fotobox","fotospiegel","fotowohnwagen")), "Product routes and anchors required"
 assert "LEG-019.webp" not in html and "LEG-014.webp" not in html, "No misleading legacy product visuals"
 assert "pending-approved-file" not in html and "legacy-reference" not in html, "Outdated placeholder"
