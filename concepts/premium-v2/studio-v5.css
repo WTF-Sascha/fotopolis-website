@@ -315,6 +315,16 @@ input,textarea,select{font-size:16px;min-height:46px}
  .studio-header *,.v45-home .v4-product-card,.studio-mainnav *,.product-step,.trust-fact,.package-card,.occasion-card{transition:none!important}
 }
 
+/* Form focus: reserve the full mobile screen for usable fields, validation and
+   the native keyboard. Bottom navigation returns when focus leaves an input. */
+@media(max-width:760px){
+  body.form-focus-active .v4-mobile-nav{
+    visibility:hidden!important;opacity:0!important;
+    pointer-events:none!important;
+    transition:none!important;
+  }
+}
+
 /* FOTOPOLIS STUDIO / STABLE REFERENCE HEADER 5.2
    One immutable composition. No sticky geometry, scroll transforms, shrinking logo,
    or scroll-driven curve. Based on the approved gold-on-navy reference artwork. */
