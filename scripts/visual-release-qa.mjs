@@ -81,8 +81,16 @@ for (const path of routes) {
   const html = read(path);
   check(html.includes('<link rel="stylesheet" href="/studio10-premium.css">'),
         path + ": Studio 10 theme missing");
-  check(html.includes('name="theme-color" content="#15120f"'),
-        path + ": PWA theme colour still uses previous palette");
+  const studio11 = has("studio11-quiet-luxury.css");
+  const expectedColor = studio11 ? "#181512" : "#15120f";
+  check(html.includes('name="theme-color" content="' + expectedColor + '"'),
+        path + ": current PWA theme colour missing");
+  if (studio11) {
+    check(html.includes('<link rel="stylesheet" href="/studio11-quiet-luxury.css">'),
+          path + ": Quiet Luxury stylesheet absent");
+    check(html.indexOf("/studio11-quiet-luxury.css") > html.indexOf("/studio10-premium.css"),
+          path + ": Studio 11 must load after Studio 10");
+  }
   check(html.indexOf("/studio10-premium.css") > html.indexOf("/brand-finish.css"),
         path + ": Studio 10 stylesheet order invalid");
 }
@@ -106,7 +114,27 @@ for (let i=1; i<=32; i++) {
         id + ": 300 percent source/candidate close-up missing");
 }
 const studio10SW = read("service-worker.js");
-check(studio10SW.includes("fotopolis-studio-2026-11-08-v10-premium-candidate") &&
-      studio10SW.includes("'/studio10-premium.css'"),
-      "Installed PWA must receive the Studio 10 style update");
+const studio11Enabled = has("studio11-quiet-luxury.css");
+check(studio10SW.includes(studio11Enabled
+        ? "fotopolis-studio-2026-11-08-v11-quiet-luxury-candidate"
+        : "fotopolis-studio-2026-11-08-v10-premium-candidate") &&
+      studio10SW.includes("'/studio10-premium.css'") &&
+      (!studio11Enabled || studio10SW.includes("'/studio11-quiet-luxury.css'")),
+      "Installed PWA missing current candidate style cache");
+if (studio11Enabled) {
+  const css = read("studio11-quiet-luxury.css");
+  check(css.includes("--fp11-obsidian") && css.includes("--fp11-champagne") &&
+        css.includes("--fp11-display") && css.includes("prefers-reduced-motion"),
+        "Studio 11 design system tokens and reduced-motion support missing");
+  check(!/#071b30|#102d45|#123b5c/i.test(css),
+        "Studio 11 public theme reintroduces legacy Navy hex values");
+  check(read("index.html").includes('class="fp11-hero-link"'),
+        "Single flagship discovery CTA missing");
+  const audit = JSON.parse(read("qa/studio11-build-audit.json"));
+  check(audit.publicRoutes === 14 && audit.unchangedOriginalDesigns === 32 &&
+        audit.release.startsWith("NOT APPROVED"),
+        "Studio 11 must protect all routes, artworks and release gate");
+  console.log("PASS Studio 11 static QA: 14 public pages, immutable source originals, "
+              + "dedicated Quiet Luxury tokens and PWA cache. Human review STILL REQUIRED.");
+}
 console.log("PASS Studio 10 structural QA: 14 public routes, CI token checks, 32 source-linked artwork comparisons and PWA updates. PENDING: human visual approval, responsive browser tests, live form regression.");
