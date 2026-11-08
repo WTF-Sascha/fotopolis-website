@@ -635,3 +635,18 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
   .package-planner .planner-wish-grid { grid-template-columns: minmax(0,1fr); }
   .package-planner .planner-meta-grid { grid-template-columns: minmax(0,1fr); }
 }
+
+
+/* Legacy-blue copy cleanup, confirmed in full-page browser screenshot review. */
+.package-overview :is(.package-facts li,.compare-table tbody th,.compare-table tbody td),
+.services-overview :is(.service-bullets li,.service-panel p),
+.package-planner :is(.planner-result-header p,.planner-disclaimer,.planner-wish small),
+.occasion-steps :is(p,li),
+.trust-process :is(p,li),
+.s7-product-story :is(p,li) {
+  color: var(--fp11-secondary) !important; font-size: max(14px,1em);
+}
+.services-overview .service-bullets li {
+  font-size: 14px !important; line-height: 1.65;
+}
+.package-overview .compare-table tbody th { color: var(--fp11-ink) !important; font-weight: 650; }
