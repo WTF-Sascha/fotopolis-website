@@ -138,7 +138,60 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("input",update);
   form.addEventListener("change",update);
   form.addEventListener("studio9-design-change",update);
-  form.addEventListener("submit",event=>event.preventDefault());
+  const directSubmit=section.querySelector("[data-studio9-product-submit]");
+  let submitting=false;
+  form.addEventListener("submit",async event=>{
+    event.preventDefault();
+    if(submitting||directSubmit?.disabled)return;
+    if(!allValid())return;
+    const accepted=field("datenschutz_ok");
+    if(!accepted?.checked){
+      if(accepted){accepted.setAttribute("aria-invalid","true");accepted.focus();}
+      status.textContent="Bitte bestätige, dass du die Datenschutzhinweise gelesen hast.";
+      return;
+    }
+    const d=read();
+    const payload=new URLSearchParams();
+    const fields={
+      "form-name":"fotopolis-studio9-anfrage",
+      anlass:d.occasion==="Noch offen"?"Sonstiger Anlass":d.occasion,
+      produkt:d.product,
+      vorlage:d.design,
+      datum:d.date,
+      tageszeit:d.time,
+      ort:d.place,
+      name:d.name,
+      email:d.email,
+      kontaktweg:"E-Mail",
+      notiz:d.notes,
+      details:d.notes,
+      datenschutz_ok:"Ja",
+      website:form.querySelector('[name="website"]')?.value||""
+    };
+    for(const [key,value] of Object.entries(fields))payload.append(key,value);
+    submitting=true;
+    directSubmit.disabled=true;
+    directSubmit.textContent="Anfrage wird übertragen …";
+    status.textContent="Die Anfrage wird verschlüsselt übertragen …";
+    try{
+      const response=await fetch("/kontakt/",{
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:payload.toString(),
+        credentials:"same-origin",
+        cache:"no-store"
+      });
+      if(!response.ok)throw Error("HTTP "+response.status);
+      status.textContent="Vielen Dank! Deine unverbindliche Anfrage wurde übermittelt. Eine Buchung ist dadurch nicht erfolgt.";
+      directSubmit.textContent="Anfrage übermittelt ✓";
+      status.setAttribute("data-studio9-sent","true");
+    }catch{
+      submitting=false;
+      directSubmit.disabled=false;
+      directSubmit.textContent="Anfrage direkt senden →";
+      status.textContent="Die Übermittlung ist fehlgeschlagen. Deine Angaben bleiben erhalten – bitte erneut versuchen oder die E-Mail-Alternative verwenden.";
+    }
+  });
 
   emailLink.addEventListener("click",event=>{
     if(!allValid()){event.preventDefault();return;}
