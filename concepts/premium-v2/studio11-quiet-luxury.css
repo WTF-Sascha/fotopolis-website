@@ -391,6 +391,12 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 .studio-footer .footer-grid { gap: clamp(20px,3vw,38px); }
 .studio-footer .footer-brand img { width: 66px; height: 66px; box-shadow: none !important; border: 0; }
 .studio-footer .footer-grid>div:nth-child(2) { font-family: var(--fp11-display); color: #f0e5d7; font-size: clamp(26px,2.5vw,36px); }
+.studio-footer .footer-brand small {
+  color: #d8c8b3 !important; font-size: 11px; line-height: 1.5;
+}
+.studio-footer .footer-grid > div:nth-child(3) small {
+  color: #d8c8b3 !important; font-size: 13px;
+}
 .studio-footer .footer-navigation { padding-top: 21px; border-color: #504338; }
 .studio-footer .footer-navigation strong { color: #dac09b; font-size: 12px; }
 .studio-footer .footer-navigation a { color: #e4d9cc; font-size: 14px; }
