@@ -1,7 +1,7 @@
 "use strict";
-/* FOTOPOLIS Studio Edition 7.0 – accessible two-step enquiry.
-   A visitor explicitly sends their prepared email; the website does not
-   transmit, promise availability or reserve a date. */
+/* FOTOPOLIS Studio 9.0 – two-step enquiry.
+   Visitor-initiated POST via Netlify Forms. No availability promises or booking.
+   The email draft remains a secondary fallback. */
 document.addEventListener("DOMContentLoaded", () => {
   const section=document.querySelector("[data-product-request-section]");
   const form=section?.querySelector("[data-product-request]");
