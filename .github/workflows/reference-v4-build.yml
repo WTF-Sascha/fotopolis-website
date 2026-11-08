@@ -21,9 +21,12 @@ jobs:
           python-version: "3.12"
       - name: Verify source syntax and front-end JS
         run: |
-          python -m py_compile scripts/build-premium-preview.py scripts/build_premium_pages.py
+          python -m py_compile scripts/build-premium-preview.py scripts/build_premium_pages.py scripts/apply-studio9.py
           node --check concepts/premium-v2/reference-v4.js
           node --check concepts/premium-v2/site.js
+          node --check concepts/premium-v2/contact-flow.js
+          node --check concepts/premium-v2/product-enquiry-v6.js
+          node --check concepts/premium-v2/studio9-design.js
       - name: Generate the exact isolated deploy preview
         run: |
           npm install --no-audit --no-fund
@@ -51,6 +54,7 @@ jobs:
           python3 -m http.server 8766 --directory preview-build > /tmp/fotopolis-presentation-server.log 2>&1 &
           SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/gallery-browser-qa.mjs
           SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/pwa-install-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/studio9-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
