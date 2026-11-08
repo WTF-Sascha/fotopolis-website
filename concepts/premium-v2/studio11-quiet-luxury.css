@@ -567,3 +567,71 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
   }
   .studio-header .studio-mainnav.mainnav { max-height: calc(100dvh - 68px); }
 }
+
+
+/* Visual QA: package planner historically remained a dark-theme form on a
+   light background and scattered its controls in a narrow second column.
+   Restore legibility and a full-width, logical form sequence. */
+.package-planner.section {
+  background: var(--fp11-ivory) !important; color: var(--fp11-ink) !important;
+  padding-block: clamp(55px,6vw,86px);
+}
+.package-planner .planner-heading h2 { color: var(--fp11-ink) !important; }
+.package-planner .planner-heading .kicker,
+.package-planner .planner-fieldset > legend,
+.package-planner .planner-label { color: var(--fp11-accent-text) !important; }
+.package-planner .planner-heading p,
+.package-planner .planner-help,
+.package-planner .planner-label small,
+.package-planner .planner-disclaimer { color: var(--fp11-secondary) !important; }
+.package-planner .planner-form {
+  display: grid; grid-template-columns: minmax(0,1fr);
+  align-items: start; gap: clamp(26px,3vw,40px); padding: clamp(22px,3vw,39px);
+  background: var(--fp11-porcelain) !important;
+  border: 1px solid var(--fp11-border) !important; border-radius: 9px !important;
+}
+.package-planner .planner-fieldset,
+.package-planner .planner-options,
+.package-planner .planner-result { grid-column: 1 / -1; min-width: 0; }
+.package-planner .planner-options {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+  align-items: start; gap: clamp(20px,3vw,40px); margin-top: 0;
+}
+.package-planner .planner-details,
+.package-planner .planner-wishes { min-width: 0; }
+.package-planner .planner-wishes {
+  border-top: 0; padding-top: 0;
+}
+.package-planner .planner-product-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.package-planner .planner-product {
+  border-radius: 6px; color: var(--fp11-ink) !important; min-height: 62px;
+}
+.package-planner .planner-meta-grid label,
+.package-planner .planner-details > label:not(.planner-label),
+.package-planner .planner-wish strong,
+.package-planner .planner-result h3 { color: var(--fp11-ink) !important; }
+.package-planner .planner-wish small { color: var(--fp11-secondary) !important; font-size: 12px; }
+.package-planner .planner-wish {
+  background: #fffcf8 !important; min-height: 95px;
+}
+.package-planner .planner-wish:has(input:checked) { background: #efe5d6 !important; }
+.package-planner .planner-result {
+  position: static; top: auto;
+  width: 100%; max-width: none; padding: clamp(22px,2.6vw,34px);
+  background: #f4eee6 !important; border: 1px solid var(--fp11-border) !important;
+  border-radius: 8px; box-shadow: none !important;
+}
+.package-planner .planner-result pre { color: var(--fp11-ink); }
+.package-planner .planner-actions { max-width: 520px; }
+.package-planner .planner-actions .muted-button {
+  border: 1px solid #baa990; background: transparent; color: var(--fp11-ink);
+}
+@media (max-width: 900px) {
+  .package-planner .planner-options { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 530px) {
+  .package-planner .planner-form { padding: 18px; gap: 24px; }
+  .package-planner .planner-product-grid { grid-template-columns: 1fr; }
+  .package-planner .planner-wish-grid { grid-template-columns: minmax(0,1fr); }
+  .package-planner .planner-meta-grid { grid-template-columns: minmax(0,1fr); }
+}
