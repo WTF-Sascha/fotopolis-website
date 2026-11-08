@@ -201,6 +201,45 @@ try {
           if(badGalleryImages.length)
             problems.push("Unloaded 32-design preview(s): "+badGalleryImages.join(", "));
         }
+        // Exercise the actual gallery UI, not just its static manifest and image tags.
+        // Restrict to the mobile representative viewport to keep CI deterministic.
+        if(route==="/designvorlagen/"&&width===390){
+          const cards=page.locator(".gl-card");
+          if(await cards.count()!==32)
+            problems.push("Expected 32 rendered gallery cards before interaction");
+          else {
+            const first=page.locator(".gl-preview").first();
+            await first.click();
+            const modal=page.locator("[data-gallery-modal]");
+            if(!await modal.isVisible())
+              problems.push("Gallery detail modal did not open");
+            else {
+              const close=page.locator("[data-modal-close]");
+              if(!await close.evaluate(el=>document.activeElement===el))
+                problems.push("Gallery modal failed to focus its close button");
+              const href=await page.locator("[data-modal-link]").getAttribute("href");
+              if(!href||!href.includes("vorlage=FP-"))
+                problems.push("Gallery detail did not pass artwork to inquiry link");
+              await page.keyboard.press("Escape");
+              if(await modal.isVisible())
+                problems.push("Escape did not close gallery modal");
+              if(!await first.evaluate(el=>document.activeElement===el))
+                problems.push("Gallery modal failed to restore focus to triggering card");
+            }
+            const search=page.locator("[data-gallery-search]");
+            await search.fill("___no_matching_design___");
+            if(await cards.count()!==0||!await page.locator("[data-gallery-empty]").isVisible())
+              problems.push("Gallery empty search state did not render");
+            await search.fill("");
+            await page.locator('[data-gallery-category="hochzeit"]').click();
+            const weddingCount=await cards.count();
+            if(weddingCount<1||weddingCount>=32)
+              problems.push("Gallery category filter did not narrow artwork results");
+            await page.locator('[data-gallery-category="alle"]').click();
+            if(await cards.count()!==32)
+              problems.push("Gallery could not restore all 32 artwork cards");
+          }
+        }
         if(width===390){
           const menu=page.locator("[data-menu-toggle]");
           if(await menu.count()===1){
@@ -240,7 +279,7 @@ const report={
   version:"Studio 11.0",createdAt:new Date().toISOString(),
   baseline:"Studio 10.0 fixed git commit f689a209929e25bdd6b6d8717675277d0ec52eb8",
   candidate:"Studio 11.0 separate branch",
-  scope:"98 viewport/route browser checks; 14x2 first-fold and fullpage screenshot pairs",
+  scope:"98 viewport/route checks; 14x2 first-fold/fullpage screenshot pairs; mobile gallery filter/modal/focus regression",
   routes,widths,checked:records.length,failures:errors.length,
   forms:"synthetic DOM and UX only; no POST/no client data",
   visualApproval:"PENDING human screenshot and artwork inspection",
