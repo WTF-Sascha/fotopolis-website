@@ -26,7 +26,7 @@ for(const viewport of viewports){
     catch(error){await check(viewport.label+" "+route+" navigation",false,error.message);continue}
     const name=route==="/"? "home":route.slice(1,-1);
     await check(viewport.label+" "+route+" status",response?.status()===200,String(response?.status()));
-    await page.screenshot({path:path.join(outDir,name+"-"+viewport.label+".png"),fullPage:true,animations:"disabled"});
+    // Lazy-loaded galleries must finish loading before the screenshot and broken-image assertion.\n    await page.evaluate(async()=>{await Promise.all([...document.images].map(async img=>{img.loading="eager";try{await img.decode()}catch{}}))});\n    await page.screenshot({path:path.join(outDir,name+"-"+viewport.label+".png"),fullPage:true,animations:"disabled"});
     const info=await page.evaluate(()=>({
       scrollWidth:document.documentElement.scrollWidth,
       viewport:innerWidth,

@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(form){
     const occasionSelect=form.querySelector("[name=anlass]");
     const params=new URLSearchParams(location.search);
+    const chosenDesign=/^FP-\d{3}$/.test(params.get("vorlage")||"")?params.get("vorlage"):"";
+    if(chosenDesign){const note=document.createElement("p");note.className="notice";note.textContent="Ausgewählte Designvorlage: "+chosenDesign;form.prepend(note)}
     const requested=params.get("anlass");
     if(requested&&occasionSelect&&[...occasionSelect.options].some(o=>o.value===requested))occasionSelect.value=requested;
     const productSelect=form.querySelector("[name=produkt]");
@@ -49,6 +51,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         "ich interessiere mich für ein Fotoerlebnis:",
         "Anlass: "+(data.get("anlass")||"Noch offen"),
         "Fotoerlebnis: "+(data.get("produkt")||"Noch offen"),
+        "Designvorlage: "+(chosenDesign||"Keine Vorauswahl"),
         "Eventdatum: "+(data.get("datum")||"Noch offen"),
         "Veranstaltungsort: "+(data.get("ort")||"Noch offen"),
         "",
