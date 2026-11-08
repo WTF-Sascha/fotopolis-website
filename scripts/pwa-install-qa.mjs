@@ -27,7 +27,7 @@ try{
   check(facts.manifest?.icons?.some(i=>i.sizes==="192x192"),"192px icon");
   check(facts.manifest?.icons?.some(i=>i.sizes==="512x512"),"512px icon");
   check(facts.count===3&&facts.railControls===0,"Three products and no redundant button row");
-  check(facts.galleryTeasers===1&&facts.hero?.includes("fotobox-event"),"Premium product hero and gallery teaser");
+  check(facts.galleryTeasers===1&&facts.hero?.includes("fotospiegel-hero"),"Premium product hero and gallery teaser");
   check(facts.pwaUpdater,"On-open app update included");
   const worker=await page.evaluate(async()=>{
     const reg=await Promise.race([
