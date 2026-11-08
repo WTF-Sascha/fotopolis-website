@@ -336,3 +336,6 @@ print(f"FOTOPOLIS STUDIO: {len(routes)} editorial pages and isolated admin manag
 # Studio 9 upgrade applies only to final isolated preview-build output.
 import runpy
 runpy.run_path(str(root / "scripts/apply-studio9.py"),run_name="__main__")
+
+# FOTOPOLIS Gold Signature is intentionally applied after Studio 9 to all public routes.
+runpy.run_path(str(root / 'scripts/apply-gold-brand.py'), run_name='__main__')
