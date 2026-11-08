@@ -107,8 +107,16 @@ for(const width of widths){
       getComputedStyle(document.querySelector(".v4-mobile-nav")).visibility==="hidden"));
     await date.evaluate(el=>el.blur());
     await page.waitForFunction(()=>!document.body.classList.contains("form-focus-active"));
-    check(width,slug,"mobile bottom bar returns after input blur",await page.evaluate(()=>
-      getComputedStyle(document.querySelector(".v4-mobile-nav")).visibility!=="hidden"));
+    await page.waitForTimeout(80);
+    const navAfterBlur=await page.evaluate(()=>{
+      const el=document.querySelector(".v4-mobile-nav");
+      return {visibility:getComputedStyle(el).visibility,display:getComputedStyle(el).display,
+        focused:document.body.classList.contains("form-focus-active"),
+        menuOpen:document.body.classList.contains("menu-open"),
+        activeTag:document.activeElement?.tagName};
+    });
+    check(width,slug,"mobile bottom bar returns after input blur",
+      navAfterBlur.visibility!=="hidden"&&navAfterBlur.display!=="none",navAfterBlur);
   }
   const future=await page.evaluate(()=>{
     const dt=new Date();dt.setDate(dt.getDate()+18);
