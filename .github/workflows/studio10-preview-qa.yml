@@ -16,7 +16,7 @@ permissions:
 jobs:
   isolated-visual-and-functional-qa:
     name: Static build + 7 viewport browser QA
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - name: Checkout isolated candidate
@@ -33,7 +33,7 @@ jobs:
         run: python -m pip install --disable-pip-version-check "Pillow>=10,<12"
       - name: Install pinned browser test tooling
         run: |
-          npm install --no-save --ignore-scripts playwright@1.56.1
+          npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
       - name: Build isolated static preview from source originals
         run: python3 scripts/build-premium-preview.py
