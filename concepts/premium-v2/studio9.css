@@ -1,0 +1,73 @@
+/* FOTOPOLIS Studio 9.0: Conversion & mobile polish.
+   Scoped exclusively to enquiry/design screens; CI, logo, hero and header unchanged. */
+.studio9-honeypot{position:absolute!important;left:-9999px!important;top:-9999px!important;opacity:0!important;pointer-events:none!important}
+.studio9-design-field{display:grid;gap:11px;width:100%;min-width:0;margin:18px 0 22px;padding:19px;border:1px solid rgba(177,143,85,.35);border-radius:13px;background:linear-gradient(135deg,#fffefb,#f5eee4);color:#133048}
+.studio9-design-field>label{display:block;font-weight:780;font-size:14px;line-height:1.45;letter-spacing:.015em;color:#0c273e}
+.studio9-design-field select{display:block;width:100%;min-width:0;max-width:100%;height:auto;min-height:50px;padding:12px 40px 12px 14px;border:1px solid #b9c5c9;border-radius:9px;background:white;color:#17334a;font-size:14px}
+.studio9-design-field select:focus-visible,.studio9-submit:focus-visible,.studio9-product-submit:focus-visible,.studio9-privacy-accept a:focus-visible{outline:3px solid #c29b62;outline-offset:3px}
+.studio9-design-info{display:flex;align-items:center;gap:14px;min-width:0}
+.studio9-design-info img{display:block;flex:0 0 auto;width:clamp(98px,18%,150px);aspect-ratio:3/2;height:auto;object-fit:cover;border:1px solid #d2c3ab;border-radius:8px;box-shadow:0 6px 16px rgba(17,38,55,.1)}
+.studio9-design-info img[hidden]{display:none!important}
+.studio9-design-info>div{flex:1;min-width:0}
+.studio9-design-info p{margin:0 0 6px;font-size:13px;line-height:1.5;color:#536477}
+.studio9-design-info a{font-size:13px;font-weight:760;line-height:1.5;color:#89612b;text-decoration:underline;text-underline-offset:3px}
+.studio9-privacy-accept{display:flex;align-items:flex-start;gap:12px;margin:16px 0 19px;font-size:13px;line-height:1.65;color:#244258}
+.studio9-privacy-accept input{flex:0 0 19px;width:19px;height:19px;min-width:19px;margin:2px 0 0;accent-color:#a47e44}
+.studio9-privacy-accept span{min-width:0;flex:1}
+.studio9-privacy-accept a{color:#855c24;text-decoration:underline;text-underline-offset:3px}
+.studio9-submit,.studio9-product-submit{cursor:pointer;min-height:52px;line-height:1.4;text-align:center;white-space:normal!important}
+.studio9-submit:disabled,.studio9-product-submit:disabled{opacity:.64;cursor:wait;pointer-events:none}
+.studio9-email-fallback,.studio9-mail-alternative{border-color:#b9a47f!important;color:#826037!important;background:transparent!important;font-size:12px!important;text-align:center}
+.studio9-success{margin:18px 0 4px;padding:18px 20px;border:1px solid #8ba59e;border-radius:11px;background:#eef5f1;color:#25483c}
+.studio9-success[hidden]{display:none!important}
+.studio9-success strong{display:block;font-size:16px;line-height:1.4}
+.studio9-success p{font-size:13px;line-height:1.6;margin:7px 0 0}
+.route-kontakt .contact-form .studio9-design-field{grid-column:1/-1;margin:8px 0 23px}
+.route-kontakt .contact-form .studio9-privacy-accept{max-width:630px}
+.route-kontakt .contact-recap .contact-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.route-kontakt .contact-recap .contact-actions .studio9-submit{flex:1 1 230px}
+.route-kontakt .contact-recap .contact-actions .studio9-email-fallback{flex:1 1 165px}
+.route-kontakt .contact-recap .contact-status{min-height:1.5em}
+.route-fotobox .studio9-design-field,.route-fotospiegel .studio9-design-field,.route-fotowohnwagen .studio9-design-field{margin:10px 0 18px}
+.route-fotobox .s7-submit-row,.route-fotospiegel .s7-submit-row,.route-fotowohnwagen .s7-submit-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.route-fotobox .studio9-product-submit,.route-fotospiegel .studio9-product-submit,.route-fotowohnwagen .studio9-product-submit{flex:1 1 205px}
+.route-fotobox .s7-submit-row .product-request-submit,.route-fotospiegel .s7-submit-row .product-request-submit,.route-fotowohnwagen .s7-submit-row .product-request-submit{flex:1 1 160px}
+.studio9-thanks{background:linear-gradient(125deg,#071b30,#0d344e);padding:clamp(75px,9vw,130px) 20px;min-height:460px;color:#fff}
+.studio9-thanks .inner{max-width:790px}
+.studio9-thanks h1{font:500 clamp(42px,5.5vw,73px)/1.12 Georgia,serif;letter-spacing:-.04em;margin:22px 0;color:#fff9ea}
+.studio9-thanks p{font-size:clamp(15px,1.5vw,18px);line-height:1.75;color:#dce6e8;max-width:640px;margin-bottom:28px}
+@media(max-width:1100px){
+  .route-kontakt .contact-flow.section{padding-block:clamp(25px,4vw,48px) clamp(40px,5vw,64px)}
+  .route-kontakt .contact-layout{gap:clamp(16px,3vw,30px)}
+  .route-kontakt .contact-intro{margin-bottom:clamp(20px,3vw,35px)}
+}
+@media(max-width:760px){
+  .route-kontakt .contact-progress{margin-bottom:19px}
+  .route-kontakt .contact-flow .inner{width:min(100%,calc(100% - 32px))}
+  .route-kontakt .contact-layout{display:flex;flex-direction:column;gap:16px}
+  .route-kontakt .contact-form,.route-kontakt .contact-recap{width:100%;max-width:none;min-width:0}
+  .route-kontakt .contact-form{padding:clamp(16px,4vw,23px)}
+  .route-kontakt .contact-fields{grid-template-columns:1fr;gap:13px}
+  .route-kontakt .contact-fields select,.route-kontakt .contact-fields input,.route-kontakt .contact-form textarea{width:100%;max-width:100%;min-height:48px;font-size:16px}
+  .route-kontakt .contact-recap{padding:22px 18px}
+  .route-kontakt .contact-recap pre{white-space:pre-wrap;overflow-wrap:anywhere}
+  .route-kontakt .contact-recap .contact-actions{flex-direction:column;align-items:stretch}
+  .route-kontakt .contact-recap .contact-actions>*{width:100%;flex:auto;min-height:48px}
+  .route-kontakt .contact-step-controls{display:flex;gap:10px;flex-wrap:wrap}
+  .route-kontakt .contact-step-controls button{min-height:49px}
+  .studio9-design-field{padding:14px;gap:8px;margin:10px 0 16px}
+  .studio9-design-field select{font-size:16px;min-height:50px}
+  .studio9-design-info{gap:10px}
+  .studio9-design-info img{width:102px}
+  .studio9-design-info p,.studio9-design-info a{font-size:12px}
+  .studio9-privacy-accept{font-size:12px;line-height:1.6}
+  .route-fotobox .s7-submit-row,.route-fotospiegel .s7-submit-row,.route-fotowohnwagen .s7-submit-row{flex-direction:column;align-items:stretch}
+  .route-fotobox .s7-submit-row>*,.route-fotospiegel .s7-submit-row>*,.route-fotowohnwagen .s7-submit-row>*{flex:auto;width:100%;min-height:48px}
+  .route-fotobox .studio9-design-field,.route-fotospiegel .studio9-design-field,.route-fotowohnwagen .studio9-design-field{margin:14px 0 18px}
+  .studio9-thanks{min-height:350px;padding:65px 16px}
+}
+@media(max-width:390px){
+  .studio9-design-info{align-items:flex-start}
+  .studio9-design-info img{width:88px}
+  .route-kontakt .contact-flow .inner{width:min(100%,calc(100% - 24px))}
+}
