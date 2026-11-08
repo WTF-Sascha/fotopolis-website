@@ -58,6 +58,12 @@ assert.match(hero,/<img\b[^>]*fotospiegel-hero-lossless\.webp/i,"Approved Photo 
 assert.match(hero,/FOTOPOLIS · PREMIUM FOTOERLEBNISSE/i,"Original hero heading must be preserved");checks++;
 assert.doesNotMatch(hero,/mirror-hero-link/i,"Standalone photo Mirror CTA must not appear");checks++;
 assert.doesNotMatch(hero,/<img\b[^>]*fotobox-event-1672\.webp/i,"The old Fotobox photo must not remain in the hero");checks++;
-const logo="/assets/fotopolis-logo-original.png";
-assert.ok(home.includes(logo)&&dashboard.includes(logo)&&login.includes(logo));checks++;
+// Public pages use the APPROVED gold brand; protected admin retains its
+// independently reviewed legacy logo until a separate admin UI release.
+const goldLogo="/assets/fotopolis-goldmark.webp";
+const adminLogo="/assets/fotopolis-logo-original.png";
+assert.ok(home.includes(goldLogo), "Public premium site must use approved Goldmark");
+assert.ok(dashboard.includes(adminLogo)&&login.includes(adminLogo),
+          "Protected admin source must remain unchanged by public rebranding");
+checks++;
 console.log("PRESENTATION RELEASE GATE PASS – "+checks+" checks, clean routes and no unapproved person photos. Live launch remains blocked independently.");
