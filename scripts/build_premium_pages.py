@@ -110,7 +110,11 @@ def render_product_enquiry(p: dict) -> str:
         '</fieldset>'
         '<p class="product-request-status" data-product-request-status role="status" '
         'aria-live="polite"></p>'
-        '</form></div></div></div></section>'
+        '</form><noscript><p class="s7-nojs">Ohne JavaScript kannst du deinen '
+        'Wunschtermin direkt per E-Mail anfragen: '
+        '<a href="mailto:kontakt@fotopolis-mieten.de?subject=FOTOPOLIS%20Terminanfrage">'
+        'kontakt@fotopolis-mieten.de</a>.</p></noscript>'
+        '</div></div></div></section>'
     )
 
 
