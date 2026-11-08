@@ -13,7 +13,7 @@ const success = [];
 const pages = [
   "index.html", "fotobox/index.html", "fotospiegel/index.html",
   "fotowohnwagen/index.html", "anlaesse/index.html", "leistungen/index.html",
-  "faq/index.html", "ueber/index.html", "kontakt/index.html", "rechtliches/index.html"
+  "faq/index.html", "ueber/index.html", "kontakt/index.html", "rechtliches/index.html", "galerie/index.html"
 ];
 const fail = (label) => failures.push(label);
 const pass = (label) => success.push(label);
@@ -101,3 +101,4 @@ console.log("FOTOPOLIS QA\n"+JSON.stringify(summary,null,2));
 for(const s of failures)console.error("FAIL",s);
 for(const s of warnings)console.warn("WARN",s);
 if(failures.length)process.exitCode=1;
+\n/* Premium gallery data and assets */\nif(exists("site/assets/design-gallery-data.json")){try{const layouts=JSON.parse(read("site/assets/design-gallery-data.json"));check(layouts.length===32,"32 einzigartige Designvorlagen im Katalog");check(new Set(layouts.map(d=>d.id)).size===layouts.length,"Vorlagen-IDs eindeutig");for(const d of layouts){check(/^FP-\\d{3}$/.test(d.id),"Katalog-ID "+d.id);check(exists("site"+d.image),"Vorlagenbild vorhanden: "+d.id)}}catch(e){fail("Designkatalog ungültig: "+e.message)}}else fail("Designkatalog fehlt");\n
