@@ -14,7 +14,7 @@
  function imagePath(path){if(typeof path!=='string'||!/^\/assets\/designvorlagen\/fp-\d{3}\.webp$/.test(path))return '';return path}
  function card(item){const el=document.createElement('article');el.className='gl-card';el.dataset.id=item.id;
   const preview=document.createElement('button');preview.className='gl-preview';preview.type='button';preview.setAttribute('aria-label',item.name+' – große Ansicht öffnen');
-  const img=document.createElement('img');img.src=imagePath(item.image);img.alt=item.name+': '+item.description;img.loading='lazy';img.decoding='async';img.width=1536;img.height=1024;preview.append(img);
+  const img=document.createElement('img');img.src=imagePath(item.image);img.alt=item.name+': '+item.description;img.loading='lazy';img.decoding='async';img.width=512;img.height=341;preview.append(img);
   const note=document.createElement('span');note.className='gl-preview-label';note.textContent=item.photos+' '+(item.photos===1?'Foto':'Fotos');preview.append(note);preview.addEventListener('click',()=>open(item));
   const body=document.createElement('div');body.className='gl-card-body';
   const top=document.createElement('div');top.className='gl-card-topline';const label=document.createElement('span');label.textContent=labels[item.category]||'Signature';const id=document.createElement('span');id.textContent=item.id;top.append(label,id);
