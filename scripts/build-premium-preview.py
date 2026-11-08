@@ -332,3 +332,7 @@ for found in re.finditer(r'(?:src|href)="(/[^"#?]+)"', html):
 # No edits to the approved logo; exact copy verified byte-for-byte.
 assert hashlib.sha256((target / "assets/fotopolis-logo-original.png").read_bytes()).digest() == hashlib.sha256((root / "site/assets/fotopolis-logo-original.png").read_bytes()).digest()
 print(f"FOTOPOLIS STUDIO: {len(routes)} editorial pages and isolated admin management; approved product photography and Reference Edition V4 layout")
+
+# Studio 9 upgrade applies only to final isolated preview-build output.
+import runpy
+runpy.run_path(str(root / "scripts/apply-studio9.py"),run_name="__main__")

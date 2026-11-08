@@ -21,9 +21,12 @@ jobs:
           python-version: "3.12"
       - name: Verify source syntax and front-end JS
         run: |
-          python -m py_compile scripts/build-premium-preview.py scripts/build_premium_pages.py
+          python -m py_compile scripts/build-premium-preview.py scripts/build_premium_pages.py scripts/apply-studio9.py
           node --check concepts/premium-v2/reference-v4.js
           node --check concepts/premium-v2/site.js
+          node --check concepts/premium-v2/contact-flow.js
+          node --check concepts/premium-v2/product-enquiry-v6.js
+          node --check concepts/premium-v2/studio9-design.js
       - name: Generate the exact isolated deploy preview
         run: |
           npm install --no-audit --no-fund
@@ -51,6 +54,14 @@ jobs:
           python3 -m http.server 8766 --directory preview-build > /tmp/fotopolis-presentation-server.log 2>&1 &
           SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/gallery-browser-qa.mjs
           SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/pwa-install-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/studio9-browser-qa.mjs
+      - name: Live Netlify Forms smoke probe – synthetic values only
+        if: ${{ github.event_name == 'pull_request' && github.head_ref == 'feat/studio9-secure-enquiries-mobile-2026-11-08' }}
+        run: |
+          # One smoke POST, explicitly fictitious data; never use customer addresses.
+          http_code=$(curl --silent --show-error --location --output /tmp/studio9-form-response.html --write-out '%{http_code}'             -X POST 'https://deploy-preview-10--fotopolis-preview.netlify.app/kontakt/'             -H 'Content-Type: application/x-www-form-urlencoded'             --data-urlencode 'form-name=fotopolis-studio9-anfrage'             --data-urlencode 'anlass=Hochzeit'             --data-urlencode 'produkt=Fotospiegel'             --data-urlencode 'vorlage=FP-028'             --data-urlencode 'datum=2026-12-12'             --data-urlencode 'name=Studio9 QA Synthetic Only'             --data-urlencode 'email=studio9-qa@invalid.example'             --data-urlencode 'kontaktweg=E-Mail'             --data-urlencode 'datenschutz_ok=Ja'             --data-urlencode 'website=')
+          echo "Netlify Forms live synthetic POST status: ${http_code}"
+          test "${http_code}" = "200"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

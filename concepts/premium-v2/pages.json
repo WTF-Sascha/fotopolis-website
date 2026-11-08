@@ -686,11 +686,11 @@
       "title": "Kontakt & Eventanfrage",
       "eyebrow": "EVENTANFRAGE · PERSÖNLICH & UNVERBINDLICH",
       "headline": "Dein Event beginnt hier.",
-      "lead": "Drei kurze Schritte zu deiner unverbindlichen Anfrage. Du entscheidest selbst, ob du den vorbereiteten E-Mail-Entwurf versendest.",
+      "lead": "Drei übersichtliche Schritte zu deiner unverbindlichen Anfrage – direkt über die Website, ohne E-Mail-Programm.",
       "blocks": [
         {
           "heading": "Direkt per E-Mail",
-          "body": "Du kannst uns jederzeit direkt an kontakt@fotopolis-mieten.de schreiben oder deine Anfrage über das Formular vorbereiten."
+          "body": "Nutze für die Anfrage das sichere Online-Formular oder schreibe uns alternativ an kontakt@fotopolis-mieten.de."
         },
         {
           "heading": "Wie geht es weiter?",
@@ -699,7 +699,7 @@
       ],
       "contactFlow": {
         "title": "Erzähl uns, was du vorhast.",
-        "eyebrow": "ANFRAGE VORBEREITEN",
+        "eyebrow": "UNVERBINDLICHE EVENTANFRAGE",
         "intro": "Anlass, Kontaktdaten und Wünsche – mehr brauchen wir für einen ersten Überblick nicht.",
         "productOptions": [
           "Noch offen",
@@ -734,7 +734,7 @@
           "Lieferung und Aufbau",
           "Digitale Fotoübergabe"
         ],
-        "legalNotice": "Deine Eingaben werden nicht an einen Server übertragen. Die Anfrage wird als E-Mail-Entwurf vorbereitet und erst versendet, wenn du sie in deinem E-Mail-Programm bestätigst.",
+        "legalNotice": "Mit dem Absenden werden deine Angaben über HTTPS an Netlify Forms zur Bearbeitung und Spamprüfung übertragen. Bitte beachte unsere Datenschutzhinweise. Eine Reservierung kommt hierdurch nicht zustande.",
         "responseNote": "Verfügbarkeit, Leistungsumfang, Anfahrt, Aufbau, Preise und Rückmeldung werden individuell geklärt. Hier wird keine konkrete Reaktionszeit zugesagt."
       }
     },
@@ -794,7 +794,7 @@
         },
         {
           "heading": "Kontaktaufnahme und Eventanfragen",
-          "body": "Das Anfrageformular erstellt zunächst einen E-Mail-Entwurf in deinem Browser. Eine Nachricht wird erst durch dein aktives Versenden im E-Mail-Programm an uns übermittelt. Wenn du uns kontaktierst, verwenden wir deine Angaben zur Bearbeitung der Anfrage und zur anschließenden Kommunikation (Art. 6 Abs. 1 lit. b oder f DSGVO)."
+          "body": "Mit dem Absenden einer Eventanfrage über das Formular werden deine Angaben über HTTPS an Netlify Forms übertragen, dort für FOTOPOLIS in einem geschützten Anfragepostfach gespeichert und auf Spam überprüft. Wir verwenden die Angaben ausschließlich zur Bearbeitung, Beantwortung und ggf. Anbahnung eines Vertrags über Fotoerlebnisse (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Netlify ist hierbei technischer Dienstleister; eine Verarbeitung außerhalb der EU kann je nach Dienst- und Hostingkonfiguration stattfinden. Bitte übermittle keine sensiblen Informationen, die für deine Anfrage nicht erforderlich sind. Alternativ kannst du uns per E-Mail kontaktieren. Eine automatisierte Kunden-Eingangsbestätigung per E-Mail ist derzeit nicht eingerichtet."
         },
         {
           "heading": "Geschützter Verwaltungsbereich",

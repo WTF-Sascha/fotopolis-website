@@ -1,7 +1,7 @@
 "use strict";
-/* FOTOPOLIS Studio Edition 7.0 – accessible two-step enquiry.
-   A visitor explicitly sends their prepared email; the website does not
-   transmit, promise availability or reserve a date. */
+/* FOTOPOLIS Studio 9.0 – two-step enquiry.
+   Visitor-initiated POST via Netlify Forms. No availability promises or booking.
+   The email draft remains a secondary fallback. */
 document.addEventListener("DOMContentLoaded", () => {
   const section=document.querySelector("[data-product-request-section]");
   const form=section?.querySelector("[data-product-request]");
@@ -44,12 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
     occasion:field("anlass").value,
     name:field("name").value.trim().slice(0,100),
     email:field("email").value.trim().slice(0,150),
-    notes:field("notiz").value.trim().slice(0,700)
+    notes:field("notiz").value.trim().slice(0,700),
+    design:field("vorlage")?.value||""
   });
   const content=d=>[
     "Hallo FOTOPOLIS,","",
     "ich möchte den folgenden Wunschtermin unverbindlich anfragen.","",
     "FOTOERLEBNIS: "+d.display,
+    "FOTODESIGN: "+(d.design||"Noch offen"),
     "WUNSCHTERMIN: "+(d.date?formatDate(d.date):"noch offen"),
     "TAGESZEIT: "+d.time,
     "ANLASS: "+d.occasion,
@@ -76,9 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const params=new URLSearchParams({produkt:d.product});
     if(d.date)params.set("datum",d.date);
     if(d.time&&d.time!=="Noch offen")params.set("tageszeit",d.time);
-    if(d.place)params.set("ort",d.place);
+    if(d.design)params.set("vorlage",d.design);
     if(d.occasion&&d.occasion!=="Noch offen")params.set("anlass",d.occasion);
-    if(d.notes)params.set("details",d.notes);
+    // Do not leak free-form personal messages or location into URLs.
     extended.href="/kontakt/?"+params.toString();
     for(const invalid of form.querySelectorAll('[aria-invalid="true"]'))invalid.removeAttribute("aria-invalid");
     status.textContent="";
@@ -135,7 +137,61 @@ document.addEventListener("DOMContentLoaded", () => {
   back.addEventListener("click",()=>setStep(1,true));
   form.addEventListener("input",update);
   form.addEventListener("change",update);
-  form.addEventListener("submit",event=>event.preventDefault());
+  form.addEventListener("studio9-design-change",update);
+  const directSubmit=section.querySelector("[data-studio9-product-submit]");
+  let submitting=false;
+  form.addEventListener("submit",async event=>{
+    event.preventDefault();
+    if(submitting||directSubmit?.disabled)return;
+    if(!allValid())return;
+    const accepted=field("datenschutz_ok");
+    if(!accepted?.checked){
+      if(accepted){accepted.setAttribute("aria-invalid","true");accepted.focus();}
+      status.textContent="Bitte bestätige, dass du die Datenschutzhinweise gelesen hast.";
+      return;
+    }
+    const d=read();
+    const payload=new URLSearchParams();
+    const fields={
+      "form-name":"fotopolis-studio9-anfrage",
+      anlass:d.occasion==="Noch offen"?"Sonstiger Anlass":d.occasion,
+      produkt:d.product,
+      vorlage:d.design,
+      datum:d.date,
+      tageszeit:d.time,
+      ort:d.place,
+      name:d.name,
+      email:d.email,
+      kontaktweg:"E-Mail",
+      notiz:d.notes,
+      details:d.notes,
+      datenschutz_ok:"Ja",
+      website:form.querySelector('[name="website"]')?.value||""
+    };
+    for(const [key,value] of Object.entries(fields))payload.append(key,value);
+    submitting=true;
+    directSubmit.disabled=true;
+    directSubmit.textContent="Anfrage wird übertragen …";
+    status.textContent="Die Anfrage wird verschlüsselt übertragen …";
+    try{
+      const response=await fetch("/kontakt/",{
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:payload.toString(),
+        credentials:"same-origin",
+        cache:"no-store"
+      });
+      if(!response.ok)throw Error("HTTP "+response.status);
+      status.textContent="Vielen Dank! Deine unverbindliche Anfrage wurde übermittelt. Eine Buchung ist dadurch nicht erfolgt.";
+      directSubmit.textContent="Anfrage übermittelt ✓";
+      status.setAttribute("data-studio9-sent","true");
+    }catch{
+      submitting=false;
+      directSubmit.disabled=false;
+      directSubmit.textContent="Anfrage direkt senden →";
+      status.textContent="Die Übermittlung ist fehlgeschlagen. Deine Angaben bleiben erhalten – bitte erneut versuchen oder die E-Mail-Alternative verwenden.";
+    }
+  });
 
   emailLink.addEventListener("click",event=>{
     if(!allValid()){event.preventDefault();return;}
