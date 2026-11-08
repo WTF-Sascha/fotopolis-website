@@ -94,7 +94,11 @@ for slug in ("fotobox", "fotospiegel", "fotowohnwagen"):
     assert 'data-product-request-email' in product_html and 'data-product-request-copy' in product_html, f"Missing email/copy actions: {slug}"
     assert '/product-v6.css' in product_html and '/product-enquiry-v6.js' in product_html
     assert 'class="page-aside"' not in product_html and 'class="page-end"' not in product_html, f"Redundant CTAs: {slug}"
-    assert 'class="product-identity-stage"' in product_html and 'class="product-specs"' in product_html
+    assert 'class="s7-story-layout"' in product_html and 'class="s7-feature-grid product-specs"' in product_html, f"Studio 7 story missing: {slug}"
+    assert product_html.count('data-product-step="1"') == 1 and product_html.count('data-product-step="2"') == 1, f"Two-step enquiry missing: {slug}"
+    assert 'data-product-next' in product_html and 'data-product-back' in product_html, f"Two-step controls missing: {slug}"
+    assert product_html.index('id="terminanfrage"') < product_html.index('class="page-body"'), f"Enquiry too late: {slug}"
+    assert 'class="product-identity-art"' not in product_html and 'class="product-v6-steps"' not in product_html, f"Retired decorative layout remains: {slug}"
     assert 'class="product-stage-media"' not in product_html, f"Duplicated product picture: {slug}"
 
 
