@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "releaseStatus": "BLOCKED_ASSET_RIGHTS_AND_ORIGINALS",
+  "approvedLogo": "/assets/fotopolis-logo-original.png",
+  "project": "FOTOPOLIS Premium Website 2.0",
+  "policy": "Never substitute generic or AI-created people for real FOTOPOLIS event photography",
+  "assets": [
+    {
+      "id": "hero-event",
+      "destination": "site/assets/photos/hero-event.avif",
+      "fallback": "site/assets/photos/hero-event.webp",
+      "placement": "Homepage hero 16:9",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P0"
+    },
+    {
+      "id": "camper-exterior",
+      "destination": "site/assets/photos/camper-exterior.avif",
+      "fallback": "site/assets/photos/camper-exterior.webp",
+      "placement": "Homepage product and Camper page",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P0"
+    },
+    {
+      "id": "camper-interior",
+      "destination": "site/assets/photos/camper-interior.avif",
+      "fallback": "site/assets/photos/camper-interior.webp",
+      "placement": "Camper story section",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P0"
+    },
+    {
+      "id": "box-installation",
+      "destination": "site/assets/photos/box-installation.avif",
+      "fallback": "site/assets/photos/box-installation.webp",
+      "placement": "Photobooth product",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P0"
+    },
+    {
+      "id": "mirror-installation",
+      "destination": "site/assets/photos/mirror-installation.avif",
+      "fallback": "site/assets/photos/mirror-installation.webp",
+      "placement": "Mirror product",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P0"
+    },
+    {
+      "id": "guests-in-action",
+      "destination": "site/assets/photos/guests-in-action.avif",
+      "fallback": "site/assets/photos/guests-in-action.webp",
+      "placement": "Gallery and emotional story",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P0"
+    },
+    {
+      "id": "photostrips-detail",
+      "destination": "site/assets/photos/photostrips-detail.avif",
+      "fallback": "site/assets/photos/photostrips-detail.webp",
+      "placement": "Feature / print detail",
+      "rightStatus": "pending",
+      "originalStatus": "missing",
+      "priority": "P1"
+    }
+  ]
+}

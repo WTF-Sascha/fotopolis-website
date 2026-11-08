@@ -1,0 +1,59 @@
+name: FOTOPOLIS Reference V4 Build Gate
+on:
+  push:
+    branches: ["design/premium-v2"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+jobs:
+  preview-build:
+    name: Validate isolated FOTOPOLIS Preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify source syntax and front-end JS
+        run: |
+          python -m py_compile scripts/build-premium-preview.py scripts/build_premium_pages.py
+          node --check concepts/premium-v2/reference-v4.js
+          node --check concepts/premium-v2/site.js
+      - name: Generate the exact isolated deploy preview
+        run: |
+          npm install --no-audit --no-fund
+          python3 scripts/build-premium-preview.py
+          npm run build:auth
+      - name: Validate generated asset and route links
+        run: |
+          test -f preview-build/index.html
+          test -f preview-build/reference-v4.css
+          test -f preview-build/reference-v4.js
+          test -f preview-build/fotobox/index.html
+          test -f preview-build/fotospiegel/index.html
+          test -f preview-build/fotowohnwagen/index.html
+          test -f preview-build/galerie/index.html
+          node scripts/premium-presentation-qa.mjs
+          node scripts/gallery-presentation-qa.mjs
+          node scripts/standalone-brand-qa.mjs
+
+      - name: Install Chromium for integrated gallery browser QA
+        run: |
+          npm install --no-audit --no-fund --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify premium product imagery and design gallery in real browser
+        run: |
+          python3 -m http.server 8766 --directory preview-build > /tmp/fotopolis-presentation-server.log 2>&1 &
+          SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/gallery-browser-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/pwa-install-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fotopolis-presentation-gallery-screenshots
+          path: qa-gallery-screenshots/
+          if-no-files-found: ignore

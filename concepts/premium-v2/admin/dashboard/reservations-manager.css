@@ -1,0 +1,20 @@
+/* FOTOPOLIS Studio 4.0 – internal reservation management */
+#bookings{scroll-margin-top:20px}
+.reservation-entry{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 16px;border:1px solid #d8e2e5;border-left:3px solid #c09a60;border-radius:6px;background:#fff;margin:9px 0}
+.reservation-entry strong{color:#173a53;font-size:12px}
+.reservation-entry p{font-size:11px;color:#617786;line-height:1.5;margin:5px 0}
+.reservation-entry small{display:block;color:#907344;font-size:10px;line-height:1.5}
+.reservation-actions{display:flex;gap:8px;flex-wrap:wrap}
+.reservation-actions button{min-height:35px;padding:8px 12px}
+.reservation-list{margin-top:14px}
+@media(max-width:620px){.reservation-entry{align-items:flex-start;flex-direction:column}.reservation-actions{width:100%}.reservation-actions button{flex:1}}
+
+/* Studio 4.2 – explicit preflight result; never styled as a booking guarantee. */
+.occupancy-preflight{font-size:11px;line-height:1.7;padding:11px 13px;margin:2px 0 0;border-radius:5px;border:1px solid #d6dedf;background:#f5f8f7;color:#526f7e}
+.occupancy-preflight:empty{display:none}
+.occupancy-preflight[data-result="clear"]{background:#f2f7f4;border-color:#b7d2c2;color:#2f694d}
+.occupancy-preflight[data-result="conflict"],.occupancy-preflight[data-result="inactive"],.occupancy-preflight[data-result="error"],.occupancy-preflight[data-result="invalid"]{background:#fbf2e8;border-color:#dfbba5;color:#8e492c}
+.occupancy-preflight[data-result="pending"]{background:#f7f7f1;border-color:#e0d4bb;color:#806742}
+#bookings .plan-form-buttons{align-items:center;gap:9px}
+#bookings .plan-form-buttons button:disabled{cursor:progress;opacity:.6}
+@media(max-width:570px){#bookings .plan-form-buttons button{width:100%}}

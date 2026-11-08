@@ -1,0 +1,24 @@
+/* FOTOPOLIS Studio 4.3 – guided first-run acceptance, original CI only. */
+.setup-progress{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-top:1px solid #3c5770;padding-top:16px;margin-top:17px}
+.setup-progress strong{font-size:13px;color:#f1e3c8}
+.setup-progress span{font-size:10px;color:#b5c4ce}
+.setup-steps{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:17px 0;padding:0}
+.setup-step{display:flex;gap:11px;align-items:flex-start;min-height:80px;padding:13px;border:1px solid #35516a;border-radius:6px;background:#0d273c}
+.setup-step-mark{flex:none;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #6d8798;border-radius:50%;color:#bed0d9;font-size:12px;font-weight:800}
+.setup-step[data-complete="true"]{border-color:#627958;background:#143a3e}
+.setup-step[data-complete="true"] .setup-step-mark{background:#d3b47b;border-color:#d3b47b;color:#112f42}
+.setup-step-content{min-width:0}
+.setup-step strong{font-size:11px;color:#f1f4f4;line-height:1.5}
+.setup-step p{color:#b9c9d0;margin:5px 0 0!important;font-size:10px!important;line-height:1.55!important}
+.setup-actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:16px}
+.setup-actions .primary-button{margin:0!important;min-height:42px;display:inline-flex!important;align-items:center;justify-content:center}
+.setup-check-button{min-height:42px;border-radius:5px;border:1px solid #c4a474;color:#f1e3c5;background:transparent;font-size:11px;font-weight:800;padding:11px 15px;cursor:pointer}
+.setup-check-button:hover,.setup-check-button:focus-visible{background:#244a63}
+.setup-check-button:disabled{opacity:.65;cursor:progress}
+.setup-status{margin:13px 0 0!important;font-size:11px!important;color:#dbd0b8!important;line-height:1.6!important}
+.setup-card.is-complete{border-color:#66826f}
+@media(max-width:760px){.setup-steps{grid-template-columns:1fr}.setup-step{min-height:0}}
+@media(max-width:470px){.setup-actions>*{width:100%;text-align:center}}
+
+/* The semantic HTML hidden attribute must win over shared CTA display rules. */
+#setup-assistant[hidden],#setup-assistant .setup-actions [hidden]{display:none!important}

@@ -1,0 +1,63 @@
+name: FOTOPOLIS Studio 5 Visual and Interaction Gate
+on:
+  push:
+    branches: ["design/premium-v2"]
+    paths:
+      - "concepts/premium-v2/studio-v5.css"
+      - "concepts/premium-v2/studio-v5.js"
+      - "concepts/premium-v2/index.html"
+      - "scripts/build_premium_pages.py"
+      - "scripts/build-premium-preview.py"
+      - "scripts/studio-v5-quality.mjs"
+      - ".github/workflows/studio-v5-visual.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  studio-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build exact isolated site and verify source syntax
+        run: |
+          python -m py_compile scripts/build-premium-preview.py scripts/build_premium_pages.py
+          node --check concepts/premium-v2/studio-v5.js
+          node --check scripts/studio-v5-quality.mjs
+          python3 scripts/build-premium-preview.py
+          test -f preview-build/studio-v5.css
+          test -f preview-build/studio-v5.js
+          test -f preview-build/fotobox/index.html
+          test -f preview-build/fotospiegel/index.html
+          test -f preview-build/fotowohnwagen/index.html
+      - name: Install Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Start local preview server
+        run: |
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-studio.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8766/ >/dev/null
+      - name: Run 12-route responsive screenshots, geometry and UX
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/studio-v5-quality.mjs
+      - name: Produce contact sheet for human visual inspection
+        if: always()
+        run: |
+          python3 -m pip install --quiet pillow
+          python3 scripts/studio-v5-contact-sheet.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fotopolis-studio-v5-screenshots
+          path: concepts/premium-v2/qa-screenshots/studio-v5/
+          retention-days: 30
+          if-no-files-found: warn

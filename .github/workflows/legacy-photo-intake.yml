@@ -1,0 +1,48 @@
+name: Import legacy FOTOPOLIS photographs for review
+
+on:
+  push:
+    branches:
+      - design/premium-v2
+    paths:
+      - scripts/legacy-photo-intake.py
+      - .github/workflows/legacy-photo-intake.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image inventory requirements
+        run: pip install --disable-pip-version-check requests beautifulsoup4 pillow
+      - name: Download and verify existing public-site photos
+        run: python scripts/legacy-photo-intake.py
+      - name: Save review library and inventory on the design branch
+        run: |
+          git config user.name "fotopolis-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add review-assets/legacy review-assets/legacy-contact-sheet.jpg docs/LEGACY_IMAGE_INVENTORY_1_0.md
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: stage legacy FOTOPOLIS imagery for review only"
+            git push origin HEAD:design/premium-v2
+          fi
+      - name: Keep contact sheet and source metadata as QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fotopolis-legacy-photo-review
+          path: |
+            review-assets/legacy-contact-sheet.jpg
+            review-assets/legacy/inventory.csv
+            review-assets/legacy/inventory.json
+            docs/LEGACY_IMAGE_INVENTORY_1_0.md
+          if-no-files-found: warn
+          retention-days: 30

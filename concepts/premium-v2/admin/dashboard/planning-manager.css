@@ -1,0 +1,72 @@
+/* FOTOPOLIS Studio 3.8 · operations workspace, gold / navy CI 1.0 */
+#planning{scroll-margin-top:20px}
+.operations-card{margin-top:24px;padding:28px 32px;border:1px solid #e0ddd6;border-radius:7px;background:#fff}
+.operations-card h2{font-size:24px;color:#17384d;letter-spacing:-.04em;margin:7px 0 10px}
+.operations-card .eyebrow{color:#947747}
+.plan-help{font-size:11px;line-height:1.75;color:#6c7d87;margin:3px 0 14px}
+.plan-header{display:flex;align-items:center;flex-wrap:wrap;gap:13px;margin:12px 0 16px}
+.plan-nonpersistent{font-size:9px;letter-spacing:.08em;color:#8d7044;font-weight:800}
+.plan-primary,.plan-secondary{cursor:pointer;padding:11px 14px;min-height:41px;border-radius:5px;font-size:11px;font-weight:800}
+.plan-primary{background:#173c58;color:#fff;border:1px solid #173c58}
+.plan-primary:hover,.plan-primary:focus-visible{background:#255d7c}
+.plan-secondary{color:#173c58;border:1px solid #bbc7cb;background:#fff}
+.plan-secondary:hover,.plan-secondary:focus-visible{border-color:#b59867}
+.plan-secondary:disabled{opacity:.45;cursor:not-allowed}
+.plan-form{border:1px solid #deceb4;background:#fbf8f1;border-radius:7px;padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:14px 17px}
+.plan-form>h3,.plan-form>.plan-help,.plan-form>.plan-error,.plan-form>.plan-form-buttons{grid-column:1/-1}
+.plan-form h3{font-size:17px;margin:0;color:#163b54}
+.plan-form label{display:grid;gap:6px;font-weight:800;font-size:11px;color:#29495d}
+.plan-form input,.plan-form select{width:100%;min-height:44px;padding:11px;border:1px solid #bec9cf;background:#fff;border-radius:5px;font-size:13px;color:#17374e}
+.plan-form input:focus-visible,.plan-form select:focus-visible{outline:2px solid #b59759;outline-offset:2px}
+.plan-error{color:#a34c30;margin:0;font-size:11px;line-height:1.5}
+.plan-form-buttons{display:flex;flex-wrap:wrap;gap:9px}
+.plan-list{display:grid;gap:9px;margin:12px 0}
+.plan-list-heading{font-size:14px;color:#153950;margin:6px 0}
+.plan-empty{font-size:11px;color:#6c808a;line-height:1.7}
+.plan-entry{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:13px 15px;background:#fdf9f1;border:1px dashed #c2a36d;border-radius:6px}
+.plan-entry strong{font-size:12px;color:#153b52}
+.plan-entry p{font-size:11px;color:#566d79;margin:5px 0}
+.plan-entry small{font-size:10px;color:#8d7249;overflow-wrap:anywhere}
+.plan-status{font-size:11px;color:#7b633c;line-height:1.5}
+.plan-export{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 0}
+.day-detail-dialog{width:min(92vw,540px);max-height:85vh;border:1px solid #dac6a2;padding:0;border-radius:10px;background:#fff;color:#173a52;box-shadow:0 16px 80px #061f3670}
+.day-detail-dialog::backdrop{background:#031b31a6}
+.day-dialog-inner{padding:25px}
+.day-dialog-heading{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.day-dialog-heading h2{font-size:24px;color:#153850;margin:5px 0 12px}
+.day-dialog-close{border:1px solid #bbc7cc;border-radius:5px;background:#f6f6f4;padding:6px 12px;font-size:18px;color:#254b61;cursor:pointer}
+.day-dialog-entries{display:grid;gap:9px;margin:10px 0 18px}
+.day-dialog-entry{padding:11px 13px;border:1px solid #e0e4e5;border-left:3px solid #5b8ba3;border-radius:5px;font-size:12px}
+.day-dialog-entry[data-draft="true"]{background:#fcf6e9;border:1px dashed #c6a164;border-left:3px solid #c6a164}
+.day-dialog-entry strong{display:block;color:#163a52}
+.day-dialog-entry p{font-size:11px;color:#697b87;margin:5px 0}
+.day-dialog-empty{font-size:12px;color:#788792;line-height:1.7}
+.day-dialog-note{font-size:11px;color:#8d7044;line-height:1.5;margin:12px 0}
+.date-jump{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.date-jump label{font-size:10px;font-weight:800;color:#455c69}
+.date-jump input{min-height:36px;min-width:140px;border:1px solid #c3cfd1;border-radius:4px;padding:7px 9px;font-size:12px;background:#fff;color:#163c56}
+.date-jump button{min-height:36px;border:1px solid #173c58;background:#173c58;color:#fff;border-radius:4px;font-size:11px;font-weight:800;padding:7px 11px}
+#dashboard-app .nav-glyph{display:inline-block;min-width:17px}
+#dashboard-app .sidebar-nav a.active,#dashboard-mobile-menu a[aria-current="page"]{color:#eacb8b}
+@media(max-width:800px){.plan-form{grid-template-columns:1fr}.operations-card{padding:23px 20px}}
+@media(max-width:570px){
+ .date-jump{width:100%}.date-jump input{flex:1;min-width:0}
+ .plan-export>*{width:100%}
+ .plan-form{padding:15px}.plan-entry{align-items:flex-start}
+ .day-dialog-inner{padding:19px}
+}
+
+.calendar-reload{min-height:37px;border:1px solid #bfcbd0;border-radius:5px;background:#fff;color:#173c58;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}
+.calendar-reload:hover,.calendar-reload:focus-visible{border-color:#b99857;background:#fcf8ee}
+.calendar-sync{margin:0 0 10px;padding:9px 13px;border:1px solid #dae6e9;background:#f4f9fa;border-radius:4px;font-size:10px;color:#4d6877;line-height:1.5}
+#dashboard-app .day-entry[data-local-draft="true"]{background:#f5ecdd;border:1px dashed #ae844b;color:#7b623f}
+@media(max-width:570px){.calendar-reload{width:100%}}
+
+.plan-inventory-link{display:inline-block;margin:0 0 12px;color:#91713e;font-weight:800;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.plan-inventory-link:hover,.plan-inventory-link:focus-visible{color:#173c58}
+
+#activity{scroll-margin-top:20px}
+.activity-entry{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:11px 0;border-bottom:1px solid #e8e5df}
+.activity-entry strong{font-size:11px;font-weight:800;color:#183e57}
+.activity-entry time{font-size:10px;color:#758c99}
+@media(max-width:570px){.activity-entry{align-items:flex-start;flex-direction:column}}

@@ -1,0 +1,83 @@
+<meta name="description" content="Interaktive Feier-Galerie von Fotopolis â Authentische Momente, echte Freude und unvergessliche Erinnerungen. Entdecke wie unsere Fotobox fÃ¼r Begeisterung sorgt.">
+<meta property="og:url" content="https://fotopolis-mieten.de/galerie.html">
+<meta property="og:title" content="Interaktive Feier-Galerie â Authentische Momente | Fotopolis">
+<meta property="og:image" content="https://fotopolis-mieten.de/assets/logo/Logo-Transparent.png">
+<link rel="icon" type="image/png" href="assets/logo/Logo-Transparent.png">
+<title>Interaktive Feier-Galerie â Authentische Momente | Fotopolis Social Events</title>
+.interactive-gallery {
+.gallery-controls {
+<img src="assets/logo/Logo-Transparent.png" alt="Fotopolis Social Events" class="logo-img">
+<li><a href="galerie.html" class="active">Galerie</a></li>
+<h1><span class="emoji">ð¨ð¸</span> <span class="gradient-text">Unsere interaktive Feier-Galerie</span></h1>
+<div class="interactive-gallery">
+{ src: 'assets/galerie/fb_party01 (1).jpg', caption: 'ð Spontane Lacher und echte Freude' },
+{ src: 'assets/galerie/fb_party01 (2).jpg', caption: 'ð¸ Authentische Party-Momente' },
+{ src: 'assets/galerie/fb_party01 (3).jpg', caption: 'â¨ Wenn die Fotobox fÃ¼r Begeisterung sorgt' },
+{ src: 'assets/galerie/fb_party01 (4).jpg', caption: 'ð Freunde haben gemeinsam SpaÃ' },
+{ src: 'assets/galerie/fb_party01 (5).jpg', caption: 'ð« Unvergessliche Erinnerungen entstehen' },
+{ src: 'assets/galerie/fb_party01 (6).jpg', caption: 'ð­ Kreative Posen und viel GelÃ¤chter' },
+{ src: 'assets/galerie/fb_party01 (7).jpg', caption: 'ð Party-Stimmung pur eingefangen' },
+{ src: 'assets/galerie/fb_party01 (8).jpg', caption: 'ð Lebendige Momente voller Energy' },
+{ src: 'assets/galerie/fb_party01 (9).jpg', caption: 'ð· Professionelle QualitÃ¤t, authentische GefÃ¼hle' },
+{ src: 'assets/galerie/fb_party01 (10).jpg', caption: 'ðª Wenn Feiern zu Kunst wird' },
+{ src: 'assets/galerie/fb_party01 (11).jpg', caption: 'ð Tanzende Herzen, strahlende Gesichter' },
+{ src: 'assets/galerie/fb_party01 (12).jpg', caption: 'ð Gruppendynamik und PartyspaÃ' },
+{ src: 'assets/galerie/fb_party01 (13).jpg', caption: 'â¨ Magische Augenblicke festgehalten' },
+{ src: 'assets/galerie/fb_party01 (14).jpg', caption: 'ð Wenn aus GÃ¤sten Freunde werden' },
+{ src: 'assets/galerie/fb_party01 (15).jpg', caption: 'ð¸ SpontaneitÃ¤t in Perfektion' },
+{ src: 'assets/galerie/fb_party01 (16).jpg', caption: 'ð Bunte Vielfalt der Emotionen' },
+{ src: 'assets/galerie/fb_party01 (17).jpg', caption: 'ð­ Theatralische Momente voller Leben' },
+{ src: 'assets/galerie/fb_party01 (18).jpg', caption: 'ð« Sterne in den Augen der Feiernden' },
+{ src: 'assets/galerie/fb_party01 (19).jpg', caption: 'ð Konfetti-Regen der GefÃ¼hle' },
+{ src: 'assets/galerie/fb_party01 (20).jpg', caption: 'â¨ Glitzernde Erinnerungen fÃ¼r die Ewigkeit' },
+{ src: 'assets/galerie/fb_party01 (21).jpg', caption: 'ð Jubel und Freude pur' },
+{ src: 'assets/galerie/fb_party01 (22).jpg', caption: 'ð· Wenn Technik auf Herz trifft' },
+{ src: 'assets/galerie/fb_party01 (23).jpg', caption: 'ð Leuchtende Augen, strahlende Seelen' },
+{ src: 'assets/galerie/fb_party01 (24).jpg', caption: 'ð Leichtigkeit und Lebensfreude' },
+{ src: 'assets/galerie/fb_party01 (25).jpg', caption: 'ð Bewegung, Musik, pure Energie' },
+{ src: 'assets/galerie/fb_party01 (26).jpg', caption: 'ðª Zirkus der Emotionen' },
+{ src: 'assets/galerie/fb_party01 (27).jpg', caption: 'â¨ Funkelnde PersÃ¶nlichkeiten' },
+{ src: 'assets/galerie/fb_party01 (28).jpg', caption: 'ð Party-Menschen in ihrem Element' },
+{ src: 'assets/galerie/fb_party01 (29).jpg', caption: 'ð¸ SchnappschÃ¼sse voller Bedeutung' },
+{ src: 'assets/galerie/fb_party01 (30).jpg', caption: 'ð Regenbogen der guten Laune' },
+{ src: 'assets/galerie/fb_party01 (31).jpg', caption: 'ð Festliche Stimmung eingefangen' },
+{ src: 'assets/galerie/fb_party01 (32).jpg', caption: 'ð« Sternstunden des Feierns' },
+{ src: 'assets/galerie/fb_party01 (33).jpg', caption: 'ð­ Maskenball der PersÃ¶nlichkeiten' },
+{ src: 'assets/galerie/fb_party02.jpg', caption: 'ðª GroÃartige Gruppenaufnahme' },
+{ src: 'assets/galerie/fb_party03 (1).jpg', caption: 'â¨ Neue Party, neue Gesichter, gleiche Freude' },
+{ src: 'assets/galerie/fb_party03 (2).jpg', caption: 'ð Verschiedene Events, durchweg Begeisterung' },
+{ src: 'assets/galerie/fb_party03 (3).jpg', caption: 'ð¸ Jede Party hat ihre eigene Magie' },
+{ src: 'assets/galerie/fb_party03 (4).jpg', caption: 'ð Individuelle Momente, universelle Freude' },
+{ src: 'assets/galerie/fb_party03 (5).jpg', caption: 'ð KreativitÃ¤t kennt keine Grenzen' },
+{ src: 'assets/galerie/fb_party03 (6).jpg', caption: 'ð Tanzende Seelen vor der Kamera' },
+{ src: 'assets/galerie/fb_party03 (7).jpg', caption: 'ð Leichte Momente, schwere Erinnerungen' },
+{ src: 'assets/galerie/fb_party03 (8).jpg', caption: 'â¨ Glanz und Gloria der Feierei' },
+{ src: 'assets/galerie/fb_party04 (1).jpg', caption: 'ð­ CharakterkÃ¶pfe voller Leben' },
+{ src: 'assets/galerie/fb_party04 (2).jpg', caption: 'ð Farbenfrohe PersÃ¶nlichkeiten' },
+{ src: 'assets/galerie/fb_party04 (3).jpg', caption: 'ð Jubel und Trubel in einem Bild' },
+{ src: 'assets/galerie/fb_party04 (4).jpg', caption: 'ð· Professionell eingefangene SpontaneitÃ¤t' },
+{ src: 'assets/galerie/fb_party04 (5).jpg', caption: 'â¨ Funken der Begeisterung' },
+{ src: 'assets/galerie/fb_party04 (6).jpg', caption: 'ð Konfetti der GefÃ¼hle' },
+{ src: 'assets/galerie/fb_party04 (7).jpg', caption: 'ð« Leuchtturm-Momente der Party' },
+{ src: 'assets/galerie/fb_party04 (8).jpg', caption: 'ðª Manege frei fÃ¼r echte Emotionen' },
+{ src: 'assets/galerie/fb_party04 (9).jpg', caption: 'ð Sterne am Party-Himmel' },
+{ src: 'assets/galerie/fb_party04 (10).jpg', caption: 'ð Schwebende Leichtigkeit des Seins' },
+{ src: 'assets/galerie/fb_party04 (11).jpg', caption: 'ð Rhythmus im Blut, Freude im Herzen' },
+{ src: 'assets/galerie/fb_party04 (12).jpg', caption: 'ð HÃ¶hepunkte die bleiben' },
+{ src: 'assets/galerie/fb_party04 (13).jpg', caption: 'ð¸ Meisterwerke der SpontaneitÃ¤t' },
+{ src: 'assets/galerie/ww_party01 (1).jpg', caption: 'ð Vintage-Charme trifft moderne Party' },
+{ src: 'assets/galerie/ww_party01 (2).jpg', caption: 'â¨ Nostalgische Fotobox-Erlebnisse' },
+{ src: 'assets/galerie/ww_party01 (3).jpg', caption: 'ð Wohnwagen-Magie in Aktion' },
+{ src: 'assets/galerie/ww_party01 (4).jpg', caption: 'ð· Retro-Style mit modernem Twist' },
+{ src: 'assets/galerie/ww_party01 (5).jpg', caption: 'ð GemÃ¼tliche AtmosphÃ¤re, groÃe Freude' },
+{ src: 'assets/galerie/ww_party01 (6).jpg', caption: 'ð Wenn Vintage auf Party trifft' },
+{ src: 'assets/galerie/ww_party01 (7).jpg', caption: 'ð« Einzigartige Wohnwagen-Erlebnisse' }
+// Galerie initialisieren
+function initGallery() {
+// Galerie beim Laden der Seite initialisieren
+document.addEventListener('DOMContentLoaded', initGallery);
+<script src="js/main.js"></script>
+// Galerie-spezifische FunktionalitÃ¤t ohne Bedienelemente
+// Bestehende Galerie-Logik beibehalten, aber Kontrollen entfernt
+console.log('ð¨ Galerie geladen - Auto-Play aktiv');
+EXTERNAL_SCRIPT https://fotopolis-mieten.de/js/main.js

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#071b30">
+<meta name="referrer" content="no-referrer">
+<title>FOTOPOLIS Studio · Mein Dashboard</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/admin/dashboard/dashboard.css">
+<link rel="stylesheet" href="/admin/dashboard/inventory-manager.css">
+<link rel="stylesheet" href="/admin/dashboard/planning-manager.css">
+<link rel="stylesheet" href="/admin/dashboard/reservations-manager.css">
+<link rel="stylesheet" href="/admin/dashboard/operations-insights.css">
+<link rel="stylesheet" href="/admin/dashboard/first-run.css">
+<script type="module" src="/admin/dashboard/dashboard-bundle.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Zum Dashboard springen</a>
+<div class="preview-banner"><span class="preview-dot" aria-hidden="true"></span><strong>FOTOPOLIS · MANAGEMENT STUDIO</strong><span>Geräte · Termine · Administration</span></div>
+<div class="loading-state" id="gate" role="status" aria-live="polite">
+  <span class="gate-mark" aria-hidden="true">◈</span>
+  <h1>Deine Verwaltung wird geöffnet.</h1>
+  <p id="gate-message">Anmeldung und Berechtigungen werden geprüft …</p>
+  <a id="login-back" href="/admin/login/" hidden>Zur Anmeldung</a>
+</div>
+<div class="app" id="dashboard-app" hidden>
+ <aside class="sidebar" aria-label="Hauptnavigation">
+  <a class="brand" href="/" aria-label="FOTOPOLIS Website"><img src="/assets/fotopolis-logo-original.png" alt="" width="55" height="55"><span>FOTOPOLIS<small>STUDIO · ADMIN</small></span></a>
+  <p class="sidebar-label">DEIN WORKSPACE</p>
+  <nav class="sidebar-nav" aria-label="Verwaltungsbereiche">
+    <a class="active" href="#overview" aria-current="page"><span class="nav-glyph" aria-hidden="true">◈</span> Dashboard</a>
+    <a href="#calendar"><span class="nav-glyph" aria-hidden="true">▦</span> Terminplaner</a>
+    <a href="#inventory"><span class="nav-glyph" aria-hidden="true">▤</span> Gerätebestand</a>
+    <a href="#planning"><span class="nav-glyph" aria-hidden="true">◷</span> Sperrzeitenplanung</a>
+    <a href="#bookings"><span class="nav-glyph" aria-hidden="true">◇</span> Interne Vormerkungen</a>
+    <a href="#activity"><span class="nav-glyph" aria-hidden="true">◴</span> Änderungsprotokoll</a>
+    <a href="#account"><span class="nav-glyph" aria-hidden="true">♧</span> Mein Konto</a>
+  </nav>
+  <div class="sidebar-spacer"></div>
+  <div class="sidebar-notice"><span class="notice-dot" aria-hidden="true"></span><strong>Sicher verbunden</strong><p>Persönlicher Zugang mit rollenbasierten Berechtigungen.</p></div>
+  <a class="return-link" href="/">◫ Zur FOTOPOLIS Website</a>
+  <button class="sidebar-signout" type="button" data-signout>Abmelden <span aria-hidden="true">↗</span></button>
+ </aside>
+ <div class="workspace">
+  <header class="topbar">
+    <button class="menu-button" type="button" data-menu-toggle aria-expanded="false" aria-controls="dashboard-mobile-menu" aria-label="Menü öffnen">☰</button>
+    <div class="crumbs">FOTOPOLIS <span>/</span> Admin Studio <span>/</span> <strong>Übersicht</strong></div>
+    <div class="top-actions"><span class="access-label" id="top-role">ADMINISTRATION</span><span class="avatar" aria-label="Angemeldeter Administrator">F</span></div>
+  </header>
+  <nav id="dashboard-mobile-menu" class="mobile-menu" hidden aria-label="Mobile Verwaltung">
+   <a href="#overview">Dashboard</a><a href="#calendar">Terminplaner</a><a href="#inventory">Gerätebestand</a><a href="#planning">Sperrzeitenplanung</a><a href="#bookings">Vormerkungen</a><a href="#activity">Protokoll</a><a href="#account">Mein Konto</a>
+   <button type="button" data-signout>Abmelden</button>
+  </nav>
+  <main id="main">
+   <section class="intro" id="overview">
+    <div>
+      <span class="eyebrow"><span class="line"></span> FOTOPOLIS MANAGEMENT STUDIO</span>
+      <h1>Willkommen in<br><em>deinem Studio.</em></h1>
+      <p>Dein zentraler Arbeitsbereich für Mietgeräte, interne Reservierungen, Sperrzeiten und Termine. Alle gespeicherten Einträge werden mit deinem Administratorkonto verwaltet.</p>
+    </div>
+    <div class="intro-action"><span class="status-pill"><i></i> Angemeldet · <strong data-role-label>Admin</strong></span><span>Interne Disposition</span></div>
+   </section>
+   <section class="metrics" aria-label="Aktueller Datenbestand">
+    <article><span>REGISTRIERTE GERÄTE</span><strong data-count="resources">–</strong><small>Physisch hinterlegte Ressourcen</small></article>
+    <article><span>TERMINE IM ZEITRAUM</span><strong data-count="bookings">–</strong><small>Bestätigt oder vorgemerkt</small></article>
+    <article><span>INTERNE SPERRZEITEN</span><strong data-count="blocks">–</strong><small>Blockierungen und Wartung</small></article>
+   </section>
+   <section class="operations-agenda" id="agenda" aria-labelledby="agenda-heading">
+    <div class="operations-agenda-top"><div><span class="eyebrow">BETRIEBSÜBERSICHT</span><h2 id="agenda-heading">Termine im gewählten Zeitraum</h2></div><a href="#calendar" class="agenda-calendar-link">Kalender öffnen ↗</a></div>
+    <p class="agenda-note">Gespeicherte Einsätze und Reservierungen im angezeigten Kalenderzeitraum.</p>
+    <div class="agenda-list" data-agenda role="status" aria-live="polite"><p>Die Termine werden geladen …</p></div>
+   </section>
+   <section class="calendar-shell" id="calendar" aria-labelledby="calendar-heading">
+    <div class="calendar-heading">
+     <div><span class="eyebrow">BUCHUNGSÜBERSICHT</span><h2 id="calendar-heading">Dein Terminplaner</h2></div>
+     <div class="calendar-controls" role="group" aria-label="Kalenderansicht"><button type="button" data-view="month" aria-pressed="true">Monat</button><button type="button" data-view="week" aria-pressed="false">Woche</button></div>
+    </div>
+    <div class="calendar-tools">
+      <div class="date-navigation"><button type="button" data-nav="prev" aria-label="Vorheriger Zeitraum">‹</button><button type="button" data-nav="today">Heute</button><button type="button" data-nav="next" aria-label="Nächster Zeitraum">›</button><strong data-period aria-live="polite">Kalender wird geladen</strong></div>
+      <div class="date-jump"><label for="admin-jump-date">Datum wählen</label><input id="admin-jump-date" type="date" aria-label="Kalenderdatum auswählen"><button type="button" data-date-go>Zeigen</button></div>
+      <button type="button" data-refresh-calendar class="calendar-reload">↻ Aktualisieren</button>
+      <button type="button" data-export-calendar class="calendar-reload" disabled>Aktuellen Zeitraum als CSV</button>
+      <label class="filter">Produkt <select data-product-filter><option value="all">Alle Fotoerlebnisse</option><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
+    </div>
+    <p class="calendar-sync" data-calendar-sync role="status" aria-live="polite">Lade Termine …</p>
+    <div class="calendar-hint"><span class="hint-point" aria-hidden="true"></span><span>Wähle einen Kalendertag für die Details. Interne Reservierungen und Sperrzeiten werden beim Speichern auf Überschneidungen geprüft.</span></div>
+    <div class="calendar-scroller"><div class="weekdays" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div class="calendar-grid" data-calendar-grid role="group" aria-label="Kalender"></div></div>
+    <div class="calendar-foot"><div class="legend"><span><i class="legend-gold"></i> Sperrzeit</span><span><i class="legend-outline"></i> Interne Reservierung</span></div><span>Europe/Berlin · Änderungen nur mit Administratorrechten</span></div>
+   </section>
+   <section class="bottom-grid">
+    <article class="detail-card"><span class="eyebrow">TAGESÜBERSICHT</span><h2 data-day-title>Ausgewählter Tag</h2><div data-day-details><p>Wähle ein Datum im Kalender aus.</p></div><div class="day-action-row"><button type="button" class="text-button" data-plan-day>Für diesen Tag Sperrzeit planen ↗</button><button type="button" class="text-button" data-reserve-day hidden>Interne Vormerkung anlegen ↗</button></div></article>
+    <article class="inventory-card" id="inventory"><span class="eyebrow">DEINE MIETGERÄTE</span><h2>Gerätebestand</h2><p class="inventory-intro">Verwalte deine Fotoboxen, Fotospiegel und Fotowohnwagen. Lege Geräte einzeln an, ändere Namen und steuere ihre Freigabe für die interne Disposition.</p><button type="button" data-export-inventory class="inventory-edit-button" disabled>Gerätebestand als CSV</button>
+    <div class="inventory-filter-bar" role="search" aria-label="Gerätebestand durchsuchen">
+      <label>Gerät suchen<input type="search" data-inventory-search autocomplete="off" placeholder="Name oder Kennung" aria-label="Gerätename oder Kennung suchen"></label>
+      <label>Produktart<select data-inventory-type><option value="all">Alle Arten</option><option value="fotobox">Fotobox</option><option value="fotospiegel">Fotospiegel</option><option value="fotowohnwagen">Fotowohnwagen</option></select></label>
+      <label>Gerätestatus<select data-inventory-state><option value="all">Alle Status</option><option value="active">Aktiv</option><option value="inactive">Deaktiviert</option></select></label>
+    </div>
+    <p class="inventory-filter-summary" data-inventory-results role="status" aria-live="polite">Geräte werden geladen …</p>
+    <div class="inventory-list" data-inventory></div><div id="inventory-manager" data-inventory-manager></div></article>
+   </section>
+   <section class="operations-card" id="planning" aria-labelledby="planning-heading">
+     <span class="eyebrow">INTERNE BETRIEBSPLANUNG</span>
+     <h2 id="planning-heading">Sperrzeiten & Wartung</h2>
+     <div id="planning-manager" data-planning-manager></div>
+   </section>
+   <section class="operations-card" id="bookings" aria-labelledby="bookings-heading">
+     <span class="eyebrow">INTERNES TERMINMANAGEMENT</span>
+     <h2 id="bookings-heading">Vormerkungen & Reservierungen</h2>
+     <div id="reservations-manager" data-reservations-manager></div>
+   </section>
+   <section class="operations-card" id="activity" aria-labelledby="activity-heading">
+      <span class="eyebrow">SICHERHEIT & NACHVOLLZIEHBARKEIT</span>
+      <h2 id="activity-heading">Letzte Verwaltungsänderungen</h2>
+      <p class="plan-help">Nachvollziehbare Änderungen an Mietgeräten und internen Terminen.</p>
+      <div data-activity-list role="status" aria-live="polite">Änderungsprotokoll wird geladen …</div>
+   </section>
+   <section class="account-card" id="account" aria-labelledby="account-heading">
+    <div><span class="eyebrow">ADMINISTRATORKONTO</span><h2 id="account-heading">Mein Konto & Sicherheit</h2><p>Dein persönlicher Zugang mit abgestuften Verwaltungsrechten.</p><dl><div><dt>E-Mail-Adresse</dt><dd data-user-email>–</dd></div><div><dt>Berechtigung</dt><dd data-user-role>–</dd></div><div><dt>Umgebung</dt><dd>Geschützter Verwaltungsbereich</dd></div></dl></div>
+    <div class="account-actions"><a href="/admin/login/?mode=reset" class="primary-button">Passwort festlegen / ändern ↗</a><button type="button" class="secondary-button" data-health-check hidden>Systemstatus prüfen</button><div class="health-status" data-health-status aria-live="polite"></div><button type="button" class="secondary-button" data-signout>Abmelden</button></div>
+   </section>
+      <section class="setup-card" id="setup-assistant" hidden aria-labelledby="setup-heading">
+     <span class="eyebrow">DEIN STUDIO EINRICHTEN</span>
+     <h2 id="setup-heading">Dein Studio Schritt für Schritt in Betrieb nehmen.</h2>
+     <p>Richte deine Verwaltung in fünf Schritten ein. Jeder Fortschritt wird anhand deiner Zugriffsrechte und tatsächlich gespeicherter Geräte und Termine überprüft.</p>
+     <div class="setup-progress"><strong data-setup-progress>Ersteinrichtung wird geprüft …</strong><span>Persönlicher Verwaltungsbereich</span></div>
+     <ol class="setup-steps" data-setup-steps aria-label="Fortschritt der Ersteinrichtung" aria-live="polite"></ol>
+     <div class="setup-actions">
+       <button type="button" class="setup-check-button" data-setup-health-check>Systemrechte prüfen</button>
+       <a class="primary-button" data-setup-next href="#inventory">Echtes Mietgerät anlegen</a>
+     </div>
+     <p class="setup-status" data-setup-status role="status" aria-live="polite"></p>
+   </section>
+<section class="security-note"><strong>Interne Verwaltung</strong><p>Die Geräte- und Terminverwaltung ist nur für berechtigte Mitarbeiter zugänglich. Vormerkungen berücksichtigen die gewählten Logistikpuffer. Kundenanfragen, Angebote und endgültige Buchungsbestätigungen werden separat abgestimmt.</p></section>
+  </main>
+  <dialog class="day-detail-dialog" id="day-detail-dialog" aria-labelledby="day-dialog-heading">
+    <div class="day-dialog-inner">
+      <div class="day-dialog-heading"><div><span class="eyebrow">TAGESDETAILS</span><h2 id="day-dialog-heading" data-dialog-day-title>Ausgewählter Tag</h2></div><button type="button" class="day-dialog-close" data-close-day aria-label="Tagesdetails schließen">×</button></div>
+      <div class="day-dialog-entries" data-dialog-entries></div>
+      <p class="day-dialog-note">Nur ausdrücklich gespeicherte Belegungen blockieren Geräte. Leere Tage sind keine verbindliche öffentliche Verfügbarkeitszusage.</p>
+      <div class="day-dialog-actions"><button type="button" class="plan-primary" data-plan-selected>Sperrzeit für diesen Tag planen</button>
+      <button type="button" class="plan-secondary" data-reserve-selected hidden>Interne Vormerkung für diesen Tag</button></div>
+    </div>
+  </dialog>
+  <footer class="footer"><span>FOTOPOLIS · MANAGEMENT STUDIO</span><span>Persönlicher Zugang · Interne Verwaltung</span></footer>
+ </div>
+</div>
+</body>
+</html>

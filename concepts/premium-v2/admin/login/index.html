@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#071b30">
+<meta name="referrer" content="no-referrer">
+<title>FOTOPOLIS · Admin-Anmeldung</title>
+<meta name="description" content="FOTOPOLIS – sicherer Zugang zur Geräte- und Terminverwaltung.">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/admin/login/login.css">
+<script type="module" src="/admin/login/login-bundle.js"></script>
+</head>
+<body>
+<a class="skip" href="#login">Zur Anmeldung springen</a>
+<div class="ribbon"><strong>FOTOPOLIS · MANAGEMENT STUDIO</strong><span>Geräte · Termine · Administration</span></div>
+<div class="shell">
+<aside class="brand-panel">
+  <a class="brand" href="/" aria-label="FOTOPOLIS – Startseite"><img src="/assets/fotopolis-logo-original.png" alt="" width="65" height="65"><strong>FOTOPOLIS<small>STUDIO · ADMIN</small></strong></a>
+  <div class="brand-message"><span class="eyebrow">DEIN PERSÖNLICHER ZUGANG</span><h1>Dein Studio.<br><em>Dein Überblick.</em></h1><p>Alle Buchungen, Mietgeräte und internen Termine übersichtlich verwalten – mit deinem persönlichen Administratorkonto.</p></div>
+  <div class="side-note">FOTOPOLIS · Ahlen · Persönlicher Zugang</div>
+</aside>
+<main id="login" class="login-panel">
+<div class="form-shell">
+  <span class="eyebrow">FOTOPOLIS · SICHERER ZUGANG</span>
+  <h2>Willkommen zurück.</h2>
+  <p class="intro" id="intro">Melde dich mit deiner E-Mail-Adresse und deinem persönlichen Passwort an.</p>
+  <div class="security-flag"><span aria-hidden="true">◈</span> Geschützter Administratorzugang</div>
+  <div class="mode-tabs" role="group" aria-label="Anmeldemethode">
+    <button type="button" data-mode="password" aria-pressed="true">Passwort</button>
+    <button type="button" data-mode="otp" aria-pressed="false">Einmalcode</button>
+    <button type="button" data-mode="reset" aria-pressed="false">Passwort festlegen</button>
+  </div>
+  <form id="auth-form" novalidate>
+    <label for="email">E-Mail-Adresse</label>
+    <input type="email" id="email" autocomplete="email" placeholder="dein.postfach@beispiel.de" spellcheck="false" required maxlength="254">
+    <div id="password-fields">
+      <label for="login-password">Dein Passwort</label>
+      <div class="password-wrap">
+        <input type="password" id="login-password" autocomplete="current-password" placeholder="Persönliches Passwort" maxlength="128">
+        <button type="button" class="show-password" data-reveal="login-password" aria-label="Passwort anzeigen">Anzeigen</button>
+      </div>
+    </div>
+    <div id="reset-fields" hidden>
+      <p class="step-note">Beim ersten Mal legst du dein Passwort über einen einmaligen E-Mail-Code fest. Danach meldest du dich ohne E-Mail-Code an.</p>
+      <label for="new-password">Neues Passwort (mindestens 12 Zeichen)</label>
+      <div class="password-wrap">
+        <input type="password" id="new-password" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Mindestens 12 Zeichen">
+        <button type="button" class="show-password" data-reveal="new-password" aria-label="Neues Passwort anzeigen">Anzeigen</button>
+      </div>
+      <label for="confirm-password">Passwort wiederholen</label>
+      <input type="password" id="confirm-password" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Passwort bestätigen">
+    </div>
+    <div id="otp-fields" hidden>
+      <label for="otp">Code aus deinem E-Mail-Postfach</label>
+      <input type="text" id="otp" autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]{6,8}" maxlength="8" placeholder="6- bis 8-stelliger Code">
+    </div>
+    <button type="button" class="action secondary" id="send-code" hidden>Code an mein Postfach senden <span aria-hidden="true">↗</span></button>
+    <button type="submit" class="action" id="submit">Mit Passwort anmelden <span aria-hidden="true">↗</span></button>
+    <div class="helper-actions">
+      <button type="button" class="link-button" id="forgot">Passwort vergessen oder erstmals festlegen?</button>
+      <button type="button" class="link-button" id="verify-email">E-Mail-Adresse noch nicht bestätigt?</button>
+    </div>
+  </form>
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <section id="session-panel" class="session-panel" hidden aria-labelledby="session-title">
+    <span class="eyebrow">SICHERHEITSPRÜFUNG</span>
+    <h3 id="session-title">Anmeldung bestätigt</h3>
+    <p id="session-info"></p><p id="access-info"></p>
+    <a id="calendar-link" href="/admin/dashboard/" hidden>Mein Dashboard öffnen ↗</a>
+    <button type="button" id="signout" class="text-action">Abmelden</button>
+  </section>
+  <p class="footnote">Dein Zugang ist persönlich und geschützt. Gib dein Passwort oder Einmalcodes niemals an andere weiter.</p>
+  <a class="back" href="/">← Zur FOTOPOLIS-Website</a>
+</div>
+</main>
+</div>
+</body>
+</html>
