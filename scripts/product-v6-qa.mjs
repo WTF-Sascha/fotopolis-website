@@ -99,6 +99,17 @@ for(const width of widths){
   const next=page.locator("[data-product-next]");
   await next.click();
   check(width,slug,"missing date blocked",await date.getAttribute("aria-invalid")==="true");
+  check(width,slug,"visible validation text",((await page.locator("[data-product-request-status]").textContent())||"").includes("Wunschtermin"));
+  if(width<=760){
+    await date.focus();
+    check(width,slug,"mobile bottom bar hides while typing",await page.evaluate(()=>
+      document.body.classList.contains("form-focus-active") &&
+      getComputedStyle(document.querySelector(".v4-mobile-nav")).visibility==="hidden"));
+    await date.evaluate(el=>el.blur());
+    await page.waitForFunction(()=>!document.body.classList.contains("form-focus-active"));
+    check(width,slug,"mobile bottom bar returns after input blur",await page.evaluate(()=>
+      getComputedStyle(document.querySelector(".v4-mobile-nav")).visibility!=="hidden"));
+  }
   const future=await page.evaluate(()=>{
     const dt=new Date();dt.setDate(dt.getDate()+18);
     return [dt.getFullYear(),String(dt.getMonth()+1).padStart(2,"0"),String(dt.getDate()).padStart(2,"0")].join("-");
@@ -121,6 +132,7 @@ for(const width of widths){
   const mail=page.locator("[data-product-request-email]");
   await mail.click();
   check(width,slug,"missing name blocked",await page.locator('[data-product-request] [name="name"]').getAttribute("aria-invalid")==="true");
+  check(width,slug,"second-step error remains visible",((await page.locator("[data-product-request-status]").textContent())||"").includes("Namen"));
   await page.locator('[data-product-request] [name="name"]').fill("Max Mustermann");
   await page.locator('[data-product-request] [name="email"]').fill("incorrect");
   await mail.click();
@@ -190,6 +202,14 @@ for(const width of widths){
  }
  await page.close();
 }
+// No-JS fallback must offer a working human-operated email contact.
+const noJs=await browser.newPage({viewport:{width:375,height:820},javaScriptEnabled:false});
+for(const slug of ["fotobox","fotospiegel","fotowohnwagen"]){
+  const resp=await noJs.goto(new URL(slug+"/",origin).toString(),{waitUntil:"domcontentloaded"});
+  const fallback=noJs.locator(".s7-nojs a[href^='mailto:']");
+  check(375,slug,"no JavaScript email fallback",resp.status()===200&&await fallback.count()===1&&await fallback.isVisible());
+}
+await noJs.close();
 await browser.close();
 const failed=cases.filter(x=>!x.pass);
 const report={version:"7.0",pages:products.length,widths,checks:cases.length,passed:cases.length-failed.length,failed:failed.length,failures:failed,screenshots:shots};
