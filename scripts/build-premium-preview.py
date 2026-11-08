@@ -340,5 +340,5 @@ runpy.run_path(str(root / "scripts/apply-studio9.py"),run_name="__main__")
 # FOTOPOLIS Gold Signature is intentionally applied after Studio 9 to all public routes.
 runpy.run_path(str(root / 'scripts/apply-gold-brand.py'), run_name='__main__')
 
-# Public-only screen branding and warm editorial image treatment.
-runpy.run_path(str(root / 'scripts/apply-photo-artdirection.py'),run_name='__main__')
+# Exact original-asset logo swap only; all other pixels are preserved.
+runpy.run_path(str(root / 'scripts/swap-original-logos.py'),run_name='__main__')
