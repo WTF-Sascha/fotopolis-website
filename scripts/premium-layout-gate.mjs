@@ -46,9 +46,9 @@ for(const width of widths) {
       const footerGrid=document.querySelector(".footer-grid");
       const topItems=footerGrid?[...footerGrid.children].filter(x=>x!==footer):[];
       const firstTopMax=Math.max(...topItems.map(x=>x.getBoundingClientRect().bottom),0);
-      const stage=document.querySelector(".product-identity-stage");
-      const media=rect(document.querySelector(".product-identity-art"));
-      const copy=rect(document.querySelector(".product-story"));
+      const stage=document.querySelector(".s7-story-layout");
+      const media=rect(document.querySelector(".s7-story-lead"));
+      const copy=rect(document.querySelector(".s7-story-points"));
       const mediaImg=document.querySelector(".studio-page-hero-media img");
       const badControls=[...document.querySelectorAll(".button,.mobile-toggle,.nav-trigger")]
         .filter(el=>{const cs=getComputedStyle(el),r=el.getBoundingClientRect();return cs.display!=="none"&&r.width>0&&r.height>0&&r.height<42;})
@@ -91,10 +91,10 @@ for(const width of widths) {
     check(label+" no clipped card content",facts.overflowCards.length===0,facts.overflowCards.join(","));
     check(label+" touch targets",facts.badControls.length===0,JSON.stringify(facts.badControls));
     if(["fotobox","fotospiegel","fotowohnwagen"].includes(slug)) {
-      check(label+" product stage present",facts.productMedia&&!!facts.mediaImg);
+      check(label+" editorial product layout present",facts.productMedia&&!!facts.mediaImg);
       check(label+" approved image unchanged presentation",
         !!facts.mediaImg?.src?.startsWith("/assets/images/")&&facts.mediaImg.fit==="contain"&&facts.mediaImg.filter==="none");
-      check(label+" product stage separation",!facts.stageOverlap&&!facts.stageStackBad);
+      check(label+" editorial layout separation",!facts.stageOverlap&&!facts.stageStackBad);
     }
     if(slug==="pakete"){
       check(label+" three package profiles",facts.packageCards===3,String(facts.packageCards));
