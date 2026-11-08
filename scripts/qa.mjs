@@ -96,10 +96,12 @@ if(!css.includes("@font-face")){
 if(source["rechtliches/index.html"]?.includes("noch in Vorbereitung")||source["rechtliches/index.html"]?.includes("werden ergänzt")){
   if(premium)fail("Premium: rechtliche Seiten noch nicht freigabefähig");else warn("Rechtliche Seiten nicht final");
 }
-/* Premium gallery data and assets */\nif(exists("site/assets/design-gallery-data.json")){try{const layouts=JSON.parse(read("site/assets/design-gallery-data.json"));check(layouts.length===32,"32 einzigartige Designvorlagen im Katalog");check(new Set(layouts.map(d=>d.id)).size===layouts.length,"Vorlagen-IDs eindeutig");for(const d of layouts){check(/^FP-\d{3}$/.test(d.id),"Katalog-ID "+d.id);check(exists("site"+d.image),"Vorlagenbild vorhanden: "+d.id)}}catch(e){fail("Designkatalog ungültig: "+e.message)}}else fail("Designkatalog fehlt");\n
+/* Premium gallery data and assets */
+if(exists("site/assets/design-gallery-data.json")){try{const layouts=JSON.parse(read("site/assets/design-gallery-data.json"));check(layouts.length===32,"32 einzigartige Designvorlagen im Katalog");check(new Set(layouts.map(d=>d.id)).size===layouts.length,"Vorlagen-IDs eindeutig");for(const d of layouts){check(/^FP-\d{3}$/.test(d.id),"Katalog-ID "+d.id);check(exists("site"+d.image),"Vorlagenbild vorhanden: "+d.id)}}catch(e){fail("Designkatalog ungültig: "+e.message)}}else fail("Designkatalog fehlt");
+
 const summary={mode:premium?"premium":"technical",passed:success.length,failed:failures.length,warnings:warnings.length,status:failures.length?"FAIL":"PASS"};
 console.log("FOTOPOLIS QA\n"+JSON.stringify(summary,null,2));
 for(const s of failures)console.error("FAIL",s);
 for(const s of warnings)console.warn("WARN",s);
 if(failures.length)process.exitCode=1;
-\n
+
