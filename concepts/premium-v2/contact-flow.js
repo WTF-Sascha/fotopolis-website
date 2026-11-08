@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
     notice.textContent="Gewählte Fotodesignvorlage: " + selectedDesign;
     form.prepend(notice);
   }
+  const designField=form.querySelector('[name="vorlage"]');
+  if(selectedDesign&&designField&&[...designField.options].some(x=>x.value===selectedDesign))
+    designField.value=selectedDesign;
+  const currentDesign=()=>designField?.value||"";
   const output = document.querySelector("[data-contact-summary]");
   const mailLink = document.querySelector("[data-contact-email]");
   const copy = document.querySelector("[data-contact-copy]");
@@ -60,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "ich möchte ein unverbindliches Angebot für mein Event anfragen.", "",
     "ANLASS", d.occasion || "noch offen",
     "FOTOERLEBNIS", d.product || "noch offen",
-    "DESIGNVORLAGE", selectedDesign || "noch offen",
+    "DESIGNVORLAGE", currentDesign() || "noch offen",
     "WUNSCHTERMIN", d.date || "noch offen",
     "TAGESZEIT", d.time || "noch offen",
     "VERANSTALTUNGSORT", d.location || "noch offen",
@@ -81,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     output.textContent = [
       "Anlass: " + (d.occasion || "bitte auswählen"),
       "Fotoerlebnis: " + d.product,
-      "Designvorlage: " + (selectedDesign || "keine Vorauswahl"),
+      "Designvorlage: " + (currentDesign() || "keine Vorauswahl"),
       "Termin: " + (d.date || "noch offen") + " · " + d.time,
       "Ort: " + (d.location || "noch offen"),
       "Gäste: " + (d.guests || "noch offen"),
@@ -158,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(askForMissing("Bitte prüfe noch deine Pflichtangaben."))return;
       const recap = document.querySelector(".contact-recap");
       recap?.scrollIntoView({behavior:"smooth",block:"nearest"});
-      mailLink.focus({preventScroll:true});
+      (document.querySelector("[data-contact-submit]")||mailLink).focus({preventScroll:true});
     }
   });
   showStep(1);
