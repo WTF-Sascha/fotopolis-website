@@ -6,6 +6,8 @@
  const modal=root.querySelector('[data-gallery-modal]'),modalImage=modal.querySelector('[data-modal-image]'),modalName=modal.querySelector('[data-modal-name]'),modalCopy=modal.querySelector('[data-modal-copy]'),modalId=modal.querySelector('[data-modal-id]'),modalTags=modal.querySelector('[data-modal-tags]'),modalLink=modal.querySelector('[data-modal-link]'),modalProduct=modal.querySelector('[data-modal-product]');
  const catButtons=[...root.querySelectorAll('[data-gallery-category]')];
  const labels={elegant:'Signature',hochzeit:'Hochzeit',weihnachten:'Weihnachten',geburtstag:'Geburtstag',firma:'Business'};
+ const requestedProduct=new URLSearchParams(location.search).get('produkt');
+ if(['Fotobox','Fotospiegel','Fotowohnwagen'].includes(requestedProduct))modalProduct.value=requestedProduct;
  let items=[],category='alle',active=null,lastFocus=null;
  let saved=[];try{saved=JSON.parse(localStorage.getItem('fotopolis.gallery.favorites')||'[]');if(!Array.isArray(saved))saved=[]}catch{saved=[]}
  const store=()=>{try{localStorage.setItem('fotopolis.gallery.favorites',JSON.stringify(saved))}catch{}};
