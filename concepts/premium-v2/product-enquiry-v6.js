@@ -1,55 +1,56 @@
 "use strict";
-/* Product Studio 6.0 – honest, client-only appointment enquiries.
-   No network requests, tracking, server writes, hold or availability claim.
-   The visitor must explicitly send the prepared email in their own email app. */
-document.addEventListener("DOMContentLoaded",()=>{
+/* FOTOPOLIS Studio Edition 7.0 – accessible two-step enquiry.
+   A visitor explicitly sends their prepared email; the website does not
+   transmit, promise availability or reserve a date. */
+document.addEventListener("DOMContentLoaded", () => {
   const section=document.querySelector("[data-product-request-section]");
   const form=section?.querySelector("[data-product-request]");
   if(!form)return;
-
-  const address="kontakt@fotopolis-mieten.de";
   const product=form.dataset.product;
   const display=form.dataset.displayProduct;
-  const select=name=>form.elements.namedItem(name);
-  const mail=section.querySelector("[data-product-request-email]");
-  const copy=section.querySelector("[data-product-request-copy]");
-  const full=section.querySelector("[data-product-request-full]");
+  const field=name=>form.elements.namedItem(name);
+  const emailLink=section.querySelector("[data-product-request-email]");
+  const copyButton=section.querySelector("[data-product-request-copy]");
+  const extended=section.querySelector("[data-product-request-full]");
   const status=section.querySelector("[data-product-request-status]");
-  const summaryDate=section.querySelector("[data-product-summary-date]");
-  const summaryTime=section.querySelector("[data-product-summary-time]");
-  const summaryPlace=section.querySelector("[data-product-summary-place]");
-  const today=new Date();
-  const todayLocal=[
-    String(today.getFullYear()),
-    String(today.getMonth()+1).padStart(2,"0"),
-    String(today.getDate()).padStart(2,"0")
-  ].join("-");
-  const dateControl=select("datum");
-  dateControl.min=todayLocal;
+  const dateDisplay=section.querySelector("[data-product-summary-date]");
+  const timeDisplay=section.querySelector("[data-product-summary-time]");
+  const placeDisplay=section.querySelector("[data-product-summary-place]");
+  const steps=[...section.querySelectorAll("[data-product-step]")];
+  const indicators=[...section.querySelectorAll("[data-product-progress]")];
+  const next=section.querySelector("[data-product-next]");
+  const back=section.querySelector("[data-product-back]");
+  const stepCount=section.querySelector("[data-step-current]");
+  const dateField=field("datum");
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,"0");
+  const minDate=[now.getFullYear(),pad(now.getMonth()+1),pad(now.getDate())].join("-");
+  dateField.min=minDate;
 
-  const read=()=>({
-    product,
-    display,
-    date:dateControl.value,
-    time:select("tageszeit").value,
-    place:select("ort").value.trim().slice(0,120),
-    occasion:select("anlass").value,
-    name:select("name").value.trim().slice(0,100),
-    email:select("email").value.trim().slice(0,150),
-    notes:select("notiz").value.trim().slice(0,700)
-  });
   const formatDate=value=>{
     if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return "Noch nicht gewählt";
     const [year,month,day]=value.split("-").map(Number);
     const parsed=new Date(Date.UTC(year,month-1,day));
     if(parsed.getUTCFullYear()!==year||parsed.getUTCMonth()!==month-1||parsed.getUTCDate()!==day)return value;
-    return new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"long",year:"numeric",timeZone:"UTC"}).format(parsed);
+    return new Intl.DateTimeFormat("de-DE",{
+      year:"numeric",month:"long",day:"2-digit",timeZone:"UTC"
+    }).format(parsed);
   };
-  const text=d=>[
+  const read=()=>({
+    product,display,
+    date:dateField.value,
+    time:field("tageszeit").value,
+    place:field("ort").value.trim().slice(0,120),
+    occasion:field("anlass").value,
+    name:field("name").value.trim().slice(0,100),
+    email:field("email").value.trim().slice(0,150),
+    notes:field("notiz").value.trim().slice(0,700)
+  });
+  const content=d=>[
     "Hallo FOTOPOLIS,","",
     "ich möchte den folgenden Wunschtermin unverbindlich anfragen.","",
     "FOTOERLEBNIS: "+d.display,
-    "WUNSCHTERMIN: "+(d.date ? formatDate(d.date) : "noch offen"),
+    "WUNSCHTERMIN: "+(d.date?formatDate(d.date):"noch offen"),
     "TAGESZEIT: "+d.time,
     "ANLASS: "+d.occasion,
     "VERANSTALTUNGSORT: "+(d.place||"noch offen"),"",
@@ -60,71 +61,99 @@ document.addEventListener("DOMContentLoaded",()=>{
     d.notes||"keine","",
     "Bitte prüft die Verfügbarkeit und erstellt mir ein persönliches Angebot.",
     "Mir ist bewusst, dass dies noch keine Buchung oder Reservierung ist.","",
-    "Viele Grüße",
-    d.name||""
+    "Viele Grüße",d.name||""
   ].join("\n");
-  const emailHref=d=>"mailto:"+address+
+  const emailHref=d=>"mailto:kontakt@fotopolis-mieten.de"+
     "?subject="+encodeURIComponent("FOTOPOLIS | Terminanfrage "+d.display+(d.date?" | "+d.date:""))+
-    "&body="+encodeURIComponent(text(d));
+    "&body="+encodeURIComponent(content(d));
 
   const update=()=>{
     const d=read();
-    summaryDate.textContent=formatDate(d.date);
-    summaryTime.textContent=d.time;
-    summaryPlace.textContent=d.place||"Wird abgestimmt";
-    mail.href=emailHref(d);
+    dateDisplay.textContent=formatDate(d.date);
+    timeDisplay.textContent=d.time;
+    placeDisplay.textContent=d.place||"Wird abgestimmt";
+    emailLink.href=emailHref(d);
     const params=new URLSearchParams({produkt:d.product});
     if(d.date)params.set("datum",d.date);
     if(d.time&&d.time!=="Noch offen")params.set("tageszeit",d.time);
     if(d.place)params.set("ort",d.place);
     if(d.occasion&&d.occasion!=="Noch offen")params.set("anlass",d.occasion);
     if(d.notes)params.set("details",d.notes);
-    full.href="/kontakt/?"+params.toString();
+    extended.href="/kontakt/?"+params.toString();
+    for(const invalid of form.querySelectorAll('[aria-invalid="true"]'))invalid.removeAttribute("aria-invalid");
     status.textContent="";
-    for(const element of form.querySelectorAll('[aria-invalid="true"]'))element.removeAttribute("aria-invalid");
   };
 
-  const validate=()=>{
-    const name=select("name");
-    const email=select("email");
-    const candidate=[dateControl,name,email].find(field=>!field.checkValidity()||
-      (field===dateControl&&field.value<todayLocal)||
-      (field!==dateControl&&!field.value.trim()));
-    if(candidate){
-      candidate.setAttribute("aria-invalid","true");
-      const fields={
-        datum:"Bitte wähle einen gültigen Wunschtermin ab heute.",
-        name:"Bitte gib deinen Namen an.",
-        email:"Bitte gib eine gültige E-Mail-Adresse an."
-      };
-      status.textContent=fields[candidate.name]||"Bitte vervollständige die Pflichtangaben.";
-      candidate.focus();
-      candidate.reportValidity();
-      return false;
+  const setStep=(n,focus=false)=>{
+    const number=n===2?2:1;
+    section.dataset.currentStep=String(number);
+    steps.forEach(step=>{step.hidden=Number(step.dataset.productStep)!==number});
+    indicators.forEach(item=>{
+      const active=Number(item.dataset.productProgress)===number;
+      item.classList.toggle("is-active",active);
+      if(active)item.setAttribute("aria-current","step");
+      else item.removeAttribute("aria-current");
+    });
+    stepCount.textContent=number===1?"01":"02";
+    status.textContent="";
+    if(focus){
+      const first=number===1?dateField:field("name");
+      first.focus({preventScroll:true});
+      section.querySelector(".s7-request-card")?.scrollIntoView({
+        block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"
+      });
     }
+  };
+  const fail=(input,message)=>{
+    input.setAttribute("aria-invalid","true");
+    status.textContent=message;
+    const n=["name","email","notiz"].includes(input.name)?2:1;
+    if(Number(section.dataset.currentStep)!==n)setStep(n);
+    input.focus({preventScroll:false});
+    input.reportValidity();
+    return false;
+  };
+  const eventValid=()=>{
+    if(!dateField.value||!dateField.checkValidity()||dateField.value<minDate)
+      return fail(dateField,"Bitte wähle einen gültigen Wunschtermin ab heute.");
+    return true;
+  };
+  const allValid=()=>{
+    if(!eventValid())return false;
+    if(!field("name").value.trim()||!field("name").checkValidity())
+      return fail(field("name"),"Bitte gib deinen Namen an.");
+    if(!field("email").value.trim()||!field("email").checkValidity())
+      return fail(field("email"),"Bitte gib eine gültige E-Mail-Adresse an.");
     status.textContent="";
     return true;
   };
+  next.addEventListener("click",()=>{
+    if(eventValid())setStep(2,true);
+  });
+  back.addEventListener("click",()=>setStep(1,true));
   form.addEventListener("input",update);
   form.addEventListener("change",update);
   form.addEventListener("submit",event=>event.preventDefault());
-  mail.addEventListener("click",event=>{
-    if(!validate()){event.preventDefault();return;}
-    // Do not simulate successful dispatch. Opening the mail client is not sending.
-    status.textContent="Dein E-Mail-Programm öffnet den Entwurf. Bitte sende die Nachricht dort selbst ab.";
+
+  emailLink.addEventListener("click",event=>{
+    if(!allValid()){event.preventDefault();return;}
+    status.textContent="Der Entwurf öffnet sich im E-Mail-Programm. Bitte dort selbst abschicken.";
   });
-  copy.addEventListener("click",async()=>{
-    if(!validate())return;
+  copyButton.addEventListener("click",async()=>{
+    if(!allValid())return;
     if(!navigator.clipboard?.writeText){
-      status.textContent="Dein Browser unterstützt die Zwischenablage nicht. Nutze bitte den E-Mail-Entwurf.";
+      status.textContent="Die Zwischenablage ist nicht verfügbar. Nutze den E-Mail-Entwurf.";
       return;
     }
     try{
-      await navigator.clipboard.writeText(text(read()));
-      status.textContent="Der Anfragetext wurde kopiert. Noch wurde nichts verschickt.";
+      await navigator.clipboard.writeText(content(read()));
+      status.textContent="Anfragetext kopiert. Es wurde nichts verschickt.";
     }catch{
-      status.textContent="Der Kopiervorgang wurde blockiert. Nutze bitte den E-Mail-Entwurf.";
+      status.textContent="Kopieren wurde blockiert. Nutze stattdessen den E-Mail-Entwurf.";
     }
   });
+
+  // Always start on the clearly labelled first step. Never silently submit.
+  setStep(1);
   update();
 });
