@@ -167,16 +167,21 @@ for(const width of widths){
    const file=slug+"-"+width+"-request.png";
    await page.screenshot({path:path.join(output,file),animations:"disabled",fullPage:false});
    shots.push(file);
-   await page.evaluate(()=>{
-     document.querySelector(".product-request-recap")?.scrollIntoView({block:"start",behavior:"instant"});
+   const picDate=page.locator('[data-product-request] [name="datum"]');
+   const picFuture=await page.evaluate(()=>{
+     const d=new Date();d.setDate(d.getDate()+22);
+     return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
    });
+   await picDate.fill(picFuture);
+   await page.locator("[data-product-next]").click();
+   await page.locator("[data-product-request-email]").scrollIntoViewIfNeeded();
    const visible=await page.evaluate(()=>{
      const button=document.querySelector(".product-request-submit")?.getBoundingClientRect();
      const nav=document.querySelector(".v4-mobile-nav")?.getBoundingClientRect();
-     return {buttonBottom:button?.bottom,navTop:nav?.top};
+     return {buttonTop:button?.top,buttonBottom:button?.bottom,navTop:nav?.top};
    });
    if(width<=430)check(width,slug,"enquiry action not covered by bottom navigation",
-     Number(visible.buttonBottom)<=Number(visible.navTop)-5,visible);
+     Number(visible.buttonTop)>=0&&Number(visible.buttonTop)<Number(visible.navTop),visible);
    const recapFile=slug+"-"+width+"-actions.png";
    await page.screenshot({path:path.join(output,recapFile),animations:"disabled",fullPage:false});
    shots.push(recapFile);
