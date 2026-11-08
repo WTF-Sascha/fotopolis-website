@@ -484,6 +484,21 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
   .gl-collection { padding-block: 25px 60px; }
   .gl-modal-panel { border-radius: 0; }
 }
+/* Contact actions: the legacy mobile flex:auto rule stretched each
+   request button into a tall blank panel instead of a compact touch target. */
+@media (max-width: 760px) {
+  .route-kontakt .contact-recap .contact-actions {
+    display: flex; flex-direction: column; align-items: stretch;
+    gap: 10px;
+  }
+  .route-kontakt .contact-recap .contact-actions > * {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 15px;
+  }
+}
 @media (max-width: 430px) {
   .v45-home .v45-hero { min-height: 595px; }
   .v45-home .v45-hero .v4-hero-content { padding: 55px 20px 270px; }
