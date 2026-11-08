@@ -1,6 +1,7 @@
 "use strict";
-/* FOTOPOLIS Studio 3.0 – progressive client-only enquiry wizard.
- * No persistence, APIs, tracking, background requests or automatic email.
+/* FOTOPOLIS Studio 9.0 – accessible multi-step enquiry.
+ * No browser-side storage; POST is triggered only by the visitor and handled by Netlify Forms.
+ * Confirmations are on-screen, not automatic customer emails or bookings.
  */
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("[data-contact-flow]");
