@@ -494,3 +494,76 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 @media (max-width:760px) {
   .fp11-hero-link { margin-top: 21px; min-height: 44px; }
 }
+
+
+/* Visual-regression correction — previous Studio 5.2 declared a highly specific
+   two-row 147px header and a centered 120px mobile brand. These exact selectors
+   restore the intended quiet, single-line composition without DOM surgery. */
+@media (min-width: 1101px) {
+  .studio-header .studio-header-shell.nav-shell {
+    position: relative; display: flex !important; flex-direction: row;
+    justify-content: space-between; align-items: center;
+    width: 100%; min-height: 78px !important; height: 78px !important;
+    padding: 0 clamp(20px,4vw,68px) !important; gap: 30px !important;
+  }
+  .studio-header .studio-identity.identity {
+    position: static !important; transform: none !important;
+    flex: 0 0 auto; margin: 0 !important; justify-self: auto;
+    display: inline-flex; align-items: center;
+  }
+  .studio-header .studio-identity.identity img {
+    width: 57px !important; height: 57px !important; flex: 0 0 57px !important;
+  }
+  .studio-header .studio-mainnav.mainnav {
+    position: static; display: flex; justify-self: auto; align-self: center;
+    grid-row: auto; grid-column: auto; justify-content: flex-end;
+    margin: 0 0 0 auto; gap: clamp(10px,1.2vw,23px);
+    min-height: 44px; white-space: nowrap;
+  }
+}
+@media (max-width: 1100px) {
+  .studio-header .studio-header-shell.nav-shell {
+    position: relative; display: flex !important; flex-direction: row;
+    justify-content: space-between !important; align-items: center;
+    min-height: 76px !important; height: 76px !important;
+    gap: 16px !important; padding: 0 22px !important;
+  }
+  .studio-header .studio-identity.identity {
+    position: static !important; left: auto !important; top: auto !important;
+    transform: none !important; z-index: 2; justify-content: flex-start;
+    align-items: center; gap: 10px;
+  }
+  .studio-header .studio-identity.identity img {
+    width: 52px !important; height: 52px !important; flex: 0 0 52px !important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle {
+    position: static !important; inset: auto !important;
+    transform: none !important; flex: 0 0 48px;
+    width: 48px !important; height: 48px !important; min-width: 48px !important;
+    border: 1px solid #887661 !important; border-radius: 7px !important;
+    background: transparent !important; padding: 0 !important;
+    margin-left: auto !important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle span {
+    width: 23px; flex-basis: 2px; background: #f1e8db !important;
+  }
+  .studio-header .studio-mainnav.mainnav {
+    top: 100% !important; left: 0; right: 0;
+    max-height: calc(100dvh - 76px); padding: 18px 24px 28px;
+    border-radius: 0; background: #25201b !important;
+  }
+}
+@media (max-width: 760px) {
+  .studio-header .studio-header-shell.nav-shell {
+    min-height: 68px !important; height: 68px !important;
+    padding: 0 16px !important;
+  }
+  .studio-header .studio-identity.identity img {
+    width: 46px !important; height: 46px !important; flex: 0 0 46px !important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle {
+    flex-basis: 44px; width: 44px !important; height: 44px !important;
+    min-width: 44px !important;
+  }
+  .studio-header .studio-mainnav.mainnav { max-height: calc(100dvh - 68px); }
+}
