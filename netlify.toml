@@ -1,5 +1,6 @@
 [build]
-  publish = "site"
+  command = "python3 scripts/build-premium-preview.py && npm run build:auth"
+  publish = "preview-build"
 
 [context.deploy-preview]
   command = "python3 scripts/build-premium-preview.py && npm run build:auth"
