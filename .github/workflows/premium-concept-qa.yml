@@ -13,6 +13,7 @@ on:
       - "scripts/premium-step4-qa.mjs"
       - "scripts/premium-step5-qa.mjs"
       - "scripts/premium-studio3-qa.mjs"
+      - "scripts/studio7-a11y-qa.mjs"
       - "scripts/premium-studio-finish-qa.mjs"
       - "scripts/premium-admin-qa.mjs"
       - "scripts/premium-presentation-qa.mjs"
@@ -81,6 +82,10 @@ jobs:
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
         run: node scripts/premium-step5-qa.mjs
+      - name: Studio 7.1 accessibility and structural regression - 12 routes across six widths
+        env:
+          SITE_BASE_URL: http://127.0.0.1:8766/
+        run: node scripts/studio7-a11y-qa.mjs
       - name: Studio 3.0 premium UX gate - eight viewports and full journeys
         env:
           SITE_BASE_URL: http://127.0.0.1:8766/
