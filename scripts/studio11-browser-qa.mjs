@@ -97,6 +97,14 @@ try {
         const data=await page.evaluate(()=>{
           const header=document.querySelector(".studio-header");
           const img=header?.querySelector("img");
+          const nav=header?.querySelector(".studio-mainnav");
+          const menu=header?.querySelector("[data-menu-toggle]");
+          const rect=element=>{
+            if(!element)return null;
+            const v=element.getBoundingClientRect();
+            return {left:v.left,top:v.top,width:v.width,height:v.height,
+                    midY:v.top+v.height/2};
+          };
           const candidates=[...document.images].filter(x=>!x.closest("[hidden]")&&x.getAttribute("src"));
           const eligible=candidates.filter(img=>img.complete&&img.naturalWidth===0)
             .map(img=>img.currentSrc||img.src);
@@ -114,6 +122,12 @@ try {
             title:document.title,
             headerLogo:img?.getAttribute("src")||"",
             logoLoaded:!!img?.naturalWidth,
+            headerRect:rect(header),logoRect:rect(img),navRect:rect(nav),
+            menuRect:rect(menu),
+            plannerLabel:document.querySelector(".planner-meta-grid label")
+              ? {foreground:getComputedStyle(document.querySelector(".planner-meta-grid label")).color,
+                 background:getComputedStyle(document.querySelector(".planner-form")).backgroundColor}
+              : null,
             theme:document.querySelector('meta[name="theme-color"]')?.content||"",
             themeLoaded:!!document.querySelector('link[href="/studio11-quiet-luxury.css"]'),
             mainCount:document.querySelectorAll("main").length,
@@ -132,6 +146,20 @@ try {
           problems.push("Approved logo absent or failed to load");
         if(data.scrollWidth>width+2||data.bodyWidth>width+2)
           problems.push("Horizontal overflow "+Math.max(data.scrollWidth,data.bodyWidth)+"px");
+        if(width>1100&&data.headerRect&&data.logoRect&&data.navRect){
+          if(data.headerRect.height>100 ||
+             Math.abs(data.logoRect.midY-data.navRect.midY)>20 ||
+             data.logoRect.left>width*.30)
+            problems.push("Header is not one-line, compact and left-branded");
+        }
+        if(width<=1100&&data.headerRect&&data.logoRect){
+          if(data.headerRect.height>95||data.logoRect.left>width*.30)
+            problems.push("Mobile header oversized or logo not left-aligned");
+        }
+        if(route==="/pakete/"&&data.plannerLabel){
+          const c=contrastRatio(data.plannerLabel.foreground,data.plannerLabel.background);
+          if(c!==null&&c<4.5)problems.push("Package planner label contrast "+c+" <4.5");
+        }
         if(data.brokenImages.length)
           problems.push("Image decode failed after actual scroll: "+data.brokenImages.join(", "));
         if(jsErrors.length)problems.push("Browser exceptions: "+jsErrors.join(" | "));
