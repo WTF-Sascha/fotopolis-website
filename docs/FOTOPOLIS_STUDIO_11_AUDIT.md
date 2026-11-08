@@ -22,12 +22,12 @@
 | A05 | P1 | **Gestalterische Schwäche** | Radialverläufe, Goldlinien, doppelte Produkt-Rahmen und dekorative Kreise in CSS | Matte Flächen, definierte Materialien, ruhige Bildbühnen, reduzierte Radien | Implementiert, Screenshots auswerten |
 | A06 | P1 | **Gestalterische Schwäche** | Viele abwechselnde Hero-/Karten-/Ziermuster unterbrechen Dramaturgie | Einheitliche Headlines, Abstände und Bildproportionen, entfallene Embleme | Erste Umsetzung, produktspezifische Einzelabnahme offen |
 | A07 | P1 | **Prüfhypothese** | Einzelne Designvorlagen erscheinen in Screenshots leer | In Browser-QA jede Seite wirklich scrollen, Bilder dekodieren, 32 Galerie-Bilder prüfen | CI-Prüfung implementiert; Ergebnis noch offen |
-| A08 | P1 | **Prüfhypothese** | Altlogo-Reste oder Compositing-Ränder in 32 Originaldrucklayouts | Studio-10-Vorher/Nachher/300%-Assets beibehalten; keine neue retuschierende Änderung | Manuelle 32er-Einzelabnahme offen |
+| A08 | P0 | **Nachgewiesener Screenshotbefund** | Beim tatsächlichen 300%-Review sind an mehreren der 32 bearbeiteten Logo-Ausschnitte weiche Halo-Ränder und uneinheitliche Freistellungen sichtbar (u. a. FP-014, FP-019, FP-023 und FP-027); kein Ausfall der Bilddateien | Originalmotivik schützen; vorhandene Retuschen nicht pauschal freigeben; gezielte Quellbild-basierte professionelle Überarbeitung als separater Bild-QA-Schritt | **Offen – keine Bildfreigabe** |
 | A09 | P1 | **Prüfhypothese** | Mirror-Display nutzt nur abgeleiteten Low-Res-Videostill; Original-MP4 nicht im Repo | Quellmaterial nicht erfinden; Geräte-/Logo-Komposition nicht verändern | Verbesserte Originaldatei weiterhin erforderlich |
 | A10 | P2 | **Gestalterische Schwäche** | Kleine Labels und dekorative Fließtextgestaltung | 16px Basisschrift, responsive Display-Schrift, kräftigere Sekundärfarben | Implementiert, Browser-Kontrast prüfen |
 | A11 | P2 | **Technische Grenze** | Noch keine verlässlichen Daten zu LCP/CLS, Screenreader und Cross-Browser | Keine erfundenen Messwerte; separate Labormessung bzw. manuelle Prüfung | Offen |
 
-**Begriffe:** Nachgewiesen = im Repository/Quellcode tatsächlich festgestellt; Schwäche = fachliche Gestaltungsbeurteilung; Hypothese = Browser-Screenshot, Kundenbild oder praktischer Test nötig.
+**Begriffe:** Nachgewiesen = anhand von Code, CI-Ausgabe oder tatsächlich gesichteten Screenshots festgestellt; Schwäche = fachliche Gestaltungsbeurteilung; Hypothese = zusätzlicher Browsertest oder Quellenprüfung nötig.
 
 ## Designsystem / technische Umsetzung
 
@@ -64,3 +64,15 @@ Rollback: Studio-11-Branch/PR entfernen oder deaktivieren. Studio-10-Commit `f68
 ## Freigabestatus
 
 **Nicht freigegeben.** CI-Ergebnis, eigenständige Deploy-Preview und menschliche Sichtprüfung sind gesondert nachzutragen. Die Fertigstellung des Designsystems bedeutet **nicht** gleichzeitig die vollständige technische und visuelle Projektabnahme.
+
+
+## Screenshot-Nachprüfung / Korrekturrunde 11.0-R2
+
+Beim ersten unabhängigen Sichtvergleich der CI-Screenshots wurden folgende Befunde bestätigt:
+
+- **Header:** Desktop-Logo war noch über statt links neben der Navigation angeordnet. Auf Mobile blieb die bisherige zentrierte Logogeometrie aktiv. Ursache: spezifischere `studio-v5.css`-Regeln für 147px-Zeilenlayout und 120px-Mobilheader. Gegenmaßnahme: gleich spezifische, später geladene responsive Studio-11-Overrides.
+- **Paketkonfigurator:** Alte dunkle Form-Textfarben wurden auf hellem Hintergrund kaum lesbar. Die alte zweispaltige Rasterdefinition ließ eine große leere Fläche unter der Produktauswahl. Gegenmaßnahme: neue vollbreite Produktauswahl, zwei logisch angeordnete Eingabebereiche, dunkle Labels, eigener Summary-Bereich.
+- **Screenshots:** Der alte Smooth-Scroll-Zustand konnte beim automatisierten Rücksprung zur Seitenoberkante noch laufen. Gegenmaßnahme: Scroll-Animation für die Testausführung deaktiviert, nach echtem Scroll/Decode `scrollY===0` abgewartet.
+- **Logo-Retusche:** 300%-Sichtprüfung ergab bei einzelnen Vorlagen unsaubere Übergänge; dies bleibt bewusst ein offener **P0-Asset-Qualitätsmangel**. Kein Retusche-Vorgang auf niedrigwertiger Bildbasis wird als professionelle Lösung ausgegeben.
+
+Die vorliegenden ersten Screenshots sind echte Browseraufnahmen; **nur neu aufgenommene, mit korrigiertem Scrollzustand erstellte First-Fold-Screenshots** dürfen künftig als First-Fold-Evidenz gelten. Ein erfolgreicher DOM-Test ersetzt diese Sichtprüfung nicht.
