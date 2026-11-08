@@ -342,3 +342,6 @@ runpy.run_path(str(root / 'scripts/apply-gold-brand.py'), run_name='__main__')
 
 # Exact original-asset logo swap only; all other pixels are preserved.
 runpy.run_path(str(root / 'scripts/visual-brand-pro.py'),run_name='__main__')
+
+# Studio 10 candidate is published only on an isolated PR/branch preview.
+runpy.run_path(str(root / 'scripts/apply-studio10.py'), run_name='__main__')
