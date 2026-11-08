@@ -1,0 +1,186 @@
+/* FOTOPOLIS Gold Signature — uploaded 08.11.2026.
+   Presentation-only brand layer. No changes to booking, admin or user data. */
+:root{
+ --navy:#14110e;--blue:#3b2b1c;--champagne:#e2bb77;--ivory:#faf1e3;
+ --ink:#271f18;--paper:#f8f4ee;--soft:#f0e8dd;--border:#d9cab8;--body:#61564b;
+ --v4-navy:#15110d;--v4-ink:#2a2119;--v4-gold:#d5aa64;--v4-gold-light:#f9dfb0;
+ --v4-cream:#f8f4ed;--v4-paper:#fffbf4;
+ --s5-midnight:#100e0c;--s5-navy:#17120d;--s5-blue:#3a2818;
+ --s5-gold:#e3bb76;--s5-gold-deep:#987035;--s5-parchment:#f8f3eb;
+ --s5-ivory:#fffcf6;--s5-text:#2a221c;--s5-muted:#665a4e;--s5-stroke:#e6d9c4;
+ --s7-ink:#2b221a;--s7-navy:#18130f;--s7-navy2:#372615;--s7-gold:#bb8e48;
+ --s7-gold-light:#f3d7a4;--s7-paper:#f8f3ec;--s7-white:#fffcf6;
+ --s7-text:#4f4439;--s7-muted:#72665b;--s7-border:#e5d9c7;
+ --gl-ink:#291e13;--gl-navy:#18120e;--gl-gold:#e1b870;--gl-cream:#f8f3eb;
+ --gl-muted:#6c5f51;--gl-line:#e2d4c1;--gl-white:#fffcf7;
+}
+body{background:#f8f3eb;color:#292119}
+::selection{background:#e5bd78;color:#1c140d}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,summary:focus-visible{outline:3px solid #bd8538;outline-offset:3px}
+.kicker,.v4-hero-kicker{color:#ae854b}
+h1 em,h2 em,h3 em,.v45-products h2 em,.v4-section-intro em{color:#b38a49}
+.studio-header.site-header{
+ background:linear-gradient(109deg,rgba(13,12,11,.985),rgba(32,24,17,.975) 58%,rgba(14,12,10,.985))!important;
+ border-top:1px solid #c79c58!important;
+ border-bottom:1px solid rgba(226,181,105,.34)!important;
+ box-shadow:0 9px 34px rgba(11,7,3,.24)!important;
+}
+.studio-header:before{background:linear-gradient(90deg,transparent,rgba(225,178,92,.3),transparent)}
+.studio-header .studio-header-curve-fill{fill:#18120e!important}
+.studio-header .studio-header-curve-stroke{stroke:#cca05a!important}
+.studio-header .studio-header-location{color:#bda17a}
+.studio-header .studio-wordmark{color:#f9e5c2!important;letter-spacing:.075em}
+.studio-header .studio-wordmark small{color:#d6b17b!important}
+.studio-identity.identity>img{
+ width:72px;height:72px;flex-basis:72px;object-fit:cover!important;
+ background:#15110e;border-radius:50%!important;
+ box-shadow:0 0 0 1px rgba(233,186,110,.35),0 0 22px rgba(205,147,55,.13);
+ filter:none!important;
+}
+.studio-mainnav .nav-trigger,.studio-mainnav a:not(.nav-cta){color:#f0e4d2}
+.studio-mainnav .nav-trigger:hover,.studio-mainnav a:not(.nav-cta):hover{color:#f3c77d}
+.studio-mainnav .nav-panel{
+ background:#211911!important;border:1px solid rgba(227,184,108,.35)!important;
+ box-shadow:0 18px 48px rgba(10,7,4,.32)!important;
+}
+.studio-mainnav .nav-panel a:hover{background:rgba(221,172,89,.10)}
+.studio-menu-toggle{border-color:rgba(230,190,119,.5)!important}
+.studio-menu-toggle span{background:#edc88f!important}
+.button.gold,.mainnav .nav-cta,.studio9-submit,.studio9-product-submit,.s7-next-button{
+ color:#24170e!important;
+ background:linear-gradient(120deg,#f6e1b4 0%,#e7bc74 48%,#c99145 100%)!important;
+ border:1px solid #dbad67!important;
+ border-radius:999px!important;
+ box-shadow:0 10px 24px rgba(86,51,17,.13)!important;
+ transition:transform .22s ease,filter .22s ease,box-shadow .22s ease;
+}
+.button.gold:hover,.mainnav .nav-cta:hover,.studio9-submit:hover,.studio9-product-submit:hover,.s7-next-button:hover{
+ filter:brightness(1.07);transform:translateY(-2px);
+ box-shadow:0 15px 30px rgba(70,39,12,.22)!important;
+}
+.v45-home .v45-hero,.v4-hero{
+ background:radial-gradient(ellipse at 83% 20%,#49321a 0%,#211810 36%,#110f0d 78%)!important;
+}
+.v45-home .v45-hero .v4-hero-visual{
+ background:radial-gradient(ellipse at 82% 43%,#503b25 0%,#211a15 42%,#0f0e0c 83%)!important;
+}
+.v45-home .v45-hero .v4-hero-shade{
+ background:linear-gradient(90deg,rgba(12,10,8,.98) 0%,rgba(18,14,11,.95) 26%,rgba(20,15,10,.72) 52%,rgba(18,14,10,.18) 89%),
+ linear-gradient(0deg,rgba(12,9,7,.4),transparent 65%)!important;
+}
+.v45-home .v45-hero .v4-hero-content{z-index:3}
+.v45-home .v45-hero h1,.v4-hero h1{color:#fff4e2}
+.v45-home .v45-hero h1 strong{color:#e7c284}
+.v45-home .v45-hero p{color:#e6d8c3}
+.v45-home .v45-hero .v4-hero-kicker{color:#e4bd7e!important}
+.v45-home .v45-products{
+ background:radial-gradient(ellipse at 2% 0%,rgba(214,176,110,.15),transparent 39%),#f7f1e7!important;
+}
+.v45-home .v4-section-intro h2,.v45-home .v4-product-body h3{color:#2b2117!important}
+.v45-home .v4-section-intro p,.v45-home .v4-product-body p{color:#6e6256!important}
+.v45-home .v4-product-card{
+ background:#fffbf5!important;border:1px solid #e7d6ba!important;
+ box-shadow:0 15px 38px rgba(61,39,14,.09)!important;
+}
+.v45-home .v4-product-card:hover{border-color:#cfaa69!important;box-shadow:0 24px 48px rgba(61,39,14,.14)!important}
+.v45-home .v4-product-tag{background:rgba(25,17,10,.91)!important;color:#f1d19a!important}
+.v45-home .v45-card-action,.v45-home .v4-product-arrow{color:#926a30!important}
+.fpv2-preview-section{background:#f1e8d8!important}
+.fpv2-preview-section .fpv2-preview-grid a{border:1px solid #d8c6a9;box-shadow:0 12px 28px rgba(44,27,12,.08)}
+.fpv2-preview-section .fpv2-preview-heading h2{color:#2e2318}
+.v45-final-cta,.v45-home .v45-final-cta{
+ background:radial-gradient(circle at 83% 23%,rgba(178,117,42,.26),transparent 44%),
+ linear-gradient(116deg,#14100d 0%,#281c12 58%,#15110e 100%)!important;
+ border-top:1px solid rgba(226,177,97,.4);
+}
+.v45-final-cta h2{color:#f7ebd5}
+.v45-final-cta p{color:#dfcdb2!important}
+.studio-page-hero.page-hero,
+.route-fotobox .studio-page-hero.page-hero,
+.route-fotospiegel .studio-page-hero.page-hero,
+.route-fotowohnwagen .studio-page-hero.page-hero{
+ background:radial-gradient(ellipse at 84% 15%,rgba(141,91,35,.36),transparent 43%),
+ linear-gradient(128deg,#14110e 0%,#261a11 65%,#3c2917 100%)!important;
+}
+.studio-page-hero.page-hero:after{
+ background:repeating-linear-gradient(130deg,rgba(230,181,105,.028) 0 1px,transparent 1px 95px)!important;
+}
+.studio-page-hero h1{color:#fff2de!important}
+.studio-page-hero p{color:#e6d9c7!important}
+.studio-page-hero .page-breadcrumbs{color:#cdbca7!important}
+.studio-page-hero .page-breadcrumbs a,.studio-page-hero .kicker{color:#eac48a!important}
+.studio-page-hero-media{border-color:rgba(229,182,105,.54)!important;background:#261a11!important}
+.page-body,.route-datenschutz .page-body,
+.route-fotobox .page-body,.route-fotospiegel .page-body,.route-fotowohnwagen .page-body{
+ background:#faf6ef!important;color:#292119;
+}
+.page-article,.package-card,.occasion-card,.contact-form,.contact-recap,.s7-request-card{
+ background:#fffcf7!important;border-color:#e3d2b7!important;
+ box-shadow:0 14px 36px rgba(60,37,15,.07)!important;
+}
+.page-article h2,.page-article h3,.studio-details-heading,.studio-disclosure summary{color:#36281a!important}
+.page-article p,.page-article li,.page-content-block p{color:#5f544a}
+.studio-disclosure{border-color:#e1d1ba!important}
+.studio-disclosure[open]{background:#fff9ec!important}
+.s7-enquiry.product-enquiry{background:#f1e6d7!important;color:#34281e!important;border-top-color:#ddc9ad!important}
+.s7-enquiry h2{color:#33261a!important}
+.s7-request-card{background:#fffaf1!important}
+.s7-request-summary{background:#211911!important;color:#f8e5c8!important}
+.s7-request-summary :is(p,dt,dd){color:#e2c7a2}
+.s7-progress-item.is-active{color:#9b6b2f!important}
+.s7-step-counter,.s7-card-overline{color:#ac7e3c!important}
+.studio9-design-field{background:linear-gradient(135deg,#fffaf1,#f4e9d7)!important;color:#3a2c1f!important;border-color:#d9bd90!important}
+.studio9-design-field>label,.studio9-privacy-accept{color:#403326!important}
+.studio9-design-field select,.studio9-design-info p{color:#4c4034!important}
+.studio9-design-info a,.studio9-privacy-accept a{color:#865921!important}
+.studio9-design-field select,
+.contact-form input,.contact-form textarea,.contact-form select,
+.product-request-form input,.product-request-form select,.product-request-form textarea{
+ border-color:#cbb898!important;background:#fffcf8!important;color:#2b2118!important;
+}
+.gl-page{background:#f8f3ea!important;color:#302419!important}
+.gl-hero{background:radial-gradient(ellipse at 74% -15%,rgba(189,124,42,.24),transparent 50%),
+ linear-gradient(125deg,#14110e,#3a2817)!important;color:#fff3dd}
+.gl-hero .gl-lead{color:#e6d8c5}
+.gl-hero .gl-action{color:#2a1b10}
+.gl-toolbar{background:#fffbf4!important;border-bottom-color:#e2d5c0!important}
+.gl-chip[aria-pressed="true"]{background:#2a1d12!important;border-color:#b38a4d!important}
+.gl-chip:hover{border-color:#c39c5b!important}
+.gl-card,.gl-item{border-color:#e4d4bc}
+.studio-footer.footer{
+ background:radial-gradient(circle at 86% 12%,rgba(147,91,30,.19),transparent 43%),
+ linear-gradient(115deg,#100e0c 0%,#251a10 100%)!important;
+ border-top:1px solid rgba(218,167,88,.45)!important;color:#f6ead4!important;
+}
+.studio-footer a:hover{color:#f0c685!important}
+.studio-footer .footer-brand img{
+ width:88px;height:88px;object-fit:cover;border-radius:50%!important;
+ background:#14110d;border:1px solid rgba(228,185,113,.48);
+ box-shadow:0 0 24px rgba(221,165,71,.1);
+}
+.studio-footer .footer-brand span{color:#f4dfbb}
+.studio-footer small{color:#d9c6a9}
+.studio9-thanks{background:#faf3e7}
+.studio9-thanks h1{color:#2a2118}
+@media(max-width:900px){
+ .studio-header .studio-header-location{display:none}
+ .studio-header .studio-wordmark{font-size:16px}
+ .studio-header .studio-mainnav.is-open,.studio-header .mainnav[aria-hidden="false"]{
+  background:#1c1712!important;border-color:rgba(216,166,89,.3)!important;
+ }
+}
+@media(max-width:760px){
+ .studio-identity.identity>img{width:56px;height:56px;flex-basis:56px}
+ .studio-header .studio-wordmark{font-size:14px;letter-spacing:.035em}
+ .studio-header .studio-wordmark small{font-size:8px}
+ .v45-home .v45-hero .v4-hero-shade{
+  background:linear-gradient(90deg,rgba(11,9,7,.95),rgba(17,13,10,.84) 55%,rgba(15,11,8,.45))!important;
+ }
+ .studio-page-hero-grid{padding-block:55px!important}
+ .studio-footer .footer-brand img{width:70px;height:70px}
+ .fpv2-preview-section{padding-inline:0}
+}
+@media(prefers-reduced-motion:reduce){
+ .button.gold,.mainnav .nav-cta,.studio9-submit,.studio9-product-submit{transition:none!important}
+}
