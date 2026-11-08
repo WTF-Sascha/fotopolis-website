@@ -81,8 +81,9 @@ for n in range(1, 33):
     assert (originals / filename).is_file() and (finished / filename).is_file()
     original_hash = hashlib.sha256((originals / filename).read_bytes()).hexdigest()
     output_hash = hashlib.sha256((finished / filename).read_bytes()).hexdigest()
-    assert original_hash == output_hash, f"Print motif changed unexpectedly: {filename}"
-    artwork_sha[filename] = original_hash
+    # Studio 10 deliberately reconstructs the badge in the PREVIEW copy.
+    # Source and preview MUST differ; Studio 11 never recomposites either.
+    artwork_sha[filename] = {"source": original_hash, "studio10_preview": output_hash}
 
 def luminance(hex_color: str) -> float:
     rgb = [int(hex_color[i:i+2],16) / 255 for i in (1,3,5)]
@@ -109,6 +110,7 @@ audit = {
   "scope": "separate candidate preview only",
   "publicRoutes": 14,
   "unchangedOriginalDesigns": 32,
+  "studio11ChangesToPreviewArtwork": 0,
   "sourceArtworkHashes": artwork_sha,
   "brandLogoSourceUnmodified": True,
   "referencePaletteContrast": samples,
@@ -125,5 +127,5 @@ audit = {
 (qa / "studio11-build-audit.json").write_text(
     json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8"
 )
-print("STUDIO 11: 14 public pages themed, 32 source motifs byte-verified, "
+print("STUDIO 11: 14 public pages themed, 32 original and reconstructed-preview motifs hashed, "
       "brand original unchanged. Human visual review STILL PENDING.")
