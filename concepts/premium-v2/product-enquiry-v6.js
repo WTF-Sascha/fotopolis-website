@@ -44,12 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
     occasion:field("anlass").value,
     name:field("name").value.trim().slice(0,100),
     email:field("email").value.trim().slice(0,150),
-    notes:field("notiz").value.trim().slice(0,700)
+    notes:field("notiz").value.trim().slice(0,700),
+    design:field("vorlage")?.value||""
   });
   const content=d=>[
     "Hallo FOTOPOLIS,","",
     "ich möchte den folgenden Wunschtermin unverbindlich anfragen.","",
     "FOTOERLEBNIS: "+d.display,
+    "FOTODESIGN: "+(d.design||"Noch offen"),
     "WUNSCHTERMIN: "+(d.date?formatDate(d.date):"noch offen"),
     "TAGESZEIT: "+d.time,
     "ANLASS: "+d.occasion,
@@ -76,9 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const params=new URLSearchParams({produkt:d.product});
     if(d.date)params.set("datum",d.date);
     if(d.time&&d.time!=="Noch offen")params.set("tageszeit",d.time);
-    if(d.place)params.set("ort",d.place);
+    if(d.design)params.set("vorlage",d.design);
     if(d.occasion&&d.occasion!=="Noch offen")params.set("anlass",d.occasion);
-    if(d.notes)params.set("details",d.notes);
+    // Do not leak free-form personal messages or location into URLs.
     extended.href="/kontakt/?"+params.toString();
     for(const invalid of form.querySelectorAll('[aria-invalid="true"]'))invalid.removeAttribute("aria-invalid");
     status.textContent="";
@@ -135,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
   back.addEventListener("click",()=>setStep(1,true));
   form.addEventListener("input",update);
   form.addEventListener("change",update);
+  form.addEventListener("studio9-design-change",update);
   form.addEventListener("submit",event=>event.preventDefault());
 
   emailLink.addEventListener("click",event=>{
