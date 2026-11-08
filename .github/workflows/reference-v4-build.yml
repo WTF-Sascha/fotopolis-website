@@ -50,6 +50,7 @@ jobs:
         run: |
           python3 -m http.server 8766 --directory preview-build > /tmp/fotopolis-presentation-server.log 2>&1 &
           SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/gallery-browser-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8766/ node scripts/pwa-install-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
