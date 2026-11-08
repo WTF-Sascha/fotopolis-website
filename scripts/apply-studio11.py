@@ -66,6 +66,15 @@ text = text.replace("'/studio10-premium.css',",
 assert text.count("'/studio11-quiet-luxury.css'") == 1
 sw.write_text(text, encoding="utf-8")
 
+# The installed-app chrome must use the same public brand palette.
+# Change only the generated preview; the source manifest remains immutable.
+manifest_path = OUT / "manifest.webmanifest"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+manifest["theme_color"] = "#181512"
+manifest["background_color"] = "#F7F3EC"
+manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 # No original asset writes. Assert byte-for-byte retention of logo + all 32
 # available source artwork files after the output-only CSS integration.
 logo = "fotopolis-goldmark.webp"
