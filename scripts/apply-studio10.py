@@ -104,7 +104,18 @@ for index in range(1, 33):
         patch = picture.crop(crop_box)
         enlarged = patch.resize((190, 276), Image.Resampling.NEAREST)
         zoom_sheet.paste(enlarged, (x0+side*198+4, y0+27))
-    zoom_drawer.text((x0+12,y0+8), ident + " · 300%-Ansicht (Ausschnitt)", fill=(237,204,152))
+    zoom_drawer.text((x0+12,y0+8), ident + " · Logo-Ausschnitt", fill=(237,204,152))
+    # Exact 300% nearest-neighbour pixel enlargement for source-vs-result inspection.
+    exact_zoom_dir = QA / "zoom"
+    exact_zoom_dir.mkdir(parents=True, exist_ok=True)
+    exact_crop = original.crop(crop_box)
+    exact_result = processed.crop(crop_box)
+    triple = Image.new("RGB", (exact_crop.width*6, exact_crop.height*3), (24,20,16))
+    triple.paste(exact_crop.resize((exact_crop.width*3, exact_crop.height*3),
+                Image.Resampling.NEAREST), (0,0))
+    triple.paste(exact_result.resize((exact_crop.width*3, exact_crop.height*3),
+                Image.Resampling.NEAREST), (exact_crop.width*3,0))
+    triple.save(exact_zoom_dir / (ident.lower() + ".webp"), "WEBP", lossless=True, method=4)
     results.append({
         "id": ident,
         "source": f"concepts/premium-v2/assets/designvorlagen/{name}",
@@ -113,6 +124,7 @@ for index in range(1, 33):
         "sourcePreservedOutsideBadge": True,
         "programmaticValidation": "passed",
         "manualLogoRetouchReview": "pending",
+        "exactThreeHundredPercentBeforeAfter": f"qa/zoom/{ident.lower()}.webp",
         "manualReviewNote": "Check seams, legacy seal remnants, edge clearance and text legibility at 200%+.",
     })
 
@@ -151,8 +163,11 @@ belegen keine professionelle Retusche. Alle 32 Logos und 3 Produktgeräte benöt
 eine manuelle Einzelabnahme, bevor die Haupt-Testwebsite aktualisiert werden darf.</p>
 <section><h2>Original/Kandidat – 32 Vorlagen</h2>
 <img src="/qa/studio10-before-after.webp" alt="Vergleichsübersicht aller 32 Layouts"></section>
-<section><h2>Vergrößerte Logos</h2>
-<img src="/qa/studio10-zoom-300pct.webp" alt="Original und Kandidat in 300-Prozent-Ausschnitten"></section>
+<section><h2>Logo-Ausschnitte – Übersicht</h2>
+<img src="/qa/studio10-zoom-300pct.webp" alt="Übersicht aller Logo-Ausschnitte"></section>
+<section><h2>Einzelbilder – jeweils exakt 300 % (Original links, Kandidat rechts)</h2>
+{''.join(f'<figure><figcaption>{escape(item["id"])}</figcaption><img src="/'+item["exactThreeHundredPercentBeforeAfter"]+'" alt="300-Prozent-Vergleich '+escape(item["id"])+'" loading="lazy"></figure>' for item in results)}
+</section>
 <section><h2>Einzelstatus</h2><ol>{cards}</ol></section>
 <p><a href="/qa/studio10-report.json">Maschinenlesbares Auditprotokoll</a></p>
 </main></body></html>"""
