@@ -90,3 +90,23 @@
 @media(max-width:820px){.fpv2-preview-heading,.fpv2-preview-compact .fpv2-preview-inner{flex-direction:column;align-items:flex-start}.fpv2-preview-grid{gap:12px}.fpv2-preview-grid span{font-size:17px}}
 @media(max-width:550px){.fpv2-preview-grid{grid-template-columns:1fr}.fpv2-preview-heading h2{font-size:34px}.fpv2-preview-cta{align-self:stretch;justify-content:center;text-align:center}}
 @media(prefers-reduced-motion:reduce){.fpv2-preview-grid a{transition:none}}
+
+
+/* Presentation safeguard 2026-11-08: product photography remains the hero.
+   The design collection is an editorial preview AFTER the three photo experiences. */
+.fpv2-preview-section:not(.fpv2-preview-compact){padding-block:clamp(44px,5vw,64px)}
+.fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-inner{gap:20px}
+.fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-heading h2{font-size:clamp(30px,3.4vw,44px)}
+.fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-grid a{padding:7px 7px 11px;gap:8px}
+.fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-grid img{height:clamp(110px,13vw,175px);max-height:175px;object-fit:cover}
+.fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-grid span{font-size:clamp(15px,1.45vw,19px);padding-inline:7px}
+@media(max-width:550px){
+  .fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-grid{
+    display:flex;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    scrollbar-width:thin;padding-bottom:8px;gap:12px
+  }
+  .fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-grid a{
+    flex:0 0 min(76vw,275px);min-width:0;scroll-snap-align:start
+  }
+  .fpv2-preview-section:not(.fpv2-preview-compact) .fpv2-preview-grid img{height:145px}
+}
