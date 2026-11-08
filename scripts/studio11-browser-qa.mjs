@@ -44,6 +44,9 @@ async function prepare(page,url,route){
   await page.evaluate(()=>document.fonts.ready);
   // Actual scroll and decode; a not-yet-loaded lazy image is not declared broken.
   await page.evaluate(async()=>{
+    document.documentElement.style.scrollBehavior="auto";
+    document.body.style.scrollBehavior="auto";
+    window.scrollTo({top:0,behavior:"instant"});
     const h=Math.max(document.documentElement.scrollHeight,window.innerHeight);
     const step=Math.max(500,Math.floor(window.innerHeight*.8));
     for(let y=0;y<h;y+=step){
@@ -56,9 +59,11 @@ async function prepare(page,url,route){
     }
     await Promise.all([...document.images].filter(img=>!img.closest("[hidden]"))
       .map(img=>img.decode().catch(()=>undefined)));
-    window.scrollTo(0,0);
+    window.scrollTo({top:0,left:0,behavior:"instant"});
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   });
-  await page.waitForTimeout(90);
+  await page.waitForFunction(()=>window.scrollY===0,{timeout:5000});
+  await page.waitForTimeout(120);
 }
 async function shot(page,key,version) {
   await page.screenshot({path:join(outputDir,key+"-"+version+"-fold.png"),animations:"disabled"});
@@ -180,7 +185,7 @@ try {
           }else problems.push("Mobile menu trigger missing");
         }
         for(const [label,sample] of [
-          ["contact_rec ap",data.contactRecap],
+          ["contact_recap",data.contactRecap],
           ["dark_product_recap",data.darkProductRecap]
         ]){
           if(sample&&sample.visible){
