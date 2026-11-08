@@ -12,6 +12,16 @@ product_photos = ["fotobox-event-1672.webp","fotobox-event-800.webp","fotowohnwa
 if target.exists():
     shutil.rmtree(target)
 (target / "assets/images").mkdir(parents=True)
+# Installable app assets are copied into EVERY Netlify deploy context, including main.
+# The PWA manifest uses the stable / id and scope so existing same-origin installs update.
+(target / "icons").mkdir(exist_ok=True)
+for icon in (root / "site/icons").glob("*.png"):
+    shutil.copy2(icon, target / "icons" / icon.name)
+for path in ("manifest.webmanifest", "offline.html"):
+    shutil.copy2(root / "site" / path, target / path)
+for path in ("service-worker.js", "pwa-update.js"):
+    shutil.copy2(source / path, target / path)
+
 for name in ("styles.css", "studio-polish.css", "site.js", "package-planner.js", "gallery-viewer.js", "contact-flow.js", "reference-v4.css", "reference-v4.js", "studio-v5.css", "studio-v5.js", "product-v6.css", "product-enquiry-v6.js"):
     shutil.copy2(source / name, target / name)
 shutil.copy2(root / "site/assets/fotopolis-logo-original.png",
@@ -281,6 +291,31 @@ assert 'data-inventory-manager' in dashboard_html
 assert 'data-count="resources"' in dashboard_html
 assert 'name="robots" content="noindex,nofollow,noarchive"' in dashboard_html
 assert 'DATABASE_URL' not in dashboard_html and 'password=' not in dashboard_html
+
+
+# PWA controls belong to public content pages, not the sensitive admin screens.
+# This also gives existing app installations a new service worker registration path.
+pwa_includes = (
+    '<link rel="manifest" href="/manifest.webmanifest">'
+    '<link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png">'
+    '<meta name="apple-mobile-web-app-capable" content="yes">'
+    '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">'
+    '<script defer src="/pwa-update.js"></script>'
+)
+public_pages = [target / "index.html", target / "designvorlagen/index.html"]
+public_pages.extend(target / route / "index.html" for route in routes)
+for page in public_pages:
+    content = page.read_text(encoding="utf-8")
+    assert content.count("</head>") == 1 and 'href="/manifest.webmanifest"' not in content
+    page.write_text(content.replace("</head>", pwa_includes + "</head>", 1), encoding="utf-8")
+
+# Swipeable product cards must not have a second, redundant row of buttons.
+assert 'class="v4-rail-controls"' not in (target / "index.html").read_text(encoding="utf-8")
+assert all((target / path).exists() for path in (
+    "service-worker.js", "pwa-update.js", "manifest.webmanifest",
+    "offline.html", "icons/icon-192.png", "icons/icon-512.png",
+    "icons/icon-maskable-512.png", "icons/apple-touch-icon-180.png",
+)), "PWA build missing essential install assets"
 
 # Build QA: all referenced local assets must exist.
 for match in re.finditer(r'srcset="([^"]+)"', html):
