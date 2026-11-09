@@ -66,6 +66,10 @@ for item in catalogue[:32]:
     # palettes and photo-window geometries to stay intact. Only original
     # FOTOPOLIS seals are replaced and original photo holes cut transparent.
     item["collection"]="classics"
+    if item["id"]=="FP-017":
+        # Verified against the archived original raster: 4 golden windows.
+        # Historical catalogue mistakenly said 3, so correct the metadata.
+        item["photos"]=4
     item["description"]="Originalmotiv fachgerecht restauriert · "+item["description"]
 for item in catalogue[32:]:
     item["collection"]="signature"
