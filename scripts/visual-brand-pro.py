@@ -201,6 +201,51 @@ apply_device_screen(source/"fotospiegel-hero-lossless.webp",
                     out/"assets/images/fotospiegel-hero-lossless.webp","mirror",mirror_art)
 for name in ("fotobox-event-800.webp","fotobox-event-1672.webp"):
     apply_device_screen(source/"products"/name,out/"assets/images"/name,"box",box_art)
+# Real-source visual evidence for the actual in-device screen, not a screenshot
+# pasted into another card. Both exported responsive sizes are reworked.
+def photo_screen_crop(im):
+    w,h=im.size
+    ref_w,ref_h=800,450
+    bounds=(337,137,451,226)
+    pad=12
+    l=round((bounds[0]-pad)*w/ref_w)
+    t=round((bounds[1]-pad)*h/ref_h)
+    r=round((bounds[2]+pad)*w/ref_w)
+    b=round((bounds[3]+pad)*h/ref_h)
+    return im.crop((l,t,r,b))
+source_box=Image.open(source/"products/fotobox-event-1672.webp").convert("RGB")
+updated_box=Image.open(out/"assets/images/fotobox-event-1672.webp").convert("RGB")
+preview_before=photo_screen_crop(source_box)
+preview_after=photo_screen_crop(updated_box)
+preview_w,preview_h=690,520
+compare=Image.new("RGB",(preview_w*2,preview_h+48),(24,21,18))
+for index,sample in enumerate((preview_before,preview_after)):
+    tile=ImageOps.contain(sample,(preview_w-18,preview_h-16),
+                          method=Image.Resampling.LANCZOS)
+    compare.paste(tile,(preview_w*index+(preview_w-tile.width)//2,
+                        (preview_h-tile.height)//2))
+draw=ImageDraw.Draw(compare)
+draw.text((30,preview_h+12),"VORHER: vorhandenes Bildschirmmotiv",fill=(245,229,209))
+draw.text((preview_w+30,preview_h+12),"NACHHER: freigegebenes, zentriertes Original-Logo",fill=(245,229,209))
+compare.save(qa/"fotobox-logo-centering-before-after.webp",
+             format="WEBP",quality=93,method=6)
+import hashlib
+(qa/"fotobox-logo-centering.json").write_text(json.dumps({
+    "scope":"Fotobox display only; photo and case outside display pixel-identical",
+    "screenReferenceRect":[337,137,451,226],
+    "brandAsset":"site/assets/fotopolis-goldmark.webp",
+    "brandAssetSha256":hashlib.sha256((root/"site/assets/fotopolis-goldmark.webp").read_bytes()).hexdigest(),
+    "screenArtwork":[1200,900],
+    "logoBounds":[360,125,840,605],
+    "logoGeometricCentreX":600,
+    "screenGeometricCentreX":600,
+    "touchButtonBounds":[335,719,865,800],
+    "buttonGeometricCentreX":600,
+    "photoFiles":["fotobox-event-1672.webp","fotobox-event-800.webp"],
+    "outputOnly":True,
+    "manualDesignApproval":"PENDING"
+},ensure_ascii=False,indent=2),encoding="utf-8")
+
 for name in ("fotowohnwagen-gartenparty-1448.webp","fotowohnwagen-gartenparty-760.webp"):
     assert (source/"products"/name).read_bytes()==(out/"assets/images"/name).read_bytes()
 
