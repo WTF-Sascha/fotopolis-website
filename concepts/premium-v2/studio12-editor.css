@@ -30,6 +30,7 @@
 .fp12-slot small{font-size:11px;color:#675c50}
 .fp12-move{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .fp12-move button{border:1px solid #ad9b84;border-radius:6px;background:transparent;color:#3c2b1d;min-height:46px;padding:10px;font-size:12px;cursor:pointer}
+.fp12-nudge{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}.fp12-nudge button{min-height:45px;border:1px solid #ad9b84;border-radius:5px;background:#f8f4ec;color:#33271d;font-size:20px;cursor:pointer}
 .fp12-primary,.fp12-secondary{border-radius:6px;padding:13px 16px;min-height:52px;width:100%;font-size:14px;font-weight:750;cursor:pointer;margin:9px 0}
 .fp12-primary{background:var(--fp12-espresso);color:#fff;border:1px solid var(--fp12-espresso)}
 .fp12-secondary{background:#d7bc94;color:#20170f;border:1px solid #ac8758}
