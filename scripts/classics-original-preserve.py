@@ -29,6 +29,9 @@ def is_photo_grey(rgb):
 # interiors, not the neutral-grey placeholders in the other 28 originals.
 # Inner bounds were inspected on their actual 1536×1024 source artwork.
 SPECIAL_SOURCE_WINDOWS={
+  # The two panels of FP-009 share an anti-aliased grey edge across the
+  # thin divider; connected-component analysis merges them even at 2px.
+  9:[(122,106,893,866),(925,106,1407,867)],
  19:[(80,265,751,700),(796,265,1479,700)],
  20:[(143,120,1394,812)],
  21:[(73,203,759,651),(790,295,1477,736)],
