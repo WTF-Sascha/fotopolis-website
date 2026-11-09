@@ -14,8 +14,10 @@ import random
 import re
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
+faithful_original = runpy.run_path(str(ROOT / "scripts/classics-original-preserve.py"))["faithful_original"]
 SOURCE = ROOT / "concepts/premium-v2"
 OUT = ROOT / "preview-build"
 TARGET = OUT / "assets/designvorlagen"
@@ -60,14 +62,14 @@ for i,(name,category,palette,photos,description) in enumerate(MORE,33):
                       "image":f"/assets/designvorlagen/fp-{i:03d}.webp",
                       "source":"Studio 11 procedural original; print overlay in /print"})
 for item in catalogue[:32]:
-    # Preserve the original ID / photo count / category, reinterpret palette and
-    # design from scratch. Source originals and their historic hashes stay intact.
-    if item["palette"] == "navy":
-        item["palette"] = "espresso" if int(item["id"][-3:]) % 3 else "noir"
-    if item["name"].startswith("Navy "):
-        item["name"] = item["name"].replace("Navy ","Espresso ",1)
-    item["description"] = "Neu komponiertes Querformat-Design · " + item["description"]
-    item["source"] = "Source artwork archived unchanged; Studio 11 editorial redesign"
+    # The user expressly requires all authentic original motifs, names,
+    # palettes and photo-window geometries to stay intact. Only original
+    # FOTOPOLIS seals are replaced and original photo holes cut transparent.
+    item["collection"]="classics"
+    item["description"]="Originalmotiv fachgerecht restauriert · "+item["description"]
+for item in catalogue[32:]:
+    item["collection"]="signature"
+    item["originalMotifPreserved"]=False
 assert len(catalogue) == 44 and len({x["id"] for x in catalogue}) == 44
 
 PALETTES = {
@@ -159,8 +161,15 @@ def header(draw,item,text,gold):
     draw.text((103,194),category,font=font(24,False),fill=(*gold,255))
     draw.line((W-425,166,W-94,166),fill=(*gold,185),width=2)
 
+classic_records=[]
+classic_pairs=[]
 def make(item):
     n=int(item["id"][-3:])
+    if n<=32:
+        before,after,rec=faithful_original(item,ORIGINAL,logo,PRINT,TARGET,W,H,DPI)
+        classic_records.append(rec)
+        classic_pairs.append((before,after))
+        return after
     palette=item["palette"] if item["palette"] in PALETTES else "ivory"
     bg,text,gold=PALETTES[palette]
     rng=random.Random(n*776)
@@ -267,6 +276,26 @@ for i,img in enumerate(thumbs):
             fill=(60,49,39))
 sheet.save(QA/"photoprint-44-contact-sheet.webp","WEBP",quality=91,method=5)
 
+# Full motif-preservation evidence: source on left, faithful new brand on right.
+assert len(classic_records)==32 and len(classic_pairs)==32
+pair_cell=(480,320)
+proof=Image.new("RGB",(pair_cell[0]*4,pair_cell[1]*8),(29,25,21))
+proof_draw=ImageDraw.Draw(proof)
+for i,(before,after) in enumerate(classic_pairs):
+    x=(i%4)*pair_cell[0];y=(i//4)*pair_cell[1]
+    orig=before.resize((231,154),Image.Resampling.LANCZOS)
+    new=after.resize((231,154),Image.Resampling.LANCZOS)
+    proof.paste(orig,(x+4,y+48))
+    proof.paste(new,(x+245,y+48))
+    proof_draw.text((x+10,y+12),f"FP-{i+1:03d} | ORIGINAL / CLASSIC",font=font(18,False),fill=(242,216,179))
+    proof_draw.text((x+255,y+214),"Ein Originalmotiv, ein Goldlogo",font=font(14,False),fill=(199,178,149))
+proof.save(QA/"classics-32-source-vs-restored.webp","WEBP",quality=92,method=5)
+(QA/"classics-32-source-fidelity.json").write_text(json.dumps(classic_records,ensure_ascii=False,indent=2),encoding="utf-8")
+# Every original id retains one source-based 3:2 composition and a true alpha
+# overlay with verified original photo slots (no uniform generic layouts).
+assert all(x["originalMotifPreserved"] is True for x in catalogue[:32])
+assert all(x["collection"]=="signature" for x in catalogue[32:])
+
 # Existing forms need the new IDs, but no workflow logic or POST is changed.
 new_options="".join(
     f'<option value="FP-{n:03d}">FP-{n:03d} · {catalogue[n-1]["name"]}</option>'
@@ -312,7 +341,10 @@ report={
  "release":"NOT APPROVED: independent Studio 11 photo-format preview",
  "officialSpecification":"fotopolis-mieten.de/tools/designer/designer.html: 15 x 10 cm, 300 DPI, PNG/JPG",
  "sizeCm":[15,10],"pixelSize":[W,H],"dpi":DPI,
- "originalSourceDesignsPreserved":32,"newDesigns":12,"candidateCount":44,
+ "originalSourceDesignsPreserved":32,"originalMotifsPreservedInPreview":32,
+ "sourceToCandidateQA":"qa/classics-32-source-vs-restored.webp",
+ "individuallyDetectedPhotoRegions":32,
+ "newDesigns":12,"candidateCount":44,
  "masterGoldmarkSha256":master_hash,
  "sourceOriginalSha256":source_hashes,
  "printOverlays":"alpha-cutout PNG, single master logo, exact photo masks",
