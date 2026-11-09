@@ -60,6 +60,19 @@ for(const filename of ["fotopolis-touch-mirror.webp","fotopolis-touch-box.webp"]
  const p="assets/branding/"+filename;
  check(has(p)&&statSync(join(base,p)).size>10000,"Missing screen asset "+p);
 }
+// Product-image QA is independent of web layout: the real original booth
+// image must be reconstructed with the approved master logo at the display's
+// geometric centre, and a reviewable before/after crop must exist.
+check(has("qa/fotobox-logo-centering-before-after.webp") &&
+      statSync(join(base,"qa/fotobox-logo-centering-before-after.webp")).size>10000,
+      "Missing real source/derived Fotobox screen comparison");
+const boxBrand=JSON.parse(read("qa/fotobox-logo-centering.json"));
+check(boxBrand.outputOnly===true &&
+      boxBrand.logoGeometricCentreX===boxBrand.screenGeometricCentreX &&
+      boxBrand.buttonGeometricCentreX===boxBrand.screenGeometricCentreX &&
+      boxBrand.brandAsset==="site/assets/fotopolis-goldmark.webp" &&
+      boxBrand.photoFiles.length===2,
+      "Approved FOTOPOLIS brand logo must be physically centered in both generated Fotobox image sizes");
 for(const filename of ["logo-detail-inspection.webp","all-32-templates.webp","studio95-audit.json"]){
  check(has("qa/"+filename),"Visual audit missing: "+filename);
 }
