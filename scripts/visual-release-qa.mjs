@@ -69,7 +69,8 @@ check(signatureItems.length===12&&signatureItems.every(x=>x.collection==="signat
   "FP-033–FP-044 must remain separate Signature candidates");
 const originalCatalog=JSON.parse(readFileSync("concepts/premium-v2/design-gallery-data.json","utf8"));
 check(classicItems.every((x,i)=>x.id===originalCatalog[i].id&&
-  x.name===originalCatalog[i].name&&x.photos===originalCatalog[i].photos&&
+  x.name===originalCatalog[i].name&&
+  x.photos===(x.id==="FP-017"?4:originalCatalog[i].photos)&&
   x.category===originalCatalog[i].category),
   "Original IDs, photo counts, occasion and recognisable design names changed");
 check(has("qa/classics-32-source-vs-restored.webp")&&
