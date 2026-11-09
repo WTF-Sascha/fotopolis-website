@@ -703,9 +703,39 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 }
 .package-overview .compare-table tbody th { color: var(--fp11-ink) !important; font-weight: 650; }
 
-/* Studio 11 Classics / Signature — explicit original-motif collection navigation. */
-.gl-toolbar .gl-toolbar-inner { flex-wrap: wrap; }
-.gl-editions { display: flex; flex-wrap: wrap; width: 100%; gap: 9px; padding-bottom: 10px; border-bottom: 1px solid rgba(185,152,98,.24); }
-.gl-editions .gl-chip { font-size: 13px; min-height: 44px; border-color: rgba(185,152,98,.5); }
-.gl-editions .gl-chip[aria-pressed="true"] { background: var(--fp11-espresso); border-color: var(--fp11-espresso); color: #f7f3ec; }
-@media (max-width:600px) { .gl-editions { display:grid; grid-template-columns:1fr; } .gl-editions .gl-chip { text-align:center; width:100%; } }
+/* Studio 11 Classics / Signature: quiet, editorial full-width collection row.
+   The prior flex-wrap property did nothing on the inherited CSS grid and
+   caused the collection selector to share a narrow column with categories. */
+.gl-toolbar .gl-toolbar-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  row-gap: 17px;
+  column-gap: clamp(18px,2.5vw,35px);
+}
+.gl-toolbar .gl-editions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid rgba(185,152,98,.28);
+}
+.gl-toolbar .gl-editions .gl-chip { font-size: 13px; min-height: 44px; border-color: rgba(185,152,98,.5); }
+.gl-toolbar .gl-editions .gl-chip[aria-pressed="true"] { background: var(--fp11-espresso); border-color: var(--fp11-espresso); color: #f7f3ec; }
+.gl-toolbar .gl-categories { grid-column: 1; align-self: center; min-width: 0; }
+.gl-toolbar .gl-fields { grid-column: 2; align-self: center; }
+.gl-hero .gl-title em { color: #e6cca5 !important; }
+@media (max-width: 1140px) {
+  .gl-toolbar .gl-toolbar-inner { grid-template-columns: minmax(0,1fr); }
+  .gl-toolbar .gl-editions,
+  .gl-toolbar .gl-categories,
+  .gl-toolbar .gl-fields { grid-column: 1; }
+}
+@media (max-width: 600px) {
+  .gl-toolbar .gl-editions { display:grid; grid-template-columns:1fr; }
+  .gl-toolbar .gl-editions .gl-chip { text-align:center; width:100%; }
+  .gl-toolbar .gl-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+}
