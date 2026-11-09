@@ -232,6 +232,20 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
 }
 .studio-page-hero-media:after,.studio-page-hero-art:before,.studio-page-hero-art:after { display: none !important; }
 .studio-page-hero-media img { object-fit: contain; padding: 18px; }
+/* Fotobox is the only landscape hero with a small physical device in the
+   centre. A controlled photographic crop increases branding visibility on
+   real desktop/mobile viewports without changing the source photograph. */
+.route-fotobox .studio-page-hero-media img {
+  object-fit: cover !important;
+  object-position: 50% 50% !important;
+  padding: 42px 18px 49px !important;
+}
+@media (max-width: 760px) {
+  .route-fotobox .studio-page-hero-media img {
+    padding: 29px 12px 38px !important;
+  }
+}
+
 .studio-page-hero-media figcaption { color: #e5d5c0; }
 .studio-page-hero-art { opacity: .2; }
 .route-kontakt .studio-page-hero-art,.route-faq .studio-page-hero-art,
