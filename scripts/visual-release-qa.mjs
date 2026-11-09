@@ -66,11 +66,18 @@ for(const filename of ["fotopolis-touch-mirror.webp","fotopolis-touch-box.webp"]
 check(has("qa/fotobox-logo-centering-before-after.webp") &&
       statSync(join(base,"qa/fotobox-logo-centering-before-after.webp")).size>10000,
       "Missing real source/derived Fotobox screen comparison");
+check(has("qa/fotobox-device-branding-before-after.webp") &&
+      statSync(join(base,"qa/fotobox-device-branding-before-after.webp")).size>10000,
+      "Missing full-device before/after visual evidence");
 const boxBrand=JSON.parse(read("qa/fotobox-logo-centering.json"));
 check(boxBrand.outputOnly===true &&
       boxBrand.logoGeometricCentreX===boxBrand.screenGeometricCentreX &&
       boxBrand.buttonGeometricCentreX===boxBrand.screenGeometricCentreX &&
       boxBrand.brandAsset==="site/assets/fotopolis-goldmark.webp" &&
+      boxBrand.logoBounds[2]-boxBrand.logoBounds[0]>=680 &&
+      boxBrand.screenLogoIncreasePercent>=40 &&
+      boxBrand.frontBadgeUsesOriginalGoldmark===true &&
+      boxBrand.frontBadgeReferenceRect[0]===366 &&
       boxBrand.photoFiles.length===2,
       "Approved FOTOPOLIS brand logo must be physically centered in both generated Fotobox image sizes");
 for(const filename of ["logo-detail-inspection.webp","all-32-templates.webp","studio95-audit.json"]){
