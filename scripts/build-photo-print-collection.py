@@ -227,7 +227,10 @@ def make(item):
         pd.text(((l+r-width)/2,(t+b)/2-16),txt,font=tt,
                 fill=(*gold,155))
     preview=Image.alpha_composite(placeholder,paper).convert("RGB")
-    preview.save(TARGET/f"fp-{n:03d}.webp","WEBP",quality=90,method=5)
+    # Never ship 44 full 300-DPI print canvases as gallery thumbnails.
+    # Print PNGs remain full-res; only UI previews are compact and responsive.
+    web_preview=preview.resize((900,600),Image.Resampling.LANCZOS)
+    web_preview.save(TARGET/f"fp-{n:03d}.webp","WEBP",quality=88,method=5)
     if "sha256" in item:
         item["sourceOriginalSha256"]=item["sha256"]
     item["sha256"]=hashlib.sha256((TARGET/f"fp-{n:03d}.webp").read_bytes()).hexdigest()
