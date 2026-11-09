@@ -70,7 +70,9 @@ for item in catalogue[:32]:
         # Verified against the archived original raster: 4 golden windows.
         # Historical catalogue mistakenly said 3, so correct the metadata.
         item["photos"]=4
-    item["description"]="Originalmotiv fachgerecht restauriert · "+item["description"]
+        item["description"]="Vier ursprüngliche Goldrahmen für vier separate Fotos"
+    else:
+        item["description"]="Originalmotiv fachgerecht restauriert · "+item["description"]
 for item in catalogue[32:]:
     item["collection"]="signature"
     item["originalMotifPreserved"]=False
