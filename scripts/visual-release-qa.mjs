@@ -37,7 +37,7 @@ for(const path of routes){
 }
 const catalogue=JSON.parse(read("assets/design-gallery-data.json"));
 check(catalogue.length===44,"Expected 44 printer layouts");
-check(new Set(catalogue.map(x=>x.id)).size===32,"Duplicate template ID");
+check(new Set(catalogue.map(x=>x.id)).size===44,"Duplicate template ID");
 const imgs=readdirSync(join(base,"assets/designvorlagen")).filter(x=>/^fp-\d{3}\.webp$/.test(x));
 check(imgs.length===44,"Missing or extra design images");
 for(const item of catalogue){
