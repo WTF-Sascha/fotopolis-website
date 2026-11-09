@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   isolated-visual-and-functional-qa:
-    name: Studio 10 baseline vs Studio 11 / 98 browser viewports
+    name: Studio 11 baseline vs Studio 12 / 105 browser viewports and synthetic print
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
