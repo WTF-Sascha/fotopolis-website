@@ -268,7 +268,7 @@ try {
             if(weddingCount<1||weddingCount>=44)
               problems.push("Gallery category filter did not narrow artwork results");
             await page.locator('[data-gallery-category="alle"]').click();
-            if(await cards.count()!==32)
+            if(await cards.count()!==44)
               problems.push("Gallery could not restore all 44 artwork cards");
           }
         }
