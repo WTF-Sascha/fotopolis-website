@@ -139,3 +139,14 @@ Die echte 1440px-Fotobox-Seite im Studio-11-Screenshot zeigt ein zwar zentrierte
 ### Release-Schutz
 
 Keine Änderungen an `main`, Live-Domain, produktiven Kundendaten oder Adminbereich. Das bestehende Draft-PR #17 bleibt ausschließlich Entwicklungs-/Preview-Ziel. Die 32 Druckvorlagen bleiben vollständig erhalten.
+
+### R5b — Bildkontrolle im vergrößerten Original-/Kandidatenvergleich
+
+Die echte CI-Gegenüberstellung der gesamten Fotobox zeigte nach der ersten Korrektur zwei weitere **nachgewiesene** Qualitätsprobleme: Der untere Aufdruck überdeckte oben noch Teile der Metallblende; rechts im Display blieb eine schmale Navy-Restkante sichtbar. Das war in den ursprünglich grünen DOM-/Browser-Checks nicht als Fehler erkannt worden.
+
+**Nachbesserung im selben isolierten Branch:**
+- Die Display-Einpassungsmaske deckt den inneren Bildschirm von `[337,137,459,226]` statt `[337,137,451,226]` ab, um die alte rechte blaue Bildkante zu beseitigen.
+- Das untere Original-Goldlogo wird kompakter und tiefer ausschließlich in den freien schwarzen Panelbereich gesetzt: `[368,368,414,414]` auf der 800×450-Referenz. Keine Überlagerung der silbernen Rahmenelemente beabsichtigt.
+- Die Build-QA kontrolliert diese konkreten Maskenkoordinaten und die Pixelidentität außerhalb beider bearbeiteten Rechtecke. Zusätzlich ist eine **menschliche Sichtkontrolle des final gerenderten Proof-Bildes** erforderlich.
+
+Diese Korrektur zeigt, warum 98 grüne Browserfälle keine automatische gestalterische Endfreigabe darstellen. Der finale Kandidat muss erneut gebaut und im tatsächlichen Geräte-Ausschnitt angesehen werden.
