@@ -180,6 +180,8 @@
       const image=await loadImage(url);
       if(job!==version||index>=photos.length)return;
       if(image.naturalWidth<64||image.naturalHeight<64)throw new Error("Bildauflösung zu gering.");
+      if(image.naturalWidth>10000||image.naturalHeight>10000||image.naturalWidth*image.naturalHeight>30000000)
+        throw new Error("Bild hat zu viele Pixel. Bitte auf maximal 30 Megapixel verkleinern.");
       photos[index]={image,dx:0,dy:0,zoom:1};
       say("Foto "+(index+1)+" geladen. Verschiebe es in der Vorschau oder passe den Zoom an.");
       refresh();paint();
@@ -190,6 +192,23 @@
     const r=canvas.getBoundingClientRect();
     return {x:(event.clientX-r.left)*W/r.width,y:(event.clientY-r.top)*H/r.height};
   }
+  function nudge(direction){
+    const p=photos[selected];if(!p?.image)return;
+    const step=30;
+    if(direction==="left")p.dx-=step;
+    if(direction==="right")p.dx+=step;
+    if(direction==="up")p.dy-=step;
+    if(direction==="down")p.dy+=step;
+    fit(p,getSlot(selected));refreshResolutionOnly();paint();
+  }
+  host.querySelectorAll("[data-fp12-nudge]").forEach(button=>
+    button.addEventListener("click",()=>nudge(button.dataset.fp12Nudge))
+  );
+  canvas.addEventListener("keydown",event=>{
+    const key={"ArrowLeft":"left","ArrowRight":"right","ArrowUp":"up","ArrowDown":"down"}[event.key];
+    if(!key)return;
+    event.preventDefault();nudge(key);
+  });
   canvas.addEventListener("pointerdown",event=>{
     if(!current||event.button>0)return;
     const p=pickPoint(event);
