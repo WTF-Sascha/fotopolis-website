@@ -7,7 +7,8 @@
   if(!host)return;
   const W=1772,H=1181,PRINT_DPI=300,MAX_IMAGE_BYTES=16*1024*1024;
   const q=(selector)=>host.querySelector(selector);
-  const canvas=q("[data-fp12-canvas]"),ctx=canvas.getContext("2d",{alpha:false});
+  const canvas=q("[data-fp12-canvas]");
+  let ctx=canvas.getContext("2d",{alpha:false});
   const selector=q("[data-fp12-template]"),product=q("[data-fp12-product]");
   const photoInput=q("[data-fp12-photo]"),slots=q("[data-fp12-slotlist]");
   const zoom=q("[data-fp12-zoom]"),zoomLabel=q("[data-fp12-zoom-label]");
@@ -286,9 +287,15 @@
     if(exporting||!current||!photos.every(p=>p?.image))return;
     exporting=true;download.disabled=true;say("Druckdatei wird lokal erstellt …");
     try{
-      draw(false);
+      // Render a separate print canvas. Live pointer/selection highlights can
+      // repaint at any frame; they must NEVER enter the downloaded file.
+      const printCanvas=document.createElement("canvas");
+      printCanvas.width=W;printCanvas.height=H;
+      const liveContext=ctx;
+      ctx=printCanvas.getContext("2d",{alpha:false});
+      try{draw(false);}finally{ctx=liveContext;}
       const blob=await new Promise((resolve,reject)=>{
-        canvas.toBlob(b=>b?resolve(b):reject(new Error("Canvas konnte nicht exportiert werden")),"image/png");
+        printCanvas.toBlob(b=>b?resolve(b):reject(new Error("Canvas konnte nicht exportiert werden")),"image/png");
       });
       const png=printPng300dpi(new Uint8Array(await blob.arrayBuffer()));
       const name=current.id+"-FOTOPOLIS-15x10cm-300dpi.png";
