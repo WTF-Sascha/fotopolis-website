@@ -348,3 +348,8 @@ runpy.run_path(str(root / 'scripts/apply-studio10.py'), run_name='__main__')
 
 # Studio 11 isolated public-only design, after immutable Studio 10 QA.
 runpy.run_path(str(root / 'scripts/apply-studio11.py'), run_name='__main__')
+
+# Studio 11.1: official FOTOPOLIS 15x10 cm / 300-DPI horizontal print collection.
+# Runs after the immutable 32-original Studio 10 / Studio 11 audit stages.
+# Only generated preview assets are replaced; source originals remain protected.
+runpy.run_path(str(root / 'scripts/build-photo-print-collection.py'), run_name='__main__')
