@@ -13,7 +13,7 @@ import math
 import random
 import re
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -290,6 +290,35 @@ for i,(before,after) in enumerate(classic_pairs):
     proof_draw.text((x+10,y+12),f"FP-{i+1:03d} | ORIGINAL / CLASSIC",font=font(18,False),fill=(242,216,179))
     proof_draw.text((x+255,y+214),"Ein Originalmotiv, ein Goldlogo",font=font(14,False),fill=(199,178,149))
 proof.save(QA/"classics-32-source-vs-restored.webp","WEBP",quality=92,method=5)
+# Explicit close-up QA on every replaced seal: original vs the real 300-DPI
+# print overlay. A full-page browser pass alone cannot reveal branding halos.
+zoom_dir=QA/"classics-logo-zoom"
+zoom_dir.mkdir(exist_ok=True)
+logo_contact=Image.new("RGB",(4*440,8*240),(24,20,17))
+logo_draw=ImageDraw.Draw(logo_contact)
+for i,rec in enumerate(classic_records):
+    number=i+1
+    source=Image.open(ORIGINAL/f"fp-{number:03d}.webp").convert("RGB")
+    actual=Image.open(PRINT/f"fp-{number:03d}.png").convert("RGB")
+    sw,sh=source.size
+    x,y=rec["logoCenter"]
+    r=rec["newRadius"]
+    src_crop=source.crop((x-r-12,y-r-12,x+r+12,y+r+12))
+    px=round(x*W/sw)
+    py=round(y*H/sh)
+    rp=round((r+12)*W/sw)
+    dst_crop=actual.crop((px-rp,py-rp,px+rp,py+rp))
+    tile=Image.new("RGB",(430,210),(24,20,17))
+    tile.paste(ImageOps.contain(src_crop,(204,196)),(3,2))
+    tile.paste(ImageOps.contain(dst_crop,(204,196)),(220,2))
+    tile.save(zoom_dir/f"fp-{number:03d}-logo-before-after.webp",
+              "WEBP",quality=93,method=4)
+    xx=(i%4)*440
+    yy=(i//4)*240
+    logo_contact.paste(tile,(xx,yy))
+    logo_draw.text((xx+8,yy+213),f"FP-{number:03d} · Alt / Masterlogo",
+                   font=font(14,False),fill=(231,204,169))
+logo_contact.save(QA/"classics-32-logo-closeups.webp","WEBP",quality=94,method=5)
 (QA/"classics-32-source-fidelity.json").write_text(json.dumps(classic_records,ensure_ascii=False,indent=2),encoding="utf-8")
 # Every original id retains one source-based 3:2 composition and a true alpha
 # overlay with verified original photo slots (no uniform generic layouts).
