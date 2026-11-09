@@ -60,7 +60,7 @@ text = sw.read_text(encoding="utf-8")
 assert text.count("fotopolis-studio-2026-11-08-v10-premium-candidate") == 1
 assert text.count("'/studio10-premium.css'") == 1
 text = text.replace("fotopolis-studio-2026-11-08-v10-premium-candidate",
-                    "fotopolis-studio-2026-11-09-v11-classics32-faithful-r1", 1)
+                    "fotopolis-studio-2026-11-09-v11-classics32-faithful-r2", 1)
 text = text.replace("'/studio10-premium.css',",
                     "'/studio10-premium.css', '/studio11-quiet-luxury.css',", 1)
 assert text.count("'/studio11-quiet-luxury.css'") == 1
