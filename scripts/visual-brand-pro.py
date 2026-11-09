@@ -183,7 +183,7 @@ def apply_device_screen(src,dst,kind,wallpaper):
         box=(265,137,575,855)
         refsize=(840,1050)
     else:
-        box=(337,137,451,226)
+        box=(337,137,459,226)
         refsize=(800,450)
     def scale(rect):
         return tuple(round(c*(w/refsize[0] if i%2==0 else h/refsize[1]))
@@ -200,10 +200,10 @@ def apply_device_screen(src,dst,kind,wallpaper):
     modified_regions=[(l,t,r,b)]
     case_badge=None
     if kind=="box":
-        # Explicitly authorized second logo position, on the existing lower
-        # BLACK face of the flightcase. Do not alter locks, aluminium framing,
-        # surrounding scene, or any other device geometry.
-        pl,pt,pr,pb=scale((366,355,418,407))
+        # Exact lower black panel interior; visual close-up QA required a
+        # smaller, lower mask to keep the goldmark wholly clear of silver rails.
+        # Do not alter locks, metal framing, event decor or device geometry.
+        pl,pt,pr,pb=scale((368,368,414,414))
         assert 0<pl<pr<w and 0<pt<pb<h and pr-pl==pb-pt, (w,h,pl,pt,pr,pb)
         badge_size=(pr-pl,pb-pt)
         face=logo.resize(badge_size,Image.Resampling.LANCZOS)
@@ -247,7 +247,7 @@ for name in ("fotobox-event-800.webp","fotobox-event-1672.webp"):
 def photo_screen_crop(im):
     w,h=im.size
     ref_w,ref_h=800,450
-    bounds=(337,137,451,226)
+    bounds=(337,137,459,226)
     pad=12
     l=round((bounds[0]-pad)*w/ref_w)
     t=round((bounds[1]-pad)*h/ref_h)
@@ -289,7 +289,7 @@ compare.save(qa/"fotobox-logo-centering-before-after.webp",
 import hashlib
 (qa/"fotobox-logo-centering.json").write_text(json.dumps({
     "scope":"Fotobox screen plus lower existing front-face badge; photo and hardware outside both masks pixel-identical",
-    "screenReferenceRect":[337,137,451,226],
+    "screenReferenceRect":[337,137,459,226],
     "brandAsset":"site/assets/fotopolis-goldmark.webp",
     "brandAssetSha256":hashlib.sha256((root/"site/assets/fotopolis-goldmark.webp").read_bytes()).hexdigest(),
     "screenArtwork":[1200,900],
@@ -297,7 +297,7 @@ import hashlib
     "logoGeometricCentreX":600,
     "screenGeometricCentreX":600,
     "touchButtonBounds":[263,757,937,831],
-    "frontBadgeReferenceRect":[366,355,418,407],
+    "frontBadgeReferenceRect":[368,368,414,414],
     "screenLogoIncreasePercent":44,
     "frontBadgeUsesOriginalGoldmark":True,
     "buttonGeometricCentreX":600,
