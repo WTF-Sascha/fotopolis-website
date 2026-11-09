@@ -209,8 +209,18 @@ def apply_device_screen(src,dst,kind,wallpaper):
         # smaller, lower mask to keep the goldmark wholly clear of silver rails.
         # Do not alter locks, metal framing, event decor or device geometry.
         pl,pt,pr,pb=scale((368,366,414,412))
-        assert 0<pl<pr<w and 0<pt<pb<h and pr-pl==pb-pt, (w,h,pl,pt,pr,pb)
-        badge_size=(pr-pl,pb-pt)
+        # Independent x/y rounding at 1672x941 can differ by one pixel;
+        # preserve a true circular logo instead of failing the preview build.
+        width,height=pr-pl,pb-pt
+        assert abs(width-height)<=1,(w,h,width,height)
+        diameter=min(width,height)
+        center_x=(pl+pr)/2
+        center_y=(pt+pb)/2
+        pl=round(center_x-diameter/2)
+        pt=round(center_y-diameter/2)
+        pr,pb=pl+diameter,pt+diameter
+        assert 0<pl<pr<w and 0<pt<pb<h and pr-pl==pb-pt
+        badge_size=(diameter,diameter)
         face=logo.resize(badge_size,Image.Resampling.LANCZOS)
         badge_mask=Image.new("L",badge_size,0)
         ImageDraw.Draw(badge_mask).ellipse((1,1,badge_size[0]-2,badge_size[1]-2),fill=255)
