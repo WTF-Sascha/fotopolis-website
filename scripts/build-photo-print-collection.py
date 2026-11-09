@@ -94,16 +94,16 @@ def darken(rgb,portion):
 def rects(count,variant):
     # All windows leave a safe headline zone above and the original-logo zone below.
     if count==1:
-        return [(92,253,1680,1015)] if variant%2 else [(112,253,1657,1015)]
+        return [(92,253,1680,980)] if variant%2 else [(112,253,1657,980)]
     if count==2:
         if variant%2:
-            return [(92,249,861,1009),(894,249,1680,1009)]
-        return [(94,253,1677,610),(94,641,1677,1007)]
+            return [(92,249,861,980),(894,249,1680,980)]
+        return [(94,253,1677,610),(94,641,1677,980)]
     if variant%3==0:
-        return [(92,252,1033,1008),(1067,252,1680,612),(1067,642,1680,1008)]
+        return [(92,252,1033,980),(1067,252,1680,612),(1067,642,1680,980)]
     if variant%3==1:
-        return [(94,252,590,1008),(622,252,1162,1008),(1194,252,1680,1008)]
-    return [(94,252,1678,606),(94,640,870,1008),(903,640,1678,1008)]
+        return [(94,252,590,980),(622,252,1162,980),(1194,252,1680,980)]
+    return [(94,252,1678,606),(94,640,870,980),(903,640,1678,980)]
 
 def graphic(draw,kind,n,bg,accent):
     rng=random.Random(n*193)
@@ -178,7 +178,7 @@ def make(item):
     windows=rects(item["photos"],n)
     # A true print overlay must have alpha=0 inside the photograph slots.
     for j,(l,t,r,b) in enumerate(windows):
-        assert l>=80 and r<=W-80 and t>=240 and b<=1017
+        assert l>=80 and r<=W-80 and t>=240 and b<=990
         d.rounded_rectangle((l,t,r,b),radius=9,fill=(0,0,0,0))
         d.rounded_rectangle((l,t,r,b),radius=9,
             outline=(*gold,255),width=6)
