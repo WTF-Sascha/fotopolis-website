@@ -205,7 +205,11 @@ def make(item):
 
     path=PRINT / f"fp-{n:03d}.png"
     paper.save(path,"PNG",dpi=(DPI,DPI),optimize=True)
-    check=Image.open(path).convert("RGBA")
+    physical=Image.open(path)
+    physical_dpi=physical.info.get("dpi",(0,0))
+    assert all(299<=float(x)<=301 for x in physical_dpi), (
+        item["id"],"PNG missing verified 300 DPI metadata",physical_dpi)
+    check=physical.convert("RGBA")
     assert check.size==(1772,1181), item["id"]
     for l,t,r,b in windows:
         assert check.getpixel(((l+r)//2,(t+b)//2))[3]==0,item["id"]
