@@ -161,8 +161,10 @@ def faithful_original(item, original_dir:Path, master_logo:Image.Image,
     # old seal and its gold rim: no layered logos, blur ghosts or clone seams.
     cx_rel,cy_rel,old_rel=OLD_POSITIONS.get(number,(.953,.937,.021))
     cx,cy=round(cx_rel*w),round(cy_rel*h)
-    radius=round(w*old_rel*1.22+4)
-    assert radius+2<min(cx,w-cx,cy,h-cy), (number,"logo lacks safe area")
+    desired=round(w*old_rel*1.22+4)
+    safe_radius=min(cx,w-cx-1,cy,h-cy-1)-3
+    radius=min(desired,safe_radius)
+    assert radius>round(w*old_rel*1.07), (number,"legacy seal exceeds safe badge bounds",radius)
     dial=radius*2
     art=original.convert("RGBA")
     logo=master_logo.convert("RGBA").resize((dial,dial),Image.Resampling.LANCZOS)
