@@ -111,7 +111,7 @@
     if(has)current.photoRegions.forEach((rect,index)=>{
       const control=document.createElement("button");
       control.type="button";control.className="fp12-slot";
-      control.dataset.slot=String(index);
+      control.dataset.slot=String(index);control.dataset.fp12Slot=String(index);
       control.setAttribute("aria-pressed",String(index===selected));
       const header=document.createElement("strong");header.textContent="Foto "+(index+1);
       const descr=document.createElement("small");
