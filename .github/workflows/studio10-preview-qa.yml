@@ -51,6 +51,7 @@ jobs:
           python3 -m http.server 8764 --directory .studio10-baseline/preview-build >/tmp/studio10-baseline.log 2>&1 &
           python3 -m http.server 8765 --directory preview-build >/tmp/studio11-candidate.log 2>&1 &
           node scripts/studio11-browser-qa.mjs
+          node scripts/studio12-browser-qa.mjs
       - name: Archive verifiable before/after screenshot evidence
         if: always()
         uses: actions/upload-artifact@v4
