@@ -150,3 +150,7 @@ Die echte CI-Gegenüberstellung der gesamten Fotobox zeigte nach der ersten Korr
 - Die Build-QA kontrolliert diese konkreten Maskenkoordinaten und die Pixelidentität außerhalb beider bearbeiteten Rechtecke. Zusätzlich ist eine **menschliche Sichtkontrolle des final gerenderten Proof-Bildes** erforderlich.
 
 Diese Korrektur zeigt, warum 98 grüne Browserfälle keine automatische gestalterische Endfreigabe darstellen. Der finale Kandidat muss erneut gebaut und im tatsächlichen Geräte-Ausschnitt angesehen werden.
+
+### R5c — vollständige optische Endposition nach 300%-Vergleich
+
+Beim Blick auf das tatsächliche Original-/Ergebnisbild war die Frontmarke unten noch zu nahe am Metallrahmen, und unter dem Bildschirm blieb ein blauer Streifen aus dem Alt-Motiv. Die letzte Nachkorrektur verkleinert die Aufkleberfläche geringfügig und setzt sie optisch mittig zwischen die silbernen Rahmenschienen (`[368,366,414,412]`). Der Bildschirm wird auf die echte innere LCD-Fläche `[337,137,459,231]` ausgedehnt; die rechteckige LCD-Maske ist ohne ausfransende/alte blau durchscheinende Ecken gesetzt. Alle Ausgaben werden erneut anhand der echten Quelldatei abgeleitet. Die PWA erhält nochmals eine eigene Service-Worker-Revision. **Abnahmebedingung:** neue Bilder und 390px-/1440px-Screenshots nach diesem Commit eigenständig sichten; nur bestandene neue CI-Läufe zählen.
