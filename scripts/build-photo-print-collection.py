@@ -322,6 +322,21 @@ report={
 }
 (QA/"photoprint-44-audit.json").write_text(
  json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+# One-click archive for the physical 15×10 cm alpha-print layouts.
+# Keep previews separate; this ZIP is for print operators and needs real photos.
+from zipfile import ZipFile, ZIP_STORED
+bundle=QA/"FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip"
+with ZipFile(bundle,"w",compression=ZIP_STORED) as archive:
+    for overlay in sorted(PRINT.glob("fp-*.png")):
+        archive.write(overlay,arcname="print-overlays/"+overlay.name)
+    archive.writestr("README.txt",
+        "FOTOPOLIS Studio 11.1 — 15x10 cm Querformat, 300 DPI.\\n"
+        "Jede PNG-Datei ist ein Foto-Overlay mit transparenten Ausschnitten; "
+        "noch kein fertiges Foto.\\n"
+        "Logo stammt aus der verbindlichen FOTOPOLIS-Goldmark-Masterdatei.\\n"
+        "Vor produktivem Druck Farbraum, Papiermass, Beschnitt und Farbprofil "
+        "am Originaldrucker pruefen.\\n"
+        "Nur Testvorschau; keine Live-Freigabe.\\n")
 assert len(list(PRINT.glob("fp-*.png")))==44
 assert len(list(TARGET.glob("fp-*.webp")))==44
 print(f"FOTOPOLIS PHOTOPRINT: {len(catalogue)} x 15x10cm landscape, "
