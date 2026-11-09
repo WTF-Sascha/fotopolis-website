@@ -236,6 +236,23 @@ try {
         // Exercise the actual gallery UI, not just its static manifest and image tags.
         // Restrict to the mobile representative viewport to keep CI deterministic.
         if(route==="/designvorlagen/"&&width===390){
+          // Independently exercise original Classics and new Signature editions.
+          const editions=page.locator("[data-gallery-collection]");
+          if(await editions.count()!==3)
+            problems.push("Missing Classic / Signature collection controls");
+          else {
+            await page.locator('[data-gallery-collection="classics"]').click();
+            if(await page.locator(".gl-card").count()!==32)
+              problems.push("32 original FOTOPOLIS Classic motifs are not selectable");
+            await page.locator('[data-gallery-collection="signature"]').click();
+            if(await page.locator(".gl-card").count()!==12)
+              problems.push("12 additional Signature designs are not separate");
+            await page.locator('[data-gallery-collection="alle"]').click();
+            if(await page.locator(".gl-card").count()!==44)
+              problems.push("Collection reset did not restore 44 designs");
+          }
+        }
+        if(route==="/designvorlagen/"&&width===390){
           const cards=page.locator(".gl-card");
           if(await cards.count()!==44)
             problems.push("Expected 44 rendered gallery cards before interaction");
