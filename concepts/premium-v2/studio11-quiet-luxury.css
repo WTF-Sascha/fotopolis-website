@@ -702,3 +702,10 @@ body { color: var(--fp11-ink); background: var(--fp11-ivory); font-family: var(-
   font-size: 14px !important; line-height: 1.65;
 }
 .package-overview .compare-table tbody th { color: var(--fp11-ink) !important; font-weight: 650; }
+
+/* Studio 11 Classics / Signature — explicit original-motif collection navigation. */
+.gl-toolbar .gl-toolbar-inner { flex-wrap: wrap; }
+.gl-editions { display: flex; flex-wrap: wrap; width: 100%; gap: 9px; padding-bottom: 10px; border-bottom: 1px solid rgba(185,152,98,.24); }
+.gl-editions .gl-chip { font-size: 13px; min-height: 44px; border-color: rgba(185,152,98,.5); }
+.gl-editions .gl-chip[aria-pressed="true"] { background: var(--fp11-espresso); border-color: var(--fp11-espresso); color: #f7f3ec; }
+@media (max-width:600px) { .gl-editions { display:grid; grid-template-columns:1fr; } .gl-editions .gl-chip { text-align:center; width:100%; } }
