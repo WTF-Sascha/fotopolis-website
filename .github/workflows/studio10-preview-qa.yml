@@ -1,4 +1,4 @@
-name: FOTOPOLIS Studio 11 – Quiet Luxury Preview QA
+name: FOTOPOLIS Studio 12 – Design-to-Print Preview QA
 
 on:
   pull_request:
