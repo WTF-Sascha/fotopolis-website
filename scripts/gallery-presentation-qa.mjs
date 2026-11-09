@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * FOTOPOLIS presentation regression gate:
- * The 32-template collection must remain separate from the photo-first Studio 7 home.
+ * The 44-template collection must remain separate from the photo-first Studio 7 home.
  * Run after: python3 scripts/build-premium-preview.py
  */
 import assert from "node:assert/strict";
@@ -47,16 +47,16 @@ for(const [slug,image] of [
   must(page.includes("/designvorlagen/?produkt="),"Design gallery cross-link lost: "+slug);
   must(page.includes("data-product-request"),"Product enquiry widget lost: "+slug);
 }
-must(Array.isArray(data)&&data.length===32,"Exactly 32 unique templates required");
-must(new Set(data.map(x=>x.id)).size===32,"Duplicate template IDs");
-must(new Set(data.map(x=>x.sha256)).size===32,"Duplicate source designs");
+must(Array.isArray(data)&&data.length===44,"Exactly 44 unique templates required");
+must(new Set(data.map(x=>x.id)).size===44,"Duplicate template IDs");
+must(new Set(data.map(x=>x.sha256)).size===44,"Duplicate source designs");
 const imageNames=readdirSync(join(root,"assets/designvorlagen")).filter(x=>/^fp-\d{3}\.webp$/.test(x));
-must(imageNames.length===32,"Unexpected design preview count");
+must(imageNames.length===44,"Unexpected design preview count");
 for(const item of data){
   must(/^FP-\d{3}$/.test(item.id),"Invalid template ID");
   must(item.image==="/assets/designvorlagen/"+item.id.toLowerCase()+".webp","Broken design route: "+item.id);
   must(exists(item.image.slice(1)),"Missing template asset: "+item.id);
-  must([1,2,3].includes(item.photos),"Invalid collage count: "+item.id);
+  must([1,2,3,4].includes(item.photos),"Invalid collage count: "+item.id);
 }
 must(gallery.includes("data-design-gallery"),"Dedicated design gallery missing");
 must(gallery.includes("/assets/design-gallery.js"),"Gallery interaction missing");
@@ -69,4 +69,4 @@ must(home.includes("/designvorlagen/"),"Home gallery entry missing");
 must(exists("galerie/index.html"),"Existing product/gallery imagery route lost");
 must(exists("admin/login/index.html"),"Admin sign-in route lost");
 must(exists("admin/dashboard/index.html"),"Operator dashboard route lost");
-console.log("PASS: Studio hero, 3 product photos, 3 enquiries, 32 unique design templates, standalone gallery, mobile layout, administration.");
+console.log("PASS: Studio hero, 3 product photos, 3 enquiries, 44 unique design templates, standalone gallery, mobile layout, administration.");
