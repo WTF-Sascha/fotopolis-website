@@ -29,6 +29,10 @@ def is_photo_grey(rgb):
 # interiors, not the neutral-grey placeholders in the other 28 originals.
 # Inner bounds were inspected on their actual 1536×1024 source artwork.
 SPECIAL_SOURCE_WINDOWS={
+  # FP-017 was incorrectly documented as 3 pictures; its ORIGINAL actually
+  # contains four separate gold-framed photo panes.
+ 17:[(65,203,525,656),(540,203,750,656),
+     (789,203,998,656),(1011,203,1474,656)],
   # The two panels of FP-009 share an anti-aliased grey edge across the
   # thin divider; connected-component analysis merges them even at 2px.
   9:[(122,106,893,866),(925,106,1407,867)],
@@ -145,7 +149,7 @@ def faithful_original(item, original_dir:Path, master_logo:Image.Image,
     w,h=original.size
     assert abs(w/h-1.5)<.01, (item["id"],"Original not 3:2",original.size)
     desired_count=int(item["photos"])
-    assert desired_count in (1,2,3)
+    assert desired_count in (1,2,3,4)
 
     if number in SPECIAL_SOURCE_WINDOWS:
         slots=SPECIAL_SOURCE_WINDOWS[number]
