@@ -216,6 +216,8 @@ def apply_device_screen(src,dst,kind,wallpaper):
         diameter=min(width,height)
         center_x=(pl+pr)/2
         center_y=(pt+pb)/2
+        # A centered square eliminates the one-pixel mismatch on 1672x941.
+        # Both its origin and diameter are recomputed per source resolution.
         pl=round(center_x-diameter/2)
         pt=round(center_y-diameter/2)
         pr,pb=pl+diameter,pt+diameter
