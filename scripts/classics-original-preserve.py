@@ -25,6 +25,16 @@ def is_photo_grey(rgb):
     r,g,b=rgb[:3]
     return 125<=r<=236 and abs(r-g)<=7 and abs(g-b)<=7 and abs(r-b)<=7
 
+# These original Silk / Portrait editions use cream or deep-navy photo
+# interiors, not the neutral-grey placeholders in the other 28 originals.
+# Inner bounds were inspected on their actual 1536×1024 source artwork.
+SPECIAL_SOURCE_WINDOWS={
+ 19:[(80,265,751,700),(796,265,1479,700)],
+ 20:[(143,120,1394,812)],
+ 21:[(73,203,759,651),(790,295,1477,736)],
+ 22:[(76,165,519,770),(552,165,988,770),(1020,165,1463,770)],
+}
+
 def find_original_photo_windows(source: Image.Image, expected_count: int):
     """Large uniform grey connected-components; never infer new layout geometry.
 
@@ -33,7 +43,7 @@ def find_original_photo_windows(source: Image.Image, expected_count: int):
     square(s) remain separate when the artwork calls for them.
     """
     w,h=source.size
-    factor=4
+    factor=2
     small=source.resize((w//factor,h//factor),Image.Resampling.NEAREST)
     sw,sh=small.size
     pixels=list(small.getdata())
@@ -134,7 +144,15 @@ def faithful_original(item, original_dir:Path, master_logo:Image.Image,
     desired_count=int(item["photos"])
     assert desired_count in (1,2,3)
 
-    slots, components=find_original_photo_windows(original,desired_count)
+    if number in SPECIAL_SOURCE_WINDOWS:
+        slots=SPECIAL_SOURCE_WINDOWS[number]
+        components=[{"method":"reviewed-original-source-rectangle"}]
+        assert len(slots)==desired_count
+    else:
+        try:
+            slots,components=find_original_photo_windows(original,desired_count)
+        except AssertionError as error:
+            raise AssertionError(f"{item['id']}: {error}") from error
     # True optical placement of the ORIGINAL seal, not a new footer in a
     # different aesthetic. A single, slightly larger opaque medal covers the
     # old seal and its gold rim: no layered logos, blur ghosts or clone seams.
