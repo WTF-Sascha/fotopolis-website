@@ -64,6 +64,9 @@ jobs:
             preview-build/qa/fotobox-logo-centering.json
             preview-build/qa/photoprint-44-contact-sheet.webp
             preview-build/qa/classics-32-source-vs-restored.webp
+            preview-build/qa/classics-32-logo-closeups.webp
+            preview-build/qa/classics-logo-zoom/
+            preview-build/qa/FOTOPOLIS_Classics_32_Originalmotive_15x10_300dpi.zip
             preview-build/qa/classics-32-source-fidelity.json
             preview-build/qa/photoprint-44-audit.json
             preview-build/qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip
