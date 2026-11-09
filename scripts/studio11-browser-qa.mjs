@@ -211,15 +211,15 @@ try {
         if(route==="/kontakt/"){
           if(await page.locator('form[name="fotopolis-studio9-anfrage"]').count()!==1)
             problems.push("Real Netlify request form missing");
-          if(await page.locator('select[name="vorlage"] option').count()!==33)
-            problems.push("Contact picker does not offer 32 artworks");
+          if(await page.locator('select[name="vorlage"] option').count()!==45)
+            problems.push("Contact picker does not offer 44 artworks");
           if(await page.locator('input[name="datenschutz_ok"]').count()!==1)
             problems.push("Consent control missing");
         }
         if(["/fotobox/","/fotospiegel/","/fotowohnwagen/"].includes(route)){
           if(await page.locator("[data-product-request]").count()!==1)
             problems.push("Inline request flow missing");
-          if(await page.locator('select[name="vorlage"] option').count()!==33)
+          if(await page.locator('select[name="vorlage"] option').count()!==45)
             problems.push("Product design picker incomplete");
         }
         if(route==="/designvorlagen/"){
@@ -227,18 +227,18 @@ try {
             const res=await fetch("/assets/design-gallery-data.json");
             return res.ok?(await res.json()).length:-1;
           });
-          if(gallery!==32)problems.push("Gallery manifest not 32 designs");
+          if(gallery!==44)problems.push("Gallery manifest not 44 designs");
           const badGalleryImages=await page.locator(".gl-preview img").evaluateAll(images=>
             images.filter(el=>!el.complete||el.naturalWidth===0).map(el=>el.src));
           if(badGalleryImages.length)
-            problems.push("Unloaded 32-design preview(s): "+badGalleryImages.join(", "));
+            problems.push("Unloaded 44-design preview(s): "+badGalleryImages.join(", "));
         }
         // Exercise the actual gallery UI, not just its static manifest and image tags.
         // Restrict to the mobile representative viewport to keep CI deterministic.
         if(route==="/designvorlagen/"&&width===390){
           const cards=page.locator(".gl-card");
-          if(await cards.count()!==32)
-            problems.push("Expected 32 rendered gallery cards before interaction");
+          if(await cards.count()!==44)
+            problems.push("Expected 44 rendered gallery cards before interaction");
           else {
             const first=page.locator(".gl-preview").first();
             await first.click();
@@ -265,11 +265,11 @@ try {
             await search.fill("");
             await page.locator('[data-gallery-category="hochzeit"]').click();
             const weddingCount=await cards.count();
-            if(weddingCount<1||weddingCount>=32)
+            if(weddingCount<1||weddingCount>=44)
               problems.push("Gallery category filter did not narrow artwork results");
             await page.locator('[data-gallery-category="alle"]').click();
             if(await cards.count()!==32)
-              problems.push("Gallery could not restore all 32 artwork cards");
+              problems.push("Gallery could not restore all 44 artwork cards");
           }
         }
         if(width===390){
