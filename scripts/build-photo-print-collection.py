@@ -401,6 +401,20 @@ with ZipFile(bundle,"w",compression=ZIP_STORED) as archive:
         "Vor produktivem Druck Farbraum, Papiermass, Beschnitt und Farbprofil "
         "am Originaldrucker pruefen.\\n"
         "Nur Testvorschau; keine Live-Freigabe.\\n")
+# The existing 32 originals are also available separately for event operators.
+# This prevents confusing new Signature designs with the familiar Classics.
+classics_bundle=QA/"FOTOPOLIS_Classics_32_Originalmotive_15x10_300dpi.zip"
+with ZipFile(classics_bundle,"w",compression=ZIP_STORED) as archive:
+    for i in range(1,33):
+        artwork=PRINT/f"fp-{i:03d}.png"
+        assert artwork.exists()
+        archive.write(artwork,arcname="FOTOPOLIS-Classics/"+artwork.name)
+    archive.writestr("README.txt",
+        "32 authentische FOTOPOLIS Classics · Originalmotive neu verarbeitet.\\n"
+        "15 × 10 cm · 300 DPI · transparente Fotofenster.\\n"
+        "Unveränderte Originalquellen, exakt ein neues freigegebenes Logo.\\n"
+        "Druckvorlagen ohne eingefügte Eventfotos, vor Serienproduktion "
+        "mit dem Originaldrucker auf Beschnitt/Farben prüfen.\\n")
 assert len(list(PRINT.glob("fp-*.png")))==44
 assert len(list(TARGET.glob("fp-*.webp")))==44
 print(f"FOTOPOLIS PHOTOPRINT: {len(catalogue)} x 15x10cm landscape, "
