@@ -82,15 +82,15 @@ try {
         if (route === "/kontakt/") {
           if (await page.locator('form[name="fotopolis-studio9-anfrage"]').count() !== 1)
             problems.push("Secure contact form missing");
-          if (await page.locator('select[name="vorlage"] option').count() !== 33)
-            problems.push("32 design choices + placeholder required");
+          if (await page.locator('select[name="vorlage"] option').count() !== 45)
+            problems.push("44 design choices + placeholder required");
           if (await page.locator('input[name="datenschutz_ok"]').count() !== 1)
             problems.push("Consent input missing");
         }
         if (["/fotobox/", "/fotospiegel/", "/fotowohnwagen/"].includes(route)) {
           if (await page.locator("[data-product-request]").count() !== 1)
             problems.push("Product enquiry missing");
-          if (await page.locator('select[name="vorlage"] option').count() !== 33)
+          if (await page.locator('select[name="vorlage"] option').count() !== 45)
             problems.push("Product design picker incomplete");
         }
         if (route === "/designvorlagen/") {
@@ -98,7 +98,7 @@ try {
             const res = await fetch("/assets/design-gallery-data.json");
             return res.ok ? (await res.json()).length : -1;
           });
-          if (count !== 32) problems.push("Design catalog not 32 items");
+          if (count !== 44) problems.push("Design catalog not 44 items");
         }
         if (route === "/" && width === 390) {
           const menu = page.locator("[data-menu-toggle]");
