@@ -1,0 +1,78 @@
+name: FOTOPOLIS Studio 11 – Quiet Luxury Preview QA
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'concepts/premium-v2/**'
+      - 'scripts/**'
+      - 'netlify.toml'
+      - '.github/workflows/studio10-preview-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-visual-and-functional-qa:
+    name: Studio 10 baseline vs Studio 11 / 98 browser viewports
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout isolated Studio 11 candidate
+        uses: actions/checkout@v4
+      - name: Checkout immutable Studio 10 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: f689a209929e25bdd6b6d8717675277d0ec52eb8
+          path: .studio10-baseline
+      - name: Python build runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node test runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install image processor
+        run: python -m pip install --disable-pip-version-check "Pillow>=10,<12"
+      - name: Install pinned browser tooling
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Build Studio 10 original baseline
+        run: python3 .studio10-baseline/scripts/build-premium-preview.py
+      - name: Build Studio 11 candidate from originals
+        run: python3 scripts/build-premium-preview.py
+      - name: Run source, artwork and static design quality gates
+        run: node scripts/visual-release-qa.mjs
+      - name: Compare 14 routes over 7 viewports and capture real browser screenshots
+        run: |
+          python3 -m http.server 8764 --directory .studio10-baseline/preview-build >/tmp/studio10-baseline.log 2>&1 &
+          python3 -m http.server 8765 --directory preview-build >/tmp/studio11-candidate.log 2>&1 &
+          node scripts/studio11-browser-qa.mjs
+      - name: Archive verifiable before/after screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio11-browser-qa-${{ github.run_number }}
+          path: |
+            studio11-browser-results/
+            preview-build/qa/studio11-build-audit.json
+            preview-build/qa/fotobox-logo-centering-before-after.webp
+            preview-build/qa/fotobox-device-branding-before-after.webp
+            preview-build/qa/fotobox-logo-centering.json
+            preview-build/qa/photoprint-44-contact-sheet.webp
+            preview-build/qa/classics-32-source-vs-restored.webp
+            preview-build/qa/classics-32-logo-closeups.webp
+            preview-build/qa/classics-logo-zoom/
+            preview-build/qa/FOTOPOLIS_Classics_32_Originalmotive_15x10_300dpi.zip
+            preview-build/qa/classics-32-source-fidelity.json
+            preview-build/qa/photoprint-44-audit.json
+            preview-build/qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip
+            preview-build/assets/design-gallery-data.json
+            preview-build/qa/studio10-before-after.webp
+            preview-build/qa/studio10-zoom-300pct.webp
+            preview-build/qa/studio10-report.json
+          if-no-files-found: warn
+          retention-days: 14
