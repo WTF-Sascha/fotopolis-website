@@ -63,12 +63,14 @@
     const label=caption.value.trim();
     if(!label)return;
     ctx.save();
-    ctx.font="600 35px system-ui,sans-serif";
+    ctx.font="600 30px system-ui,sans-serif";
     let text=label;
-    const maxWidth=920;
+    const maxWidth=870;
     while(ctx.measureText(text).width>maxWidth&&text.length>4)text=text.slice(0,-2)+"…";
     const measured=Math.min(maxWidth,ctx.measureText(text).width);
-    const px=75,py=H-87,pw=Math.max(220,measured+64),ph=58;
+    // Small footer chip below the gold baseline of the original Classics,
+    // never a broad banner over the decoration or the Master Goldmark.
+    const px=74,py=H-67,pw=Math.max(202,measured+52),ph=46;
     ctx.fillStyle="rgba(39,29,21,.93)";
     roundedRect(px,py,pw,ph,7);ctx.fill();
     ctx.lineWidth=2;ctx.strokeStyle="#bc965f";ctx.stroke();
