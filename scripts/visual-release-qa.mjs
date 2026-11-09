@@ -54,6 +54,9 @@ check(printReport.candidateCount===44 && printReport.originalSourceDesignsPreser
       printReport.pixelSize[0]===1772 && printReport.pixelSize[1]===1181 &&
       printReport.dpi===300,"Print collection 15x10 cm format must be verified");
 check(has("qa/photoprint-44-contact-sheet.webp"),"Missing photo-print review contact sheet");
+check(has("qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip")&&
+      statSync(join(base,"qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip")).size>100000,
+      "Missing 44-design customer-facing print overlay package");
 const contact=read("kontakt/index.html");
 check(contact.includes('name="fotopolis-studio9-anfrage"'),"Netlify contact form missing");
 for(let n=1;n<=44;n++){
