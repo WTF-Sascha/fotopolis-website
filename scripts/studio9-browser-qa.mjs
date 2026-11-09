@@ -19,7 +19,7 @@ try{
   const f=page.locator('form[name="fotopolis-studio9-anfrage"]');
   check(await f.count()===1,"Static Netlify form missing at "+width);
   check(await f.getAttribute("data-netlify")==="true","Server-side form detection absent at "+width);
-  check(await f.locator('select[name="vorlage"] option').count()===33,"32 templates not connected to contact at "+width);
+  check(await f.locator('select[name="vorlage"] option').count()===45,"44 templates not connected to contact at "+width);
   check(await f.locator('[name="vorlage"]').inputValue()==="FP-028","Gallery design handoff failed at "+width);
   check(await f.locator('[name="produkt"]').inputValue()==="Fotospiegel","Product handoff failed at "+width);
   check((await page.locator("[data-studio9-template-image]").getAttribute("src"))?.includes("fp-028.webp"),"Design image did not load at "+width);
@@ -56,7 +56,7 @@ try{
   await page.goto(new URL("fotospiegel/",base).toString(),{waitUntil:"networkidle"});
   const pf=page.locator("form[data-product-request]");
   check(await pf.count()===1,"Product inline form missing at "+width);
-  check(await pf.locator('[name="vorlage"] option').count()===33,"32 designs not in product form at "+width);
+  check(await pf.locator('[name="vorlage"] option').count()===45,"44 designs not in product form at "+width);
   await pf.locator('[name="vorlage"]').selectOption("FP-009");
   await pf.locator('[name="datum"]').fill("2026-12-20");
   await page.locator("[data-product-next]").click();
@@ -83,5 +83,5 @@ try{
   check(errors.length===0,"Browser console errors at "+width+": "+JSON.stringify(errors));
   await context.close();
  }
- console.log("PASS: "+total+" Studio 9.0 checks: real form markup, gallery preselection, 32 templates, validation, error recovery, POST payload, mobile layout and product-to-gallery navigation.");
+ console.log("PASS: "+total+" Studio 9.0 checks: real form markup, gallery preselection, 44 templates, validation, error recovery, POST payload, mobile layout and product-to-gallery navigation.");
 }finally{await browser.close()}
