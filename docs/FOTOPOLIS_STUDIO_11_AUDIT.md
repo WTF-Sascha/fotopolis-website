@@ -113,3 +113,29 @@ Die vorliegenden ersten Screenshots sind echte Browseraufnahmen; **nur neu aufge
 - Die PWA-Service-Worker-Kennung wurde geändert, damit installierte Vorschau-PWAs die aktualisierte Fotobox-Darstellung nicht aus einer früheren Cache-Version beziehen.
 
 **Scope-/Freigabegrenzen:** Nur Produktbilddarstellung im separaten Studio-11-Preview. Nicht mit der bereits früher erzeugten freien Bildvariante verwechseln: Kein gesamtes Produktbild oder dekorativer Event-Hintergrund wurde generativ ersetzt. Die manuelle Einzelbildkontrolle der Bildschirmperspektive und die übrigen Logo-Retuschen bleiben gesonderte Freigabepunkte. Keine Änderung an Live-Domain, main, Kundendaten oder Adminbereich.
+
+## 11.0-R5 — Sichtbarkeit und Geometrie der Geräte-Logos (09.11.2026)
+
+### Ausgangsbefund, visuell nachgewiesen
+
+Die echte 1440px-Fotobox-Seite im Studio-11-Screenshot zeigt ein zwar zentriertes, aber optisch sehr kleines, dunkles Logo auf dem Gerätedisplay. Die untere schwarze Frontfläche des Originalgeräts war unbeschriftet. Der Code prüfte bisher die Mitte eines virtuellen 1200×900-Motivs, **nicht die Sichtbarkeit im gerenderten Webbild**. Deshalb war die bisherige pauschale QA-Freigabe zu weitgehend.
+
+### Gezielte Korrektur — nur separater Studio-11-Branch
+
+1. Der unveränderte, freigegebene Master `site/assets/fotopolis-goldmark.webp` wird im 1200×900-Fotobox-Screen **690 statt 480 Pixel** groß gesetzt (+43,75 %), exakt horizontal mittig. Das Display erhält einen ruhigen dunklen Grund mit kontrollierter warmer Hinterleuchtung. Die Touch-to-Start-Fläche bleibt mittig.
+2. Auf der bereits vorhandenen schwarzen unteren Flightcase-Front wird **ausschließlich das freigegebene Goldlogo** innerhalb einer kleinen kreisförmigen, geometrisch zentrierten Maske eingesetzt, ohne ein neues Produkt oder eine andere Gerätegeometrie zu erzeugen.
+3. Beide responsive PWA-Bildvarianten (`fotobox-event-1672.webp`, `fotobox-event-800.webp`) werden aus denselben unveränderten Originaldateien rekonstruiert.
+4. Die Fotobox-Hero-Darstellung erhält einen **produktspezifisch kontrollierten Bildausschnitt**, damit das physische Gerät samt Logos auf Desktop und Mobile besser erkennbar ist. Keine Änderung an Originalbild, Foto Mirror oder Fotowohnwagen.
+5. Die PWA-Cacheversion wird erneuert, damit eine installierte Preview keine alten Fotobox-Bilder weiterverwendet.
+
+### Erweiterte unabhängige QA
+
+- Der Bildbuild kontrolliert jeden Pixel **außerhalb der beiden ausdrücklich freigegebenen Logobereiche** mittels Differenzmaske gegen das unveränderte Original. Die originale Gerätegeometrie, Hardware, Ballons, Dekoration usw. dürfen nicht verändert werden.
+- Die tatsächliche Pixeländerung des unteren Goldlogos wird auf hinreichende Größe und Kontrast kontrolliert; keine rein deklarative Positionsbehauptung.
+- Das Build-Gate verlangt das größere Displaylogo, das zweite Frontbadge, beide Ausgabebilder und einen Vorher-Nachher-Ausschnitt des **vollständigen Geräts**.
+- Der GitHub-Actions-Browserlauf umfasst weiterhin **14 Seiten × 7 Viewports = 98 Kombinationen** mit echten First-Fold- und Fullpage-Aufnahmen auf 390px und 1440px; zusätzlicher Artefaktbeleg: `preview-build/qa/fotobox-device-branding-before-after.webp` und JSON.
+- **Manuelle gestalterische Abnahme bleibt getrennt von technischen Gates.** Auch nach grünem CI ist Zoom-/Kantenkontrolle erforderlich.
+
+### Release-Schutz
+
+Keine Änderungen an `main`, Live-Domain, produktiven Kundendaten oder Adminbereich. Das bestehende Draft-PR #17 bleibt ausschließlich Entwicklungs-/Preview-Ziel. Die 32 Druckvorlagen bleiben vollständig erhalten.
