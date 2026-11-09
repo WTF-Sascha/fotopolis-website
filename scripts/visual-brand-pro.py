@@ -117,30 +117,50 @@ for n,p in enumerate(designs,1):
 # as the master composition. The screenshot is only a small source preview;
 # it is never marketed as a native-resolution device screen or video.
 mirror_art=ImageOps.fit(ref,(1080,1920),method=Image.Resampling.LANCZOS)
-# 4:3 photobox display: a matching crop of the same reference master.
-box_art=ImageOps.fit(ref,(1200,900),method=Image.Resampling.LANCZOS,
-                     centering=(.5,.48))
-# Recreate the small caption after reframing, rather than cut the portrait CTA
-# partially at the edge of the landscape screen.
-def make_box_screen(bg):
-    img=bg.copy()
-    draw=ImageDraw.Draw(img)
+# Fotobox display is its OWN correctly centered premium brand composition.
+# The previous 4:3 crop of the portrait Mirror still displaced the camera/wordmark.
+# Render the exact approved GOLD master logo once, around the true screen centre.
+# The entire physical booth and event photograph outside the screen stays unchanged.
+def make_centered_box_screen():
+    w,h=1200,900
+    dark=(23,18,15)
+    screen=Image.new("RGB",(w,h),dark)
+    ambient=Image.new("RGBA",(w,h),(0,0,0,0))
+    glow=ImageDraw.Draw(ambient)
+    glow.ellipse((245,20,955,730),fill=(170,115,54,115))
+    ambient=ambient.filter(ImageFilter.GaussianBlur(133))
+    screen=Image.alpha_composite(screen.convert("RGBA"),ambient).convert("RGB")
+    size=480
+    # Mathematically centred artwork, not a CSS overlay and not an approximate offset.
+    logo_left=(w-size)//2
+    logo_top=125
+    assert logo_left+size//2==w//2
+    face=logo.resize((size,size),Image.Resampling.LANCZOS)
+    mask=Image.new("L",(size,size),0)
+    ImageDraw.Draw(mask).ellipse((1,1,size-2,size-2),fill=255)
+    mask=mask.filter(ImageFilter.GaussianBlur(0.6))
+    screen.paste(face,(logo_left,logo_top),mask)
+    draw=ImageDraw.Draw(screen)
+    button=(335,719,865,800)
+    assert (button[0]+button[2])//2==w//2
+    draw.rounded_rectangle(button,radius=39,fill=(20,16,13),
+                           outline=(196,151,90),width=3)
     try:
         from PIL import ImageFont
-        font=ImageFont.truetype("DejaVuSans.ttf",36)
+        font=ImageFont.truetype("DejaVuSans.ttf",32)
     except Exception:
         from PIL import ImageFont
         font=ImageFont.load_default()
-    bar=(300,740,900,820)
-    # Quiet, easily touchable CTA replacing the clipped portrait caption.
-    draw.rounded_rectangle(bar,radius=33,fill=(16,12,9),outline=(224,172,91),width=3)
-    txt="Touch to Start"
-    bounds=draw.textbbox((0,0),txt,font=font)
-    draw.text(((1200-(bounds[2]-bounds[0]))/2,
-               (bar[1]+bar[3]-(bounds[3]-bounds[1]))/2-bounds[1]),
-              txt,fill=(247,210,151),font=font)
-    return img
-box_art=make_box_screen(box_art)
+    label="TOUCH TO START"
+    tb=draw.textbbox((0,0),label,font=font)
+    tw,th=tb[2]-tb[0],tb[3]-tb[1]
+    draw.text(((w-tw)//2-tb[0],
+               (button[1]+button[3]-th)//2-tb[1]),
+              label,fill=(245,221,187),font=font)
+    return screen
+
+box_art=make_centered_box_screen()
+# The Foto Mirror retains its independent approved video-derived composition.
 brand=out/"assets/branding"
 brand.mkdir(parents=True,exist_ok=True)
 mirror_art.save(brand/"fotopolis-touch-mirror.webp","WEBP",quality=92,method=5)
@@ -219,7 +239,8 @@ zoom.save(qa/"logo-detail-inspection.webp","WEBP",quality=88,method=5)
 (qa/"studio95-audit.json").write_text(json.dumps({
  "version":"9.5","logo":"Current FOTOPOLIS gold seal",
  "templates":32,"devicePhotos":3,
- "sourceVideo":"FOTOPOLIS_Fotomirror_Klassik_Active.mp4, 9-second still",
+ "sourceVideo":"FOTOPOLIS_Fotomirror_Klassik_Active.mp4, 9-second still (Mirror only)",
+ "fotoboxDisplay":"Approved master goldmark, mathematically centred within screen",
  "outsideLogoAndDisplayAreas":"unchanged",
  "approvedOriginals":"preserved","items":records
 },ensure_ascii=False,indent=2),encoding="utf-8")
