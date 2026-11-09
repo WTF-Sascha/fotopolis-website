@@ -224,6 +224,9 @@ def make(item):
                 fill=(*gold,155))
     preview=Image.alpha_composite(placeholder,paper).convert("RGB")
     preview.save(TARGET/f"fp-{n:03d}.webp","WEBP",quality=90,method=5)
+    if "sha256" in item:
+        item["sourceOriginalSha256"]=item["sha256"]
+    item["sha256"]=hashlib.sha256((TARGET/f"fp-{n:03d}.webp").read_bytes()).hexdigest()
     item["image"]=f"/assets/designvorlagen/fp-{n:03d}.webp"
     item["printOverlay"]=f"/assets/designvorlagen/print/fp-{n:03d}.png"
     item["format"]="15 x 10 cm Querformat"
@@ -284,6 +287,20 @@ for page in sorted(OUT.rglob("index.html")):
     if updated!=html:
         page.write_text(updated,encoding="utf-8")
         updated_pages+=1
+
+# Preserve a truthful separation between the Studio 10 audit (32 originals)
+# and the new print candidate (44 distinct redesigns).
+audit_path=QA/"studio11-build-audit.json"
+existing_audit=json.loads(audit_path.read_text(encoding="utf-8"))
+existing_audit["studio11ChangesToPreviewArtwork"]=44
+existing_audit["originalSourceDesignsPreserved"]=32
+existing_audit["newPrintCandidates"]=12
+existing_audit["candidatePrintCollection"]=44
+existing_audit["printFormat"]="15 x 10 cm landscape, 1772 x 1181 px, 300 DPI"
+existing_audit["printQA"]="44 alpha-overlay PNG files and 44 3:2 WebP gallery previews"
+existing_audit["printArtworkManualReview"]="pending 44 individual print layouts"
+audit_path.write_text(json.dumps(existing_audit,ensure_ascii=False,indent=2),encoding="utf-8")
+
 report={
  "release":"NOT APPROVED: independent Studio 11 photo-format preview",
  "officialSpecification":"fotopolis-mieten.de/tools/designer/designer.html: 15 x 10 cm, 300 DPI, PNG/JPG",
