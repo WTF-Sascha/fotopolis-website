@@ -172,7 +172,7 @@ for (let i=1; i<=32; i++) {
 const studio10SW = read("service-worker.js");
 const studio11Enabled = has("studio11-quiet-luxury.css");
 check(studio10SW.includes(studio11Enabled
-        ? "fotopolis-studio-2026-11-09-v11-classics32-faithful-r1"
+        ? "fotopolis-studio-2026-11-09-v11-classics32-faithful-r2"
         : "fotopolis-studio-2026-11-08-v10-premium-candidate") &&
       studio10SW.includes("'/studio10-premium.css'") &&
       (!studio11Enabled || studio10SW.includes("'/studio11-quiet-luxury.css'")),
