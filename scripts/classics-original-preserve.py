@@ -89,16 +89,22 @@ def find_original_photo_windows(source: Image.Image, expected_count: int):
         b_candidates=[]
         for y in scan_ys:
             y=min(h-1,max(0,y))
-            xs=[x for x in range(max(0,l-9),min(w,r+9))
+            left_xs=[x for x in range(max(0,l-9),min(w,l+23))
                 if is_photo_grey(full[x,y])]
-            if xs:
-                l_candidates.append(min(xs));r_candidates.append(max(xs)+1)
+            right_xs=[x for x in range(max(0,r-23),min(w,r+9))
+                if is_photo_grey(full[x,y])]
+            if left_xs and right_xs:
+                l_candidates.append(min(left_xs))
+                r_candidates.append(max(right_xs)+1)
         for x in scan_xs:
             x=min(w-1,max(0,x))
-            ys=[y for y in range(max(0,t-9),min(h,b+9))
+            top_ys=[y for y in range(max(0,t-9),min(h,t+23))
                 if is_photo_grey(full[x,y])]
-            if ys:
-                t_candidates.append(min(ys));b_candidates.append(max(ys)+1)
+            bottom_ys=[y for y in range(max(0,b-23),min(h,b+9))
+                if is_photo_grey(full[x,y])]
+            if top_ys and bottom_ys:
+                t_candidates.append(min(top_ys))
+                b_candidates.append(max(bottom_ys)+1)
         if not (l_candidates and r_candidates and t_candidates and b_candidates):
             return rough
         # Medians reject a single shifted scanline from drawn FOTO text.
