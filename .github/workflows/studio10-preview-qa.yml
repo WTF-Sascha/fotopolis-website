@@ -59,6 +59,8 @@ jobs:
           name: studio11-browser-qa-${{ github.run_number }}
           path: |
             studio11-browser-results/
+            studio12-browser-results/
+            preview-build/qa/studio12-build-audit.json
             preview-build/qa/studio11-build-audit.json
             preview-build/qa/fotobox-logo-centering-before-after.webp
             preview-build/qa/fotobox-device-branding-before-after.webp
