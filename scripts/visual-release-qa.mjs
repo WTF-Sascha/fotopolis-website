@@ -78,9 +78,10 @@ check(boxBrand.outputOnly===true &&
       boxBrand.screenLogoIncreasePercent>=40 &&
       boxBrand.frontBadgeUsesOriginalGoldmark===true &&
       boxBrand.screenReferenceRect[2]===459 &&
+      boxBrand.screenReferenceRect[3]===231 &&
       boxBrand.frontBadgeReferenceRect[0]===368 &&
-      boxBrand.frontBadgeReferenceRect[1]===368 &&
-      boxBrand.frontBadgeReferenceRect[3]===414 &&
+      boxBrand.frontBadgeReferenceRect[1]===366 &&
+      boxBrand.frontBadgeReferenceRect[3]===412 &&
       boxBrand.photoFiles.length===2,
       "Approved FOTOPOLIS brand logo must be physically centered in both generated Fotobox image sizes");
 for(const filename of ["logo-detail-inspection.webp","all-32-templates.webp","studio95-audit.json"]){
