@@ -165,7 +165,10 @@ def faithful_original(item, original_dir:Path, master_logo:Image.Image,
     # old seal and its gold rim: no layered logos, blur ghosts or clone seams.
     cx_rel,cy_rel,old_rel=OLD_POSITIONS.get(number,(.953,.937,.021))
     cx,cy=round(cx_rel*w),round(cy_rel*h)
-    desired=round(w*old_rel*1.22+4)
+    # The larger original Navy emblems FP-023–032 sit close to genuine
+    # gilded frame ornaments. Keep the new stamp just above the legacy outer
+    # circle to avoid swallowing adjacent gold geometry in those originals.
+    desired=round(w*old_rel*(1.08 if number>=23 else 1.22)+(3 if number>=23 else 4))
     safe_radius=min(cx,w-cx-1,cy,h-cy-1)-3
     radius=min(desired,safe_radius)
     assert radius>round(w*old_rel*1.07), (number,"legacy seal exceeds safe badge bounds",radius)
