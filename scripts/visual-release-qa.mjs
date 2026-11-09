@@ -57,6 +57,25 @@ check(has("qa/photoprint-44-contact-sheet.webp"),"Missing photo-print review con
 check(has("qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip")&&
       statSync(join(base,"qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip")).size>100000,
       "Missing 44-design customer-facing print overlay package");
+// Studio 11 Classics: originals must remain recognisable and independently
+// source-traceable rather than being silently replaced by generic new layouts.
+const classicItems=catalogue.slice(0,32);
+const signatureItems=catalogue.slice(32);
+check(classicItems.length===32&&classicItems.every(x=>
+  x.collection==="classics"&&x.originalMotifPreserved===true&&
+  x.legacyLogoReplaced===true&&x.logoMaster==="site/assets/fotopolis-goldmark.webp"),
+  "FP-001–FP-032 must preserve every authentic design motif with a single master Goldmark");
+check(signatureItems.length===12&&signatureItems.every(x=>x.collection==="signature"),
+  "FP-033–FP-044 must remain separate Signature candidates");
+const originalCatalog=JSON.parse(readFileSync("concepts/premium-v2/design-gallery-data.json","utf8"));
+check(classicItems.every((x,i)=>x.id===originalCatalog[i].id&&
+  x.name===originalCatalog[i].name&&x.photos===originalCatalog[i].photos&&
+  x.category===originalCatalog[i].category),
+  "Original IDs, photo counts, occasion and recognisable design names changed");
+check(has("qa/classics-32-source-vs-restored.webp")&&
+  has("qa/classics-32-source-fidelity.json"),"Missing 32-authentic-motif before/after QA");
+const classicFidelity=JSON.parse(read("qa/classics-32-source-fidelity.json"));
+check(classicFidelity.length===32,"Missing individual original-motif trace for some designs");
 const contact=read("kontakt/index.html");
 check(contact.includes('name="fotopolis-studio9-anfrage"'),"Netlify contact form missing");
 for(let n=1;n<=44;n++){
