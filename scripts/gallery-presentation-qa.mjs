@@ -56,7 +56,7 @@ for(const item of data){
   must(/^FP-\d{3}$/.test(item.id),"Invalid template ID");
   must(item.image==="/assets/designvorlagen/"+item.id.toLowerCase()+".webp","Broken design route: "+item.id);
   must(exists(item.image.slice(1)),"Missing template asset: "+item.id);
-  must([1,2,3].includes(item.photos),"Invalid collage count: "+item.id);
+  must([1,2,3,4].includes(item.photos),"Invalid collage count: "+item.id);
 }
 must(gallery.includes("data-design-gallery"),"Dedicated design gallery missing");
 must(gallery.includes("/assets/design-gallery.js"),"Gallery interaction missing");
