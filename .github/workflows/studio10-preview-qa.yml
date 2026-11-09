@@ -59,6 +59,9 @@ jobs:
           path: |
             studio11-browser-results/
             preview-build/qa/studio11-build-audit.json
+            preview-build/qa/fotobox-logo-centering-before-after.webp
+            preview-build/qa/fotobox-device-branding-before-after.webp
+            preview-build/qa/fotobox-logo-centering.json
             preview-build/qa/studio10-before-after.webp
             preview-build/qa/studio10-zoom-300pct.webp
             preview-build/qa/studio10-report.json
