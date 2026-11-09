@@ -96,3 +96,20 @@ Die vorliegenden ersten Screenshots sind echte Browseraufnahmen; **nur neu aufge
 - Web-Vitals, Screenreader, reale Gerätekonfigurationen und echte Netlify-Forms-Einreichung wurden nicht verifiziert.
 - Die QA-Screenshots sind Belege für gerenderte Zustände; ohne unabhängige Sichtabnahme sind sie kein gestalterisches Freigabezertifikat.
 - Für sämtliche nach R3 neu erzeugten Vorher-Nachher-Bilder gilt ausschließlich der **neue** CI-Artefaktstand des aktuellen Commit-Hash als belastbar.
+
+
+## 11.0-R4 — Original-Logo im Fotobox-Display korrekt zentriert (09.11.2026)
+
+**Anlass:** Der Betreiber hat auf einer Produktpräsentation eine nicht sauber zentrierte FOTOPOLIS-Signatur im Fotobox-Display beanstandet. Ein allein im Chat gerendertes Bild ist keine PWA-Implementierung.
+
+**Nachgewiesene Ursache im Code:** `scripts/visual-brand-pro.py` verwendete das Portrait-Standbild des Foto Mirror als 4:3-Crop auch für die Fotobox. Dieses Verfahren kann Logo- und Bildschirmausrichtung verschieben. Der fehleranfällige Fotobox-Crop wurde ersetzt.
+
+**Tatsächliche Codeänderungen (nur Studio-11-Branch):**
+- Ein eigens für das Fotobox-Display erstelltes, ruhiges 4:3-Bildschirmdesign verwendet **direkt die unveränderte, genehmigte** `site/assets/fotopolis-goldmark.webp`. Das Logo liegt geometrisch zentriert bei x=600 von 1200 Bildpunkten. Der Touch-to-Start-Knopf ist ebenso zentriert.
+- `fotobox-event-800.webp` und `fotobox-event-1672.webp` werden beim Preview-Build ausschließlich innerhalb der schon festgelegten Geräte-Displaymaske neu erzeugt. Außerhalb dieses Bereichs prüft die bestehende `ImageChops`-Regression Pixelidentität.
+- Die hochauflösende Foto-Mirror-Komposition, alle 32 Druckvorlagen, die Masterlogo-Datei und die unbearbeiteten Originalfoto-Dateien bleiben erhalten.
+- `preview-build/qa/fotobox-logo-centering-before-after.webp` bietet einen tatsächlichen vergrößerten Original-/Kandidatenvergleich. `preview-build/qa/fotobox-logo-centering.json` dokumentiert Logoherkunft, Position und beide Bildvarianten.
+- `scripts/visual-release-qa.mjs` verlangt jetzt beide Artefakte und den dokumentierten identischen horizontalen Mittelpunkt von Logo, Screen und Touch-CTA.
+- Die PWA-Service-Worker-Kennung wurde geändert, damit installierte Vorschau-PWAs die aktualisierte Fotobox-Darstellung nicht aus einer früheren Cache-Version beziehen.
+
+**Scope-/Freigabegrenzen:** Nur Produktbilddarstellung im separaten Studio-11-Preview. Nicht mit der bereits früher erzeugten freien Bildvariante verwechseln: Kein gesamtes Produktbild oder dekorativer Event-Hintergrund wurde generativ ersetzt. Die manuelle Einzelbildkontrolle der Bildschirmperspektive und die übrigen Logo-Retuschen bleiben gesonderte Freigabepunkte. Keine Änderung an Live-Domain, main, Kundendaten oder Adminbereich.
