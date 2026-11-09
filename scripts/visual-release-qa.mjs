@@ -36,18 +36,27 @@ for(const path of routes){
  }
 }
 const catalogue=JSON.parse(read("assets/design-gallery-data.json"));
-check(catalogue.length===32,"Expected 32 printer layouts");
+check(catalogue.length===44,"Expected 44 printer layouts");
 check(new Set(catalogue.map(x=>x.id)).size===32,"Duplicate template ID");
 const imgs=readdirSync(join(base,"assets/designvorlagen")).filter(x=>/^fp-\d{3}\.webp$/.test(x));
-check(imgs.length===32,"Missing or extra design images");
+check(imgs.length===44,"Missing or extra design images");
 for(const item of catalogue){
  check(item.image==="/assets/designvorlagen/"+item.id.toLowerCase()+".webp",item.id+": invalid artwork path");
  check(has(item.image.slice(1)),item.id+": missing design");
  check(statSync(join(base,item.image.slice(1))).size>1000,item.id+": empty artwork");
+ check(item.pixelWidth===1772&&item.pixelHeight===1181&&item.dpi===300,item.id+": bad 15x10 cm print size or DPI");
+ check(item.printOverlay==="/assets/designvorlagen/print/"+item.id.toLowerCase()+".png",item.id+": missing print overlay URL");
+ check(has(item.printOverlay.slice(1))&&statSync(join(base,item.printOverlay.slice(1))).size>1000,item.id+": missing alpha PNG print overlay");
 }
+const printReport=JSON.parse(read("qa/photoprint-44-audit.json"));
+check(printReport.candidateCount===44 && printReport.originalSourceDesignsPreserved===32 &&
+      printReport.newDesigns===12 &&
+      printReport.pixelSize[0]===1772 && printReport.pixelSize[1]===1181 &&
+      printReport.dpi===300,"Print collection 15x10 cm format must be verified");
+check(has("qa/photoprint-44-contact-sheet.webp"),"Missing photo-print review contact sheet");
 const contact=read("kontakt/index.html");
 check(contact.includes('name="fotopolis-studio9-anfrage"'),"Netlify contact form missing");
-for(let n=1;n<=32;n++){
+for(let n=1;n<=44;n++){
  const id="FP-"+String(n).padStart(3,"0");
  check(contact.includes('value="'+id+'"'),id+": not available in contact form");
 }
@@ -140,7 +149,7 @@ for (let i=1; i<=32; i++) {
 const studio10SW = read("service-worker.js");
 const studio11Enabled = has("studio11-quiet-luxury.css");
 check(studio10SW.includes(studio11Enabled
-        ? "fotopolis-studio-2026-11-09-v11-device-branding-r4"
+        ? "fotopolis-studio-2026-11-09-v11-photo-15x10-44"
         : "fotopolis-studio-2026-11-08-v10-premium-candidate") &&
       studio10SW.includes("'/studio10-premium.css'") &&
       (!studio11Enabled || studio10SW.includes("'/studio11-quiet-luxury.css'")),
