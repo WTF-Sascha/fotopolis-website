@@ -233,6 +233,29 @@ try {
           if(badGalleryImages.length)
             problems.push("Unloaded 44-design preview(s): "+badGalleryImages.join(", "));
         }
+        // A real 1440px layout check prevents the former column collision:
+        // all edition pills occupy a full-width row above occasion filters.
+        if(route==="/designvorlagen/"&&width===1440){
+          const geometry=await page.evaluate(()=>{
+            const ed=document.querySelector(".gl-editions")?.getBoundingClientRect();
+            const cat=document.querySelector(".gl-categories")?.getBoundingClientRect();
+            const fields=document.querySelector(".gl-fields")?.getBoundingClientRect();
+            const shell=document.querySelector(".gl-toolbar-inner")?.getBoundingClientRect();
+            const title=document.querySelector(".gl-title em");
+            const headingColor=title?getComputedStyle(title).color:"";
+            return {ed:ed&&{x:ed.x,right:ed.right,y:ed.y,bottom:ed.bottom},
+              cat:cat&&{x:cat.x,y:cat.y},fields:fields&&{y:fields.y},
+              shell:shell&&{x:shell.x,right:shell.right},headingColor};
+          });
+          if(!geometry.ed||!geometry.cat||!geometry.fields||!geometry.shell||
+             geometry.ed.bottom>=geometry.cat.y||
+             geometry.ed.bottom>=geometry.fields.y||
+             Math.abs(geometry.ed.x-geometry.shell.x)>4||
+             geometry.ed.right<geometry.shell.right-4)
+            problems.push("Desktop collection selector is not a full-width row above category filters");
+          if(geometry.headingColor!=="rgb(230, 204, 165)")
+            problems.push("Editorial heading has incorrect low-contrast accent: "+geometry.headingColor);
+        }
         // Exercise the actual gallery UI, not just its static manifest and image tags.
         // Restrict to the mobile representative viewport to keep CI deterministic.
         if(route==="/designvorlagen/"&&width===390){
