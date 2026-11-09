@@ -203,7 +203,7 @@ def apply_device_screen(src,dst,kind,wallpaper):
         # Explicitly authorized second logo position, on the existing lower
         # BLACK face of the flightcase. Do not alter locks, aluminium framing,
         # surrounding scene, or any other device geometry.
-        pl,pt,pr,pb=scale((366,343,418,395))
+        pl,pt,pr,pb=scale((366,355,418,407))
         assert 0<pl<pr<w and 0<pt<pb<h and pr-pl==pb-pt, (w,h,pl,pt,pr,pb)
         badge_size=(pr-pl,pb-pt)
         face=logo.resize(badge_size,Image.Resampling.LANCZOS)
@@ -297,7 +297,7 @@ import hashlib
     "logoGeometricCentreX":600,
     "screenGeometricCentreX":600,
     "touchButtonBounds":[263,757,937,831],
-    "frontBadgeReferenceRect":[366,343,418,395],
+    "frontBadgeReferenceRect":[366,355,418,407],
     "screenLogoIncreasePercent":44,
     "frontBadgeUsesOriginalGoldmark":True,
     "buttonGeometricCentreX":600,
