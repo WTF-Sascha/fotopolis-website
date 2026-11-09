@@ -68,7 +68,7 @@ gallery_new=gallery_new.replace(anchor,
 hero_anchor='<a class="gl-secondary" href="/kontakt/">Persönliche Gestaltung anfragen ↗</a>'
 assert gallery_new.count(hero_anchor)==1
 gallery_new=gallery_new.replace(hero_anchor,
- '<a class="gl-secondary" href="/designstudio/">Fotoeditor öffnen ↗</a>'+hero_anchor,1)
+ '<a class="gl-secondary" href="/designstudio/">Fotoeditor öffnen ↗</a>',1)
 gallery.write_text(gallery_new,encoding="utf-8")
 
 # Existing Netlify form and accessibility/wizard remain unchanged. A separate,
