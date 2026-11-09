@@ -183,7 +183,7 @@ def apply_device_screen(src,dst,kind,wallpaper):
         box=(265,137,575,855)
         refsize=(840,1050)
     else:
-        box=(337,137,459,226)
+        box=(337,137,459,231)
         refsize=(800,450)
     def scale(rect):
         return tuple(round(c*(w/refsize[0] if i%2==0 else h/refsize[1]))
@@ -193,9 +193,14 @@ def apply_device_screen(src,dst,kind,wallpaper):
     edited=original.copy()
     art=ImageOps.fit(wallpaper,(r-l,b-t),method=Image.Resampling.LANCZOS)
     matte=Image.new("L",art.size,0)
-    ImageDraw.Draw(matte).rounded_rectangle((1,1,art.width-2,art.height-2),
-        radius=max(3,round(min(art.size)*.028)),fill=255)
-    matte=matte.filter(ImageFilter.GaussianBlur(.65))
+    if kind=="box":
+        # Inner LCD is rectangular. A rounded feathered matte was letting
+        # the source's old blue artwork leak through near the bottom edge.
+        ImageDraw.Draw(matte).rectangle((0,0,art.width-1,art.height-1),fill=255)
+    else:
+        ImageDraw.Draw(matte).rounded_rectangle((1,1,art.width-2,art.height-2),
+            radius=max(3,round(min(art.size)*.028)),fill=255)
+        matte=matte.filter(ImageFilter.GaussianBlur(.65))
     edited.paste(art,(l,t),matte)
     modified_regions=[(l,t,r,b)]
     case_badge=None
@@ -203,7 +208,7 @@ def apply_device_screen(src,dst,kind,wallpaper):
         # Exact lower black panel interior; visual close-up QA required a
         # smaller, lower mask to keep the goldmark wholly clear of silver rails.
         # Do not alter locks, metal framing, event decor or device geometry.
-        pl,pt,pr,pb=scale((368,368,414,414))
+        pl,pt,pr,pb=scale((368,366,414,412))
         assert 0<pl<pr<w and 0<pt<pb<h and pr-pl==pb-pt, (w,h,pl,pt,pr,pb)
         badge_size=(pr-pl,pb-pt)
         face=logo.resize(badge_size,Image.Resampling.LANCZOS)
@@ -247,7 +252,7 @@ for name in ("fotobox-event-800.webp","fotobox-event-1672.webp"):
 def photo_screen_crop(im):
     w,h=im.size
     ref_w,ref_h=800,450
-    bounds=(337,137,459,226)
+    bounds=(337,137,459,231)
     pad=12
     l=round((bounds[0]-pad)*w/ref_w)
     t=round((bounds[1]-pad)*h/ref_h)
@@ -289,7 +294,7 @@ compare.save(qa/"fotobox-logo-centering-before-after.webp",
 import hashlib
 (qa/"fotobox-logo-centering.json").write_text(json.dumps({
     "scope":"Fotobox screen plus lower existing front-face badge; photo and hardware outside both masks pixel-identical",
-    "screenReferenceRect":[337,137,459,226],
+    "screenReferenceRect":[337,137,459,231],
     "brandAsset":"site/assets/fotopolis-goldmark.webp",
     "brandAssetSha256":hashlib.sha256((root/"site/assets/fotopolis-goldmark.webp").read_bytes()).hexdigest(),
     "screenArtwork":[1200,900],
@@ -297,7 +302,7 @@ import hashlib
     "logoGeometricCentreX":600,
     "screenGeometricCentreX":600,
     "touchButtonBounds":[263,757,937,831],
-    "frontBadgeReferenceRect":[368,368,414,414],
+    "frontBadgeReferenceRect":[368,366,414,412],
     "screenLogoIncreasePercent":44,
     "frontBadgeUsesOriginalGoldmark":True,
     "buttonGeometricCentreX":600,
