@@ -42,7 +42,13 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Build Studio 10 original baseline
         run: python3 .studio10-baseline/scripts/build-premium-preview.py
-      - name: Build Studio 11 candidate from originals
+      - name: Validate Studio 12 code syntax before build
+        run: |
+          node --check concepts/premium-v2/studio12-editor.js
+          node --check concepts/premium-v2/studio12-contact-transfer.js
+          node --check scripts/studio12-browser-qa.mjs
+          python3 -m py_compile scripts/apply-studio12.py
+      - name: Build Studio 12 candidate from originals
         run: python3 scripts/build-premium-preview.py
       - name: Run source, artwork and static design quality gates
         run: node scripts/visual-release-qa.mjs
