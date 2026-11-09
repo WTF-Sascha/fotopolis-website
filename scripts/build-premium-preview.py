@@ -353,3 +353,7 @@ runpy.run_path(str(root / 'scripts/apply-studio11.py'), run_name='__main__')
 # Runs after the immutable 32-original Studio 10 / Studio 11 audit stages.
 # Only generated preview assets are replaced; source originals remain protected.
 runpy.run_path(str(root / 'scripts/build-photo-print-collection.py'), run_name='__main__')
+
+# Studio 12.0: public photo editor, client-only export and opt-in enquiry handoff.
+# New route is isolated to this branch's preview output, never the live site.
+runpy.run_path(str(root / 'scripts/apply-studio12.py'), run_name='__main__')
