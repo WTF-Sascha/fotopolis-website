@@ -52,7 +52,7 @@ jobs:
         run: python3 scripts/build-premium-preview.py
       - name: Run source, artwork and static design quality gates
         run: node scripts/visual-release-qa.mjs
-      - name: Compare 14 routes over 7 viewports and capture real browser screenshots
+      - name: Compare 14 legacy routes, 7 widths, and run Studio 12 editor print/browser QA
         run: |
           python3 -m http.server 8764 --directory .studio10-baseline/preview-build >/tmp/studio10-baseline.log 2>&1 &
           python3 -m http.server 8765 --directory preview-build >/tmp/studio11-candidate.log 2>&1 &
