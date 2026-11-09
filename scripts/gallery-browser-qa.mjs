@@ -97,13 +97,13 @@ try{
 
     response=await page.goto(serverUrl("designvorlagen/"),{waitUntil:"networkidle",timeout:45000});
     ok(response?.status()===200,"Design route HTTP error at "+width);
-    await page.waitForFunction(()=>document.querySelectorAll("[data-gallery-grid] .gl-card").length===32,{timeout:20000});
-    ok(await page.locator("[data-gallery-grid] .gl-card").count()===32,"32 cards not rendered at "+width);
+    await page.waitForFunction(()=>document.querySelectorAll("[data-gallery-grid] .gl-card").length===44,{timeout:20000});
+    ok(await page.locator("[data-gallery-grid] .gl-card").count()===44,"44 cards not rendered at "+width);
     ok(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2)),"Design gallery overflow at "+width);
     await page.screenshot({path:output+"/designgallery-"+width+".png",fullPage:true,animations:"disabled"});
     await page.locator('[data-gallery-category="hochzeit"]').click();
     const filtered=await page.locator("[data-gallery-grid] .gl-card").count();
-    ok(filtered>0&&filtered<32,"Wedding filter failed at "+width);
+    ok(filtered>0&&filtered<44,"Wedding filter failed at "+width);
     await page.locator(".gl-preview").first().click();
     ok(await page.locator("[data-gallery-modal]").isVisible(),"Template detail did not open at "+width);
     const link=await page.locator("[data-modal-link]").getAttribute("href");
@@ -117,7 +117,7 @@ try{
     ok(errors.length===0,"Browser errors at "+width+": "+JSON.stringify(errors));
     await page.close();
   }
-  console.log("PASS: "+total+" cross-device checks for 3 product photos, studio home, 32 templates, filtering, modal, enquiry, routes and overflow.");
+  console.log("PASS: "+total+" cross-device checks for 3 product photos, studio home, 44 templates, filtering, modal, enquiry, routes and overflow.");
 }finally{
   await browser.close();
 }
