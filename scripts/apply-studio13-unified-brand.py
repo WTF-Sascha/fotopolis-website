@@ -127,8 +127,8 @@ worker_path=OUT/"service-worker.js"
 worker=worker_path.read_text(encoding="utf-8")
 assert "v13-admin-secure-r1" in worker, "Unexpected PWA cache version"
 worker=worker.replace("v13-admin-secure-r1","v13-brand-unified-r2",1)
-assert "const CORE=[" in worker
-worker=worker.replace("const CORE=[",
+assert "const SHELL=[" in worker
+worker=worker.replace("const SHELL=[",
  "const CORE=['/studio13-unified-brand.css','/icons/brand-192.png',"
  "'/icons/brand-512.png','/icons/brand-maskable-512.png','/icons/brand-180.png',",1)
 assert "/api/" in worker and "/admin/" in worker
