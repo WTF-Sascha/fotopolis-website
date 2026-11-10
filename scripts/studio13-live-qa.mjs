@@ -11,6 +11,17 @@ async function fetchChecked(path,options){
 }
 async function probe(){
  const publicRes=await fetchChecked("/api/fotopolis/studio13/content",{method:"GET",headers:{Accept:"application/json"}});
+ // Once the Netlify team-only review wall is enabled, requests without an
+ // authenticated Netlify SSO session must not attempt the private API tests.
+ if(publicRes.status===301||publicRes.status===302||publicRes.status===303||
+    publicRes.status===307||publicRes.status===308||
+    publicRes.status===401||publicRes.status===403){
+   states.push({step:"non-production visitor access",protected:true,status:publicRes.status,
+     note:"Authenticated browser review required; API was previously smoke tested without the access wall"});
+   return;
+ }
+ if(!(publicRes.headers.get("content-type")||"").includes("application/json"))
+   throw Error("Unexpected non-JSON response from public CMS gateway");
  assert.equal(publicRes.status,200,"Published CMS endpoint must work on real Netlify");
  const pub=await publicRes.json();
  assert.equal(pub.previewOnly,true);
@@ -44,4 +55,6 @@ for(let n=1;n<=16;n++){
  catch(error){lastError=error;if(n===16)break;await new Promise(r=>setTimeout(r,12000));states.length=0;}
 }
 if(lastError){console.error("STUDIO 13 REAL DEPLOY QA FAILED",String(lastError));process.exitCode=1;}
-else console.log("STUDIO 13 REAL NETLIFY API SMOKE PASS",JSON.stringify(states));
+else console.log(states.some(x=>x.protected)?
+  "STUDIO 13 PREVIEW VISITOR ACCESS IS PROTECTED":"STUDIO 13 REAL NETLIFY API SMOKE PASS",
+  JSON.stringify(states));
