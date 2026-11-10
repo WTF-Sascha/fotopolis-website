@@ -58,3 +58,19 @@ test("host confusion, alternate sites, and cross-preview origins fail closed",as
   }),ctx);
   assert.equal(r.status,403);
 });
+
+test("private design API rejects anonymous access and published contexts",async()=>{
+  const {default:design}=await import("../netlify/functions/fotopolis-design-private.mjs");
+  const urls=[
+    "https://deploy-preview-19--fotopolis-preview.netlify.app/api/fotopolis/admin/design/catalog",
+    "https://deploy-preview-19--fotopolis-preview.netlify.app/api/fotopolis/admin/design/editor",
+    "https://deploy-preview-19--fotopolis-preview.netlify.app/api/fotopolis/admin/design/print/FP-017"
+  ];
+  for(const url of urls){
+    const response=await design(new Request(url),ctx);
+    assert.equal(response.status,401,"Anonymous must never retrieve "+url);
+    assert.equal(response.headers.get("cache-control"),"no-store, max-age=0");
+    const production=await design(new Request(url),{deploy:{context:"production",published:true}});
+    assert.equal(production.status,404);
+  }
+});
