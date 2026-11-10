@@ -69,7 +69,7 @@ admin_css+=list((OUT/"admin/designstudio").glob("*.css"))
 palette=("#231a15","#352920","#4d3d30","#655347","#776658","#978572","#b4a08a","#d8cab8","#efe7db")
 def warm_hex(token):
     digits=token[1:]
-    digits=digits*2 if len(digits) in (3,4) else digits
+    digits="".join(ch*2 for ch in digits) if len(digits) in (3,4) else digits
     if len(digits) not in (6,8):return token
     try: r,g,b=[int(digits[i:i+2],16)/255 for i in (0,2,4)]
     except ValueError:return token
@@ -121,6 +121,38 @@ for path in html_files:
         assert "studio13-unified-brand.css" in html
     path.write_text(html,encoding="utf-8")
     changed.append(str(relative))
+
+# Offline shell is a first-class app surface: readable, warm and available from PWA cache.
+offline=OUT/"offline.html"
+assert offline.is_file()
+offline.write_text("""<!doctype html>
+<html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#211a15"><meta name="robots" content="noindex,nofollow">
+<title>Offline | FOTOPOLIS</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;background:#211a15;color:#f8ead7;
+font:400 16px/1.65 system-ui,"Segoe UI",Arial,sans-serif;
+display:grid;place-items:center;padding:clamp(18px,5vw,50px)}
+main{width:min(100%,560px);text-align:center;background:#30251d;border:1px solid #6b5037;
+padding:clamp(26px,6vw,56px);border-radius:16px;box-shadow:0 20px 50px #150d0940}
+img{width:100px;height:100px;object-fit:contain;border-radius:50%;margin:0 auto 24px}
+h1{font:400 clamp(30px,5vw,47px)/1.12 Georgia,serif;margin:0 0 18px}
+p{color:#ddd0bc;margin:0 auto 25px;max-width:34ch}
+a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;
+padding:12px 20px;border-radius:8px;background:#c7a776;color:#241b13;
+font-weight:700;text-decoration:none}
+a:hover{background:#dbc197}a:focus-visible{outline:3px solid #e9c797;outline-offset:3px}
+</style></head>
+<body><main>
+<img src="/icons/brand-192.png" alt="FOTOPOLIS">
+<h1>Gute Erinnerungen bleiben.</h1>
+<p>Du bist gerade offline. Bereits besuchte Seiten sind eventuell weiter verfügbar.</p>
+<a href="/">FOTOPOLIS erneut öffnen</a>
+</main></body></html>
+""",encoding="utf-8")
 
 # A new version and the actual new icon URLs ensure PWA updates use the right logo.
 worker_path=OUT/"service-worker.js"
