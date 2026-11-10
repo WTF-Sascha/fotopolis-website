@@ -7,6 +7,7 @@ on:
       - 'scripts/test-admin-auth.mjs'
       - 'scripts/studio13-contract-qa.mjs'
       - 'scripts/studio13-private-qa.mjs'
+      - 'scripts/studio13-brand-browser-qa.mjs'
       - 'scripts/studio13-services-qa.mjs'
       - 'scripts/studio13-live-qa.mjs'
       - 'scripts/studio13-browser-qa.mjs'
@@ -46,6 +47,7 @@ jobs:
           node --check scripts/test-admin-auth.mjs
           node --check scripts/studio13-services-qa.mjs
           node --check scripts/studio13-live-qa.mjs
+          node --check scripts/studio13-brand-browser-qa.mjs
           node --check netlify/functions/fotopolis-studio13-public.mjs
           node --check netlify/functions/fotopolis-studio13-admin.mjs
           python -m py_compile scripts/apply-studio13-unified-brand.py
@@ -79,8 +81,17 @@ jobs:
         run: |
           python3 -m http.server 8765 --directory preview-build >/tmp/studio13-static.log 2>&1 &
           node scripts/studio13-browser-qa.mjs
+          node scripts/studio13-brand-browser-qa.mjs
       - name: Probe real Netlify Deploy Preview API
         run: node scripts/studio13-live-qa.mjs
+      - name: Archive brand-system visual screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio13-unified-brand-screenshots-${{ github.run_number }}
+          path: studio13-brand-screenshots/
+          if-no-files-found: warn
+          retention-days: 14
       - name: Archive actual browser screenshots and QA record
         if: always()
         uses: actions/upload-artifact@v4
