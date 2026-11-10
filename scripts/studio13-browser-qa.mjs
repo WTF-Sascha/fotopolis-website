@@ -55,6 +55,30 @@ try{
  }catch(e){errors.push({step:"secure-boundary",error:String(e.stack||e)});}
  finally{await secure.close();}
 }finally{await browser.close();}
+
+for(const width of [390,768,1440]){
+ const page=await chromium.launch({headless:true});
+ try{
+  const tab=await page.newPage({viewport:{width,height:900},deviceScaleFactor:1,serviceWorkers:"block"});
+  await tab.route("**/admin/dashboard/dashboard-bundle.js",route=>route.abort());
+  const res=await tab.goto(origin+"/admin/dashboard/",{waitUntil:"domcontentloaded",timeout:35000});
+  assert.equal(res.status(),200);
+  await tab.evaluate(()=>{
+   document.getElementById("gate").hidden=true;
+   document.getElementById("dashboard-app").hidden=false;
+  });
+  for(const id of ["analytics","eventanfragen","designstudio","designs","cms","medien","system"]){
+   assert.equal(await tab.locator("#"+id).count(),1,"Missing gated admin panel "+id);
+  }
+  const scroll=await tab.evaluate(()=>document.documentElement.scrollWidth);
+  assert.ok(scroll<=width+3,"Admin horizontal overflow "+width+" / "+scroll);
+  await tab.screenshot({path:dest+"/admin-layout-synthetic-"+width+".png",animations:"disabled",fullPage:true});
+  results.push({width,view:"admin static synthetic preview",panels:7,noOverflow:true,
+    note:"Not a real authenticated administrator session"});
+  await tab.close();
+ }catch(e){errors.push({width,step:"admin-static-layout",error:String(e.stack||e)})}
+ finally{await page.close();}
+}
 await writeFile(dest+"/results.json",JSON.stringify({results,errors,scope:"Studio 13 static browser and visual QA; authenticated Netlify function still needs live integration test"},null,2));
 if(errors.length){
  console.error("STUDIO 13 BROWSER QA FAILED",JSON.stringify(errors,null,2));process.exitCode=1;
