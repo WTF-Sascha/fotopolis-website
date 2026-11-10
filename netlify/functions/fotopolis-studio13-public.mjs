@@ -74,6 +74,13 @@ export default async function handler(req,context){
    const e=validateEnquiry(body);
    if(!e)return response({error:"Bitte Anfrage und Einwilligung prüfen."},400);
    if(e.honeypot)return response({accepted:true,notBooked:true},202);
+   // Staging-only abuse budget; no visitor fingerprinting or IP storage.
+   const quota=await sql`SELECT
+     count(*) FILTER (WHERE created_at >= (now() - interval '24 hours'))::int AS today,
+     count(*) FILTER (WHERE email=${e.email} AND created_at >= (now() - interval '24 hours'))::int AS sender
+     FROM fotopolis_studio13.inquiries`;
+   if(Number(quota[0]?.today||0)>=60||Number(quota[0]?.sender||0)>=3)
+     return response({error:"Zu viele Testanfragen. Bitte direkt per E-Mail Kontakt aufnehmen."},429);
    const rows=await sql`
       WITH saved AS (
         INSERT INTO fotopolis_studio13.inquiries
