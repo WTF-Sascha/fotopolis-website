@@ -35,3 +35,26 @@ test("dashboard endpoint never serves published Netlify deploys",async()=>{
   const r=await dashboard(new Request("https://fotopolis-preview.netlify.app/api/fotopolis/admin/overview?from=2026-11-01&to=2026-12-01"),{deploy:{context:"production",published:true}});
   assert.equal(r.status,404);
 });
+
+test("any exact same-origin deploy-preview is accepted up to authorization",async()=>{
+  for(const id of [2,18,19,130]){
+    const url="https://deploy-preview-"+id+"--fotopolis-preview.netlify.app/api/fotopolis/admin/session";
+    const r=await handler(new Request(url,{headers:{Origin:new URL(url).origin}}),ctx);
+    assert.equal(r.status,401,"Preview "+id+" must reach JWT gate");
+  }
+});
+test("host confusion, alternate sites, and cross-preview origins fail closed",async()=>{
+  const bad=[
+    "https://fotopolis-preview.netlify.app/api/fotopolis/admin/session",
+    "https://deploy-preview-19--other-site.netlify.app/api/fotopolis/admin/session",
+    "https://deploy-preview-19--fotopolis-preview.netlify.app.evil.example/api/fotopolis/admin/session"
+  ];
+  for(const url of bad){
+    const r=await handler(new Request(url),ctx);
+    assert.equal(r.status,404);
+  }
+  const r=await handler(new Request("https://deploy-preview-19--fotopolis-preview.netlify.app/api/fotopolis/admin/session",{
+    headers:{Origin:"https://deploy-preview-18--fotopolis-preview.netlify.app"}
+  }),ctx);
+  assert.equal(r.status,403);
+});

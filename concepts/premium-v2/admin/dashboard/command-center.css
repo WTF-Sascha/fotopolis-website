@@ -1,0 +1,27 @@
+/* Studio 13 – Admin-only progressive command center; public branding remains unchanged. */
+.cc-nav-group{margin-top:24px!important;color:#ddc7a4!important;letter-spacing:.15em!important}
+.cc-intro,.cc-system{margin:35px 0 20px;padding:clamp(24px,3.2vw,40px);border:1px solid rgba(215,183,122,.18);border-radius:17px;background:linear-gradient(120deg,#151d24,#25302f)}
+.cc-intro h2,.cc-system h2{font-family:Georgia,serif;font-size:clamp(26px,3.3vw,40px);font-weight:400;color:#f7f2e8;margin:10px 0 12px}
+.cc-intro p,.cc-system p{color:#dbd3c6;line-height:1.7;max-width:78ch;margin:0}
+.cc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:0 0 18px}
+.cc-panel{padding:clamp(20px,2.2vw,30px);background:#fbf8f2;color:#292722;border:1px solid #ded7cd;border-radius:15px;scroll-margin-top:86px}
+.cc-panel-head{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cc-eyebrow{font-size:11px;letter-spacing:.13em;font-weight:750;text-transform:uppercase;color:#b99659}
+.cc-panel h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(22px,2.3vw,30px);line-height:1.16;margin:19px 0 10px}
+.cc-panel p{font-size:14px;line-height:1.75;color:#655d51;max-width:60ch}
+.cc-state{font-size:11px;color:#514c44;border:1px solid #d4cbba;border-radius:99px;padding:5px 9px;background:#f1ecdf}
+.cc-attention{color:#764b30;border-color:#d4bda7;background:#f7e9da}
+.cc-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0;margin:0}
+.cc-kpis div{border-top:1px solid #e3d9c9;padding-top:10px}
+.cc-kpis dt{font-size:11px;letter-spacing:.05em;color:#696052}
+.cc-kpis dd{margin:6px 0;color:#27251e;font-size:15px;font-weight:700}
+.cc-panel .cc-hint{border-top:1px solid #eae3d8;padding-top:10px;font-size:12px;color:#786c5a}
+.cc-link{display:inline-flex;align-items:center;gap:4px;margin-top:9px;color:#9a7039;font-weight:700;font-size:14px;text-decoration:underline;text-underline-offset:4px}
+.cc-link:hover,.cc-link:focus-visible{color:#5e431f}
+.cc-system{display:flex;align-items:center;justify-content:space-between;gap:24px;scroll-margin-top:86px}
+.cc-system-actions{display:flex;flex-direction:column;align-items:flex-start;gap:4px;flex:0 0 auto}
+.cc-system-actions .cc-link{color:#f3d3a0}
+#analytics,#eventanfragen,#designstudio,#designs,#cms,#medien{scroll-margin-top:100px}
+@media(max-width:980px){.cc-grid{grid-template-columns:1fr}.cc-system{display:block}.cc-system-actions{margin-top:18px}}
+@media(max-width:520px){.cc-panel{padding:18px}.cc-kpis{grid-template-columns:1fr}.cc-intro,.cc-system{padding:23px 18px}}
+@media(prefers-reduced-motion:reduce){.cc-panel,.cc-system{scroll-behavior:auto}}
