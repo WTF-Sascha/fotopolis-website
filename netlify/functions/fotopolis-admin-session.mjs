@@ -10,6 +10,15 @@ const PREVIEW_HOST=/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app
 const jwks=createRemoteJWKSet(new URL(AUTH_BASE+"/.well-known/jwks.json"),{timeoutDuration:5000});
 export const noCache={"Cache-Control":"no-store, max-age=0","Content-Type":"application/json; charset=utf-8"};
 export const response=(data,status)=>new Response(JSON.stringify(data),{status,headers:noCache});
+// Cross-site writes are denied even if the bearer token is otherwise valid.
+// The caller must use the identical origin of a valid, isolated Deploy Preview.
+export function samePreviewOrigin(request){
+  try{
+    const url=new URL(request.url);
+    return url.protocol==="https:"&&PREVIEW_HOST.test(url.hostname)&&
+      request.headers.get("origin")===url.origin;
+  }catch{return false}
+}
 
 export async function authorizeAdmin(request,context,{methods=["GET"]}={}){
   if(context?.deploy?.context!=="deploy-preview"||context?.deploy?.published===true){
