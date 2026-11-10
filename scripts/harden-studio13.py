@@ -75,9 +75,9 @@ ed.mkdir(parents=True,exist_ok=True)
 
 gallery=OUT/"designvorlagen/index.html"
 html=gallery.read_text(encoding="utf-8")
-html,n=re.subn(r'<a\\b[^>]*\\bdata-modal-editor\\b[^>]*>.*?</a>',"",html,count=1,flags=re.S)
+html,n=re.subn(r'<a\b[^>]*\bdata-modal-editor\\b[^>]*>.*?</a>',"",html,count=1,flags=re.S)
 assert n==1,"Public editor CTA still present or markup changed"
-html,n=re.subn(r'<a\\b[^>]*\\bdata-modal-print\\b[^>]*>.*?</a>',"",html,count=1,flags=re.S)
+html,n=re.subn(r'<a\b[^>]*\bdata-modal-print\\b[^>]*>.*?</a>',"",html,count=1,flags=re.S)
 assert n==1,"Public print download still present or markup changed"
 html=html.replace('<a class="gl-secondary" href="/designstudio/">Fotoeditor öffnen ↗</a>',
 '<a class="gl-secondary" href="/kontakt/">Persönliche Gestaltung anfragen ↗</a>')
