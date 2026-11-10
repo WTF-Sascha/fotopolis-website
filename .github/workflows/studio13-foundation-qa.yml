@@ -3,9 +3,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'netlify/functions/fotopolis-admin-session.mjs'
+      - 'netlify/functions/**'
       - 'scripts/test-admin-auth.mjs'
       - 'scripts/studio13-contract-qa.mjs'
+      - 'scripts/studio13-private-qa.mjs'
+      - 'scripts/harden-studio13.py'
+      - 'scripts/build-admin-auth.mjs'
+      - 'netlify.toml'
       - 'scripts/build-premium-preview.py'
       - 'concepts/premium-v2/admin/**'
       - 'docs/FOTOPOLIS_STUDIO_13_ARCHITECTURE_AND_RISKS.md'
@@ -37,13 +41,15 @@ jobs:
           python -m py_compile scripts/build-premium-preview.py
       - name: Verify unauthorized requests and preview-origin matrix
         run: node --test scripts/test-admin-auth.mjs
-      - name: Build exact isolated public and admin assets
+      - name: Build, verify historical invariants, then harden
         run: |
           python3 scripts/build-premium-preview.py
-          npm run build:auth
-      - name: Verify no regression in app structure
-        run: |
-          node scripts/studio13-contract-qa.mjs
           node scripts/visual-release-qa.mjs
           python3 scripts/harden-studio13.py
+          node --check preview-build/admin/designstudio/studio13-editor.js
+          npm run build:auth
+      - name: Verify secure release artifact
+        run: |
+          node scripts/studio13-contract-qa.mjs
           node scripts/studio13-private-qa.mjs
+          node --test scripts/test-admin-auth.mjs
