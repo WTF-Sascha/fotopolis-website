@@ -183,6 +183,8 @@ export default async function handler(req,context){
    const buffer=Buffer.from(b.base64,"base64");
    if(buffer.length<16||buffer.length>2097152||!fileType(buffer,b.mimeType))return message("Nur echte JPG-, PNG- und WebP-Bilder bis 2 MB erlaubt");
    const hash=createHash("sha256").update(buffer).digest("hex");
+   const cap=await sql`SELECT count(*)::int AS used FROM fotopolis_studio13.media_assets`;
+   if(Number(cap[0]?.used||0)>=40)return message("Test-Medienspeicher ist auf 40 private Dateien begrenzt",429);
    const rows=await sql`INSERT INTO fotopolis_studio13.media_assets
      (filename,mime_type,image_data,file_bytes,sha256,alt_text,license_note,uploaded_by)
      VALUES (${b.filename},${b.mimeType},decode(${b.base64},'base64'),${buffer.length},${hash},
