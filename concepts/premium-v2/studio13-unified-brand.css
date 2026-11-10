@@ -382,3 +382,38 @@ body.fp13-body .fp13-top a,body.fp13-body .fp13-gate a{color:#f0d0a4}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;
     transition-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+/* Sidebar and compact mobile IA remain navigable with 15+ administrative destinations. */
+@media(min-width:781px){
+  body:has(#dashboard-app) .sidebar{
+    position:sticky;top:0;align-self:start;
+    height:100dvh;min-height:720px;overflow-y:auto;overscroll-behavior:contain;
+    scrollbar-width:thin;scrollbar-color:#8f7050 #2c2118;
+  }
+  body:has(#dashboard-app) .topbar{position:sticky;top:0;z-index:30}
+}
+@media(max-width:780px){
+  body:has(#dashboard-app) .mobile-menu:not([hidden]){
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    align-items:stretch;gap:5px 8px;
+    max-height:min(62dvh,650px);
+    overflow:auto;overscroll-behavior:contain;
+    scrollbar-color:#b99a72 #33261c;
+  }
+  body:has(#dashboard-app) .mobile-menu a,
+  body:has(#dashboard-app) .mobile-menu button{
+    display:flex;justify-content:flex-start;align-items:center;
+    width:100%;white-space:normal;line-height:1.35;text-wrap:pretty;
+    padding:11px 10px;min-height:44px;
+  }
+  body:has(#dashboard-app) .mobile-menu a[aria-current=page]{
+    outline:1px solid #c3a16f;outline-offset:-1px;
+  }
+}
+@media(max-width:570px){
+  body:has(#dashboard-app) .mobile-menu:not([hidden]){
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    max-height:min(58dvh,500px);
+  }
+}
