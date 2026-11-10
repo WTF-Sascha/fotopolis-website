@@ -35,3 +35,32 @@
 .fp13-gate h1{color:#fff7e8;font-family:Georgia,serif;font-weight:400}
 .fp13-gate p{color:#ded2be}
 @media(max-width:600px){.fp13-top{flex-wrap:wrap}.fp13-gate{margin:7vh 14px;padding:22px}}
+
+/* Studio 13 / tested admin controls */
+.cc-live{margin-top:18px;padding-top:16px;border-top:1px solid rgba(124,103,68,.19)}
+.cc-result{font-size:13px;line-height:1.55;color:#4c5c46;white-space:pre-wrap}
+.cc-result[data-error="true"]{color:#9b442f}
+.cc-controls{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:16px 0}
+.cc-control-button{border:1px solid #bc9c67;background:#17201f;color:#f7e6c7;
+padding:10px 13px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:650}
+.cc-control-button:hover{background:#334134}
+.cc-control-button:focus-visible{outline:3px solid #ccad74;outline-offset:3px}
+.cc-control-button:disabled{opacity:.5;cursor:not-allowed}
+.cc-editor{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.cc-field{display:flex;flex-direction:column;gap:7px;color:#332f27;font-size:12px;font-weight:650}
+.cc-field input:not([type=checkbox]),.cc-field select,.cc-field textarea{width:100%;max-width:100%;border:1px solid #bdb1a0;
+background:#fff;color:#211f1d;padding:10px 12px;border-radius:8px;font:inherit}
+.cc-field textarea{resize:vertical;min-height:82px;line-height:1.5}
+.cc-field input[type=checkbox]{width:18px;height:18px;accent-color:#9d7842}
+.cc-data-list{max-height:300px;overflow:auto}
+.cc-data-list p{margin:0;padding:7px 0;border-top:1px solid rgba(90,84,67,.1);
+font-size:12px;font-variant-numeric:tabular-nums}
+.cc-records{display:grid;gap:10px}
+.cc-record{border:1px solid #d8cebf;background:#fffefa;border-radius:10px;padding:14px;
+display:grid;gap:8px;min-width:0;overflow-wrap:anywhere}
+.cc-record strong{color:#201f1d;font-size:14px}
+.cc-record small{color:#716759;font-size:12px}
+.cc-record p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.cc-media-thumb{display:block;max-width:100%;max-height:260px;object-fit:contain;border-radius:8px;border:1px solid #ddd}
+@media(max-width:560px){.cc-controls{flex-direction:column;align-items:stretch}
+.cc-controls .cc-control-button{width:100%}.cc-field textarea{min-height:112px}}
