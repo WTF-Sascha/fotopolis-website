@@ -7,12 +7,14 @@ on:
       - 'scripts/test-admin-auth.mjs'
       - 'scripts/studio13-contract-qa.mjs'
       - 'scripts/studio13-private-qa.mjs'
+      - 'scripts/studio13-services-qa.mjs'
       - 'scripts/studio13-browser-qa.mjs'
       - 'scripts/harden-studio13.py'
       - 'scripts/build-admin-auth.mjs'
       - 'netlify.toml'
       - 'scripts/build-premium-preview.py'
       - 'concepts/premium-v2/admin/**'
+      - 'concepts/premium-v2/studio13-*.js'
       - 'docs/FOTOPOLIS_STUDIO_13_ARCHITECTURE_AND_RISKS.md'
   workflow_dispatch:
 permissions:
@@ -39,9 +41,18 @@ jobs:
           node --check netlify/functions/fotopolis-admin-session.mjs
           node --check scripts/studio13-contract-qa.mjs
           node --check scripts/test-admin-auth.mjs
+          node --check scripts/studio13-services-qa.mjs
+          node --check netlify/functions/fotopolis-studio13-public.mjs
+          node --check netlify/functions/fotopolis-studio13-admin.mjs
+          node --check concepts/premium-v2/admin/dashboard/command-center-app.js
+          node --check concepts/premium-v2/studio13-metrics.js
+          node --check concepts/premium-v2/studio13-public-content.js
+          node --check concepts/premium-v2/studio13-enquiry-mirror.js
           python -m py_compile scripts/build-premium-preview.py
       - name: Verify unauthorized requests and preview-origin matrix
-        run: node --test scripts/test-admin-auth.mjs
+        run: |
+          node --test scripts/test-admin-auth.mjs
+          node --test scripts/studio13-services-qa.mjs
       - name: Build, verify historical invariants, then harden
         run: |
           python3 scripts/build-premium-preview.py
