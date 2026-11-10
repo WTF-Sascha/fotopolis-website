@@ -273,7 +273,7 @@ assert 'POSTGRES' not in login_html and 'password=' not in login_html
 dashboard_source = admin_source / "dashboard"
 dashboard_target = admin_target / "dashboard"
 dashboard_target.mkdir(exist_ok=True)
-for name in ("index.html", "dashboard.css", "inventory-manager.css", "inventory-manager.js", "planning-manager.css", "planning-manager.js", "planning-logic.js", "reservations-manager.css", "reservations-manager.js", "csv-export.js", "operations-insights.css", "operations-insights.js", "first-run.css", "first-run.js"):
+for name in ("index.html", "dashboard.css", "inventory-manager.css", "inventory-manager.js", "planning-manager.css", "planning-manager.js", "planning-logic.js", "reservations-manager.css", "reservations-manager.js", "csv-export.js", "operations-insights.css", "operations-insights.js", "first-run.css", "first-run.js", "command-center.css"):
     shutil.copy2(dashboard_source / name, dashboard_target / name)
 dashboard_html = (dashboard_target / "index.html").read_text(encoding="utf-8")
 assert 'id="dashboard-app" hidden' in dashboard_html
@@ -342,3 +342,18 @@ runpy.run_path(str(root / 'scripts/apply-gold-brand.py'), run_name='__main__')
 
 # Exact original-asset logo swap only; all other pixels are preserved.
 runpy.run_path(str(root / 'scripts/visual-brand-pro.py'),run_name='__main__')
+
+# Studio 10 candidate is published only on an isolated PR/branch preview.
+runpy.run_path(str(root / 'scripts/apply-studio10.py'), run_name='__main__')
+
+# Studio 11 isolated public-only design, after immutable Studio 10 QA.
+runpy.run_path(str(root / 'scripts/apply-studio11.py'), run_name='__main__')
+
+# Studio 11.1: official FOTOPOLIS 15x10 cm / 300-DPI horizontal print collection.
+# Runs after the immutable 32-original Studio 10 / Studio 11 audit stages.
+# Only generated preview assets are replaced; source originals remain protected.
+runpy.run_path(str(root / 'scripts/build-photo-print-collection.py'), run_name='__main__')
+
+# Studio 12.0: public photo editor, client-only export and opt-in enquiry handoff.
+# New route is isolated to this branch's preview output, never the live site.
+runpy.run_path(str(root / 'scripts/apply-studio12.py'), run_name='__main__')

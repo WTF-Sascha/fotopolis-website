@@ -1,8 +1,7 @@
 // FOTOPOLIS Studio 4.0: isolated internal holds (NOT public customer bookings).
 // No customer PII, payments, prices, emails, or public availability promises.
 import {neon} from "@neondatabase/serverless";
-import {authorizeAdmin,response} from "./fotopolis-admin-session.mjs";
-const preview="https://deploy-preview-2--fotopolis-preview.netlify.app";
+import {authorizeAdmin,response,samePreviewOrigin} from "./fotopolis-admin-session.mjs";
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
 const utc=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
 const exact=(v,keys)=>Object.keys(v).every(k=>keys.includes(k));
@@ -35,7 +34,7 @@ export default async function handler(request,context){
  const auth=await authorizeAdmin(request,context,{methods:["POST","PATCH"]});
  if(auth.denied)return auth.denied;
  if(!["owner","manager"].includes(auth.role))return response({error:"Admin permission required"},403);
- if(request.headers.get("origin")!==preview)return response({error:"Forbidden origin"},403);
+ if(!samePreviewOrigin(request))return response({error:"Forbidden origin"},403);
  if(!/^application\/json(?:\s*;|$)/i.test(request.headers.get("content-type")||""))return response({error:"JSON required"},415);
  let textValue;
  try{textValue=await request.text()}catch{return response({error:"Invalid request"},400)}

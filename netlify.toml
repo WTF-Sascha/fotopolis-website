@@ -1,13 +1,15 @@
 [build]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && npm run build:auth"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs"
   publish = "preview-build"
 
+# Studio 11.1 review builds include 44 horizontal 15x10cm 300-DPI photo overlays.
+# No production release or live-domain merge is authorized by this preview.
 [context.deploy-preview]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && npm run build:auth"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs"
   publish = "preview-build"
 
 [context.branch-deploy]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && npm run build:auth"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs"
   publish = "preview-build"
 
 [[headers]]
@@ -20,9 +22,15 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
 [[headers]]
+  for = "/designstudio/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' blob: data:; connect-src 'self'; form-action 'self'"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
   for = "/admin/login/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech; font-src 'self'; object-src 'none'"
+    Content-Security-Policy = "default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech; font-src 'self'; object-src 'none'"
     Cache-Control = "no-store"
 
 [[headers]]
@@ -41,3 +49,20 @@
   [headers.values]
     Content-Type = "application/manifest+json"
     Cache-Control = "no-cache"
+
+# Bundle internal print originals into the guarded Function, NEVER publish them as CDN assets.
+[functions.fotopolis-design-private]
+  included_files = ["private-design-assets/catalogue.json", "private-design-assets/editor.html", "private-design-assets/print/*.png"]
+
+[[headers]]
+  for = "/admin/designstudio/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech; font-src 'self'; object-src 'none'"
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[redirects]]
+  from = "/designstudio/*"
+  to = "/designvorlagen/"
+  status = 302
+  force = true

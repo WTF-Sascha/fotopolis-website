@@ -1,0 +1,102 @@
+name: FOTOPOLIS Studio 13 – Foundation QA
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'netlify/functions/**'
+      - 'scripts/test-admin-auth.mjs'
+      - 'scripts/studio13-contract-qa.mjs'
+      - 'scripts/studio13-private-qa.mjs'
+      - 'scripts/studio13-brand-browser-qa.mjs'
+      - 'scripts/studio13-services-qa.mjs'
+      - 'scripts/studio13-live-qa.mjs'
+      - 'scripts/studio13-browser-qa.mjs'
+      - 'scripts/harden-studio13.py'
+      - 'scripts/apply-studio13-unified-brand.py'
+      - 'scripts/build-admin-auth.mjs'
+      - 'netlify.toml'
+      - 'scripts/build-premium-preview.py'
+      - 'concepts/premium-v2/admin/**'
+      - 'concepts/premium-v2/studio13-*.js'
+      - 'concepts/premium-v2/studio13-unified-brand.css'
+      - 'docs/FOTOPOLIS_STUDIO_13_ARCHITECTURE_AND_RISKS.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-and-test:
+    name: Auth regression, build and admin contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned development dependencies
+        run: |
+          npm install --no-audit --no-fund
+          python -m pip install --disable-pip-version-check "Pillow>=10,<12"
+      - name: Assert syntax
+        run: |
+          node --check netlify/functions/fotopolis-admin-session.mjs
+          node --check scripts/studio13-contract-qa.mjs
+          node --check scripts/test-admin-auth.mjs
+          node --check scripts/studio13-services-qa.mjs
+          node --check scripts/studio13-live-qa.mjs
+          node --check scripts/studio13-brand-browser-qa.mjs
+          node --check netlify/functions/fotopolis-studio13-public.mjs
+          node --check netlify/functions/fotopolis-studio13-admin.mjs
+          python -m py_compile scripts/apply-studio13-unified-brand.py
+          node --check concepts/premium-v2/admin/dashboard/command-center-app.js
+          node --check concepts/premium-v2/studio13-metrics.js
+          node --check concepts/premium-v2/studio13-public-content.js
+          node --check concepts/premium-v2/studio13-enquiry-mirror.js
+          python -m py_compile scripts/build-premium-preview.py
+      - name: Verify unauthorized requests and preview-origin matrix
+        run: |
+          node --test scripts/test-admin-auth.mjs
+          node --test scripts/studio13-services-qa.mjs
+      - name: Build, verify historical invariants, then harden
+        run: |
+          python3 scripts/build-premium-preview.py
+          node scripts/visual-release-qa.mjs
+          python3 scripts/harden-studio13.py
+          python3 scripts/apply-studio13-unified-brand.py
+          node --check preview-build/admin/designstudio/studio13-editor.js
+          npm run build:auth
+      - name: Verify secure release artifact
+        run: |
+          node scripts/studio13-contract-qa.mjs
+          node scripts/studio13-private-qa.mjs
+          node --test scripts/test-admin-auth.mjs
+      - name: Install Chromium and pinned browser test engine
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture responsive gallery and prove private assets absent
+        run: |
+          python3 -m http.server 8765 --directory preview-build >/tmp/studio13-static.log 2>&1 &
+          node scripts/studio13-browser-qa.mjs
+          node scripts/studio13-brand-browser-qa.mjs
+      - name: Probe real Netlify Deploy Preview API
+        run: node scripts/studio13-live-qa.mjs
+      - name: Archive brand-system visual screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio13-unified-brand-screenshots-${{ github.run_number }}
+          path: studio13-brand-screenshots/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Archive actual browser screenshots and QA record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio13-responsive-public-private-${{ github.run_number }}
+          path: studio13-browser-results/
+          if-no-files-found: warn
+          retention-days: 14

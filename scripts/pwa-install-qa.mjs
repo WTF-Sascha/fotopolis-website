@@ -50,8 +50,8 @@ try{
   check((await page.locator("#hero-title").textContent()).includes("Momente"),"Offline app shell opens latest homepage");
   await context.setOffline(false);
   await page.goto(new URL("designvorlagen/",base).toString(),{waitUntil:"networkidle",timeout:45000});
-  await page.waitForFunction(()=>document.querySelectorAll("[data-gallery-grid] .gl-card").length===32);
-  check(await page.locator("[data-gallery-grid] .gl-card").count()===32,"All 32 designs survive app update");
+  await page.waitForFunction(()=>document.querySelectorAll("[data-gallery-grid] .gl-card").length===44);
+  check(await page.locator("[data-gallery-grid] .gl-card").count()===44,"All 44 designs survive app update");
   console.log("PASS: "+checks+" PWA install, update, offline and duplicate navigation assertions.");
   await context.close();
 }finally{

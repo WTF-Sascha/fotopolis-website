@@ -4,18 +4,31 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { neon } from "@neondatabase/serverless";
 
 const AUTH_BASE="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
-const PREVIEW_ORIGIN="https://deploy-preview-2--fotopolis-preview.netlify.app";
+// Only Netlify deploy-preview subdomains for THIS development site are accepted.
+// The origin must match the current request host, not a historic PR number.
+const PREVIEW_HOST=/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app$/i;
 const jwks=createRemoteJWKSet(new URL(AUTH_BASE+"/.well-known/jwks.json"),{timeoutDuration:5000});
 export const noCache={"Cache-Control":"no-store, max-age=0","Content-Type":"application/json; charset=utf-8"};
 export const response=(data,status)=>new Response(JSON.stringify(data),{status,headers:noCache});
+// Cross-site writes are denied even if the bearer token is otherwise valid.
+// The caller must use the identical origin of a valid, isolated Deploy Preview.
+export function samePreviewOrigin(request){
+  try{
+    const url=new URL(request.url);
+    return url.protocol==="https:"&&PREVIEW_HOST.test(url.hostname)&&
+      request.headers.get("origin")===url.origin;
+  }catch{return false}
+}
 
 export async function authorizeAdmin(request,context,{methods=["GET"]}={}){
   if(context?.deploy?.context!=="deploy-preview"||context?.deploy?.published===true){
     return {denied:response({error:"Not found"},404)};
   }
   if(!methods.includes(request.method))return {denied:response({error:"Method not allowed"},405)};
+  const url=new URL(request.url);
+  if(url.protocol!=="https:"||!PREVIEW_HOST.test(url.hostname))return {denied:response({error:"Not found"},404)};
   const origin=request.headers.get("origin");
-  if(origin&&origin!==PREVIEW_ORIGIN)return {denied:response({error:"Forbidden origin"},403)};
+  if(origin&&origin!==url.origin)return {denied:response({error:"Forbidden origin"},403)};
   const header=request.headers.get("authorization")||"";
   const match=/^Bearer ([A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)$/.exec(header);
   if(!match||match[1].length>6000)return {denied:response({authenticated:false,error:"Unauthorized"},401)};

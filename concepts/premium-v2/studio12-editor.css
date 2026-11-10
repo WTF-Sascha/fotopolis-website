@@ -1,0 +1,71 @@
+/* FOTOPOLIS Studio 12.0 — client-only photo print editor, quiet luxury. */
+.fp12-app{--fp12-ink:#29231e;--fp12-espresso:#30251d;--fp12-gold:#a67c48;--fp12-border:#d6c8b7;--fp12-ivory:#f7f3ec;--fp12-white:#fffcf8;font-family:var(--fp11-body,Manrope,system-ui,sans-serif);color:var(--fp12-ink);background:var(--fp12-ivory);min-width:0}
+.fp12-app *, .fp12-app *::before, .fp12-app *::after{box-sizing:border-box}
+.fp12-app h1,.fp12-app h2{font-family:var(--fp11-display,Georgia,serif);font-weight:500;letter-spacing:-.035em}
+.fp12-app button,.fp12-app select,.fp12-app input{font:inherit}
+.fp12-app :is(button,select,input,a):focus-visible{outline:3px solid #815927;outline-offset:3px}
+.fp12-container{width:min(1280px,calc(100% - clamp(30px,6vw,90px)));margin-inline:auto}
+.fp12-intro{padding:clamp(52px,6vw,91px) 0 clamp(48px,4vw,70px);color:#f7f0e5;background:var(--fp12-espresso)}
+.fp12-kicker,.fp12-step{color:#a87a49;font-size:12px;letter-spacing:.14em;font-weight:750;text-transform:uppercase;line-height:1.5}
+.fp12-intro .fp12-kicker{color:#e4c79f}
+.fp12-intro h1{font-size:clamp(41px,5.25vw,78px);line-height:1.08;margin:12px 0 16px;max-width:1000px}
+.fp12-intro h1 em{color:#e5cda9;font-style:italic}
+.fp12-intro p:not(.fp12-kicker){max-width:770px;font-size:clamp(16px,1.25vw,19px);line-height:1.75;color:#e8ded0}
+.fp12-trust{margin-top:33px;display:flex;flex-wrap:wrap;gap:14px 28px;font-size:13px;color:#e8dac7}
+.fp12-trust span span{display:inline-flex;align-items:center;justify-content:center;border:1px solid #8e795f;color:#dec59f;border-radius:50%;width:31px;height:31px;margin-right:9px}
+.fp12-workspace{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);align-items:start;gap:clamp(24px,3vw,50px);padding-block:clamp(30px,4vw,64px) 85px}
+.fp12-panel{padding:clamp(20px,2vw,30px);border:1px solid var(--fp12-border);border-radius:10px;background:var(--fp12-white);box-shadow:0 12px 45px #29201908}
+.fp12-panel-head h2,.fp12-section h2{margin:7px 0 21px;font-size:29px;line-height:1.17}
+.fp12-section{border-top:1px solid var(--fp12-border);margin-top:25px;padding-top:23px}
+.fp12-section h2{margin-bottom:11px}
+.fp12-panel label{display:block;font-size:14px;font-weight:750;margin:16px 0 8px;color:#342a22}
+.fp12-panel select,.fp12-panel input[type=text],.fp12-panel input[type=file]{width:100%;min-width:0;padding:13px 12px;border:1px solid #a99b8b;border-radius:6px;background:#fff;color:#30251d;font-size:14px;min-height:46px}
+.fp12-panel input[type=file]{max-width:100%;padding:10px;line-height:1.6}
+.fp12-panel input[type=range]{display:block;accent-color:#8c6238;width:100%;margin:14px 0;min-height:28px}
+.fp12-muted{font-size:13px;line-height:1.65;color:#605549;margin:8px 0 11px}
+.fp12-optional{font-weight:500;color:#605549}
+.fp12-slotlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 0}
+.fp12-slot{border:1px solid #b7a995;color:#372d24;background:#faf6ee;border-radius:6px;min-height:54px;padding:9px 10px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;justify-content:center}
+.fp12-slot[aria-pressed=true]{border-color:#38291e;background:#e7d7c2;box-shadow:inset 0 0 0 1px #38291e}
+.fp12-slot small{font-size:11px;color:#675c50}
+.fp12-move{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fp12-move button{border:1px solid #ad9b84;border-radius:6px;background:transparent;color:#3c2b1d;min-height:46px;padding:10px;font-size:12px;cursor:pointer}
+.fp12-nudge{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}.fp12-nudge button{min-height:45px;border:1px solid #ad9b84;border-radius:5px;background:#f8f4ec;color:#33271d;font-size:20px;cursor:pointer}
+.fp12-primary,.fp12-secondary{border-radius:6px;padding:13px 16px;min-height:52px;width:100%;font-size:14px;font-weight:750;cursor:pointer;margin:9px 0}
+.fp12-primary{background:var(--fp12-espresso);color:#fff;border:1px solid var(--fp12-espresso)}
+.fp12-secondary{background:#d7bc94;color:#20170f;border:1px solid #ac8758}
+.fp12-app button[disabled]{opacity:.55;cursor:not-allowed}
+.fp12-export>p[role=status]{color:#4f4339;font-size:14px;line-height:1.6;margin:12px 0}
+.fp12-preview-column{position:sticky;top:clamp(75px,7vw,110px);min-width:0}
+.fp12-preview-heading{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:9px 16px;margin-bottom:18px}
+.fp12-preview-heading h2{font-size:clamp(24px,2.4vw,36px);line-height:1.2;margin:5px 0}
+.fp12-format{font-size:12px;font-weight:750;color:#80623f;border:1px solid #c5b69d;border-radius:3px;padding:8px 10px}
+.fp12-canvas-frame{background:#e9dfd1;border:1px solid #cbbca8;padding:clamp(7px,1.5vw,16px);border-radius:9px;box-shadow:0 15px 45px #18120b12;min-width:0}
+.fp12-canvas-frame canvas{display:block;width:100%;height:auto;aspect-ratio:1772/1181;background:#f0e9e0;touch-action:none;cursor:grab}
+.fp12-canvas-frame canvas:active{cursor:grabbing}
+.fp12-info{display:flex;gap:14px;padding:16px 18px;border:1px solid #c9b9a1;border-radius:6px;margin-top:23px;background:#f1e8db}
+.fp12-info span{font-size:23px;color:#80623f}
+.fp12-info p{font-size:13px;line-height:1.65;color:#51483d;margin:0}
+.fp12-feedback:not(:empty){margin:14px 0;padding:12px 14px;border-left:3px solid #a77942;color:#463a2d;background:#f1e8db;font-size:14px;line-height:1.55}
+.fp12-outro{padding:54px 0 65px;background:#eee3d4;border-top:1px solid #d4c4ae}
+.fp12-outro h2{font-size:clamp(28px,3vw,46px);margin:0 0 15px}
+.fp12-outro p{line-height:1.7;color:#54483c;font-size:16px;margin-bottom:20px}
+.fp12-outro a{display:inline-block;margin:0 15px 11px 0;border-bottom:1px solid currentColor;padding:6px 1px;color:#483522;font-weight:700}
+@media(max-width:960px){
+ .fp12-workspace{grid-template-columns:minmax(0,1fr);gap:30px}
+ .fp12-preview-column{position:static;grid-row:1}
+ .fp12-panel{grid-row:2}
+ .fp12-panel{max-width:none}
+ .fp12-slotlist{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .fp12-container{width:calc(100% - 30px)}
+ .fp12-intro{padding:41px 0 40px}
+ .fp12-intro h1{font-size:clamp(36px,9vw,51px)}
+ .fp12-trust{display:grid;grid-template-columns:1fr;gap:9px}
+ .fp12-workspace{padding:24px 0 53px}
+ .fp12-slotlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .fp12-panel{padding:18px 15px}
+ .fp12-move{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.fp12-app *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
