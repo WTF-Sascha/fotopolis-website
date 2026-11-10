@@ -5,7 +5,8 @@ import {join} from "node:path";
 
 const jobs=[
  {source:"concepts/premium-v2/admin/login/login.js",target:"preview-build/admin/login/login-bundle.js",html:"preview-build/admin/login/index.html"},
- {source:"concepts/premium-v2/admin/dashboard/dashboard.js",target:"preview-build/admin/dashboard/dashboard-bundle.js",html:"preview-build/admin/dashboard/index.html"}
+ {source:"concepts/premium-v2/admin/dashboard/dashboard.js",target:"preview-build/admin/dashboard/dashboard-bundle.js",html:"preview-build/admin/dashboard/index.html"},
+ {source:"concepts/premium-v2/admin/designstudio/boot.js",target:"preview-build/admin/designstudio/boot-bundle.js",html:"preview-build/admin/designstudio/index.html"}
 ];
 for(const item of jobs){
   if(!existsSync(item.html))throw Error("Run Python preview build first");

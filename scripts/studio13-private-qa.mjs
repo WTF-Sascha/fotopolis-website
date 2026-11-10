@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import {readFileSync,readdirSync,existsSync} from "node:fs";
+const read=p=>readFileSync(p,"utf8");
+const publicRoot="preview-build/",internal="private-design-assets/";
+const list=JSON.parse(read(publicRoot+"assets/design-gallery-data.json"));
+assert.equal(list.length,44);
+assert.ok(list.every(x=>!Object.hasOwn(x,"printOverlay")&&!Object.hasOwn(x,"photoRegions")));
+assert.equal(readdirSync(internal+"print").filter(x=>x.endsWith(".png")).length,44);
+assert.ok(!existsSync(publicRoot+"assets/designvorlagen/print"));
+assert.ok(!existsSync(publicRoot+"designstudio/index.html"));
+assert.ok(!existsSync(publicRoot+"studio12-editor.js"));
+assert.ok(!existsSync(publicRoot+"qa"));
+assert.ok(existsSync(publicRoot+"admin/designstudio/index.html"));
+const shell=read(publicRoot+"admin/designstudio/index.html");
+assert.ok(!shell.includes("data-fp12-editor"),"Editor markup must be served only after bearer authorization");
+const ed=read(publicRoot+"admin/designstudio/studio13-editor.js");
+assert.ok(ed.includes("window.fp13Fetch"),"Editor must fetch protected assets");
+assert.ok(!ed.includes('fetch("/assets/design-gallery-data.json"'));
+const gallery=read(publicRoot+"designvorlagen/index.html");
+assert.ok(!gallery.includes('data-modal-editor')&&!gallery.includes('data-modal-print'));
+assert.ok(!gallery.includes('href="/designstudio/'));
+const sw=read(publicRoot+"service-worker.js");
+assert.ok(!sw.includes("'/designstudio/'"));
+assert.ok(!sw.includes("'/studio12-editor.js'"));
+assert.equal(JSON.parse(read(internal+"catalogue.json")).length,44);
+console.log("Studio 13 P0 private asset separation contracts PASS; live authenticated network QA pending.");

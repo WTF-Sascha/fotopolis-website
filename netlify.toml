@@ -1,5 +1,5 @@
 [build]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && npm run build:auth"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && npm run build:auth"
   publish = "preview-build"
 
 # Studio 11.1 review builds include 44 horizontal 15x10cm 300-DPI photo overlays.
@@ -49,3 +49,20 @@
   [headers.values]
     Content-Type = "application/manifest+json"
     Cache-Control = "no-cache"
+
+# Bundle internal print originals into the guarded Function, NEVER publish them as CDN assets.
+[functions.fotopolis-design-private]
+  included_files = ["private-design-assets/catalogue.json", "private-design-assets/editor.html", "private-design-assets/print/*.png"]
+
+[[headers]]
+  for = "/admin/designstudio/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech; font-src 'self'; object-src 'none'"
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[redirects]]
+  from = "/designstudio/*"
+  to = "/designvorlagen/"
+  status = 302
+  force = true

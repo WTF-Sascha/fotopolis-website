@@ -45,3 +45,5 @@ jobs:
         run: |
           node scripts/studio13-contract-qa.mjs
           node scripts/visual-release-qa.mjs
+          python3 scripts/harden-studio13.py
+          node scripts/studio13-private-qa.mjs
