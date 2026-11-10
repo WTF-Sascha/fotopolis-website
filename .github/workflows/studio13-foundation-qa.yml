@@ -8,6 +8,7 @@ on:
       - 'scripts/studio13-contract-qa.mjs'
       - 'scripts/studio13-private-qa.mjs'
       - 'scripts/studio13-services-qa.mjs'
+      - 'scripts/studio13-live-qa.mjs'
       - 'scripts/studio13-browser-qa.mjs'
       - 'scripts/harden-studio13.py'
       - 'scripts/build-admin-auth.mjs'
@@ -42,6 +43,7 @@ jobs:
           node --check scripts/studio13-contract-qa.mjs
           node --check scripts/test-admin-auth.mjs
           node --check scripts/studio13-services-qa.mjs
+          node --check scripts/studio13-live-qa.mjs
           node --check netlify/functions/fotopolis-studio13-public.mjs
           node --check netlify/functions/fotopolis-studio13-admin.mjs
           node --check concepts/premium-v2/admin/dashboard/command-center-app.js
@@ -73,6 +75,8 @@ jobs:
         run: |
           python3 -m http.server 8765 --directory preview-build >/tmp/studio13-static.log 2>&1 &
           node scripts/studio13-browser-qa.mjs
+      - name: Probe real Netlify Deploy Preview API
+        run: node scripts/studio13-live-qa.mjs
       - name: Archive actual browser screenshots and QA record
         if: always()
         uses: actions/upload-artifact@v4
