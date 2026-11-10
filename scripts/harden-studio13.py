@@ -65,9 +65,9 @@ ed.mkdir(parents=True,exist_ok=True)
 <title>Internes Design Studio | FOTOPOLIS</title>
 <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/studio12-editor.css">
 <link rel="stylesheet" href="/admin/dashboard/command-center.css">
-<style>body{background:#151c23;color:#f4e9d9}.fp13-top{padding:15px clamp(15px,3vw,50px);display:flex;gap:22px;align-items:center;border-bottom:1px solid #725f42}.fp13-top a{color:#e6c588}.fp13-gate{max-width:820px;margin:10vh auto;padding:35px;background:#273029;border-radius:15px}.fp13-gate a{color:#f1cf89}</style>
+
 <script type="module" src="/admin/designstudio/boot-bundle.js"></script></head>
-<body><header class="fp13-top"><strong>FOTOPOLIS / INTERN</strong><a href="/admin/dashboard/#designstudio">Zur Verwaltung</a></header>
+<body class="fp13-body"><header class="fp13-top"><strong>FOTOPOLIS / INTERN</strong><a href="/admin/dashboard/#designstudio">Zur Verwaltung</a></header>
 <div id="fp13-gate" class="fp13-gate" role="status" aria-live="polite"><h1>Design Studio wird geprüft.</h1>
 <p id="fp13-message">Authentifizierung und Berechtigungen werden geprüft …</p>
 <a href="/admin/login/" id="fp13-login" hidden>Zur geschützten Anmeldung</a></div>
