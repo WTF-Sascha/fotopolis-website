@@ -130,7 +130,7 @@ for file,formtype in ((OUT/"contact-flow.js","website"),(OUT/"product-enquiry-v6
     js=file.read_text(encoding="utf-8")
     marker='if(!response.ok)throw Error("HTTP "+response.status);'
     assert js.count(marker)==1
-    js=js.replace(marker,marker+'\\n      void window.fp13MirrorEnquiry?.(form,"'+formtype+'");',1)
+    js=js.replace(marker,marker+'\n      void window.fp13MirrorEnquiry?.(form,"'+formtype+'");',1)
     file.write_text(js,encoding="utf-8")
 # Disclosure visible on the exact test data collection site – no legal assessment implied.
 privacy=OUT/"datenschutz/index.html"
@@ -154,5 +154,16 @@ page=page.replace("</main>",notice+"</main>",1)
 privacy.write_text(page,encoding="utf-8")
 # Do not build the addon into PWA cache; no sensitive requests may be handled by the worker.
 assert "studio13-metrics.js" not in worker.read_text(encoding="utf-8")
+# Editorial notices appear ONLY when approved CMS text is present.
+public_css=OUT/"styles.css"
+public_css.write_text(public_css.read_text(encoding="utf-8")+"""
+.studio13-public-note:not([hidden]){display:block;margin:clamp(24px,5vw,65px) auto;
+max-width:940px;padding:clamp(22px,3vw,40px);border:1px solid #c4ab7a;
+border-radius:14px;background:#f7f2e9;color:#332f2a;font-size:clamp(15px,1.5vw,18px);
+line-height:1.8;white-space:pre-line}
+.studio13-privacy-addendum{max-width:960px;margin:40px auto;padding:26px;
+background:#f8f2e7;color:#312b24;border-left:3px solid #ab8253;border-radius:8px}
+.studio13-privacy-addendum p{line-height:1.7}
+""",encoding="utf-8")
 
 print("STUDIO 13: Public previews only, 44 private print masters, auth-gated editor and zero public print archives")
