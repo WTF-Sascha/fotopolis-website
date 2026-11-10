@@ -6,6 +6,7 @@ import {setupReservationsManager} from "./reservations-manager.js";
 import {downloadCsv} from "./csv-export.js";
 import {filterInventory,calendarAgenda,occupancyLabels} from "./operations-insights.js";
 import {setupFirstRun} from "./first-run.js";
+import {setupCommandCenter} from "./command-center-app.js";
 
 const AUTH_URL="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
 const client=createAuthClient(AUTH_URL);
@@ -452,6 +453,7 @@ async function authenticate(){
     });
     await loadCalendar();
     await loadActivity();
+    setupCommandCenter({role:adminRole,getToken:async()=>getAdminJwt(client,await client.getSession())});
     updateNavigation();
     const anchor=location.hash&&document.querySelector(location.hash);
     if(anchor)requestAnimationFrame(()=>anchor.scrollIntoView({block:"start"}));
@@ -481,7 +483,7 @@ mobile.querySelectorAll("a").forEach(x=>x.addEventListener("click",()=>{mobile.h
 // Keep context visible on mobile and desktop. Navigation is never an auth bypass.
 function updateNavigation(){
  const target=location.hash||"#overview";
- const labels={"#overview":"Übersicht","#calendar":"Terminplaner","#inventory":"Gerätebestand","#planning":"Sperrzeiten","#bookings":"Vormerkungen","#activity":"Änderungsprotokoll","#account":"Mein Konto"};
+ const labels={"#overview":"Übersicht","#calendar":"Terminplaner","#inventory":"Gerätebestand","#planning":"Sperrzeiten","#bookings":"Vormerkungen","#activity":"Änderungsprotokoll","#analytics":"Analytics","#eventanfragen":"Eventanfragen","#designstudio":"Design Studio","#designs":"Designvorlagen","#cms":"Website & Inhalte","#medien":"Medien","#system":"System","#account":"Mein Konto"};
  $(".crumbs strong").textContent=labels[target]||"Übersicht";
  for(const a of document.querySelectorAll('.sidebar-nav a, #dashboard-mobile-menu a')){
    const isActive=a.getAttribute("href")===target;

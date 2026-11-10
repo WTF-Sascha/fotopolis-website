@@ -89,7 +89,9 @@ export default async function handler(req,context){
    if(req.method==="GET"){
     const rows=await sql`SELECT content_key,draft_text,published_text,version,published_version,updated_at
       FROM fotopolis_studio13.cms_content ORDER BY content_key`;
-    return response({rows,previewOnly:true},200);
+    const versions=await sql`SELECT content_key,version,created_at FROM fotopolis_studio13.cms_history
+       ORDER BY created_at DESC LIMIT 80`;
+    return response({rows,versions,previewOnly:true},200);
    }
    const b=await bodyJson(req,5500);
    if(!b||!validKeys.has(b.key)||!["save","publish","rollback"].includes(b.action))return message("Ungültige CMS-Aktion");

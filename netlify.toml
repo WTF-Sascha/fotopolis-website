@@ -30,7 +30,7 @@
 [[headers]]
   for = "/admin/login/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech; font-src 'self'; object-src 'none'"
+    Content-Security-Policy = "default-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech; font-src 'self'; object-src 'none'"
     Cache-Control = "no-store"
 
 [[headers]]

@@ -9,7 +9,12 @@ const sourceTypes=new Set(["website","product"]);
 const productTypes=new Set(["Fotobox","Fotospiegel","Fotowohnwagen","Noch offen"]);
 const day=/^\d{4}-\d{2}-\d{2}$/;
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const validDate=s=>s===null||s===""||(typeof s==="string"&&day.test(s)&&new Date(s+"T00:00:00Z").toISOString().slice(0,10)===s);
+const validDate=s=>{
+ if(s===null||s==="")return true;
+ if(typeof s!=="string"||!day.test(s))return false;
+ const value=new Date(s+"T00:00:00Z");
+ return Number.isFinite(value.getTime())&&value.toISOString().slice(0,10)===s;
+};
 const field=(s,max)=>typeof s==="string"&&s.trim().length<=max?s.trim():null;
 export function validateEnquiry(v){
  if(!v||typeof v!=="object"||Array.isArray(v))return null;

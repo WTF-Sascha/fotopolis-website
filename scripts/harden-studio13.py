@@ -99,4 +99,60 @@ assert "/designstudio/" not in sw and "/studio12-editor.js" not in sw
 worker.write_text(sw,encoding="utf-8")
 assert len(list((PRIVATE/"print").glob("*.png")))==44
 assert not any((OUT/p).exists() for p in ["assets/designvorlagen/print","designstudio/index.html","qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip"])
+
+# Studio 13 preview-only customer operations and publishing adapters.
+for asset in ("studio13-metrics.js","studio13-enquiry-mirror.js","studio13-public-content.js"):
+    shutil.copy2(ROOT/"concepts/premium-v2"/asset,OUT/asset)
+# Only public website routes are instrumented; admin/auth and print files are excluded.
+public_files = [
+    OUT/"index.html",OUT/"fotobox/index.html",OUT/"fotospiegel/index.html",
+    OUT/"fotowohnwagen/index.html",OUT/"designvorlagen/index.html",
+    OUT/"kontakt/index.html",OUT/"pakete/index.html",OUT/"faq/index.html",
+    OUT/"anlaesse/index.html",OUT/"ueber-uns/index.html"
+]
+for path in public_files:
+    content=path.read_text(encoding="utf-8")
+    assert content.count("</head>")==1
+    scripts='<script defer src="/studio13-metrics.js"></script>'
+    if path in (OUT/"index.html",OUT/"kontakt/index.html",OUT/"faq/index.html",OUT/"ueber-uns/index.html"):
+        scripts+='<script defer src="/studio13-public-content.js"></script>'
+        key={OUT/"index.html":"hero_note",OUT/"kontakt/index.html":"contact_note",
+             OUT/"faq/index.html":"faq_intro",OUT/"ueber-uns/index.html":"about_note"}[path]
+        insert='<aside class="studio13-public-note" data-studio13-content="'+key+'" hidden></aside>'
+        assert content.count("</main>")==1
+        content=content.replace("</main>",insert+"</main>",1)
+    if path==OUT/"kontakt/index.html" or path.name=="index.html" and path.parent.name in ("fotobox","fotospiegel","fotowohnwagen"):
+        scripts+='<script defer src="/studio13-enquiry-mirror.js"></script>'
+    content=content.replace("</head>",scripts+"</head>",1)
+    path.write_text(content,encoding="utf-8")
+# Respect the existing successful Netlify Forms submission path. Mirror only AFTER it confirms acceptance.
+for file,formtype in ((OUT/"contact-flow.js","website"),(OUT/"product-enquiry-v6.js","product")):
+    js=file.read_text(encoding="utf-8")
+    marker='if(!response.ok)throw Error("HTTP "+response.status);'
+    assert js.count(marker)==1
+    js=js.replace(marker,marker+'\\n      void window.fp13MirrorEnquiry?.(form,"'+formtype+'");',1)
+    file.write_text(js,encoding="utf-8")
+# Disclosure visible on the exact test data collection site – no legal assessment implied.
+privacy=OUT/"datenschutz/index.html"
+page=privacy.read_text(encoding="utf-8")
+assert page.count("</main>")==1
+notice=(
+    '<section class="studio13-privacy-addendum" aria-label="Entwicklungsumgebung">'
+    '<h2>FOTOPOLIS Studio 13 – Testumgebung</h2>'
+    '<p>Auf dieser separat gekennzeichneten Netlify-Testwebsite werden freiwillig abgesendete '
+    'Eventanfragen weiterhin über Netlify Forms übertragen. Nach bestätigtem Versand versucht '
+    'das System zusätzlich, die Angaben in die interne Verwaltungsdatenbank (Neon, Entwicklungsbranch) '
+    'zu übernehmen. Diese Kopie ist ausschließlich berechtigten Mitarbeitenden zugänglich. '
+    'Ein erfolgreicher Formularversand ist keine Buchungsbestätigung.</p>'
+    '<p>Die Testwebsite zählt zusätzlich rein aggregierte Seitenaufrufe und ausgewählte '
+    'Interaktionen. Es werden dafür keine Cookies, dauerhaften Besucherkennungen oder '
+    'persönlichen Browserprofile angelegt. Die angezeigten Zahlen sind keine eindeutigen Besucher. '
+    'Die rechtliche Einordnung und die endgültigen Aufbewahrungsfristen sind vor einem '
+    'produktiven Start gesondert zu prüfen.</p></section>'
+)
+page=page.replace("</main>",notice+"</main>",1)
+privacy.write_text(page,encoding="utf-8")
+# Do not build the addon into PWA cache; no sensitive requests may be handled by the worker.
+assert "studio13-metrics.js" not in worker.read_text(encoding="utf-8")
+
 print("STUDIO 13: Public previews only, 44 private print masters, auth-gated editor and zero public print archives")
