@@ -11,11 +11,13 @@ on:
       - 'scripts/studio13-live-qa.mjs'
       - 'scripts/studio13-browser-qa.mjs'
       - 'scripts/harden-studio13.py'
+      - 'scripts/apply-studio13-unified-brand.py'
       - 'scripts/build-admin-auth.mjs'
       - 'netlify.toml'
       - 'scripts/build-premium-preview.py'
       - 'concepts/premium-v2/admin/**'
       - 'concepts/premium-v2/studio13-*.js'
+      - 'concepts/premium-v2/studio13-unified-brand.css'
       - 'docs/FOTOPOLIS_STUDIO_13_ARCHITECTURE_AND_RISKS.md'
   workflow_dispatch:
 permissions:
@@ -46,6 +48,7 @@ jobs:
           node --check scripts/studio13-live-qa.mjs
           node --check netlify/functions/fotopolis-studio13-public.mjs
           node --check netlify/functions/fotopolis-studio13-admin.mjs
+          python -m py_compile scripts/apply-studio13-unified-brand.py
           node --check concepts/premium-v2/admin/dashboard/command-center-app.js
           node --check concepts/premium-v2/studio13-metrics.js
           node --check concepts/premium-v2/studio13-public-content.js
@@ -60,6 +63,7 @@ jobs:
           python3 scripts/build-premium-preview.py
           node scripts/visual-release-qa.mjs
           python3 scripts/harden-studio13.py
+          python3 scripts/apply-studio13-unified-brand.py
           node --check preview-build/admin/designstudio/studio13-editor.js
           npm run build:auth
       - name: Verify secure release artifact
