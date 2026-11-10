@@ -1,7 +1,7 @@
 // FOTOPOLIS Studio 4.0 preview-only: private internal block persistence.
 // Server verified Neon Auth JWT, RBAC and least-privilege PostgreSQL role.
 import {neon} from "@neondatabase/serverless";
-import {authorizeAdmin,response} from "./fotopolis-admin-session.mjs";
+import {authorizeAdmin,response,samePreviewOrigin} from "./fotopolis-admin-session.mjs";
 const origin="https://deploy-preview-2--fotopolis-preview.netlify.app";
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const kinds=new Set(["internal_block","maintenance"]);
