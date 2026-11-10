@@ -7,6 +7,7 @@ on:
       - 'scripts/test-admin-auth.mjs'
       - 'scripts/studio13-contract-qa.mjs'
       - 'scripts/studio13-private-qa.mjs'
+      - 'scripts/studio13-browser-qa.mjs'
       - 'scripts/harden-studio13.py'
       - 'scripts/build-admin-auth.mjs'
       - 'netlify.toml'
@@ -53,3 +54,19 @@ jobs:
           node scripts/studio13-contract-qa.mjs
           node scripts/studio13-private-qa.mjs
           node --test scripts/test-admin-auth.mjs
+      - name: Install Chromium and pinned browser test engine
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture responsive gallery and prove private assets absent
+        run: |
+          python3 -m http.server 8765 --directory preview-build >/tmp/studio13-static.log 2>&1 &
+          node scripts/studio13-browser-qa.mjs
+      - name: Archive actual browser screenshots and QA record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio13-responsive-public-private-${{ github.run_number }}
+          path: studio13-browser-results/
+          if-no-files-found: warn
+          retention-days: 14
