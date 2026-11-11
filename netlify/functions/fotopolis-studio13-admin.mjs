@@ -19,6 +19,8 @@ const capabilities={
  viewer:{"analytics":["GET"]}
 };
 export const may=(role,module,method)=>!!capabilities[role]?.[module]?.includes(method);
+// Managers manage preview CMS content, but staff-role assignment remains owner-only.
+export const mayPublishCms=role=>["owner","manager","editor"].includes(role);
 const message=(msg,code=400)=>response({error:msg},code);
 async function bodyJson(request,max=4096){
  if(!/^application\/json(?:\s*;|$)/i.test(request.headers.get("content-type")||""))return null;
@@ -57,11 +59,19 @@ export default async function handler(req,context){
   if(!may(role,module,req.method))return message("Keine Berechtigung für diesen Bereich",403);
   if(module==="analytics"){
    if(id)return message("Not found",404);
+   // Inclusive date window: today plus the preceding 29 calendar days.
+   // There are at most 10 page paths x 4 event types x 30 days in this schema.
    const rows=await sql`SELECT event_date,page,event_type,hits FROM fotopolis_studio13.analytics_daily
-     WHERE event_date >= ((now() AT TIME ZONE 'Europe/Berlin')::date - INTERVAL '30 days')
-     ORDER BY event_date DESC,page,event_type LIMIT 500`;
+     WHERE event_date >= ((now() AT TIME ZONE 'Europe/Berlin')::date - INTERVAL '29 days')
+     ORDER BY event_date DESC,page,event_type LIMIT 1500`;
    const total=rows.reduce((n,x)=>n+Number(x.hits||0),0);
-   return response({rows,total,kind:"Gezählte Ereignisse – keine eindeutigen Besucher",days:30,source:"Studio-13-Preview, aggregiert ohne Cookies"},200);
+   // Server-confirmed CRM rows are NOT equivalent to click events or Netlify Forms receipts.
+   const verified=await sql`SELECT product,status,count(*)::int AS count
+     FROM fotopolis_studio13.inquiries GROUP BY product,status ORDER BY product,status`;
+   const mirroredCount=verified.reduce((n,x)=>n+Number(x.count||0),0);
+   return response({rows,total,kind:"Gezählte Ereignisse – keine eindeutigen Besucher",days:30,
+     source:"Studio-14-Preview, aggregiert ohne Cookies",
+     crm:{mirroredCount,byProductAndStatus:verified,authoritativeSource:"Netlify Forms – separat abgleichen"}},200);
   }
   if(module==="inquiries"){
    if(req.method==="GET"){
@@ -104,7 +114,7 @@ export default async function handler(req,context){
     return response({saved:true,item:rows[0],published:false},200);
    }
    if(b.action==="publish"){
-    if(!["owner","editor"].includes(role))return message("Veröffentlichungsrecht fehlt",403);
+    if(!mayPublishCms(role))return message("Veröffentlichungsrecht fehlt",403);
     const rows=await sql`WITH changed AS (
       UPDATE fotopolis_studio13.cms_content SET published_text=draft_text,published_version=version,
         updated_at=now(),updated_by=${auth.userId}::uuid WHERE content_key=${b.key}
@@ -116,7 +126,7 @@ export default async function handler(req,context){
     await log(sql,auth.userId,"cms_preview_publish","content",b.key);
     return response({saved:true,item:rows[0],previewOnly:true},200);
    }
-   if(!["owner","editor"].includes(role)||!Number.isInteger(b.version)||b.version<0)return message("Rücksetzung nicht erlaubt",403);
+   if(!mayPublishCms(role)||!Number.isInteger(b.version)||b.version<0)return message("Rücksetzung nicht erlaubt",403);
    const history=await sql`SELECT published_text FROM fotopolis_studio13.cms_history
       WHERE content_key=${b.key} AND version=${b.version} ORDER BY id DESC LIMIT 1`;
    if(!history.length)return message("Version nicht gefunden",404);
