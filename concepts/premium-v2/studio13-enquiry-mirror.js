@@ -13,8 +13,15 @@
    const read=n=>String(data.get(n)||"").trim();
    // A honeypot entry is not an accepted customer request.
    if(!read("datenschutz_ok")||read("website")){signal("not-mirrored");return false;}
+   // The key was already submitted in the accepted Netlify Forms payload.
+   // Reuse it verbatim to make the two systems auditable against each other.
+   const submittedKey=read("fp_request_key");
+   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submittedKey)){
+    signal("needs-reconciliation");return false;
+   }
    const product=read("produkt");
-   if(!keys.has(form))keys.set(form,crypto.randomUUID());
+   if(!keys.has(form))keys.set(form,submittedKey);
+   if(keys.get(form)!==submittedKey){signal("needs-reconciliation");return false;}
    const record={
     requestKey:keys.get(form),
     source:source==="product"?"product":"website",
