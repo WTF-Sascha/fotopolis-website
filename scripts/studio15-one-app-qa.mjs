@@ -20,7 +20,8 @@ for(const path of ["admin/index.html","admin/login/index.html","admin/dashboard/
 const worker=read(root+"service-worker.js");
 assert.ok(worker.includes("url.pathname.startsWith('/admin/')"),"Never cache staff routes");
 assert.ok(worker.includes("url.pathname.startsWith('/api/')"),"Never cache protected API replies");
-assert.ok(!worker.includes("'/admin/'"),"Never pre-cache private entry points");
+const shell=worker.split("const SHELL=[")[1]?.split("];")[0]||"";
+assert.ok(!shell.includes("'/admin/'"),"Never pre-cache private entry points");
 assert.ok(worker.includes("v15-one-app-secure-r1"),"Old app cache not invalidated");
 
 const example={
