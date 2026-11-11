@@ -18,10 +18,10 @@ Die Statusbegriffe sind strikt getrennt: **nicht implementiert**, **teilweise im
 | ID | Priorität | Modul / Historie | Befund vor Studio 14 | Maßnahme im Branch / Status danach | Test / Abnahmekriterium |
 |---|---|---|---|---|---|
 | F14-001 | P0 | Formular → CRM, Studio 9/13 | Nach erfolgreichem Netlify-POST wurde der Mirror-Aufruf mit `void` nicht abgewartet; ein fehlgeschlagener Mirror blieb in der Erfolgsanzeige unsichtbar | **Code korrigiert:** abgewarteter Mirror, max. 2 Versuche mit gleicher UUID, explizite Sync-Warnung ohne Verlust der Netlify-Sendebestätigung | CI-Contract-Test plus echte synthetische Netlify→Neon-End-to-End-Synchronisation ausstehend |
-| F14-002 | P0 | Netlify-Forms-Abgleich, Studio 13 | Zwei Quellen ohne Transaktion; Netlify-Submission-ID nicht im CRM; keine vollständige Pagination/Abgleichfunktion | **Teilweise:** Übertragungszuverlässigkeit verbessert; maschinell bestätigter Soll-/Ist-Abgleich noch **offen** | Mit freigegebenen Testanfragen jede Netlify-ID genau einmal einer bestätigten CRM-Kopie zuordnen; Fehlfälle dokumentieren |
+| F14-002 | P0 | Netlify-Forms-Abgleich, Studio 13 | Zwei Quellen ohne Transaktion; Netlify-Submission-ID nicht im CRM; keine vollständige Pagination/Abgleichfunktion | **Teilweise:** Übertragungszuverlässigkeit verbessert und CRM-Filter nach Produkt, Status und Wunschtermin ergänzt; maschinell bestätigter Soll-/Ist-Abgleich noch **offen** | Mit freigegebenen Testanfragen jede Netlify-ID genau einmal einer bestätigten CRM-Kopie zuordnen; Fehlfälle dokumentieren |
 | F14-003 | P0 | Auth/JWT/RBAC, Studio 3–13 | Negative Tests dokumentiert; positive reale Anmeldung und Rollentrennung in PR #19 nicht belegt | **Unverändert offen:** Auth-Preview-Origin #20 in Neon DEV freigegeben; kein Konto simuliert | Echter SSO+Neon-Owner-Login, Tokenablauf, Logout, erlaubte und verweigerte API-Rechte |
 | F14-004 | P0 | Verwaltung, Studio 4.0–4.4 | Persistente Geräte, Reservierungen, Sperrzeiten und Audit implementiert; kein neuer echter Full-Flow belegt | **Erhalten, E2E offen**; keine Testbuchung mit echten Geräten erzeugt | Synthetische isolierte Anlage, Konflikt, UTC/DST, Storno, Audit, Reload, Rollback |
-| F14-005 | P0 | Private Designs, Studio 12/13 | Editor hinter JWT und private Print-Originale über Function laut Code/CI. Alte PR-Previews durch Netlify-Team-SSO geschützt | **Erhalten;** keine Änderung an 44 Dateien | Originale gegen Hash, anonymen/unerlaubten Zugriff und positives autorisiertes Laden testen |
+| F14-005 | P0 | Private Designs, Studio 12/13 | Editor hinter JWT und private Print-Originale über Function; Zusatzrolle Designer hatte trotz aktiver Studio-Rolle keinen Zugang | **Code korrigiert:** aktive Designer-Scope serverseitig auf jeder Dateianforderung geprüft, geschützter Editor-Bootstrap auf diese Prüfung ausgerichtet; 44 Originale unverändert | Designer aktiv erlaubt; deaktivierter Designer/Editor/Viewer verboten; reale Browser-/Rollenprüfung weiterhin offen |
 | F14-006 | P0 | Druckqualität, Studio 10/11/12 | 44 Motive, 1772×1181 px, DPI-Metadatum; frühere Halo-/Freistellfehler an Logos u. a. FP-014/019/023/027 nicht abschließend fachlich freigegeben | **Offen, Asset-Freigabeblocker.** Originale bewusst unverändert | Visueller 300%-Check aller 44, physischer Proof mit ICC, Beschnitt, korrektem FOTOPOLIS-Logo |
 | F14-007 | P0 | CRM-Validierung, Studio 13 | Backend akzeptierte `FP-000`, obwohl kein Motiv mit dieser ID existiert | **Code korrigiert**, Regressionstest ergänzt | `FP-000` → 400, `FP-001` bis `FP-044` bleiben valide |
 | F14-008 | P1 | CMS-Rollen, Studio 13 | Manager durfte CMS-POST grundsätzlich, Preview-Publish/Rollback verweigerte die Rollenprüfung dennoch | **Code korrigiert**, Berechtigung explizit und testbar | Manager: Preview-Publish ja; Viewer: nein; Owner: ja; kein Live-Publish |
@@ -41,7 +41,9 @@ Die Statusbegriffe sind strikt getrennt: **nicht implementiert**, **teilweise im
 - `netlify/functions/fotopolis-studio13-public.mjs`: Motivkennung `FP-000` ausgeschlossen.
 - `netlify/functions/fotopolis-studio13-admin.mjs`: Rollenkonsistenz und getrennte aggregierte CRM-/Analytics-Daten.
 - `concepts/premium-v2/admin/dashboard/command-center-app.js`: Kennzahlen semantisch getrennt.
-- `scripts/studio13-services-qa.mjs` und `scripts/studio13-contract-qa.mjs`: zusätzliche Regressionstests.
+- `netlify/functions/fotopolis-design-private.mjs` und `concepts/premium-v2/admin/designstudio/boot.js`: geschützter Editor für aktive Designer-Scope-Rollen, serverseitig bei jeder privaten Dateianforderung geprüft.
+- `scripts/studio13-services-qa.mjs`, `scripts/studio13-contract-qa.mjs` und `scripts/studio13-private-qa.mjs`: zusätzliche Regressionstests und angepasste ältere Verträge.
+- CRM-Filter: `netlify/functions/fotopolis-studio13-admin.mjs` prüft Queryparameter, `command-center-app.js` bietet Produktauswahl, Status und Wunschtermin von/bis. Neue Testläufe für diese Änderung separat prüfen.
 
 ## 3. Abnahmeprotokoll (laufend, streng evidenzbasiert)
 
@@ -55,7 +57,7 @@ Die Statusbegriffe sind strikt getrennt: **nicht implementiert**, **teilweise im
 | Vollständiger Netlify-Forms→CRM-E2E mit Test-Anfrage | **Nicht durchgeführt** |
 | Echtes Wiederherstellungs-/Buchungs-End-to-End | **Nicht durchgeführt** |
 | Physischer Druck und rechtliche Freigabe | **Nicht durchgeführt** |
-| GitHub Actions & aktuelle Netlify-Deploy-Preview | **Zur Prüfung; konkrete Commit- und Lauf-IDs nachtragen** |
+| GitHub Actions & aktuelle Netlify-Deploy-Preview | **Teilweise bestätigt**: Studio-13-Foundation-QA-Lauf #42988938558 erfolgreich (vor neuester Filterergänzung). Studio-14-Deploy-Preview als Netlify-Deployment `6af42a0bac83364232ed2077` mit `ready` nachgewiesen (früherer Branch-Stand). Neuster Commit und alle Regressions-Workflows bleiben gesondert nachzuprüfen. |
 
 ## 4. Freigabeentscheidung
 
