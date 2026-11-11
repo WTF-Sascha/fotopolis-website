@@ -57,7 +57,7 @@ Die Statusbegriffe sind strikt getrennt: **nicht implementiert**, **teilweise im
 | Vollständiger Netlify-Forms→CRM-E2E mit Test-Anfrage | **Nicht durchgeführt** |
 | Echtes Wiederherstellungs-/Buchungs-End-to-End | **Nicht durchgeführt** |
 | Physischer Druck und rechtliche Freigabe | **Nicht durchgeführt** |
-| GitHub Actions & aktuelle Netlify-Deploy-Preview | **Teilweise bestätigt**: Studio-13-Foundation-QA-Lauf #42988938558 erfolgreich (vor neuester Filterergänzung). Studio-14-Deploy-Preview als Netlify-Deployment `6af42a0bac83364232ed2077` mit `ready` nachgewiesen (früherer Branch-Stand). Neuster Commit und alle Regressions-Workflows bleiben gesondert nachzuprüfen. |
+| GitHub Actions & aktuelle Netlify-Deploy-Preview | **Technische QA bestanden** am Code-Commit `5b1c6af`: Studio-13-Foundation-QA [Lauf 42990380934](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42990380934), einschließlich Browser-/Responsive-QA und Screenshot-Artefakten `studio13-responsive-public-private-54` und `studio13-unified-brand-screenshots-54`. Quality Gates (42990380795) und Reference-V4-Build (42990380729) ebenfalls erfolgreich. Studio-12-Print-Browser-Regression (42990381040) separat prüfen. Netlify-Preview #20 bei Code-Commit `62f9560` als `ready` nachgewiesen; finale Dokumentationscommits erfordern keine Livefreigabe. |
 
 ## 4. Freigabeentscheidung
 
@@ -71,3 +71,10 @@ Kein weiterer großflächiger Markenumbau: erst technische und fachliche Altlast
 - Die öffentliche Formular-Implementierung generiert beim Absenden **vor** dem Netlify-POST eine UUID; dieselbe ID wird bei der nachgelagerten Neon-Kopie als `request_key` verwendet. Die interne CRM-API liefert diese Referenz nur mit gültiger Berechtigung und zeigt sie im Verwaltungsbereich an.
 - **Beweisgrenze:** Die Feldregistrierung und der Build beweisen die technische Datenzuordnung, aber keine Ende-zu-Ende-Zustellung. Für einen erfolgreichen Funktionstest muss eine ausdrücklich freigegebene synthetische Anfrage bei Netlify Forms eingehen und genau einmal mit identischer UUID in Neon erscheinen.
 - Die aktuelle DEV-Bestandsaufnahme hatte zum Auditzeitpunkt 0 CRM-Anfragen; es wurden keine echten Kundenkontakte, E-Mails oder Buchungen ausgelöst.
+
+## 6. Nachweise und Übergabe
+
+- **Studio-14-Codebasis geprüft:** Commit `5b1c6afbbb505f4ae24d7f05b20a8ce1d221d510`, Foundation-QA erfolgreich (Lauf [42990380934](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42990380934)); Screenshots als offizielle Actions-Artefakte abgelegt. Der QA-Lauf ist kein Ersatz für einen menschlichen visuellen Review oder einen echten administrativen Login.
+- **Netlify:** Deploy Preview #20, `https://deploy-preview-20--fotopolis-preview.netlify.app/`, Team-SSO; Netlify Forms registrierte `fp_request_key` nach Preview-Build. Es wurden keine synthetischen Formsendungen ausgelöst.
+- **Reststatus:** Release **NO-GO** wegen positiver Auth-Rollen- und Datenpersistenz-E2Es, maschinellem Netlify-Forms-Reconciliation, physischem Druckproof, Logo-Freigabe sowie Datenschutz-/Betriebs- und Rechtefreigaben.
+- **Code unverändert:** GitHub `main`, freigegebene Goldmark und alle 44 Printoriginale. Die Studio-14-Änderungen befinden sich ausschließlich im separaten PR-#20-Branch.
