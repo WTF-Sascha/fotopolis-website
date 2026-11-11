@@ -1,15 +1,15 @@
 [build]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs && node scripts/studio14-print-admin-qa.mjs"
   publish = "preview-build"
 
 # Studio 11.1 review builds include 44 horizontal 15x10cm 300-DPI photo overlays.
 # No production release or live-domain merge is authorized by this preview.
 [context.deploy-preview]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs && node scripts/studio14-print-admin-qa.mjs"
   publish = "preview-build"
 
 [context.branch-deploy]
-  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs"
+  command = "python3 scripts/build-premium-preview.py && node scripts/visual-release-qa.mjs && python3 scripts/harden-studio13.py && python3 scripts/apply-studio13-unified-brand.py && npm run build:auth && node scripts/studio13-private-qa.mjs && node scripts/studio13-contract-qa.mjs && node scripts/studio14-print-admin-qa.mjs"
   publish = "preview-build"
 
 [[headers]]
