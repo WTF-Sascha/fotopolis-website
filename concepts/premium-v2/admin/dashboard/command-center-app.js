@@ -107,6 +107,7 @@ export function setupCommandCenter({getToken,role}){
      const row=el("article",null,"cc-record");
      row.append(el("strong",r.full_name+" · "+r.product+" · "+(r.event_date||"Termin offen")));
      row.append(el("small",date(r.created_at)+" · "+r.source+" · "+(r.template_id||"ohne Vorlage")));
+     if(r.request_key)row.append(el("small","Netlify-Formularreferenz: "+r.request_key));
      row.append(el("p","Kontakt: "+r.email+(r.phone?" · "+r.phone:"")));
      row.append(el("p","Ort: "+(r.event_location||"offen")+" · Wunsch: "+(r.notes||"keine Angaben")));
      const selected=select(row,"Bearbeitungsstatus",Object.entries(statuses),r.status);
