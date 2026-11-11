@@ -3,7 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import publicHandler,{validateMetric,validateEnquiry} from "../netlify/functions/fotopolis-studio13-public.mjs";
-import adminHandler,{may,mayPublishCms} from "../netlify/functions/fotopolis-studio13-admin.mjs";
+import adminHandler,{may,mayPublishCms,validFilterDate} from "../netlify/functions/fotopolis-studio13-admin.mjs";
 import {mayAccessDesign} from "../netlify/functions/fotopolis-design-private.mjs";
 import {samePreviewOrigin} from "../netlify/functions/fotopolis-admin-session.mjs";
 const host="https://deploy-preview-19--fotopolis-preview.netlify.app";
@@ -51,6 +51,16 @@ test("private print assets allow only base managers/owners or active designer sc
  assert.equal(mayAccessDesign("viewer","editor",true),false);
  assert.equal(mayAccessDesign("viewer","eventmanager",true),false);
  assert.equal(mayAccessDesign("viewer",null,false),false);
+});
+test("CRM filter date parsing is strict and calendar-valid",()=>{
+ assert.equal(validFilterDate(""),true);
+ assert.equal(validFilterDate("2027-01-31"),true);
+ assert.equal(validFilterDate("2027-02-29"),false);
+ assert.equal(validFilterDate("2028-02-29"),true);
+ assert.equal(validFilterDate("2027-13-01"),false);
+ assert.equal(validFilterDate("2027-00-10"),false);
+ assert.equal(validFilterDate("2027-7-1"),false);
+ assert.equal(validFilterDate("2027-01-31T00:00"),false);
 });
 test("cross-preview mutations are rejected without leaking data",()=>{
  const a=new Request(host+"/api/fotopolis/studio13/metric",{method:"POST",headers:{Origin:host}});
