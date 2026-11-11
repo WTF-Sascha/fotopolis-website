@@ -1,4 +1,4 @@
-// FOTOPOLIS presentation gate: /admin/ must lead to secure sign-in only.
+// FOTOPOLIS presentation gate: /admin/ is a public-facing navigation shell only; all real functionality requires Neon Auth.
 import {chromium} from "playwright";
 import {readFileSync,mkdirSync} from "node:fs";
 import path from "node:path";
@@ -6,7 +6,7 @@ const base=process.env.SITE_BASE_URL||"http://127.0.0.1:8766/";
 const dest="concepts/premium-v2/qa-screenshots/admin-studio";
 mkdirSync(dest,{recursive:true});
 const html=readFileSync("preview-build/admin/index.html","utf8");
-if(!html.includes('url=/admin/login/'))throw Error("Legacy admin route must direct to real login");
+if(!html.includes('href="/admin/login/"')||!html.includes('href="/admin/dashboard/"'))throw Error("New secure administration entry is missing");
 if(/data-block-dialog|STUDIO REVIEW|DEMO-SPERRZEIT/i.test(html))throw Error("Old admin demo unexpectedly published");
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 let checks=0;
@@ -20,6 +20,11 @@ try{
    await page.route("**/*.neonauth.*",r=>r.fulfill({status:200,contentType:"application/json",
      headers:{"access-control-allow-origin":"*"},body:'{"session":null,"user":null}'}));
    await page.goto(new URL("admin/",base).href,{waitUntil:"domcontentloaded"});
+   if(new URL(page.url()).pathname!=="/admin/")throw Error("Admin entrance must not redirect silently at "+width);
+   if(await page.locator(".fp14-tiles article").count()!==3)throw Error("Three management areas are not discoverable at "+width);checks++;
+   if(await page.locator('a[href="/admin/designstudio/"]').count()!==1)throw Error("Protected design studio link missing "+width);checks++;
+   if([320,1440].includes(width))await page.screenshot({path:path.join(dest,"management-portal-"+width+".png"),fullPage:true});
+   await page.locator('a.fp14-cta[href="/admin/login/"]').click();
    await page.waitForURL("**/admin/login/",{timeout:10000});
    if(!(await page.title()).includes("FOTOPOLIS"))throw Error("Missing branded login title at "+width);checks++;
    if(await page.locator("form#auth-form").count()!==1)throw Error("Protected login form missing "+width);checks++;
@@ -31,5 +36,5 @@ try{
    if([320,1440].includes(width))await page.screenshot({path:path.join(dest,"presentation-login-"+width+".png"),fullPage:true});
    await context.close();
  }
- console.log("PRESENTATION ADMIN ROUTING QA PASS – "+checks+" checks, secure login only, zero writes.");
+ console.log("STUDIO 14 ADMIN PORTAL QA PASS – "+checks+" checks, discoverable team entrance, protected login, zero writes.");
 }finally{await browser.close()}
