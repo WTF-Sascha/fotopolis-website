@@ -88,6 +88,11 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
      info.append(el("strong",(resource?.display_name||"Unbekanntes Gerät")+" · "+(booking.allocation_state==="confirmed"?"Bestätigte interne Reservierung":"Vormerkung")),
        el("p",localBerlinTime(booking.event_start_at).replace("T"," ")+" bis "+localBerlinTime(booking.event_end_at).replace("T"," ")+" Uhr","reservation-date"),
        el("small","Belegt inkl. Logistikpuffer: "+localBerlinTime(booking.occupied_from).replace("T"," ")+" bis "+localBerlinTime(booking.occupied_until).replace("T"," ")+" Uhr"));
+     if(booking.inquiry_id){
+       const reference=el("a","Zugeordnete Anfrage "+booking.inquiry_id,"reservation-date");
+       reference.href="#eventanfragen";
+       info.append(reference);
+     }
      item.append(info);
      if(allowed){
        const actions=el("div",undefined,"reservation-actions");
@@ -142,7 +147,7 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
    form.scrollIntoView({block:"nearest",behavior:"smooth"});device.focus();
  }
  function openForInquiry(details){
-   if(!allowed||!details||!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(details.id||""))return;
+   if(!allowed||!details||!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(details.id||""))return;
    openForDate(details.eventDate);
    linkedInquiryId=details.id;
    linkNote.textContent="Diese Vormerkung wird mit der bestehenden Anfrage verknüpft (ID: "+linkedInquiryId+"). Erst ein berechtigter Mitarbeiter kann eine Reservierung speichern oder bestätigen.";
