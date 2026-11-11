@@ -33,7 +33,7 @@ Befund bei letzter read-only Abfrage: Netlify Forms `0` Submissions, Neon DEV `0
 
 **Anmeldung:** In der Entwicklungs-Preview muss zuerst die Netlify-Team-SSO-Schranke passiert werden. Danach `Neon Auth`: bestehende Team-E-Mail-Adresse und persönliches Passwort; beim ersten Mal per `Passwort festlegen` einen Code an das **bereits vorhandene** berechtigte Postfach senden lassen. Der Server prüft zusätzlich einen **aktiven** Eintrag in `fotopolis.admin_members`. Ein beliebiges Neon-Auth-Konto gewährt noch keinen Zugang. Bei der Bestandsaufnahme war genau **eine aktive Owner-Rolle** registriert; aus der Anzahl geht nicht hervor, ob der Nutzer selbst die Zugangsdaten hat.
 
-**Installierbare Staff-PWA:** Die Staff-Oberfläche hat einen eigenständigen Web-App-Metadatenpfad `/admin/manifest.webmanifest` mit `id`, `start_url` und `scope` `/admin/`, offiziellen Goldmark-Icons und Direktaktionen. Die öffentliche Marken-PWA bleibt separat `/`. Mitarbeitende können die Admin-Web-App über die Installationsfunktion ihres Browsers auf Mobilgerät/Desktop hinzufügen, sobald die Test-URL und SSO-Zugriff verfügbar sind. Netzwerkzugriff ist für die geschützten Funktionen erforderlich. Der öffentliche Service Worker speichert **keine** `/admin/`-URLs oder `/api/`-Antworten.
+**Studio 15 – eine gemeinsame installierbare PWA:** Öffentliche Kunden- und interne Mitarbeiterseiten referenzieren dasselbe `/manifest.webmanifest` mit stabiler `id`, `start_url` und `scope` `/`. Die frühere separate Staff-PWA wird im Build **nicht mehr erzeugt**. Der Root-Service-Worker bypassed **alle** `/admin/`- und `/api/`-Zugriffe; die Teamdaten bleiben network-only, durch SSO, Neon Auth und serverseitige Rollenprüfung geschützt. Die App bietet einen Shortcut zur Teamverwaltung. **Bereits installierte Staff-PWAs mit alter `/admin/`-App-ID müssen nach geprüftem Neuinstall der gemeinsamen App vom jeweiligen Endgerät manuell entfernt werden; eine automatische Deinstallation ist nicht möglich.**
 
 ## 3. Verwaltungsfunktionen und Grenzen
 
@@ -43,7 +43,7 @@ Befund bei letzter read-only Abfrage: Netlify Forms `0` Submissions, Neon DEV `0
 | Interner Arbeitsbereich mit mobilem Dashboard | Ja | Responsive Browser-QA/Team-SSO-Praxis prüfen |
 | Eventanfragen/Status/Filter | Ja, Neon-Verwaltungskopien | Verifizierte Form→Event→Neon-E2E und Recovery-Reconciliation fehlen |
 | Geräteverwaltung | Ja, `fotopolis.resources` | Drei bekannte Ressourcen waren in DEV deaktiviert; Aktivierung nur nach realem Bestandsabgleich |
-| Kalender, Sperrzeiten, Reservierungen | Ja, `fotopolis.allocations` | Keine gespeicherten DEV-Reservierungen; reale Geräte- und Konflikttests fehlen |
+| Kalender, Sperrzeiten, Reservierungen | Ja, `fotopolis.allocations`; Studio-15-Bezug `inquiry_id` auf `inquiries` | DEV-Migration erfolgreich, Geräte weiter deaktiviert; echter Anfrage→Vormerkung→Konflikt-Test fehlt |
 | Drucklayouts | 32 Classics + 12 Signatures | Signatures ohne eingebrannte Katalogtitel; Classics benötigen Einzelprüfung |
 | Website-Texte, Medien, Rollen, Analytics | Vorbereitete Module | Rollen- und Datenschutz-/Berechtigungsabnahme offen |
 | Automatische E-Mail-/WhatsApp-Zusammenführung | Nein | Kein Zugriff auf bisherige Betreiberkanäle; gesonderte Einwilligung/Integration erforderlich |
