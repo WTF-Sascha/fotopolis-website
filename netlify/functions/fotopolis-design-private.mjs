@@ -2,6 +2,7 @@
 import {readFile} from "node:fs/promises";
 import {join} from "node:path";
 import {authorizeAdmin,response} from "./fotopolis-admin-session.mjs";
+import {neon} from "@neondatabase/serverless";
 
 const root=join(process.cwd(),"private-design-assets");
 const headers={
@@ -10,10 +11,23 @@ const headers={
  "Content-Security-Policy":"default-src 'none'; frame-ancestors 'none'",
  "Referrer-Policy":"no-referrer"
 };
+export const mayAccessDesign=(baseRole,scopedRole,active)=>(
+ ["owner","manager"].includes(baseRole)||(baseRole==="viewer"&&active===true&&scopedRole==="designer")
+);
 export default async function handler(request,context){
  const auth=await authorizeAdmin(request,context);
  if(auth.denied)return auth.denied;
- if(!["owner","manager"].includes(auth.role))return response({error:"Keine Designberechtigung"},403);
+ if(!mayAccessDesign(auth.role,null,false)){
+  const key=Netlify.env.get("FOTOPOLIS_STUDIO13_DEV_DB_URL");
+  if(!key)return response({error:"Designberechtigung nicht prüfbar"},503);
+  let scoped;
+  try{
+   scoped=await neon(key)`SELECT role,active FROM fotopolis_studio13.staff_roles
+     WHERE user_id=${auth.userId}::uuid LIMIT 1`;
+  }catch{return response({error:"Designberechtigung momentan nicht prüfbar"},503);}
+  if(!mayAccessDesign(auth.role,scoped[0]?.role,scoped[0]?.active===true))
+   return response({error:"Keine Designberechtigung"},403);
+ }
  const path=new URL(request.url).pathname;
  try{
   if(path==="/api/fotopolis/admin/design/catalog"){
