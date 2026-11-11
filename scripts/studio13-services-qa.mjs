@@ -4,6 +4,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import publicHandler,{validateMetric,validateEnquiry} from "../netlify/functions/fotopolis-studio13-public.mjs";
 import adminHandler,{may,mayPublishCms} from "../netlify/functions/fotopolis-studio13-admin.mjs";
+import {mayAccessDesign} from "../netlify/functions/fotopolis-design-private.mjs";
 import {samePreviewOrigin} from "../netlify/functions/fotopolis-admin-session.mjs";
 const host="https://deploy-preview-19--fotopolis-preview.netlify.app";
 const preview={deploy:{context:"deploy-preview",published:false}};
@@ -41,6 +42,15 @@ test("stable capability matrix limits sensitive operations",()=>{
  assert.equal(mayPublishCms("manager"),true);
  assert.equal(mayPublishCms("editor"),true);
  assert.equal(mayPublishCms("viewer"),false);
+});
+test("private print assets allow only base managers/owners or active designer scope",()=>{
+ assert.equal(mayAccessDesign("owner",null,false),true);
+ assert.equal(mayAccessDesign("manager",null,false),true);
+ assert.equal(mayAccessDesign("viewer","designer",true),true);
+ assert.equal(mayAccessDesign("viewer","designer",false),false);
+ assert.equal(mayAccessDesign("viewer","editor",true),false);
+ assert.equal(mayAccessDesign("viewer","eventmanager",true),false);
+ assert.equal(mayAccessDesign("viewer",null,false),false);
 });
 test("cross-preview mutations are rejected without leaking data",()=>{
  const a=new Request(host+"/api/fotopolis/studio13/metric",{method:"POST",headers:{Origin:host}});
