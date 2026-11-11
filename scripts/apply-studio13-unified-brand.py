@@ -58,18 +58,22 @@ manifest["icons"]=[
  {"src":"/icons/brand-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
  {"src":"/icons/brand-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
 ]
+# Studio 15: exactly ONE installable PWA identity for the public and staff
+# routes, without changing the stable root ID of existing customer installs.
+manifest["name"]="FOTOPOLIS · Fotoerlebnisse und Studio"
+manifest["short_name"]="FOTOPOLIS"
+manifest["description"]="Fotoerlebnisse entdecken und als berechtigtes Teammitglied Veranstaltungen verwalten."
+manifest["shortcuts"]=[
+  {"name":"Teamverwaltung","short_name":"Studio","url":"/admin/"},
+  {"name":"Anfragen","short_name":"Anfragen","url":"/admin/dashboard/#eventanfragen"},
+  {"name":"Termine","short_name":"Termine","url":"/admin/dashboard/#calendar"},
+  {"name":"Design Studio","short_name":"Designs","url":"/admin/designstudio/"}
+]
 manifest_path.write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-
-# A separate installable staff app; public PWA retains its own manifest and
-# navigation scope. Sensitive HTML, JSON, photos and API replies are NEVER
-# added to a service-worker cache (the existing worker bypasses /admin/).
-private_manifest_src=ROOT/"concepts/premium-v2/admin/manifest.webmanifest"
-private_manifest=json.loads(private_manifest_src.read_text(encoding="utf-8"))
-assert private_manifest["id"]=="/admin/" and private_manifest["start_url"]=="/admin/"
-assert private_manifest["scope"]=="/admin/" and private_manifest["display"]=="standalone"
-assert all((OUT/icon["src"].lstrip("/")).exists() for icon in private_manifest["icons"])
-(OUT/"admin/manifest.webmanifest").write_text(
-    json.dumps(private_manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+# No /admin/manifest.webmanifest is emitted: a second manifest would create
+# a competing installed app ID. Existing staff-only installs must be manually
+# retired after the canonical app has been installed and verified.
+assert not (OUT/"admin/manifest.webmanifest").exists()
 
 
 # Recolor ONLY admin CSS hex colors that are visibly blue/cyan, preserving their
@@ -130,14 +134,15 @@ for path in html_files:
         html=html.replace("</head>",'<meta name="theme-color" content="#211a15"></head>',1)
     html=html.replace("</head>",icon_markup+'<link rel="stylesheet" href="/studio13-unified-brand.css"></head>',1)
     if relative.parts[0]=="admin":
-        # This meta and app identity are present on portal, sign-in, dashboard
-        # and private design workspace. Authentication stays server enforced.
+        # One app identity on admin AND customer pages. The worker registers
+        # at root but bypasses all /admin/ and /api/ traffic (network only).
         assert 'href="/manifest.webmanifest"' not in html,relative
         assert 'href="/admin/manifest.webmanifest"' not in html,relative
         html=html.replace("</head>",
-          '<link rel="manifest" href="/admin/manifest.webmanifest">'
-          '<meta name="application-name" content="FOTOPOLIS Studio">'
-          '<meta name="apple-mobile-web-app-title" content="FOTOPOLIS Studio"></head>',1)
+          '<link rel="manifest" href="/manifest.webmanifest">'
+          '<meta name="application-name" content="FOTOPOLIS">'
+          '<meta name="apple-mobile-web-app-title" content="FOTOPOLIS">'
+          '<script defer src="/pwa-update.js"></script></head>',1)
         assert "studio13-unified-brand.css" in html
     path.write_text(html,encoding="utf-8")
     changed.append(str(relative))
