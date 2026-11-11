@@ -54,5 +54,33 @@ const migration=read("database/neon/007_studio15_inquiry_booking_link_dev.sql");
 assert.ok(migration.includes("REFERENCES fotopolis_studio13.inquiries(id) ON DELETE RESTRICT"));
 assert.ok(migration.includes("GRANT INSERT (inquiry_id)"));
 assert.ok(migration.includes("GRANT SELECT (inquiry_id)"));
+// Studio 16: a real dropdown controls exactly one visible module.
+const managementHtml=read(root+"admin/dashboard/index.html");
+const managementSource=read("concepts/premium-v2/admin/dashboard/dashboard.js");
+const managementStyles=read(root+"admin/dashboard/command-center.css");
+assert.ok(managementHtml.includes('id="fp16-area-select"'),"Missing workspace dropdown");
+for(const id of ["overview","calendar","inventory","planning","bookings","activity",
+  "analytics","eventanfragen","designstudio","designs","cms","medien","system","account"]){
+  assert.ok(managementHtml.includes('<option value="'+id+'">'),
+    "Missing selectable workspace "+id);
+  assert.ok(managementSource.includes(id+':["#'+id+'"')||
+    (id==="overview"&&managementSource.includes('overview:["#overview"'))||
+    (id==="calendar"&&managementSource.includes('calendar:["#calendar"')),
+    "Selected area has no visibility route "+id);
+}
+assert.ok(managementSource.includes('history.pushState(null,"","#"+area)'),
+ "Dropdown needs shareable deep links");
+assert.ok(managementSource.includes('window.addEventListener("popstate"'),
+ "Browser history must restore the selected module");
+assert.ok(managementSource.includes('window.addEventListener("hashchange"'),
+ "External admin links must open the selected module");
+assert.ok(managementStyles.includes("#dashboard-app .fp16-hidden{display:none!important}"),
+ "Inactive modules must not contribute to scroll height");
+assert.ok(managementStyles.includes("#dashboard-app .bottom-grid") &&
+  managementStyles.includes("grid-template-columns:minmax(0,1fr)!important"),
+  "The active inventory or calendar detail area must use full width");
+assert.ok(editor.includes("fotopolis:show-area")&&managementSource.includes("fotopolis:show-area"),
+ "CRM handoff must reveal the reservations module synchronously");
+
 console.log("Studio 15 contract PASS: single app ID, uncached private routes, linked CRM-to-hold flow and database constraints.");
 console.log("REAL E2E STILL OPEN: authenticated owner, form intake, conflict race, physical prints, migration rollback.");
