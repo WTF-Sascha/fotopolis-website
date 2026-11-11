@@ -236,22 +236,20 @@ for slug in ("fotobox", "fotospiegel", "fotowohnwagen"):
 
 
 # The legacy browser-only admin prototype is retired from the deploy.
-# /admin/ now leads exclusively to the protected Neon Auth sign-in screen.
+# /admin/ is a visible branded portal; sensitive routes remain JWT/SSO gated.
 admin_source = source / "admin"
 admin_target = target / "admin"
 admin_target.mkdir(exist_ok=True)
 shutil.copy2(admin_source / "admin.css", admin_target / "admin.css")
-admin_html = """<!doctype html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive">
-<meta name="referrer" content="no-referrer">
-<title>FOTOPOLIS · Verwaltung</title>
-<meta http-equiv="refresh" content="0; url=/admin/login/"></head>
-<body><main><h1>FOTOPOLIS Verwaltung</h1>
-<p><a href="/admin/login/">Zur geschützten Anmeldung</a></p>
-</main></body></html>"""
-(admin_target / "index.html").write_text(admin_html, encoding="utf-8")
-assert 'url=/admin/login/' in admin_html
+# Source-controlled Studio-14 portal, intentionally not the old automatic redirect.
+# This file exposes navigation only; protected modules still require SSO,
+# Neon Auth, JWT signature verification and the member role check.
+shutil.copy2(admin_source / "index.html",admin_target / "index.html")
+admin_html=(admin_target / "index.html").read_text(encoding="utf-8")
+assert 'href="/admin/login/"' in admin_html
+assert 'href="/admin/dashboard/"' in admin_html
+assert 'href="/admin/designstudio/"' in admin_html
+assert 'http-equiv="refresh"' not in admin_html
 assert not (admin_target / "admin.js").exists(), "Legacy demo must never ship"
 assert not any((target / x).exists() for x in ("database", "database_url", ".env"))
 
