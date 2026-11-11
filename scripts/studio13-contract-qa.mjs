@@ -24,6 +24,20 @@ for(const jsPath of ["preview-build/contact-flow.js","preview-build/product-enqu
   assert.match(js,/if\(!studio14MirrorOk\).*Netlify Forms bleibt maßgeblich/,
     "Never hide failed internal CRM replication from the test UI");
 }
+for(const formPath of ["kontakt/index.html","fotobox/index.html",
+  "fotospiegel/index.html","fotowohnwagen/index.html"]){
+ const html=read("preview-build/"+formPath);
+ assert.match(html,/name="fp_request_key" value=""/,
+   "Shared request key must be declared in the final Netlify Forms build");
+}
+for(const jsPath of ["preview-build/contact-flow.js","preview-build/product-enquiry-v6.js"]){
+ const js=read(jsPath);
+ assert.ok(js.includes('form.elements.namedItem("fp_request_key")'),"Missing source key injection");
+ assert.ok(js.includes("crypto.randomUUID()"),"Shared source key not generated before Netlify Forms");
+}
+const productJs=read("preview-build/product-enquiry-v6.js");
+assert.ok(productJs.includes('payload.append("fp_request_key",studio14KeyField.value)'),
+  "Product must submit the same reference key as the CRM mirror");
 const mirror=read("preview-build/studio13-enquiry-mirror.js");
 assert.ok(mirror.includes("keys=new WeakMap()"),"Mirror retries must reuse per-form UUID");
 assert.ok(mirror.includes("attempt<2"),"Bounded retry missing");
