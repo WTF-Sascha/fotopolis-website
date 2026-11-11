@@ -213,14 +213,16 @@ def make(item):
               outline=(*gold,200),width=2)
     paper.paste(badge,(logo_x,logo_y),mask)
     d=ImageDraw.Draw(paper)
-    d.line((95,H-107,1410,H-107),fill=(*gold,170),width=2)
-    d.text((97,H-85),"DEIN MOMENT · DEIN DESIGN",
-           font=font(25,False),fill=(*text,255))
-    d.text((800,H-82),"TT.MM.JJJJ",
-           font=font(22,False),fill=(*text,220))
+    # A clean photo print must not contain stock template labels, demo dates
+    # or editorial placeholders. The empty lower-left strip is reserved for
+    # event-specific text/branding, added only by an explicitly approved editor.
+    d.line((95,H-107,1410,H-107),fill=(*gold,120),width=2)
 
     path=PRINT / f"fp-{n:03d}.png"
     item["printIncludesTemplateTitle"]=False
+    item["printContainsDemoDate"]=False
+    item["printUsesCatalogueName"]=False
+    item["optionalPersonalizationRegion"]=[95,H-101,750,H-32]
     paper.save(path,"PNG",dpi=(DPI,DPI),optimize=True)
     physical=Image.open(path)
     physical_dpi=physical.info.get("dpi",(0,0))
