@@ -153,19 +153,20 @@ def graphic(draw,kind,n,bg,accent):
         draw.arc((W-350,14,W-90,228),200,330,fill=(*accent,75),width=2)
 
 def header(draw,item,text,gold):
-    title=item["name"].upper()
-    max_width=1345
-    size=69
-    while size>38:
-        ft=font(size,True)
-        if draw.textbbox((0,0),title,font=ft)[2] <= max_width: break
-        size-=3
-    draw.text((99,97),title,font=font(size,True),fill=(*text,255))
-    category={"hochzeit":"WEDDING EDITION","firma":"CORPORATE EDITION",
-              "weihnachten":"WINTER EDITION","geburtstag":"CELEBRATION EDITION",
-              "elegant":"SIGNATURE COLLECTION"}.get(item["category"],"SIGNATURE")
-    draw.text((103,194),category,font=font(24,False),fill=(*gold,255))
-    draw.line((W-425,166,W-94,166),fill=(*gold,185),width=2)
+    """Print-only editorial ornament. The design's catalogue NAME is metadata.
+
+    Never typeset a template name, category label or collection label on an
+    event photo print. The customer receives an unbranded-title photo frame;
+    the FOTOPOLIS brand seal is added separately at the lower right.
+    """
+    # Preserve the intentional, refined top margin without printing
+    # "Ivory Editorial", "Wedding Edition" or similar internal catalogue IDs.
+    y=166
+    draw.line((99,y,403,y),fill=(*gold,155),width=2)
+    draw.line((W-403,y,W-99,y),fill=(*gold,155),width=2)
+    for x in (89,W-89):
+        draw.ellipse((x-3,y-3,x+3,y+3),fill=(*gold,170))
+
 
 classic_records=[]
 classic_pairs=[]
@@ -219,6 +220,7 @@ def make(item):
            font=font(22,False),fill=(*text,220))
 
     path=PRINT / f"fp-{n:03d}.png"
+    item["printIncludesTemplateTitle"]=False
     paper.save(path,"PNG",dpi=(DPI,DPI),optimize=True)
     physical=Image.open(path)
     physical_dpi=physical.info.get("dpi",(0,0))
