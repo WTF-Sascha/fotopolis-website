@@ -148,6 +148,7 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
  }
  function openForInquiry(details){
    if(!allowed||!details||!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(details.id||""))return;
+   window.dispatchEvent(new CustomEvent("fotopolis:show-area",{detail:{area:"bookings"}}));
    openForDate(details.eventDate);
    linkedInquiryId=details.id;
    linkNote.textContent="Diese Vormerkung wird mit der bestehenden Anfrage verknüpft (ID: "+linkedInquiryId+"). Erst ein berechtigter Mitarbeiter kann eine Reservierung speichern oder bestätigen.";
@@ -155,7 +156,6 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
    const match={Fotobox:"fotobox",Fotospiegel:"fotospiegel",Fotowohnwagen:"fotowohnwagen"}[details.product];
    const possible=getResources().filter(r=>r.enabled&&r.product_type===match);
    if(possible.length===1)device.value=possible[0].id;
-   location.hash="bookings";
    form.scrollIntoView({block:"start",behavior:"smooth"});
  }
  window.addEventListener("fotopolis:open-booking",event=>openForInquiry(event.detail));
