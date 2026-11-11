@@ -140,7 +140,12 @@ display:grid;gap:8px;min-width:0;overflow-wrap:anywhere}
  #dashboard-app .fp16-area-tools button{min-height:43px;padding-inline:13px;font-size:12px}
  #dashboard-app #fp16-area-select{min-height:56px;font-size:16px}
 }
+@media(max-width:780px){
+ #dashboard-app .topbar .crumbs{min-width:0;flex-wrap:wrap;gap:4px 7px;line-height:1.3}
+ #dashboard-app .topbar .crumbs .fp16-crumb-context,
+ #dashboard-app .topbar .crumbs .fp16-crumb-context + .fp16-crumb-separator{display:none}
+}
 @media(max-width:380px){
- #dashboard-app .topbar .crumbs{font-size:9px;gap:6px;letter-spacing:0}
- #dashboard-app .topbar .crumbs span:nth-child(2){display:none}
+ #dashboard-app .topbar .crumbs{font-size:10px;letter-spacing:0}
+ #dashboard-app .topbar .crumbs strong{font-size:10px}
 }
