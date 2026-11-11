@@ -62,6 +62,40 @@
    <a href="#overview">Dashboard</a><a href="#calendar">Terminplaner</a><a href="#inventory">Gerätebestand</a><a href="#planning">Sperrzeitenplanung</a><a href="#bookings">Vormerkungen</a><a href="#activity">Protokoll</a><a href="#analytics">Analytics</a><a href="#eventanfragen">Eventanfragen</a><a href="#designstudio">Design Studio</a><a href="#designs">Vorlagen</a><a href="#cms">Website &amp; Inhalte</a><a href="#medien">Medien</a><a href="#system">System</a><a href="#account">Mein Konto</a>
    <button type="button" data-signout>Abmelden</button>
   </nav>
+  <div class="fp16-area-switch" role="navigation" aria-label="Arbeitsbereich auswählen">
+    <div class="fp16-area-heading">
+      <span class="fp16-kicker">FOTOPOLIS STUDIO · INTERNE VERWALTUNG</span>
+      <strong id="fp16-active-title" aria-live="polite">Dashboard</strong>
+      <p>Wähle deinen Arbeitsbereich. Nur dieser Bereich wird angezeigt.</p>
+    </div>
+    <label class="fp16-select-wrap" for="fp16-area-select">
+      <span>Bereich wechseln</span>
+      <select id="fp16-area-select" aria-label="Verwaltungsbereich wählen" autocomplete="off">
+        <optgroup label="Übersicht und Anfragen">
+          <option value="overview">Dashboard / Übersicht</option>
+          <option value="eventanfragen">Eventanfragen</option>
+          <option value="analytics">Analytics &amp; Reichweite</option>
+        </optgroup>
+        <optgroup label="Termine und Mietgeräte">
+          <option value="calendar">Terminplaner</option>
+          <option value="bookings">Vormerkungen &amp; Reservierungen</option>
+          <option value="inventory">Geräteverwaltung</option>
+          <option value="planning">Sperrzeiten &amp; Wartung</option>
+          <option value="activity">Änderungsprotokoll</option>
+        </optgroup>
+        <optgroup label="Design und Website">
+          <option value="designstudio">Design Studio / Fotoeditor</option>
+          <option value="designs">Druckvorlagen</option>
+          <option value="cms">Website &amp; Inhalte</option>
+          <option value="medien">Medienverwaltung</option>
+        </optgroup>
+        <optgroup label="Kontoverwaltung">
+          <option value="system">System &amp; Sicherheit</option>
+          <option value="account">Mein Konto</option>
+        </optgroup>
+      </select>
+    </label>
+  </div>
   <main id="main">
    <section class="intro" id="overview">
     <div>
