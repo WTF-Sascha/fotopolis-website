@@ -22,7 +22,8 @@ try{
    await page.goto(new URL("admin/",base).href,{waitUntil:"domcontentloaded"});
    if(new URL(page.url()).pathname!=="/admin/")throw Error("Admin entrance must not redirect silently at "+width);
    if(await page.locator(".fp14-tiles article").count()!==3)throw Error("Three management areas are not discoverable at "+width);checks++;
-   if(await page.locator('a[href="/admin/designstudio/"]').count()!==1)throw Error("Protected design studio link missing "+width);checks++;
+   if(await page.locator('.fp14-actions a[href="/admin/designstudio/"]').count()!==1)throw Error("Quick access to private editor missing "+width);checks++;
+   if(await page.locator('.fp14-tile a[href="/admin/designstudio/"]').count()!==1)throw Error("Private editor tile missing "+width);checks++;
    if([320,1440].includes(width))await page.screenshot({path:path.join(dest,"management-portal-"+width+".png"),fullPage:true});
    await page.locator('a.fp14-cta[href="/admin/login/"]').click();
    await page.waitForURL("**/admin/login/",{timeout:10000});
