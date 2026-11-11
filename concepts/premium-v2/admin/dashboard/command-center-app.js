@@ -110,6 +110,14 @@ export function setupCommandCenter({getToken,role}){
      if(r.request_key)row.append(el("small","Netlify-Formularreferenz: "+r.request_key));
      row.append(el("p","Kontakt: "+r.email+(r.phone?" · "+r.phone:"")));
      row.append(el("p","Ort: "+(r.event_location||"offen")+" · Wunsch: "+(r.notes||"keine Angaben")));
+     if(["owner","manager"].includes(role)){
+      button(row,"Vormerkung aus Anfrage planen",()=>{
+       window.dispatchEvent(new CustomEvent("fotopolis:open-booking",{
+        detail:{id:r.id,eventDate:r.event_date,product:r.product}
+       }));
+       setStatus(p,"Anfrage zur Terminplanung übergeben. Gerät, Zeitraum und Logistikpuffer müssen vor dem Speichern geprüft werden.");
+      });
+     }
      const selected=select(row,"Bearbeitungsstatus",Object.entries(statuses),r.status);
      button(row,"Status speichern",async()=>{
       await request("inquiries/"+r.id,{method:"PATCH",body:{status:selected.value}});
