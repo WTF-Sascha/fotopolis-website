@@ -100,6 +100,16 @@ worker.write_text(sw,encoding="utf-8")
 assert len(list((PRIVATE/"print").glob("*.png")))==44
 assert not any((OUT/p).exists() for p in ["assets/designvorlagen/print","designstudio/index.html","qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip"])
 
+# Studio 14 correlation: the generated static Netlify Forms declaration and the
+# product forms carry the SAME request UUID field submitted to Netlify and Neon.
+# This is safe only in the isolated deploy-preview output, never in source originals.
+for formpage in [OUT/"kontakt/index.html",*(OUT/slug/"index.html" for slug in ("fotobox","fotospiegel","fotowohnwagen"))]:
+    html=formpage.read_text(encoding="utf-8")
+    marker='<input type="hidden" name="form-name" value="fotopolis-studio9-anfrage">'
+    assert html.count(marker)==1, formpage
+    html=html.replace(marker,marker+'<input type="hidden" name="fp_request_key" value="">',1)
+    formpage.write_text(html,encoding="utf-8")
+
 # Studio 13 preview-only customer operations and publishing adapters.
 for asset in ("studio13-metrics.js","studio13-enquiry-mirror.js","studio13-public-content.js"):
     shutil.copy2(ROOT/"concepts/premium-v2"/asset,OUT/asset)
@@ -133,6 +143,23 @@ for file,formtype in ((OUT/"contact-flow.js","website"),(OUT/"product-enquiry-v6
     sync_line=('const studio14MirrorOk = typeof window.fp13MirrorEnquiry === "function" && '
                'await window.fp13MirrorEnquiry(form,"'+formtype+'");')
     js=js.replace(marker,marker+'\n      '+sync_line,1)
+    # Populate form key BEFORE the Netlify payload is assembled; exactly the same key
+    # is available when the follow-up mirror reads the source form's FormData.
+    key_init=('const studio14KeyField=form.elements.namedItem("fp_request_key");'
+              'if(!studio14KeyField)throw Error("Fehlende Formularreferenz");'
+              'if(!studio14KeyField.value)studio14KeyField.value=crypto.randomUUID();')
+    if formtype=="website":
+        payload_marker='const data=new URLSearchParams(new FormData(form));'
+        assert js.count(payload_marker)==1
+        js=js.replace(payload_marker,key_init+'\n      '+payload_marker,1)
+    else:
+        payload_marker='const payload=new URLSearchParams();'
+        assert js.count(payload_marker)==1
+        js=js.replace(payload_marker,key_init+'\n    '+payload_marker,1)
+        # Product payload is assembled manually and must include the registered key.
+        append_marker='for(const [key,value] of Object.entries(fields))payload.append(key,value);'
+        assert js.count(append_marker)==1
+        js=js.replace(append_marker,append_marker+'\n    payload.append("fp_request_key",studio14KeyField.value);',1)
     success_text=(
         'status.textContent="Deine Anfrage wurde übermittelt. Eine Buchung ist dadurch nicht erfolgt.";'
         if formtype=="website" else
