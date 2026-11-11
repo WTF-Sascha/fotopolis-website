@@ -64,3 +64,83 @@ display:grid;gap:8px;min-width:0;overflow-wrap:anywhere}
 .cc-media-thumb{display:block;max-width:100%;max-height:260px;object-fit:contain;border-radius:8px;border:1px solid #ddd}
 @media(max-width:560px){.cc-controls{flex-direction:column;align-items:stretch}
 .cc-controls .cc-control-button{width:100%}.cc-field textarea{min-height:112px}}
+
+
+/* Studio 16 – a single selected operational area instead of a long dashboard.
+   Presentation-only navigation: session and RBAC remain server-enforced. */
+#dashboard-app .fp16-hidden{display:none!important}
+#dashboard-app .fp16-area-switch{
+  display:grid;
+  grid-template-columns:minmax(170px,1fr) minmax(245px,420px) auto;
+  align-items:center;gap:clamp(14px,2.3vw,30px);
+  padding:19px clamp(19px,4vw,64px);
+  background:#f1e9dc;border-bottom:1px solid #dac9b2;color:#392b21;
+}
+#dashboard-app .fp16-area-heading{min-width:0}
+#dashboard-app .fp16-kicker{
+  display:block;font:750 10px/1.35 var(--fp-brand-body,Arial,sans-serif);
+  color:#866943;letter-spacing:.13em;margin-bottom:6px;
+}
+#dashboard-app .fp16-area-heading strong{
+  display:block;font:500 clamp(22px,2.4vw,29px)/1.14 Georgia,serif;
+  letter-spacing:-.025em;color:#34271e;
+}
+#dashboard-app .fp16-area-heading p{margin:5px 0 0;color:#736355;font-size:12px;line-height:1.5}
+#dashboard-app .fp16-select-wrap{min-width:0;display:grid;gap:7px}
+#dashboard-app .fp16-select-wrap>span{
+  color:#5e4835;font-size:12px;font-weight:780;letter-spacing:.015em;
+}
+#dashboard-app #fp16-area-select{
+  display:block;width:100%;min-width:0;min-height:53px;
+  border:1px solid #ac8a61;border-radius:9px;
+  padding:10px 13px;background:#fffcf8;color:#36261b;
+  font:700 15px/1.4 var(--fp-brand-body,Arial,sans-serif);
+  box-shadow:0 3px 12px rgb(52 38 24 / 5%);
+  cursor:pointer;
+}
+#dashboard-app #fp16-area-select:focus-visible{
+  outline:3px solid #a87738;outline-offset:3px;
+}
+#dashboard-app .fp16-area-tools{
+  display:flex;flex-direction:column;gap:7px;align-items:stretch;
+}
+#dashboard-app .fp16-area-tools a,
+#dashboard-app .fp16-area-tools button{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:38px;padding:7px 11px;
+  border:1px solid #ccbaa3;border-radius:7px;
+  background:#fff9f0;color:#604832;text-decoration:none;
+  font:700 11px/1.3 var(--fp-brand-body,Arial,sans-serif);cursor:pointer;
+  white-space:nowrap;
+}
+#dashboard-app .fp16-area-tools a:hover,
+#dashboard-app .fp16-area-tools button:hover{background:#e5d7c3;color:#39281c}
+#dashboard-app .bottom-grid,
+#dashboard-app .cc-grid{grid-template-columns:minmax(0,1fr)!important}
+#dashboard-app .cc-grid > .cc-panel{width:100%;max-width:none}
+#dashboard-app .bottom-grid > .inventory-card,
+#dashboard-app .bottom-grid > .detail-card{width:100%}
+#dashboard-app .cc-intro{display:none!important}
+#dashboard-app .workspace main{padding-top:clamp(20px,3vw,36px)}
+@media(max-width:1150px){
+ #dashboard-app .fp16-area-switch{grid-template-columns:minmax(180px,1fr) minmax(225px,1.3fr)}
+ #dashboard-app .fp16-area-tools{grid-column:1/-1;flex-direction:row;justify-content:flex-end}
+}
+@media(max-width:780px){
+ /* The area dropdown replaces the previous second mobile menu. */
+ #dashboard-app .menu-button{display:none!important}
+ #dashboard-app .fp16-area-switch{
+   display:flex;flex-direction:column;align-items:stretch;gap:15px;
+   padding:17px 19px 19px;
+ }
+ #dashboard-app .fp16-area-heading strong{font-size:25px}
+ #dashboard-app .fp16-area-heading p{font-size:11px}
+ #dashboard-app .fp16-area-tools{display:flex;flex-direction:row;justify-content:flex-end;gap:10px}
+ #dashboard-app .fp16-area-tools a,
+ #dashboard-app .fp16-area-tools button{min-height:43px;padding-inline:13px;font-size:12px}
+ #dashboard-app #fp16-area-select{min-height:56px;font-size:16px}
+}
+@media(max-width:380px){
+ #dashboard-app .topbar .crumbs{font-size:9px;gap:6px;letter-spacing:0}
+ #dashboard-app .topbar .crumbs span:nth-child(2){display:none}
+}
