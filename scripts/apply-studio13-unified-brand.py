@@ -69,7 +69,7 @@ assert private_manifest["id"]=="/admin/" and private_manifest["start_url"]=="/ad
 assert private_manifest["scope"]=="/admin/" and private_manifest["display"]=="standalone"
 assert all((OUT/icon["src"].lstrip("/")).exists() for icon in private_manifest["icons"])
 (OUT/"admin/manifest.webmanifest").write_text(
-    json.dumps(private_manifest,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+    json.dumps(private_manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
 
 # Recolor ONLY admin CSS hex colors that are visibly blue/cyan, preserving their
