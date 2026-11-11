@@ -1,0 +1,61 @@
+{
+  "id": "/admin/",
+  "name": "FOTOPOLIS · Interne Verwaltung",
+  "short_name": "FOTOPOLIS Studio",
+  "description": "Geschützter FOTOPOLIS Arbeitsbereich für Eventanfragen, Geräte, Termine und Druckvorlagen.",
+  "lang": "de-DE",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "theme_color": "#211a15",
+  "background_color": "#faf6ef",
+  "icons": [
+    {
+      "src": "/icons/brand-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/brand-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/brand-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Anfragen",
+      "short_name": "Anfragen",
+      "url": "/admin/dashboard/#eventanfragen",
+      "description": "Eingegangene Eventanfragen bearbeiten"
+    },
+    {
+      "name": "Termine",
+      "short_name": "Termine",
+      "url": "/admin/dashboard/#calendar",
+      "description": "Terminplaner und Belegungen"
+    },
+    {
+      "name": "Geräte",
+      "short_name": "Geräte",
+      "url": "/admin/dashboard/#inventory",
+      "description": "Fotobox, Foto Mirror und Camper verwalten"
+    },
+    {
+      "name": "Design Studio",
+      "short_name": "Designs",
+      "url": "/admin/designstudio/",
+      "description": "Geschützter Druckvorlagen-Editor"
+    }
+  ]
+}
