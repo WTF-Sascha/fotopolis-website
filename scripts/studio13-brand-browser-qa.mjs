@@ -63,7 +63,8 @@ try{
       assert.equal(await page.locator(".fp14-tiles article").count(),3);
       assert.equal(await page.locator('.fp14-cta[href="/admin/login/"]').count(),1);
       assert.equal(await page.locator('a[href="/admin/dashboard/"]').count(),1);
-      assert.equal(await page.locator('a[href="/admin/designstudio/"]').count(),1);
+      assert.equal(await page.locator('.fp14-actions a[href="/admin/designstudio/"]').count(),1);
+      assert.equal(await page.locator('.fp14-tile a[href="/admin/designstudio/"]').count(),1);
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth)<=width+3,
         "Admin landing horizontal overflow at "+width);
       await page.screenshot({path:out+"/admin-portal-"+width+".png",animations:"disabled",fullPage:true});
