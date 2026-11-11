@@ -21,6 +21,12 @@ const capabilities={
 export const may=(role,module,method)=>!!capabilities[role]?.[module]?.includes(method);
 // Managers manage preview CMS content, but staff-role assignment remains owner-only.
 export const mayPublishCms=role=>["owner","manager","editor"].includes(role);
+export const validFilterDate=value=>{
+ if(value==="")return true;
+ if(typeof value!=="string"||!/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return false;
+ const date=new Date(value+"T00:00:00Z");
+ return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value;
+};
 const message=(msg,code=400)=>response({error:msg},code);
 async function bodyJson(request,max=4096){
  if(!/^application\/json(?:\s*;|$)/i.test(request.headers.get("content-type")||""))return null;
@@ -76,9 +82,22 @@ export default async function handler(req,context){
   if(module==="inquiries"){
    if(req.method==="GET"){
     if(id)return message("Not found",404);
+    const q=url.searchParams;
+    const status=q.get("status")||"all",product=q.get("product")||"all";
+    const from=q.get("from")||"",to=q.get("to")||"";
+    if(!(status==="all"||validStates.has(status))||
+       !["all","Fotobox","Fotospiegel","Fotowohnwagen","Noch offen"].includes(product)||
+       !validFilterDate(from)||!validFilterDate(to)||(from&&to&&from>to))
+      return message("Ungültige Filterwerte",400);
     const rows=await sql`SELECT id,source,full_name,email,phone,product,event_date,event_location,template_id,
-       notes,status,created_at,updated_at FROM fotopolis_studio13.inquiries ORDER BY created_at DESC LIMIT 100`;
-    return response({rows,source:"Studio-13-Synchronisation; bestehende Netlify Forms sind gesondert zu prüfen"},200);
+       notes,status,created_at,updated_at FROM fotopolis_studio13.inquiries
+       WHERE (${status}='all' OR status=${status})
+         AND (${product}='all' OR product=${product})
+         AND (${from}='' OR event_date >= NULLIF(${from},'')::date)
+         AND (${to}='' OR event_date <= NULLIF(${to},'')::date)
+       ORDER BY created_at DESC LIMIT 101`;
+    return response({rows:rows.slice(0,100),hasMore:rows.length>100,
+      source:"Studio-14-Neon-Kopien; Netlify Forms muss gesondert abgeglichen werden"},200);
    }
    if(!idPattern.test(id||""))return message("Ungültige Anfrage-ID");
    const b=await bodyJson(req);
