@@ -13,7 +13,9 @@ function moment(x){
 export function validateHoldAction(value,method){
  if(!value||typeof value!=="object"||Array.isArray(value))return {error:"Invalid reservation payload"};
  if(method==="POST"){
-   if(!exact(value,["resourceId","eventStartUtc","eventEndUtc","occupiedFromUtc","occupiedUntilUtc"])||!uuid.test(value.resourceId||""))return {error:"Invalid device or hold fields"};
+   if(!exact(value,["resourceId","eventStartUtc","eventEndUtc","occupiedFromUtc","occupiedUntilUtc","inquiryId"])||!uuid.test(value.resourceId||""))return {error:"Invalid device or hold fields"};
+   const inquiryId=Object.hasOwn(value,"inquiryId")?value.inquiryId:null;
+   if(inquiryId!==null&&(typeof inquiryId!=="string"||!uuid.test(inquiryId)))return {error:"Invalid inquiry reference"};
    const dates=["eventStartUtc","eventEndUtc","occupiedFromUtc","occupiedUntilUtc"].map(k=>moment(value[k]));
    if(dates.some(d=>!d||!Number.isFinite(d.getTime())))return {error:"Valid UTC times required"};
    const [eventStart,eventEnd,from,until]=dates;
@@ -22,7 +24,7 @@ export function validateHoldAction(value,method){
        eventStart-from>24*3600000||until-eventEnd>24*3600000)return {error:"Invalid event window or logistics buffers"};
    return {value:{resourceId:value.resourceId,eventStartUtc:eventStart.toISOString(),
      eventEndUtc:eventEnd.toISOString(),occupiedFromUtc:from.toISOString(),
-     occupiedUntilUtc:until.toISOString()}};
+     occupiedUntilUtc:until.toISOString(),inquiryId}};
  }
  if(method==="PATCH"){
    if(!exact(value,["id","action"])||!uuid.test(value.id||"")||!["confirm","cancel"].includes(value.action))return {error:"Only booking confirmation or cancellation allowed"};
@@ -47,18 +49,21 @@ export default async function handler(request,context){
  try{
    const sql=neon(conn);let rows;
    if(request.method==="POST"){
-     const {resourceId,eventStartUtc,eventEndUtc,occupiedFromUtc,occupiedUntilUtc}=parsed.value;
+     const {resourceId,eventStartUtc,eventEndUtc,occupiedFromUtc,occupiedUntilUtc,inquiryId}=parsed.value;
      rows=await sql`
        WITH held AS (
          INSERT INTO fotopolis.allocations(resource_id,allocation_kind,allocation_state,
-           event_start_at,event_end_at,occupied_from,occupied_until)
+           event_start_at,event_end_at,occupied_from,occupied_until,inquiry_id)
          SELECT r.id,'booking','held',${eventStartUtc}::timestamptz,
            ${eventEndUtc}::timestamptz,${occupiedFromUtc}::timestamptz,
-           ${occupiedUntilUtc}::timestamptz
+           ${occupiedUntilUtc}::timestamptz,${inquiryId}::uuid
          FROM fotopolis.resources r
          WHERE r.id=${resourceId}::uuid AND r.enabled=true
+           AND (${inquiryId}::uuid IS NULL OR EXISTS (
+             SELECT 1 FROM fotopolis_studio13.inquiries i WHERE i.id=${inquiryId}::uuid
+           ))
          RETURNING id,resource_id,allocation_kind,allocation_state,
-           event_start_at,event_end_at,occupied_from,occupied_until
+           event_start_at,event_end_at,occupied_from,occupied_until,inquiry_id
        ), logged AS (
          INSERT INTO fotopolis.admin_activity(user_id,action,entity_id)
          SELECT ${auth.userId}::uuid,'create_booking',id FROM held
@@ -82,7 +87,7 @@ export default async function handler(request,context){
        ) SELECT * FROM updated
      `;
    }
-   if(!rows.length)return response({error:"Active device or reservation not found"},404);
+   if(!rows.length)return response({error:"Active device, inquiry or reservation not found"},404);
    return response({saved:true,allocation:rows[0],previewOnly:true},request.method==="POST"?201:200);
  }catch(e){
    if(e?.code==="23P01")return response({error:"Device is already occupied in this window"},409);
