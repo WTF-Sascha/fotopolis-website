@@ -65,15 +65,19 @@ export function setupCommandCenter({getToken,role}){
    const data=await request("analytics"),rows=data.rows||[];
    const metrics=rows.reduce((out,r)=>{out[r.event_type]=(out[r.event_type]||0)+Number(r.hits);return out;},{});
    const views=metrics.seitenaufruf||0,enq=metrics.anfrage_gesendet||0;
+   const mirrored=Number(data.crm?.mirroredCount||0);
    const kpi=p.root.querySelector(".cc-kpis");
    if(kpi){kpi.replaceChildren();
-    for(const [heading,value] of [["Seitenaufrufe",views],["Produktinteraktionen",metrics.produktinteresse||0],
-      ["Designauswahlen",metrics.designauswahl||0],["Erfasste Anfrageaktionen",enq],
-      ["Anfrageaktionen pro Seitenaufruf",views?(enq/views*100).toFixed(1)+" %":"Nicht berechenbar"]]){
+    for(const [heading,value] of [["Gezählte Seitenaufrufe",views],
+      ["Produktinteraktionen",metrics.produktinteresse||0],
+      ["Designauswahlen",metrics.designauswahl||0],
+      ["Gemessene Anfrageaktionen",enq],
+      ["In Neon erfasste Anfragen",mirrored]]){
      const row=el("div");row.append(el("dt",heading),el("dd",value));kpi.append(row);
     }
    }
-   setStatus(p,rows.length?"Tatsächlich gezählte Ereignisse der letzten 30 Tage. Keine eindeutigen Besucher oder verlässliche Conversion-Attribution.":"Noch keine aggregierten Ereignisse in dieser Testumgebung.");
+   setStatus(p,(rows.length?"Gezählte Ereignisse der letzten 30 Kalendertage. ":"Keine aggregierten Ereignisse in dieser Testumgebung. ")
+     +"Neon-Anfragen sind zusätzliche Verwaltungskopien; Netlify Forms bleibt für tatsächlich eingegangene Formulare maßgeblich. Keine eindeutigen Besucher oder belastbare Conversion-Zahl.");
    const list=el("div",null,"cc-data-list");
    rows.slice(0,50).forEach(r=>list.append(el("p",r.event_date+" · "+r.page+" · "+r.event_type+" · "+r.hits)));
    const prior=p.holder.querySelector(".cc-data-list");if(prior)prior.remove();p.holder.append(list);
