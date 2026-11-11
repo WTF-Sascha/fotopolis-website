@@ -431,3 +431,39 @@ body.fp13-body .fp13-top a,body.fp13-body .fp13-gate a{color:#f0d0a4}
   text-underline-offset:4px}
 .fp14-admin-entry a:focus-visible{outline:3px solid #a87738;outline-offset:3px}
 @media(max-width:620px){.fp14-admin-entry{justify-content:center;text-align:center}}
+
+
+/* Studio 15: findable, restrained staff entry on every public page.
+   This links to the protected portal; it never exposes business data. */
+.studio-mainnav a.fp15-staff-nav{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center;
+  gap:7px;
+  min-height:43px;
+  padding:8px 13px!important;
+  border:1px solid rgba(226,193,145,.60);
+  border-radius:8px;
+  background:rgba(235,207,162,.08);
+  color:#f0d2a8!important;
+  font-size:.76rem;
+  font-weight:720;
+  white-space:nowrap;
+  text-decoration:none;
+  letter-spacing:.025em;
+}
+.studio-mainnav a.fp15-staff-nav:hover,
+.studio-mainnav a.fp15-staff-nav:focus-visible{
+  background:rgba(235,207,162,.17)!important;
+  border-color:#e2c191;
+  color:#fff1dc!important;
+}
+@media(max-width:1024px){
+  .studio-mainnav a.fp15-staff-nav{
+    margin-top:8px;
+    width:100%;
+    justify-content:flex-start;
+    min-height:48px;
+    font-size:.9rem;
+  }
+}
