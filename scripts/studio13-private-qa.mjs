@@ -33,8 +33,8 @@ for(const path of ["index.html","fotobox/index.html","fotospiegel/index.html",
  assert.ok(read(publicRoot+path).includes("/studio13-metrics.js"),"Missing metrics integration on "+path);
 }
 const contact=read(publicRoot+"contact-flow.js"),product=read(publicRoot+"product-enquiry-v6.js");
-assert.ok(contact.includes('fp13MirrorEnquiry?.(form,"website")'),"Contact not mirrored after Netlify success");
-assert.ok(product.includes('fp13MirrorEnquiry?.(form,"product")'),"Product enquiries not mirrored after Netlify success");
+assert.match(contact,/await window\.fp13MirrorEnquiry\(form,"website"\)/,"Contact must await CRM mirror after Netlify accepts");
+assert.match(product,/await window\.fp13MirrorEnquiry\(form,"product"\)/,"Product enquiry must await CRM mirror");
 assert.ok(read(publicRoot+"datenschutz/index.html").includes("interne Verwaltungsdatenbank"),"Preview privacy disclosure missing");
 assert.ok(read(publicRoot+"admin/dashboard/dashboard-bundle.js").includes("studio13/admin/"),"Studio 13 admin controls not compiled");
 assert.ok(!read(publicRoot+"admin/dashboard/index.html").includes("postgresql://"),"Credentials leaked");
