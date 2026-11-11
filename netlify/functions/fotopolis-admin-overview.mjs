@@ -20,7 +20,7 @@ export default async function handler(request,context){
     const [resources,allocations]=await Promise.all([
       db`SELECT id,resource_code,product_type,display_name,enabled
          FROM fotopolis.resources ORDER BY product_type,resource_code LIMIT 100`,
-      db`SELECT id,resource_id,allocation_kind,allocation_state,event_start_at,event_end_at,occupied_from,occupied_until
+      db`SELECT id,resource_id,allocation_kind,allocation_state,event_start_at,event_end_at,occupied_from,occupied_until,inquiry_id
          FROM fotopolis.allocations
          WHERE occupied_until >= ${fromTime.toISOString()}::timestamptz
            AND occupied_from < ${toTime.toISOString()}::timestamptz
