@@ -3,7 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import publicHandler,{validateMetric,validateEnquiry} from "../netlify/functions/fotopolis-studio13-public.mjs";
-import adminHandler,{may} from "../netlify/functions/fotopolis-studio13-admin.mjs";
+import adminHandler,{may,mayPublishCms} from "../netlify/functions/fotopolis-studio13-admin.mjs";
 import {samePreviewOrigin} from "../netlify/functions/fotopolis-admin-session.mjs";
 const host="https://deploy-preview-19--fotopolis-preview.netlify.app";
 const preview={deploy:{context:"deploy-preview",published:false}};
@@ -18,6 +18,7 @@ test("strict incoming enquiry validation incl consent, length and invalid date",
  assert.equal(validateEnquiry({...base,email:"invalid"}),null);
  assert.equal(validateEnquiry({...base,eventDate:"2026-99-99"}),null);
  assert.equal(validateEnquiry({...base,templateId:"FP-999"}),null);
+ assert.equal(validateEnquiry({...base,templateId:"FP-000"}),null);
  assert.equal(validateEnquiry({...base,notes:"x".repeat(1501)}),null);
  assert.equal(validateEnquiry({...base,source:"unknown"}),null);
 });
@@ -37,6 +38,9 @@ test("stable capability matrix limits sensitive operations",()=>{
  assert.equal(may("analyst","inquiries","GET"),false);
  assert.equal(may("designer","designs","POST"),true);
  assert.equal(may("editor","media","POST"),false);
+ assert.equal(mayPublishCms("manager"),true);
+ assert.equal(mayPublishCms("editor"),true);
+ assert.equal(mayPublishCms("viewer"),false);
 });
 test("cross-preview mutations are rejected without leaking data",()=>{
  const a=new Request(host+"/api/fotopolis/studio13/metric",{method:"POST",headers:{Origin:host}});
