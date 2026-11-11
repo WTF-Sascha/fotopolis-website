@@ -170,6 +170,23 @@ for file,formtype in ((OUT/"contact-flow.js","website"),(OUT/"product-enquiry-v6
                 'Die interne Übernahme konnte nicht bestätigt werden. Netlify Forms bleibt maßgeblich.";')
     js=js.replace(success_text,success_text+'\n      '+diagnostic,1)
     file.write_text(js,encoding="utf-8")
+# Explicit team entry point: only the isolated built preview gets these links.
+# Public customers see no protected data or admin features; SSO and JWT gates remain.
+public_admin_pages=0
+for page in sorted(OUT.rglob("index.html")):
+    if "admin" in page.relative_to(OUT).parts:
+        continue
+    html=page.read_text(encoding="utf-8")
+    assert html.count("</footer>")==1, f"Missing footer in {page}"
+    assert "fp14-admin-entry" not in html, f"Duplicate management entry in {page}"
+    link=('<nav class="fp14-admin-entry" aria-label="Interner Mitarbeiterzugang">'
+          '<a href="/admin/">Interne Verwaltung <span aria-hidden="true">↗</span></a>'
+          '</nav>')
+    html=html.replace("</footer>",link+"</footer>",1)
+    page.write_text(html,encoding="utf-8")
+    public_admin_pages+=1
+assert public_admin_pages==14, f"Expected 14 public preview entries, got {public_admin_pages}"
+
 # Disclosure visible on the exact test data collection site – no legal assessment implied.
 privacy=OUT/"datenschutz/index.html"
 page=privacy.read_text(encoding="utf-8")
