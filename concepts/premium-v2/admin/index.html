@@ -22,6 +22,12 @@ body{margin:0;min-height:100dvh;background:#faf6ef;color:#2b231d;font:400 16px/1
 .fp14-lead{max-width:760px;color:#685c50;font-size:clamp(1rem,1.8vw,1.2rem);margin:0 0 34px}
 .fp14-cta{display:inline-flex;justify-content:center;align-items:center;padding:14px 28px;min-height:52px;color:#241b13!important;background:#c7a776;border-radius:10px;font-weight:750;text-decoration:none}
 .fp14-cta:hover{background:#dfc193}
+.fp14-actions{margin:20px 0 16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.fp14-actions a{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;
+  padding:12px 15px;background:#fffdf8;border:1px solid #ddcbb5;border-radius:10px;
+  color:#433023;text-decoration:none;font-weight:700;min-height:49px}
+.fp14-actions a:hover{background:#f3eadb;border-color:#c7a776}
+.fp14-actions span{color:#9b7649}
 .fp14-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:48px 0 27px}
 .fp14-tile{padding:clamp(23px,3vw,34px);border:1px solid #ddd0bf;background:#fffcf8;border-radius:16px;min-width:0;box-shadow:0 12px 34px #3c26180b}
 .fp14-tile span{display:block;color:#8b6943;font-weight:750;letter-spacing:.12em;font-size:.74rem;margin-bottom:13px}
@@ -30,7 +36,8 @@ body{margin:0;min-height:100dvh;background:#faf6ef;color:#2b231d;font:400 16px/1
 .fp14-tile a{display:inline-flex;align-items:center;min-height:44px;color:#6d4b2b;font-weight:750;text-underline-offset:4px}
 .fp14-note{border-top:1px solid #ddd0bf;padding-top:22px;color:#685c50;font-size:.94rem}
 a:focus-visible{outline:3px solid #a87738;outline-offset:4px}
-@media(max-width:820px){.fp14-tiles{grid-template-columns:1fr}.fp14-admin-header{flex-wrap:wrap}.fp14-admin-main{width:min(100% - 32px,1140px)}}
+@media(max-width:820px){.fp14-tiles{grid-template-columns:1fr}.fp14-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.fp14-admin-header{flex-wrap:wrap}.fp14-admin-main{width:min(100% - 32px,1140px)}}
+@media(max-width:385px){.fp14-actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -46,6 +53,12 @@ a:focus-visible{outline:3px solid #a87738;outline-offset:4px}
 <h1>Alles im Blick. Alles an einem Ort.</h1>
 <p class="fp14-lead">Der geschützte Arbeitsbereich für Geräte, Termine, Kundenanfragen, Designvorlagen, Inhalte, Medien und Auswertungen. Nur berechtigte Teammitglieder können Verwaltungsdaten einsehen oder bearbeiten.</p>
 <a class="fp14-cta" href="/admin/login/">Sicher anmelden und Verwaltung öffnen</a>
+<nav class="fp14-actions" aria-label="Schnellzugriff auf Verwaltungsmodule">
+<a href="/admin/dashboard/#eventanfragen">Anfragen <span aria-hidden="true">↗</span></a>
+<a href="/admin/dashboard/#calendar">Termine <span aria-hidden="true">↗</span></a>
+<a href="/admin/dashboard/#inventory">Geräte <span aria-hidden="true">↗</span></a>
+<a href="/admin/designstudio/">Druckvorlagen <span aria-hidden="true">↗</span></a>
+</nav>
 <section class="fp14-tiles" aria-label="Verwaltungsbereiche">
 <article class="fp14-tile">
 <span>01 / BETRIEB</span><h2>Business Command Center</h2>
@@ -63,7 +76,8 @@ a:focus-visible{outline:3px solid #a87738;outline-offset:4px}
 <a href="/admin/dashboard/#cms">Redaktion und Medien öffnen</a>
 </article>
 </section>
-<p class="fp14-note"><strong>Wichtig:</strong> Zuerst ist die Netlify-Teamfreigabe für diese Testvorschau erforderlich. Danach erfolgt die persönliche Anmeldung über Neon Auth. Diese Vorschau ist kein öffentlicher Kundenzugang und keine Freigabe der Live-Website.</p>
+<p class="fp14-note"><strong>Anfragen-Eingang:</strong> Die Website-Testformulare werden zunächst von Netlify Forms entgegengenommen. Das interne Anfragenmodul zeigt zusätzliche Neon-Verwaltungskopien und ersetzt derzeit noch keinen verbindlichen Netlify-Formularabgleich. Anfragen per E-Mail, WhatsApp oder Telefon der bisherigen Live-Website werden nicht automatisch in diese Testverwaltung importiert.</p>
+<p class="fp14-note"><strong>Sicherheitszugang:</strong> Für die Testvorschau ist zuerst die Netlify-Teamfreigabe und danach die persönliche Anmeldung über Neon Auth erforderlich. Nur freigeschaltete Teammitglieder dürfen interne Daten einsehen oder bearbeiten. Keine Freigabe der Live-Website.</p>
 </main>
 </body>
 </html>
