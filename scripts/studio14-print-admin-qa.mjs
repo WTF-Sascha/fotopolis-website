@@ -97,6 +97,8 @@ assert.ok(admin.includes('href="/admin/dashboard/#inventory"'),"Missing private 
 
 const login=read("preview-build/admin/login/index.html");
 assert.ok(login.includes("login-bundle.js"),"Real Neon Auth login must stay active");
+assert.ok(login.includes("Nur für freigeschaltete Teammitglieder") && login.includes("er erstellt keine Registrierung"),
+  "Login must explain disabled public sign-up and OTP restrictions");
 const secured=read("preview-build/admin/designstudio/index.html");
 assert.ok(secured.includes("boot-bundle.js"),"Private editor must stay behind auth bootstrap");
 console.log("STUDIO 14 PRINT + ADMIN QA: "+signature.length+" signatures without embedded generated titles, "+
