@@ -6,6 +6,9 @@ on:
       - 'netlify/functions/**'
       - 'scripts/test-admin-auth.mjs'
       - 'scripts/studio13-contract-qa.mjs'
+      - 'scripts/studio14-print-admin-qa.mjs'
+      - 'scripts/build-photo-print-collection.py'
+      - 'concepts/premium-v2/admin/index.html'
       - 'scripts/studio13-private-qa.mjs'
       - 'scripts/studio13-brand-browser-qa.mjs'
       - 'scripts/studio13-services-qa.mjs'
@@ -44,6 +47,7 @@ jobs:
         run: |
           node --check netlify/functions/fotopolis-admin-session.mjs
           node --check scripts/studio13-contract-qa.mjs
+          node --check scripts/studio14-print-admin-qa.mjs
           node --check scripts/test-admin-auth.mjs
           node --check scripts/studio13-services-qa.mjs
           node --check scripts/studio13-live-qa.mjs
@@ -72,6 +76,7 @@ jobs:
         run: |
           node scripts/studio13-contract-qa.mjs
           node scripts/studio13-private-qa.mjs
+          node scripts/studio14-print-admin-qa.mjs
           node --test scripts/test-admin-auth.mjs
       - name: Install Chromium and pinned browser test engine
         run: |
