@@ -89,7 +89,7 @@ export default async function handler(req,context){
        !["all","Fotobox","Fotospiegel","Fotowohnwagen","Noch offen"].includes(product)||
        !validFilterDate(from)||!validFilterDate(to)||(from&&to&&from>to))
       return message("Ungültige Filterwerte",400);
-    const rows=await sql`SELECT id,source,full_name,email,phone,product,event_date,event_location,template_id,
+    const rows=await sql`SELECT id,request_key,source,full_name,email,phone,product,event_date,event_location,template_id,
        notes,status,created_at,updated_at FROM fotopolis_studio13.inquiries
        WHERE (${status}='all' OR status=${status})
          AND (${product}='all' OR product=${product})
