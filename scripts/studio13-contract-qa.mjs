@@ -17,6 +17,18 @@ for(const link of ["#analytics","#eventanfragen","#designstudio","#designs","#cm
   assert.ok(admin.includes('href="'+link+'"'),"Missing navigation "+link);
 }
 assert.ok(admin.includes('id="dashboard-app" hidden'),"Admin dashboard must stay gated");
+for(const jsPath of ["preview-build/contact-flow.js","preview-build/product-enquiry-v6.js"]){
+  const js=read(jsPath);
+  assert.match(js,/await window\\.fp13MirrorEnquiry\\(form,/,
+    "Wait for CRM mirror to finish before displaying final success state");
+  assert.match(js,/if\\(!studio14MirrorOk\\).*Netlify Forms bleibt maßgeblich/,
+    "Never hide failed internal CRM replication from the test UI");
+}
+const mirror=read("preview-build/studio13-enquiry-mirror.js");
+assert.ok(mirror.includes("keys=new WeakMap()"),"Mirror retries must reuse per-form UUID");
+assert.ok(mirror.includes("attempt<2"),"Bounded retry missing");
+assert.ok(!mirror.includes("localStorage"),"No personal data or synthetic success in local storage");
+
 assert.ok(admin.includes("/admin/dashboard/dashboard-bundle.js"),"Existing auth bundle missing");
 assert.ok(admin.includes("command-center.css"));
 assert.ok(css.includes("@media(max-width:520px)"),"Mobile CSS missing");
