@@ -33,7 +33,7 @@ assert.ok(!existsSync(join(built,"assets/designvorlagen/print")),
   "Print production masters must remain outside the public CDN");
 
 const admin=read("preview-build/admin/index.html");
-assert.ok(admin.includes("Interne Verwaltung") && admin.includes("Management Studio"),
+assert.ok(admin.includes("Interne Verwaltung") && admin.includes("MANAGEMENT STUDIO"),
   "Admin landing must have a branded, named entry point");
 assert.ok(admin.includes('href="/admin/login/"'),"Missing login entry");
 assert.ok(admin.includes('href="/admin/dashboard/"'),"Missing dashboard");
