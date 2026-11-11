@@ -36,6 +36,11 @@ try{
         assert.equal(await page.locator('link[rel="apple-touch-icon"][href*="brand-180"]').count(),1);
         const overflow=await page.evaluate(()=>document.documentElement.scrollWidth);
         assert.ok(overflow<=width+3,path+" horizontal overflow "+width+"=>"+overflow);
+        const teamEntry=page.locator('footer .fp14-admin-entry a');
+        assert.equal(await teamEntry.count(),1,path+" lacks visible team management link");
+        assert.equal(await teamEntry.getAttribute("href"),"/admin/");
+        const teamEntryHeight=await teamEntry.evaluate(el=>el.getBoundingClientRect().height);
+        assert.ok(teamEntryHeight>=42,path+" management link is too small to tap");
         const logo=await page.locator('header .studio-identity img').first().getAttribute("src").catch(()=>null);
         if(logo)assert.equal(logo,"/assets/fotopolis-goldmark.webp");
         if((path==="/"||path==="/kontakt/")&&(width===390||width===1440)){
@@ -46,6 +51,26 @@ try{
       }catch(e){errors.push({route:path,width,error:String(e.stack||e)})}
       finally{await page.close();}
     }
+  }
+  // Studio 14: the actual administration landing is a navigable portal,
+  // not a silent redirect. All destination pages retain their auth gates.
+  for(const width of [390,768,1440]){
+    const page=await browser.newPage({viewport:{width,height:900},serviceWorkers:"block"});
+    try{
+      const response=await page.goto(base+"/admin/",{waitUntil:"domcontentloaded",timeout:35000});
+      assert.equal(response.status(),200);
+      assert.equal(new URL(page.url()).pathname,"/admin/","Admin landing must not redirect");
+      assert.equal(await page.locator(".fp14-tiles article").count(),3);
+      assert.equal(await page.locator('.fp14-cta[href="/admin/login/"]').count(),1);
+      assert.equal(await page.locator('a[href="/admin/dashboard/"]').count(),1);
+      assert.equal(await page.locator('a[href="/admin/designstudio/"]').count(),1);
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth)<=width+3,
+        "Admin landing horizontal overflow at "+width);
+      await page.screenshot({path:out+"/admin-portal-"+width+".png",animations:"disabled",fullPage:true});
+      cases.push({route:"/admin/",width,authenticated:false,
+        note:"Landing only; protected endpoints not accessed"});
+    }catch(e){errors.push({route:"/admin/",width,error:String(e.stack||e)})}
+    finally{await page.close();}
   }
   for(const width of [390,768,1440]){
     const page=await browser.newPage({viewport:{width,height:900},serviceWorkers:"block"});
