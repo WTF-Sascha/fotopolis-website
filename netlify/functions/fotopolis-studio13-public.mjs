@@ -24,7 +24,7 @@ export function validateEnquiry(v){
  if(!uuid.test(v.requestKey||"")||!sourceTypes.has(v.source)||!name||name.length<2||!email||
    !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)||phone===null||location===null||notes===null||
    !productTypes.has(v.product)||!validDate(date)||v.consentConfirmed!==true||
-   (template!==null&&!/^FP-0(?:[0-3][0-9]|4[0-4])$/.test(template))||
+   (template!==null&&(!/^FP-0(?:[0-3][0-9]|4[0-4])$/.test(template)||template==="FP-000"))||
    (v.website&&String(v.website).length>100))return null;
  return {key:v.requestKey,source:v.source,name,email,phone,product:v.product,
          date,location,template,notes,honeypot:!!v.website};
