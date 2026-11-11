@@ -56,7 +56,8 @@ assert.match(faq,/individuelle Layouts und Designs/);checks++;
 const gallery=visibleText(readFileSync(root+"/galerie/index.html","utf8"));
 assert.match(gallery,/FOTOERLEBNIS/);checks++;
 const admin=readFileSync(root+"/admin/index.html","utf8");
-assert.ok(admin.includes('url=/admin/login/'),"Legacy admin must continue redirecting to login");checks++;
+assert.ok(admin.includes('href="/admin/login/"')&&admin.includes('href="/admin/dashboard/"')&&admin.includes('href="/admin/designstudio/"'),"Brand-aligned admin portal must link to gated management tools");checks++;
+assert.ok(!admin.includes('http-equiv="refresh"'),"Admin entrance must not silently redirect");checks++;
 assert.ok(!existsSync(root+"/admin/admin.js"),"Legacy browser-only admin remains unpublished");checks++;
 const staticRoutes=["","fotobox","fotospiegel","fotowohnwagen","leistungen","anlaesse","ueber","faq","kontakt","rechtliches"];
 for(const route of staticRoutes){
