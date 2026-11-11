@@ -179,6 +179,14 @@ for page in sorted(OUT.rglob("index.html")):
     html=page.read_text(encoding="utf-8")
     assert html.count("</footer>")==1, f"Missing footer in {page}"
     assert "fp14-admin-entry" not in html, f"Duplicate management entry in {page}"
+    # Studio 15 visibility fix: staff access must not be buried in the footer.
+    # A navigation link only opens the restricted portal; it does not grant data rights.
+    nav=re.compile(r'(<nav\\b[^>]*\\bid=["\\\']mainnav["\\\'][^>]*>)(.*?)(</nav>)',re.S|re.I)
+    access=('<a class="fp15-staff-nav" href="/admin/" '
+            'aria-label="Interne FOTOPOLIS Verwaltung öffnen">Team · Verwaltung</a>')
+    html,nav_count=nav.subn(lambda match:match.group(1)+match.group(2)+access+match.group(3),html,count=1)
+    assert nav_count==1, f"Main navigation team access missing in {page}"
+    assert html.count('class="fp15-staff-nav"')==1
     link=('<nav class="fp14-admin-entry" aria-label="Interner Mitarbeiterzugang">'
           '<a href="/admin/">Interne Verwaltung <span aria-hidden="true">↗</span></a>'
           '</nav>')
