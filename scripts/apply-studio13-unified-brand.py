@@ -183,7 +183,7 @@ a:hover{background:#dbc197}a:focus-visible{outline:3px solid #e9c797;outline-off
 worker_path=OUT/"service-worker.js"
 worker=worker_path.read_text(encoding="utf-8")
 assert "v13-admin-secure-r1" in worker, "Unexpected PWA cache version"
-worker=worker.replace("v13-admin-secure-r1","v14-print-clean-admin-portal-r1",1)
+worker=worker.replace("v13-admin-secure-r1","v15-one-app-secure-r1",1)
 assert "const SHELL=[" in worker
 worker=worker.replace("const SHELL=[",
  "const CORE=['/studio13-unified-brand.css','/icons/brand-192.png',"
