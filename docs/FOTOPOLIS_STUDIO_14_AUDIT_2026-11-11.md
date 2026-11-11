@@ -77,4 +77,24 @@ Kein weiterer großflächiger Markenumbau: erst technische und fachliche Altlast
 - **Studio-14-Codebasis geprüft:** Commit `5b1c6afbbb505f4ae24d7f05b20a8ce1d221d510`, Foundation-QA erfolgreich (Lauf [42990380934](https://github.com/WTF-Sascha/fotopolis-website/actions/runs/42990380934)); Screenshots als offizielle Actions-Artefakte abgelegt. Der QA-Lauf ist kein Ersatz für einen menschlichen visuellen Review oder einen echten administrativen Login.
 - **Netlify:** Deploy Preview #20, `https://deploy-preview-20--fotopolis-preview.netlify.app/`, Team-SSO; Netlify Forms registrierte `fp_request_key` nach Preview-Build. Es wurden keine synthetischen Formsendungen ausgelöst.
 - **Reststatus:** Release **NO-GO** wegen positiver Auth-Rollen- und Datenpersistenz-E2Es, maschinellem Netlify-Forms-Reconciliation, physischem Druckproof, Logo-Freigabe sowie Datenschutz-/Betriebs- und Rechtefreigaben.
-- **Code unverändert:** GitHub `main`, freigegebene Goldmark und alle 44 Printoriginale. Die Studio-14-Änderungen befinden sich ausschließlich im separaten PR-#20-Branch.
+- **Unverändert:** GitHub `main`, die freigegebene Goldmark, echte Produktbilder und die **32 Original-Classic-Quelldateien**. Die **12 abgeleiteten Signature-Druckdateien** werden in der Studio-14-Preview ausdrücklich neu und ohne Katalogtitel generiert. Keine Änderung produktiver Dateien.
+
+## 7. Studio 14 – Korrekturrunde Drucknamen & interner Verwaltungszugang (11.11.2026)
+
+### Verifizierte Ursachen
+1. **Signature-Druckgrafik:** `scripts/build-photo-print-collection.py` zeichnete `item["name"].upper()` und zusätzlich `WEDDING EDITION` / `SIGNATURE COLLECTION` o. ä. als echte Rasterpixel direkt in jede der 12 Signature-Printoverlays (FP-033 bis FP-044). Im Fußbereich wurden außerdem `DEIN MOMENT · DEIN DESIGN` und `TT.MM.JJJJ` gedruckt. Solche Texte gehören in den Katalog oder in eine ausdrücklich beauftragte Personalisierung, nicht fest in den Kundenausdruck.
+2. **32 Classic-Vorlagen:** `classics-original-preserve.py` übernimmt die hochgeladenen Originalraster. Das Modul setzt keinen Katalognamen zusätzlich auf das Druckbild; bereits im Quellraster vorhandene Schrift ist jedoch eingebrannt. Da die einzelnen Originale bislang nicht für die Entfernung dieser typografischen Inhalte neu retuschiert wurden, kann **nicht** bestätigt werden, dass alle 32 Classic-Ausdrucke namenfrei sind. Ungeprüfte Retuschen und pauschales Übermalen sind kein Ersatz.
+3. **Interne Verwaltung nicht sichtbar:** `scripts/build-premium-preview.py` erzeugte für `/admin/` bei jedem Build automatisch eine veraltete Redirect-HTML-Seite, selbst wenn `concepts/premium-v2/admin/index.html` bereits aktualisiert war. Gleichzeitig enthielt die öffentliche Testwebsite keinen gut erkennbaren Teamzugang.
+
+### In dieser Korrekturrunde implementiert
+- Druckgrafik FP-033 bis FP-044: Der `header()` zeichnet nur noch dezente Linien/Ornamente. Katalogname und Kategorie bleiben in JSON, Auswahlmenüs und Beschreibungen; **nicht** im Print-Raster. Ebenso entfallen das feste Demo-Datum und der Beispiel-Slogan im Fußbereich. Die Flächen bleiben für optionale kundenbezogene Personalisierung frei.
+- Bestehende 32 Classic-Bilddateien nicht beschädigt oder unkontrolliert überschrieben. Ihre typografische Einzelprüfung und ggf. quellmaterialbasierte Retusche ist ein **offener P0-Qualitätspunkt**, keine erledigte Arbeit.
+- Neuer responsiver Premium-Einstieg unter `/admin/` mit Dashboard, internem Design Studio und Redaktion. Der Preview-Build kopiert jetzt genau diese Quelle statt eines Auto-Redirects. Alle 14 öffentlichen Preview-Seiten erhalten im Footer `Interne Verwaltung` → `/admin/`. **Datenzugriff bleibt weiterhin SSO- und JWT-/Rollen-geschützt.**
+- Der PWA-Service-Worker verwendet einen neuen Cachebezeichner `v14-print-clean-admin-portal-r1`, damit alte öffentliche Oberflächen nach Updates nicht dauerhaft angezeigt werden.
+- Tests: `scripts/studio14-print-admin-qa.mjs`, Studio-13 Foundation-/Browser-QA und angepasste Präsentations-/Reference-Gates. Neue mobile Screenshots des Admin-Portals bei 390/768/1440 Pixeln werden in den CI-Artefakten geprüft.
+
+### Offene finale Abnahmen
+- Sichtprüfung der 12 neuen Signature-Motive im echten Browser und ein physischer 15×10-cm-Ausdruck mit ICC-Profil, Beschnitt und echten Fotos.
+- Sichtprüfung **aller 32 Classic-Printoverlays**, gezielte Entfernung dort eingebrannter reiner Designnamen aus originalen Layern beziehungsweise qualitätsgesichert überarbeiteter Pixeldateien. Keine pauschalen Retuschen ohne Quellprüfung.
+- Positiver Owner-/Manager-/Designer-Login, Zugriffstests des gesamten `/admin/dashboard/` und `/admin/designstudio/` unter der echten Netlify-Team-SSO-/Neon-Auth-Sitzung.
+- Erst nach allen erforderlichen technischen, rechtlichen und menschlichen Freigaben einen separaten Merge-/Livegang erwägen. **PR #20 bleibt Draft; produktive Kunden- und Buchungsdaten bleiben unberührt.**
