@@ -59,9 +59,6 @@ export default async function handler(request,context){
            ${occupiedUntilUtc}::timestamptz,${inquiryId}::uuid
          FROM fotopolis.resources r
          WHERE r.id=${resourceId}::uuid AND r.enabled=true
-           AND (${inquiryId}::uuid IS NULL OR EXISTS (
-             SELECT 1 FROM fotopolis_studio13.inquiries i WHERE i.id=${inquiryId}::uuid
-           ))
          RETURNING id,resource_id,allocation_kind,allocation_state,
            event_start_at,event_end_at,occupied_from,occupied_until,inquiry_id
        ), logged AS (
@@ -91,6 +88,7 @@ export default async function handler(request,context){
    return response({saved:true,allocation:rows[0],previewOnly:true},request.method==="POST"?201:200);
  }catch(e){
    if(e?.code==="23P01")return response({error:"Device is already occupied in this window"},409);
+   if(e?.code==="23503")return response({error:"Linked inquiry does not exist"},404);
    return response({error:"Internal reservation unavailable"},503);
  }
 }
