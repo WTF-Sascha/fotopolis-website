@@ -1,36 +1,53 @@
-/* Existing Netlify Forms submission is the authoritative send.
-   After success, a best-effort, idempotent copy is made to the isolated Neon DEV CRM.
-   CRM sync failure cannot turn a delivered Netlify Form into a claimed failure.
-*/
+/* FOTOPOLIS Studio 14 – reliable, preview-only CRM mirror.
+ * Netlify Forms remains authoritative. Never persist personal data in the browser.
+ * Retry the SAME key after ambiguous network failures to prevent duplicates.
+ */
 (()=>{
- if(!/^deploy-preview-\d+--fotopolis-preview\.netlify\.app$/.test(location.hostname))return;
+ "use strict";
+ if(!/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app$/i.test(location.hostname))return;
+ const keys=new WeakMap();
  window.fp13MirrorEnquiry=async(form,source)=>{
+  const signal=state=>window.dispatchEvent(new CustomEvent("fotopolis-studio14-sync",{detail:{state}}));
   try{
    const data=new FormData(form);
    const read=n=>String(data.get(n)||"").trim();
+   // A honeypot entry is not an accepted customer request.
+   if(!read("datenschutz_ok")||read("website")){signal("not-mirrored");return false;}
    const product=read("produkt");
-   const accepted=read("datenschutz_ok");
-   if(!accepted) return false;
+   if(!keys.has(form))keys.set(form,crypto.randomUUID());
    const record={
-    requestKey:crypto.randomUUID(),source:source==="product"?"product":"website",
+    requestKey:keys.get(form),
+    source:source==="product"?"product":"website",
     fullName:read("name").slice(0,100),email:read("email").slice(0,254),
     phone:read("telefon").slice(0,45),
     product:["Fotobox","Fotospiegel","Fotowohnwagen"].includes(product)?product:"Noch offen",
     eventDate:read("datum")||null,eventLocation:read("ort").slice(0,160),
-    templateId:/^FP-0(?:[0-3][0-9]|4[0-4])$/.test(read("vorlage"))?read("vorlage"):null,
+    templateId:/^FP-0(?:[0-3][0-9]|4[0-4])$/.test(read("vorlage"))&&read("vorlage")!=="FP-000"?read("vorlage"):null,
     notes:[read("notiz"),read("details")].filter(Boolean).join("\n").slice(0,1500),
-    consentConfirmed:true,website:read("website")
+    consentConfirmed:true,website:""
    };
-   const response=await fetch("/api/fotopolis/studio13/enquiry",{
-    method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(record),
-    credentials:"same-origin",cache:"no-store",keepalive:false
-   });
-   if(!response.ok)throw new Error("CRM sync unavailable");
-   window.dispatchEvent(new Event("fotopolis-studio13-enquiry"));
-   return true;
-  }catch{
-   // Netlify already accepted the form; never misrepresent that as undelivered.
-   return false;
-  }
+   const body=JSON.stringify(record);
+   for(let attempt=0;attempt<2;attempt++){
+    const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),4500);
+    try{
+     const response=await fetch("/api/fotopolis/studio13/enquiry",{
+      method:"POST",headers:{"Content-Type":"application/json"},body,
+      credentials:"same-origin",cache:"no-store",keepalive:false,signal:abort.signal
+     });
+     if(response.status===201){
+      const result=await response.json();
+      if(result.accepted===true&&result.notBooked===true&&typeof result.id==="string"){
+       signal("mirrored");window.dispatchEvent(new Event("fotopolis-studio13-enquiry"));
+       return true;
+      }
+     }
+     // Validation and permission failures are not transient.
+     if([400,401,403,404,429].includes(response.status))break;
+    }catch{/* A network timeout may have persisted the request; keep its idempotency key. */}
+    finally{clearTimeout(timeout);}
+   }
+  }catch{/* Customer's accepted Netlify submission must not be undone. */}
+  signal("needs-reconciliation");
+  return false;
  };
 })();
