@@ -15,8 +15,10 @@ async function authorizedFetch(path){
   const status=await authorizedFetch("/api/fotopolis/admin/session");
   if(status.status!==200){fail("Kein aktiver Administratorzugang. Bitte anmelden.");return;}
   const member=await status.json();
-  if(!["owner","manager"].includes(member.role)){fail("Keine Berechtigung für das interne Design Studio.");return;}
+  // The server verifies the active designer scope; client-side base roles are not proof of permission.
+  if(!["owner","manager","viewer"].includes(member.role)){fail("Keine Berechtigung für das interne Design Studio.");return;}
   const view=await authorizedFetch("/api/fotopolis/admin/design/editor");
+  if(view.status===403){fail("Deine aktive Rolle ist nicht für das interne Design Studio freigeschaltet.");return;}
   if(!view.ok)throw new Error("Editor nicht erreichbar ("+view.status+")");
   const markup=await view.text();
   if(!markup.startsWith("<main id=\"content\"")||!markup.includes("data-fp12-editor"))throw Error("Invalid editor markup");
