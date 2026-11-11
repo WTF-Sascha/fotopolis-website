@@ -52,29 +52,35 @@ for(const dir of ["","fotobox","fotospiegel","fotowohnwagen","designvorlagen","k
 }
 const css=read("preview-build/studio13-unified-brand.css");
 assert.ok(css.includes(".fp14-admin-entry"),"Team entry must match the approved color system");
-// The staff administration is a separate installable PWA, not a public
-// website shortcut: distinct app identity and scope, common approved icons.
-const staffManifest=JSON.parse(read("preview-build/admin/manifest.webmanifest"));
+// Studio 15 contract: customer and employee routes share one installable ID.
+// The protected routes remain network-only and are never PWA cached.
 const publicManifest=JSON.parse(read("preview-build/manifest.webmanifest"));
-assert.equal(staffManifest.id,"/admin/");
-assert.equal(staffManifest.start_url,"/admin/");
-assert.equal(staffManifest.scope,"/admin/");
-assert.equal(staffManifest.display,"standalone");
 assert.equal(publicManifest.id,"/");
+assert.equal(publicManifest.start_url,"/");
 assert.equal(publicManifest.scope,"/");
-assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/dashboard/#eventanfragen"));
-assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/dashboard/#calendar"));
-assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/dashboard/#inventory"));
-assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/designstudio/"));
-for(const icon of staffManifest.icons){
- assert.ok(icon.src.startsWith("/icons/brand-"),"Only approved goldmark icons");
- assert.ok(existsSync(join(built,icon.src.slice(1))),"Missing approved staff app icon "+icon.src);
+assert.equal(publicManifest.display,"standalone");
+assert.ok(!existsSync(join(built,"admin/manifest.webmanifest")),
+  "A second staff manifest would create a competing app identity");
+for(const shortcut of ["/admin/","/admin/dashboard/#eventanfragen",
+                       "/admin/dashboard/#calendar","/admin/designstudio/"]){
+ assert.ok(publicManifest.shortcuts.some(x=>x.url===shortcut),
+   "Missing unified app shortcut "+shortcut);
 }
-for(const pagePath of ["admin/index.html","admin/login/index.html","admin/dashboard/index.html","admin/designstudio/index.html"]){
+for(const icon of publicManifest.icons){
+ assert.ok(icon.src.startsWith("/icons/brand-"),"Only approved goldmark icons");
+ assert.ok(existsSync(join(built,icon.src.slice(1))),"Missing approved app icon "+icon.src);
+}
+for(const pagePath of ["admin/index.html","admin/login/index.html",
+                       "admin/dashboard/index.html","admin/designstudio/index.html"]){
  const page=read("preview-build/"+pagePath);
- assert.ok(page.includes('href="/admin/manifest.webmanifest"'),"Staff manifest missing in "+pagePath);
- assert.equal((page.match(/rel="manifest"/g)||[]).length,1,"Duplicate manifest in "+pagePath);
- assert.ok(!page.includes('href="/manifest.webmanifest"'),"Public app manifest in private page "+pagePath);
+ assert.ok(page.includes('href="/manifest.webmanifest"'),
+   "Canonical manifest missing in "+pagePath);
+ assert.ok(page.includes('src="/pwa-update.js"'),
+   "Unified update registration missing in "+pagePath);
+ assert.equal((page.match(/rel="manifest"/g)||[]).length,1,
+   "Duplicate manifest in "+pagePath);
+ assert.ok(!page.includes('href="/admin/manifest.webmanifest"'),
+   "Competing staff manifest in "+pagePath);
 }
 const worker=read("preview-build/service-worker.js");
 assert.ok(worker.includes("url.pathname.startsWith('/admin/')"),
@@ -89,4 +95,4 @@ const secured=read("preview-build/admin/designstudio/index.html");
 assert.ok(secured.includes("boot-bundle.js"),"Private editor must stay behind auth bootstrap");
 console.log("STUDIO 14 PRINT + ADMIN QA: "+signature.length+" signatures without embedded generated titles, "+
   classics.length+" classics source-preserved (manual baked-text review needed), 44 protected print masters, "+
-  linked+" public entry links, installable separately-scoped staff app, real private management entry PASS.");
+  linked+" public entry links, unified public-and-admin PWA, real private management entry PASS.");
