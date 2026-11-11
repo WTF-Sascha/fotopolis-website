@@ -112,7 +112,7 @@ function renderAgenda(){
      selected=day;cursor=fromKey(day);
      await loadCalendar();
      if(!calendarLoaded||app.hidden)return;
-     $("#calendar").scrollIntoView({block:"start",behavior:"smooth"});
+     chooseArea("calendar");
      openDayDialog();
    });
    row.append(content,go);target.append(row);
@@ -424,6 +424,7 @@ async function authenticate(){
     $("[data-user-role]").textContent=roleLabels[body.role];
     $("[data-role-label]").textContent=roleLabels[body.role];
     $("#top-role").textContent=roleLabels[body.role].toUpperCase();
+    updateNavigation();
     gate.hidden=true;app.hidden=false;
     firstRun ||= setupFirstRun({
       root:$("#setup-assistant"),
@@ -455,8 +456,7 @@ async function authenticate(){
     await loadActivity();
     setupCommandCenter({role:adminRole,getToken:async()=>getAdminJwt(client,await client.getSession())});
     updateNavigation();
-    const anchor=location.hash&&document.querySelector(location.hash);
-    if(anchor)requestAnimationFrame(()=>anchor.scrollIntoView({block:"start"}));
+    requestAnimationFrame(()=>window.scrollTo(0,0));
   }catch(e){lock("Die geschützte Verwaltung ist aktuell nicht erreichbar. Deine Daten bleiben gesperrt.")}
 }
 for(const selector of ["[data-inventory-search]","[data-inventory-type]","[data-inventory-state]"]){
@@ -480,19 +480,82 @@ $("[data-product-filter]").addEventListener("change",renderCalendar);
 const menu=$("[data-menu-toggle]"),mobile=$("#dashboard-mobile-menu");
 menu.addEventListener("click",()=>{const open=menu.getAttribute("aria-expanded")!=="true";menu.setAttribute("aria-expanded",String(open));menu.setAttribute("aria-label",open?"Menü schließen":"Menü öffnen");mobile.hidden=!open});
 mobile.querySelectorAll("a").forEach(x=>x.addEventListener("click",()=>{mobile.hidden=true;menu.setAttribute("aria-expanded","false")}));
-// Keep context visible on mobile and desktop. Navigation is never an auth bypass.
-function updateNavigation(){
- const target=location.hash||"#overview";
- const labels={"#overview":"Übersicht","#calendar":"Terminplaner","#inventory":"Gerätebestand","#planning":"Sperrzeiten","#bookings":"Vormerkungen","#activity":"Änderungsprotokoll","#analytics":"Analytics","#eventanfragen":"Eventanfragen","#designstudio":"Design Studio","#designs":"Designvorlagen","#cms":"Website & Inhalte","#medien":"Medien","#system":"System","#account":"Mein Konto"};
- $(".crumbs strong").textContent=labels[target]||"Übersicht";
- for(const a of document.querySelectorAll('.sidebar-nav a, #dashboard-mobile-menu a')){
-   const isActive=a.getAttribute("href")===target;
-   a.classList.toggle("active",isActive);
-   if(isActive)a.setAttribute("aria-current","page");
-   else a.removeAttribute("aria-current");
- }
+// Studio 16: compact single-area workspace. Routing only changes presentation;
+// every server action still requires the existing authenticated JWT and RBAC.
+const areas={
+  overview:["#overview",".metrics","#agenda","#setup-assistant",".security-note"],
+  calendar:["#calendar",".bottom-grid > .detail-card"],
+  inventory:["#inventory"],
+  planning:["#planning"],
+  bookings:["#bookings"],
+  activity:["#activity"],
+  analytics:["#analytics"],
+  eventanfragen:["#eventanfragen"],
+  designstudio:["#designstudio"],
+  designs:["#designs"],
+  cms:["#cms"],
+  medien:["#medien"],
+  system:["#system"],
+  account:["#account"]
+};
+const areaLabels={
+  overview:"Dashboard",calendar:"Terminplaner",inventory:"Geräteverwaltung",
+  planning:"Sperrzeiten & Wartung",bookings:"Vormerkungen & Reservierungen",
+  activity:"Änderungsprotokoll",analytics:"Analytics & Reichweite",
+  eventanfragen:"Eventanfragen",designstudio:"Design Studio",
+  designs:"Druckvorlagen",cms:"Website & Inhalte",medien:"Medienverwaltung",
+  system:"System & Sicherheit",account:"Mein Konto"
+};
+const areaSelect=$("#fp16-area-select");
+function currentArea(){
+  const id=location.hash.replace(/^#/,"");
+  return Object.hasOwn(areas,id)?id:"overview";
 }
-window.addEventListener("hashchange",updateNavigation);
+function updateNavigation(){
+  const area=currentArea(),target="#"+area;
+  areaSelect.value=area;
+  $("#fp16-active-title").textContent=areaLabels[area];
+  $(".crumbs strong").textContent=areaLabels[area];
+  for(const [key,selectors] of Object.entries(areas)){
+    for(const selector of selectors){
+      const node=$(selector);
+      if(node)node.classList.toggle("fp16-hidden",key!==area);
+    }
+  }
+  // Group wrappers must also disappear: an empty CSS grid would otherwise
+  // add scroll height. Their single remaining panel spans the entire workspace.
+  $(".bottom-grid").classList.toggle("fp16-hidden",!["calendar","inventory"].includes(area));
+  $(".cc-grid").classList.toggle("fp16-hidden",
+    !["analytics","eventanfragen","designstudio","designs","cms","medien"].includes(area));
+  $(".cc-intro")?.classList.add("fp16-hidden");
+  for(const a of document.querySelectorAll('.sidebar-nav a, #dashboard-mobile-menu a')){
+    const active=a.getAttribute("href")===target;
+    a.classList.toggle("active",active);
+    if(active)a.setAttribute("aria-current","page");
+    else a.removeAttribute("aria-current");
+  }
+  const dialog=$("#day-detail-dialog");
+  if(area!=="calendar"&&dialog?.open)dialog.close();
+}
+function chooseArea(area){
+  if(!Object.hasOwn(areas,area))return;
+  if(location.hash!=="#"+area)history.pushState(null,"","#"+area);
+  updateNavigation();
+  window.scrollTo({top:0,behavior:"auto"});
+}
+areaSelect.addEventListener("change",()=>chooseArea(areaSelect.value));
+window.addEventListener("hashchange",()=>{
+  updateNavigation();
+  requestAnimationFrame(()=>window.scrollTo(0,0));
+});
+window.addEventListener("popstate",()=>{
+  updateNavigation();
+  requestAnimationFrame(()=>window.scrollTo(0,0));
+});
+// Allows asynchronous inquiry -> reservation handoff to reveal its form
+// before scrolling/focusing, instead of attempting to focus a hidden panel.
+window.addEventListener("fotopolis:show-area",event=>chooseArea(event.detail?.area));
+
 async function fetchHealthReport(){
  if(adminRole!=="owner")throw Error("Nur der Hauptadministrator darf die Systemrechte prüfen.");
  const token=await getAdminJwt(client,await client.getSession());
@@ -560,22 +623,22 @@ $("[data-date-go]").addEventListener("click",async()=>{
  openDayDialog();
 });
 $("[data-plan-day]").addEventListener("click",()=>{
- $("#planning")?.scrollIntoView({block:"start",behavior:"smooth"});
+ chooseArea("planning");
  planningManager?.openForDate(selected);
 });
 $("[data-reserve-day]").addEventListener("click",()=>{
- $("#bookings")?.scrollIntoView({block:"start",behavior:"smooth"});
+ chooseArea("bookings");
  reservationsManager?.openForDate(selected);
 });
 $("[data-reserve-selected]").addEventListener("click",()=>{
  $("#day-detail-dialog").close();
- $("#bookings")?.scrollIntoView({block:"start",behavior:"smooth"});
+ chooseArea("bookings");
  reservationsManager?.openForDate(selected);
 });
 $("[data-close-day]").addEventListener("click",()=>$("#day-detail-dialog").close());
 $("[data-plan-selected]").addEventListener("click",()=>{
  $("#day-detail-dialog").close();
- $("#planning")?.scrollIntoView({block:"start",behavior:"smooth"});
+ chooseArea("planning");
  planningManager?.openForDate(selected);
 });
 $("#day-detail-dialog").addEventListener("click",event=>{
