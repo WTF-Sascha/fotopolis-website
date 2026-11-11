@@ -130,7 +130,18 @@ for file,formtype in ((OUT/"contact-flow.js","website"),(OUT/"product-enquiry-v6
     js=file.read_text(encoding="utf-8")
     marker='if(!response.ok)throw Error("HTTP "+response.status);'
     assert js.count(marker)==1
-    js=js.replace(marker,marker+'\n      void window.fp13MirrorEnquiry?.(form,"'+formtype+'");',1)
+    sync_line=('const studio14MirrorOk = typeof window.fp13MirrorEnquiry === "function" && '
+               'await window.fp13MirrorEnquiry(form,"'+formtype+'");')
+    js=js.replace(marker,marker+'\\n      '+sync_line,1)
+    success_text=(
+        'status.textContent="Deine Anfrage wurde übermittelt. Eine Buchung ist dadurch nicht erfolgt.";'
+        if formtype=="website" else
+        'status.textContent="Vielen Dank! Deine unverbindliche Anfrage wurde übermittelt. Eine Buchung ist dadurch nicht erfolgt.";'
+    )
+    assert js.count(success_text)==1
+    diagnostic=(' if(!studio14MirrorOk)status.textContent+=" Hinweis zur Testumgebung: '
+                'Die interne Übernahme konnte nicht bestätigt werden. Netlify Forms bleibt maßgeblich.";')
+    js=js.replace(success_text,success_text+'\\n      '+diagnostic,1)
     file.write_text(js,encoding="utf-8")
 # Disclosure visible on the exact test data collection site – no legal assessment implied.
 privacy=OUT/"datenschutz/index.html"
