@@ -66,7 +66,7 @@ for(const page of ["index.html","fotobox/index.html","fotospiegel/index.html","f
 const appAdmin=read(publicRoot+"admin/admin.css");
 const appLogin=read(publicRoot+"admin/login/login.css");
 assert.ok(!appAdmin.includes("#071b30")&&!appLogin.includes("#071b30"),"Legacy navy not purged from admin CSS");
-assert.ok(read(publicRoot+"service-worker.js").includes("v14-print-clean-admin-portal-r1"),"PWA cache version not changed");
+assert.ok(read(publicRoot+"service-worker.js").includes("v15-one-app-secure-r1"),"PWA cache version not changed");
 console.log("Studio 13.1 brand: all entries unified, 3 PWA icons, approved goldmark, warm admin and fresh cache PASS.");
 console.log("Studio 13 P0/P1 secure assets and complete module hooks PASS; real role-authorized E2E remains distinct.");
 
