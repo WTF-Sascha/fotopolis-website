@@ -52,10 +52,41 @@ for(const dir of ["","fotobox","fotospiegel","fotowohnwagen","designvorlagen","k
 }
 const css=read("preview-build/studio13-unified-brand.css");
 assert.ok(css.includes(".fp14-admin-entry"),"Team entry must match the approved color system");
+// The staff administration is a separate installable PWA, not a public
+// website shortcut: distinct app identity and scope, common approved icons.
+const staffManifest=JSON.parse(read("preview-build/admin/manifest.webmanifest"));
+const publicManifest=JSON.parse(read("preview-build/manifest.webmanifest"));
+assert.equal(staffManifest.id,"/admin/");
+assert.equal(staffManifest.start_url,"/admin/");
+assert.equal(staffManifest.scope,"/admin/");
+assert.equal(staffManifest.display,"standalone");
+assert.equal(publicManifest.id,"/");
+assert.equal(publicManifest.scope,"/");
+assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/dashboard/#eventanfragen"));
+assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/dashboard/#calendar"));
+assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/dashboard/#inventory"));
+assert.ok(staffManifest.shortcuts.some(x=>x.url==="/admin/designstudio/"));
+for(const icon of staffManifest.icons){
+ assert.ok(icon.src.startsWith("/icons/brand-"),"Only approved goldmark icons");
+ assert.ok(existsSync(join(built,icon.src.slice(1))),"Missing approved staff app icon "+icon.src);
+}
+for(const pagePath of ["admin/index.html","admin/login/index.html","admin/dashboard/index.html","admin/designstudio/index.html"]){
+ const page=read("preview-build/"+pagePath);
+ assert.ok(page.includes('href="/admin/manifest.webmanifest"'),"Staff manifest missing in "+pagePath);
+ assert.equal((page.match(/rel="manifest"/g)||[]).length,1,"Duplicate manifest in "+pagePath);
+ assert.ok(!page.includes('href="/manifest.webmanifest"'),"Public app manifest in private page "+pagePath);
+}
+const worker=read("preview-build/service-worker.js");
+assert.ok(worker.includes("url.pathname.startsWith('/admin/')"),
+  "Public service worker must never cache private staff routes");
+assert.ok(admin.includes('href="/admin/dashboard/#eventanfragen"'),"Missing direct private inbox");
+assert.ok(admin.includes('href="/admin/dashboard/#calendar"'),"Missing private calendar");
+assert.ok(admin.includes('href="/admin/dashboard/#inventory"'),"Missing private equipment management");
+
 const login=read("preview-build/admin/login/index.html");
 assert.ok(login.includes("login-bundle.js"),"Real Neon Auth login must stay active");
 const secured=read("preview-build/admin/designstudio/index.html");
 assert.ok(secured.includes("boot-bundle.js"),"Private editor must stay behind auth bootstrap");
 console.log("STUDIO 14 PRINT + ADMIN QA: "+signature.length+" signatures without embedded generated titles, "+
   classics.length+" classics source-preserved (manual baked-text review needed), 44 protected print masters, "+
-  linked+" public entry links, real private management entry PASS.");
+  linked+" public entry links, installable separately-scoped staff app, real private management entry PASS.");
