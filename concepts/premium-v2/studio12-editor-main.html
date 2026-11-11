@@ -1,0 +1,48 @@
+<main id="content" class="fp12-app" data-fp12-editor>
+<section class="fp12-intro" aria-labelledby="fp12-title">
+  <div class="fp12-container">
+    <p class="fp12-kicker">FOTOPOLIS / DESIGN-TO-PRINT STUDIO 12.0</p>
+    <h1 id="fp12-title">Dein Design. <em>Deine Geschichte.</em></h1>
+    <p>Wähle eine der 44 Original- und Signature-Vorlagen, füge deine Fotos ein und gestalte deine persönliche Druckvorschau. Deine Bilder bleiben auf diesem Gerät.</p>
+    <div class="fp12-trust"><span><span aria-hidden="true">01</span> Vorlage wählen</span><span><span aria-hidden="true">02</span> Bilder gestalten</span><span><span aria-hidden="true">03</span> Druckvorschau &amp; Anfrage</span></div>
+  </div>
+</section>
+<section class="fp12-workspace fp12-container" aria-label="Fotoeditor">
+  <div class="fp12-panel">
+    <div class="fp12-panel-head"><span class="fp12-step">01 / KOLLEKTION</span><h2>Vorlage auswählen</h2></div>
+    <label for="fp12-template">Designvorlage</label>
+    <select id="fp12-template" data-fp12-template aria-describedby="fp12-template-hint"><option value="">Vorlagen werden geladen …</option></select>
+    <p id="fp12-template-hint" class="fp12-muted" data-fp12-layout>15 × 10 cm · Querformat · 300 DPI</p>
+    <label for="fp12-product">Fotoerlebnis</label>
+    <select id="fp12-product" data-fp12-product><option>Fotobox</option><option>Fotospiegel</option><option>Fotowohnwagen</option></select>
+
+    <div class="fp12-section"><span class="fp12-step">02 / DEINE BILDER</span><h2>Fotos einfügen</h2><p class="fp12-muted">Jedes Fotofeld hat einen eigenen Ausschnitt. JPG, PNG oder WebP bis 16 MB je Bild.</p></div>
+    <div class="fp12-slotlist" data-fp12-slotlist role="group" aria-label="Fotofelder"></div>
+    <label for="fp12-photo">Foto für das ausgewählte Feld</label>
+    <input id="fp12-photo" type="file" accept="image/jpeg,image/png,image/webp" data-fp12-photo aria-describedby="fp12-photo-privacy"/>
+    <p id="fp12-photo-privacy" class="fp12-muted">Deine Fotos werden nicht hochgeladen, nicht gespeichert und nicht an FOTOPOLIS übertragen.</p>
+    <div class="fp12-controls"><label for="fp12-zoom">Bildausschnitt vergrößern <output data-fp12-zoom-label for="fp12-zoom">100 %</output></label><input id="fp12-zoom" type="range" min="100" max="250" step="5" value="100" data-fp12-zoom/><div class="fp12-move"><button type="button" data-fp12-center>Foto mittig ausrichten</button><button type="button" data-fp12-remove>Foto entfernen</button></div><div class="fp12-nudge" role="group" aria-label="Bildausschnitt mit Tasten verschieben"><button type="button" data-fp12-nudge="left" aria-label="Bild nach links verschieben">←</button><button type="button" data-fp12-nudge="up" aria-label="Bild nach oben verschieben">↑</button><button type="button" data-fp12-nudge="down" aria-label="Bild nach unten verschieben">↓</button><button type="button" data-fp12-nudge="right" aria-label="Bild nach rechts verschieben">→</button></div><p class="fp12-muted">Du kannst das ausgewählte Foto auch direkt in der Druckvorschau verschieben.</p></div>
+
+    <div class="fp12-section"><span class="fp12-step">03 / PERSONalisierung</span><h2>Deine persönliche Note</h2></div>
+    <label for="fp12-caption">Kurzer Text auf dem Ausdruck <span class="fp12-optional">(optional)</span></label>
+    <input id="fp12-caption" type="text" maxlength="65" autocomplete="off" placeholder="z. B. Anna &amp; Max · 12.06.2027" data-fp12-caption />
+    <p class="fp12-muted">Wird nur auf Wunsch als dezente Beschriftung am unteren linken Rand ergänzt. Originalmotiv und Goldlogo bleiben erhalten.</p>
+    <div class="fp12-section fp12-export">
+      <span class="fp12-step">04 / ERGEBNIS</span><h2>Dein fertiges Fotolayout</h2>
+      <p data-fp12-completeness role="status" aria-live="polite">Vorlage auswählen, um loszulegen.</p>
+      <button type="button" class="fp12-primary" data-fp12-download disabled>15 × 10 cm PNG herunterladen</button>
+      <button type="button" class="fp12-secondary" data-fp12-request>Unverbindliche Anfrage mit Design →</button>
+      <p class="fp12-muted">PNG: 1772 × 1181 Pixel, 300 DPI, inklusive Fotos, Druckmotiv und FOTOPOLIS-Logo. Der Export ist erst verfügbar, wenn alle Fotofelder ausgefüllt sind.</p>
+      <p class="fp12-muted">Vor dem Event prüfen wir Beschnitt und Farbprofil am tatsächlichen Drucksystem. Eine Anfrage ist keine verbindliche Buchung.</p>
+    </div>
+  </div>
+  <div class="fp12-preview-column">
+    <div class="fp12-preview-heading"><div><p class="fp12-step">LIVE-VORSCHAU</p><h2>So sieht dein Ausdruck aus.</h2></div><span class="fp12-format">15 × 10 cm · 300 DPI</span></div>
+    <div class="fp12-canvas-frame"><canvas width="1772" height="1181" tabindex="0" data-fp12-canvas role="img" aria-label="Interaktive Vorschau des Fotolayouts. Mit der Maus oder per Touch können Fotos verschoben werden.">Für die Fotovorschau ist ein Browser mit Canvas erforderlich.</canvas></div>
+    <p class="fp12-muted">Tippe auf ein Fotofeld, um es auszuwählen, oder ziehe ein bereits eingefügtes Foto im Rahmen zurecht.</p>
+    <div class="fp12-info"><span aria-hidden="true">◈</span><p data-fp12-resolution>Bei zu geringer Fotoauflösung erscheint hier eine Warnung. Deine Bilder werden ausschließlich lokal verarbeitet.</p></div>
+    <p class="fp12-feedback" role="status" aria-live="polite" data-fp12-status></p>
+  </div>
+</section>
+<section class="fp12-outro"><div class="fp12-container"><h2>Ein Design, das zu deinem Anlass passt.</h2><p>Du möchtest die Gestaltung lieber mit uns abstimmen? Wir übernehmen gern die finale Umsetzung.</p><a href="/designvorlagen/">Alle 44 Vorlagen entdecken</a><a href="/kontakt/">Persönlich anfragen</a></div></section>
+</main>

@@ -34,7 +34,10 @@ assert.equal((gallery.match(/class="curated-item"/g)||[]).length,3);checks++;
 assert.equal((gallery.match(/data-v4-gallery-filter=/g)||[]).length,4,"Every product filter must exist");checks++;
 assert.ok(!existsSync(base+"assets/images/LEG-060.webp"),"Unapproved photo should not be published");checks++;
 assert.ok(!existsSync(base+"admin/admin.js"),"Retired browser-only admin prototype must not ship");checks++;
-assert.match(admin,/url=\/admin\/login\//);checks++;
+assert.match(admin,/href="\/admin\/login\/"/);checks++;
+assert.match(admin,/href="\/admin\/dashboard\/"/);checks++;
+assert.match(admin,/href="\/admin\/designstudio\/"/);checks++;
+assert.doesNotMatch(admin,/http-equiv=["']refresh["']/i,"Admin portal must not silently redirect");checks++;
 assert.match(login,/id="auth-form"/);checks++;
 assert.doesNotMatch(login,/Neon-Authentifizierungsdienst|STUDIO DEVELOPMENT/,"Branded login must not expose backend-provider or prototype language");checks++;
 assert.match(dashboard,/id="dashboard-app" hidden/);checks++;
@@ -58,6 +61,12 @@ assert.match(hero,/<img\b[^>]*fotospiegel-hero-lossless\.webp/i,"Approved Photo 
 assert.match(hero,/FOTOPOLIS · PREMIUM FOTOERLEBNISSE/i,"Original hero heading must be preserved");checks++;
 assert.doesNotMatch(hero,/mirror-hero-link/i,"Standalone photo Mirror CTA must not appear");checks++;
 assert.doesNotMatch(hero,/<img\b[^>]*fotobox-event-1672\.webp/i,"The old Fotobox photo must not remain in the hero");checks++;
-const logo="/assets/fotopolis-logo-original.png";
-assert.ok(home.includes(logo)&&dashboard.includes(logo)&&login.includes(logo));checks++;
+// Public pages use the APPROVED gold brand; protected admin retains its
+// independently reviewed legacy logo until a separate admin UI release.
+const goldLogo="/assets/fotopolis-goldmark.webp";
+const adminLogo="/assets/fotopolis-logo-original.png";
+assert.ok(home.includes(goldLogo), "Public premium site must use approved Goldmark");
+assert.ok(dashboard.includes(adminLogo)&&login.includes(adminLogo),
+          "Protected admin source must remain unchanged by public rebranding");
+checks++;
 console.log("PRESENTATION RELEASE GATE PASS – "+checks+" checks, clean routes and no unapproved person photos. Live launch remains blocked independently.");

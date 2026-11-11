@@ -1,0 +1,252 @@
+/* FOTOPOLIS STUDIO 10.0 — central public-facing Black & Champagne Gold theme.
+   Loaded after legacy skins. One controlled surface layer; no image/logo compositing.
+   Product hero, functional JS and individual print-template colours stay unchanged. */
+:root {
+  color-scheme: light;
+  --fp10-onyx: #15120f;
+  --fp10-charcoal: #25201b;
+  --fp10-graphite: #342b23;
+  --fp10-gold: #d8b678;
+  --fp10-gold-light: #f1d9a9;
+  --fp10-gold-dark: #8a632b;
+  --fp10-ivory: #f8f4ec;
+  --fp10-cream: #fffcf7;
+  --fp10-text: #2b241d;
+  --fp10-muted: #665c52;
+  --fp10-line: #e1d4c0;
+  --fp10-focus: #b57a2e;
+  --fp10-shadow: 0 12px 36px rgba(31, 22, 12, .085);
+  --fp10-radius: 16px;
+  --fp10-ease: cubic-bezier(.22, .65, .2, 1);
+  /* Compatibility aliases are set once; old components need no further blue fallbacks. */
+  --navy: var(--fp10-onyx);
+  --blue: var(--fp10-charcoal);
+  --champagne: var(--fp10-gold);
+  --ivory: var(--fp10-ivory);
+  --v4-navy: var(--fp10-onyx);
+  --v4-cream: var(--fp10-ivory);
+  --s5-navy: var(--fp10-onyx);
+  --s5-midnight: var(--fp10-onyx);
+  --s5-blue: var(--fp10-charcoal);
+  --s5-parchment: var(--fp10-ivory);
+  --gl-navy: var(--fp10-onyx);
+  --gl-ink: var(--fp10-text);
+  --gl-cream: var(--fp10-ivory);
+  --gl-gold: var(--fp10-gold);
+  --gl-muted: var(--fp10-muted);
+  --gl-line: var(--fp10-line);
+}
+html { scroll-padding-top: clamp(78px, 9vw, 116px); }
+body { background: var(--fp10-ivory); color: var(--fp10-text); min-width: 320px; }
+*, *::before, *::after { box-sizing: border-box; }
+main, section, .inner, .page-grid, .gl-shell, .v4-product-card { min-width: 0; }
+img, video, svg { max-width: 100%; }
+h1, h2, h3 { text-wrap: balance; }
+p, li, dd, label { overflow-wrap: break-word; }
+a:focus-visible, button:focus-visible, summary:focus-visible,
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 3px solid var(--fp10-focus);
+  outline-offset: 3px;
+}
+:target { scroll-margin-top: 118px; }
+.studio-header.site-header {
+  background: rgba(21, 18, 15, .975) !important;
+  border-top: 1px solid rgba(216, 182, 120, .8);
+  border-bottom: 1px solid rgba(216, 182, 120, .25);
+  box-shadow: 0 10px 34px rgba(13, 9, 5, .2);
+}
+.studio-header .studio-header-curve-fill { fill: var(--fp10-onyx); }
+.studio-header .studio-header-curve-stroke { stroke: var(--fp10-gold); }
+.studio-header-shell.nav-shell { align-items: center; }
+.studio-identity.identity { align-items: center; min-width: 0; }
+.studio-identity.identity > img, .studio-footer .footer-brand img {
+  object-fit: contain !important;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.studio-mainnav.mainnav { align-items: center; }
+.studio-mainnav .nav-trigger,
+.studio-mainnav a:not(.nav-cta) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  line-height: 1.25;
+  vertical-align: middle;
+}
+.studio-mainnav .nav-trigger svg.nav-chevron,
+.studio-mainnav .nav-cta svg.nav-cta-arrow {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  position: static;
+  margin: 0;
+  transform: none;
+  vertical-align: middle;
+}
+.studio-mainnav .nav-trigger[aria-expanded="true"] svg.nav-chevron { transform: rotate(180deg); }
+.studio-mainnav .nav-panel {
+  background: var(--fp10-charcoal) !important;
+  border-color: rgba(216, 182, 120, .38);
+}
+.studio-mainnav .nav-panel a { justify-content: flex-start; text-align: left; }
+.button.gold, .mainnav .nav-cta,
+.studio9-submit, .studio9-product-submit, .s7-next-button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.35;
+  white-space: normal;
+}
+.v45-home .v45-hero .v4-hero-visual {
+  background: radial-gradient(ellipse at 80% 47%, #382b1e, var(--fp10-onyx) 77%) !important;
+}
+.v45-home .v45-hero .v4-hero-content { max-width: 1480px; }
+.v45-home .v45-products,
+.product-premium, .package-overview, .services-overview, .occasion-section,
+.trust-section, .curated-gallery { background: var(--fp10-ivory); }
+.v45-home .v4-product-track { gap: clamp(12px, 1.5vw, 22px); align-items: stretch; }
+.v45-home .v4-product-card {
+  height: 100%;
+  isolation: isolate;
+  border-radius: var(--fp10-radius);
+  background: var(--fp10-cream) !important;
+  box-shadow: var(--fp10-shadow);
+  border: 1px solid var(--fp10-line);
+}
+.v45-home .v4-product-photo {
+  position: relative;
+  height: clamp(235px, 23vw, 330px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 39%, #35271b 0%, #1b1612 77%);
+}
+.v45-home .v4-product-photo > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center;
+  padding: clamp(9px, 1.1vw, 15px);
+}
+.v45-home .v4-product-body { flex: 1; min-height: 140px; }
+.v45-home .v4-product-body h3 { line-height: 1.16; }
+.v45-home .v4-product-arrow { display: inline-flex; align-items: center; justify-content: center; }
+.studio-page-hero.page-hero {
+  background: linear-gradient(125deg, var(--fp10-onyx), #342619) !important;
+}
+.studio-page-hero-grid { min-width: 0; }
+.studio-page-hero-media { background: var(--fp10-charcoal) !important; overflow: hidden; }
+.studio-page-hero-media img { object-fit: contain; object-position: center; }
+.studio-route-jumps { background: var(--fp10-cream); border-bottom-color: var(--fp10-line); }
+.studio-route-jumps a { background: var(--fp10-cream); border-color: var(--fp10-line); color: var(--fp10-text); }
+.studio-route-jumps a:hover { color: var(--fp10-cream); background: var(--fp10-charcoal); }
+.page-body, .product-steps, .services-overview, .trust-process,
+.occasion-steps, .package-planner { background: var(--fp10-ivory); }
+.page-article, .package-card, .planning-card, .trust-fact, .occasion-card,
+.service-panel, .product-step, .contact-form, .contact-recap, .s7-request-card {
+  min-width: 0;
+  border-radius: var(--fp10-radius);
+  border-color: var(--fp10-line);
+  box-shadow: var(--fp10-shadow);
+}
+.page-article :is(h2, h3), .product-spec h3, .package-card h3, .planning-card h3,
+.trust-fact h3, .service-panel h3 { color: var(--fp10-text); }
+.page-article :is(p, li), .product-spec p, .package-card p,
+.planning-card p, .trust-fact p { color: var(--fp10-muted); }
+.s7-enquiry.product-enquiry { background: #efe5d7 !important; }
+.s7-request-summary { background: var(--fp10-onyx); }
+.contact-form :is(input, select, textarea),
+.product-request-form :is(input, select, textarea),
+.gl-page :is(input, select) {
+  max-width: 100%;
+  min-width: 0;
+  font-size: max(16px, 1rem);
+  border-radius: 9px;
+}
+.contact-form :is(input, select, textarea):focus,
+.product-request-form :is(input, select, textarea):focus {
+  border-color: var(--fp10-focus);
+}
+.gl-page { color: var(--fp10-text); background: var(--fp10-ivory); }
+.gl-hero { background: linear-gradient(125deg, var(--fp10-onyx), #342619) !important; }
+.gl-toolbar { background: var(--fp10-cream); }
+.gl-card { background: var(--fp10-cream); border-color: var(--fp10-line); }
+.gl-preview { background: var(--fp10-charcoal); aspect-ratio: 3 / 2; }
+.gl-preview img { width: 100%; height: 100%; object-fit: contain; }
+.gl-modal { align-items: safe center; }
+.gl-modal-panel { max-width: min(1260px, calc(100vw - 24px)); }
+.gl-modal-img-wrap { background: var(--fp10-onyx); }
+.gl-modal-info { min-width: 0; }
+.gl-modal-info .gl-action {
+  background: var(--fp10-onyx);
+  border-color: var(--fp10-onyx);
+  color: var(--fp10-cream);
+}
+.gl-chip[aria-pressed="true"], .v4-gallery-filters button[aria-pressed="true"] {
+  background: var(--fp10-charcoal) !important;
+  border-color: var(--fp10-charcoal);
+  color: var(--fp10-cream);
+}
+.gl-close { min-width: 44px; min-height: 44px; }
+.studio9-thanks { background: var(--fp10-ivory); }
+.studio9-thanks h1 { color: var(--fp10-text); }
+@media (max-width: 1024px) {
+  .studio-header-shell.nav-shell { gap: 14px; }
+  .studio-mainnav.mainnav { gap: 10px; }
+  .studio-mainnav .nav-trigger { padding-inline: 4px; }
+}
+@media (max-width: 900px) {
+  .studio-header .studio-mainnav.is-open,
+  .studio-header .mainnav[aria-hidden="false"] { background: var(--fp10-onyx) !important; }
+  .studio-mainnav .nav-panel { box-shadow: none; }
+  .studio-mainnav .nav-trigger { justify-content: space-between; width: 100%; }
+  .studio-mainnav .nav-panel a { justify-content: flex-start; }
+  .v45-home .v4-product-track { scroll-padding-inline: 18px; }
+}
+@media (max-width: 760px) {
+  .studio-header-shell.nav-shell { min-height: 76px; }
+  .studio-mainnav .nav-cta { width: 100%; }
+  .v45-home .v45-hero .v4-hero-content { padding-block: clamp(88px, 16vw, 115px) 100px; }
+  .v45-home .v4-product-photo { height: clamp(210px, 55vw, 285px); }
+  .studio-page-hero-grid { padding-block: clamp(34px, 7vw, 60px); }
+  .studio-page-hero-media { max-width: 100%; }
+  .gl-grid { grid-template-columns: 1fr; }
+  .gl-toolbar-inner { grid-template-columns: 1fr; }
+  .gl-fields { width: 100%; }
+  .gl-search, .gl-layout { flex: 1; min-width: 0; }
+  .gl-modal { padding: 10px; }
+  .gl-modal-panel {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    max-height: calc(100dvh - 20px);
+    overflow-y: auto;
+  }
+  .gl-modal-img-wrap { min-height: 180px; padding: 18px; }
+  .gl-modal-img { max-height: min(48dvh, 440px); }
+  .gl-modal-info { padding: 22px 18px 28px; }
+  .route-kontakt .contact-layout { grid-template-columns: minmax(0, 1fr); }
+  .route-kontakt .contact-fields { grid-template-columns: minmax(0, 1fr); }
+  .s7-request-card, .contact-form, .contact-recap { padding-inline: clamp(14px, 4vw, 22px); }
+}
+@media (max-width: 390px) {
+  .gl-shell { width: calc(100% - 24px); }
+  .studio-wordmark { max-width: 162px; }
+  .v45-home .v4-product-body { padding-inline: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

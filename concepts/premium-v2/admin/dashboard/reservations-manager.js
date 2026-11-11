@@ -28,6 +28,8 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
  const lead=el("p","Erstelle interne Reservierungen und Vormerkungen mit verbindlich angegebenen Vor- und Nachlaufzeiten. Das gesamte Zeitfenster wird für das gewählte Gerät reserviert.","plan-help");
  const status=el("p","", "plan-status");status.setAttribute("role","status");
  const list=el("div",undefined,"reservation-list");
+ let linkedInquiryId=null;
+ const linkNote=el("p","", "plan-help");linkNote.hidden=true;
  const action=button("+ Interne Vormerkung anlegen","plan-primary");
  action.hidden=!allowed;
  const form=el("form",undefined,"plan-form");form.hidden=true;form.noValidate=true;
@@ -56,7 +58,7 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
  const controls=el("div",undefined,"plan-form-buttons");
  const submit=el("button","Vormerkung verbindlich speichern","plan-primary");submit.type="submit";
  const cancel=button("Abbrechen");controls.append(check,submit,cancel);
- form.append(el("h3","Neue interne Reservierung"),
+ form.append(el("h3","Neue interne Reservierung"),linkNote,
    el("p","Das Start-/Endfenster beschreibt die Veranstaltungszeit. Beide Pufferfelder sind Pflicht – auch wenn 0 Minuten richtig sind.","plan-help"),
    field("Aktiviertes Mietgerät",device,"booking-device"),field("Beginn (Ortszeit)",start,"booking-start"),
    field("Ende (Ortszeit)",end,"booking-end"),
@@ -86,6 +88,11 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
      info.append(el("strong",(resource?.display_name||"Unbekanntes Gerät")+" · "+(booking.allocation_state==="confirmed"?"Bestätigte interne Reservierung":"Vormerkung")),
        el("p",localBerlinTime(booking.event_start_at).replace("T"," ")+" bis "+localBerlinTime(booking.event_end_at).replace("T"," ")+" Uhr","reservation-date"),
        el("small","Belegt inkl. Logistikpuffer: "+localBerlinTime(booking.occupied_from).replace("T"," ")+" bis "+localBerlinTime(booking.occupied_until).replace("T"," ")+" Uhr"));
+     if(booking.inquiry_id){
+       const reference=el("a","Zugeordnete Anfrage "+booking.inquiry_id,"reservation-date");
+       reference.href="#eventanfragen";
+       info.append(reference);
+     }
      item.append(info);
      if(allowed){
        const actions=el("div",undefined,"reservation-actions");
@@ -130,6 +137,7 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
    }finally{check.disabled=false}
  });
  function openForDate(day){
+   linkedInquiryId=null;linkNote.hidden=true;linkNote.textContent="";
    choices();form.reset();error.textContent="";invalidatePreflight();form.hidden=false;
    const chosen=typeof day==="string"&&/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(day)
      ?day:localBerlinTime(new Date()).slice(0,10);
@@ -138,6 +146,19 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
    before.value="";after.value="";
    form.scrollIntoView({block:"nearest",behavior:"smooth"});device.focus();
  }
+ function openForInquiry(details){
+   if(!allowed||!details||!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(details.id||""))return;
+   window.dispatchEvent(new CustomEvent("fotopolis:show-area",{detail:{area:"bookings"}}));
+   openForDate(details.eventDate);
+   linkedInquiryId=details.id;
+   linkNote.textContent="Diese Vormerkung wird mit der bestehenden Anfrage verknüpft (ID: "+linkedInquiryId+"). Erst ein berechtigter Mitarbeiter kann eine Reservierung speichern oder bestätigen.";
+   linkNote.hidden=false;
+   const match={Fotobox:"fotobox",Fotospiegel:"fotospiegel",Fotowohnwagen:"fotowohnwagen"}[details.product];
+   const possible=getResources().filter(r=>r.enabled&&r.product_type===match);
+   if(possible.length===1)device.value=possible[0].id;
+   form.scrollIntoView({block:"start",behavior:"smooth"});
+ }
+ window.addEventListener("fotopolis:open-booking",event=>openForInquiry(event.detail));
  action.addEventListener("click",()=>openForDate());
  cancel.addEventListener("click",()=>{form.hidden=true;error.textContent="";action.focus()});
  form.addEventListener("submit",async event=>{
@@ -146,7 +167,12 @@ export function setupReservationsManager({root,getResources,getAllocations,creat
      before:before.value,after:after.value},getResources(),getAllocations());
    if(check.error){error.textContent=check.error;return}
    submit.disabled=true;error.textContent="Prüfe verfügbare Zeit und speichere …";
-   try{await createHold(check.value);form.hidden=true;error.textContent="";status.textContent="Interne Vormerkung gespeichert. Sie blockiert das Gerät.";action.focus()}
+   try{
+     await createHold({...check.value,...(linkedInquiryId?{inquiryId:linkedInquiryId}:{})});
+     form.hidden=true;error.textContent="";
+     status.textContent=linkedInquiryId?"Mit Anfrage verknüpfte interne Vormerkung gespeichert. Gerät blockiert.":"Interne Vormerkung gespeichert. Sie blockiert das Gerät.";
+     linkedInquiryId=null;linkNote.hidden=true;action.focus();
+   }
    catch(e){error.textContent=e?.message||"Vormerkung konnte nicht angelegt werden."}
    finally{submit.disabled=false}
  });

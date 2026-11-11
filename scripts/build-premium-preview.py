@@ -236,22 +236,20 @@ for slug in ("fotobox", "fotospiegel", "fotowohnwagen"):
 
 
 # The legacy browser-only admin prototype is retired from the deploy.
-# /admin/ now leads exclusively to the protected Neon Auth sign-in screen.
+# /admin/ is a visible branded portal; sensitive routes remain JWT/SSO gated.
 admin_source = source / "admin"
 admin_target = target / "admin"
 admin_target.mkdir(exist_ok=True)
 shutil.copy2(admin_source / "admin.css", admin_target / "admin.css")
-admin_html = """<!doctype html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive">
-<meta name="referrer" content="no-referrer">
-<title>FOTOPOLIS · Verwaltung</title>
-<meta http-equiv="refresh" content="0; url=/admin/login/"></head>
-<body><main><h1>FOTOPOLIS Verwaltung</h1>
-<p><a href="/admin/login/">Zur geschützten Anmeldung</a></p>
-</main></body></html>"""
-(admin_target / "index.html").write_text(admin_html, encoding="utf-8")
-assert 'url=/admin/login/' in admin_html
+# Source-controlled Studio-14 portal, intentionally not the old automatic redirect.
+# This file exposes navigation only; protected modules still require SSO,
+# Neon Auth, JWT signature verification and the member role check.
+shutil.copy2(admin_source / "index.html",admin_target / "index.html")
+admin_html=(admin_target / "index.html").read_text(encoding="utf-8")
+assert 'href="/admin/login/"' in admin_html
+assert 'href="/admin/dashboard/"' in admin_html
+assert 'href="/admin/designstudio/"' in admin_html
+assert 'http-equiv="refresh"' not in admin_html
 assert not (admin_target / "admin.js").exists(), "Legacy demo must never ship"
 assert not any((target / x).exists() for x in ("database", "database_url", ".env"))
 
@@ -273,7 +271,7 @@ assert 'POSTGRES' not in login_html and 'password=' not in login_html
 dashboard_source = admin_source / "dashboard"
 dashboard_target = admin_target / "dashboard"
 dashboard_target.mkdir(exist_ok=True)
-for name in ("index.html", "dashboard.css", "inventory-manager.css", "inventory-manager.js", "planning-manager.css", "planning-manager.js", "planning-logic.js", "reservations-manager.css", "reservations-manager.js", "csv-export.js", "operations-insights.css", "operations-insights.js", "first-run.css", "first-run.js"):
+for name in ("index.html", "dashboard.css", "inventory-manager.css", "inventory-manager.js", "planning-manager.css", "planning-manager.js", "planning-logic.js", "reservations-manager.css", "reservations-manager.js", "csv-export.js", "operations-insights.css", "operations-insights.js", "first-run.css", "first-run.js", "command-center.css"):
     shutil.copy2(dashboard_source / name, dashboard_target / name)
 dashboard_html = (dashboard_target / "index.html").read_text(encoding="utf-8")
 assert 'id="dashboard-app" hidden' in dashboard_html
@@ -342,3 +340,18 @@ runpy.run_path(str(root / 'scripts/apply-gold-brand.py'), run_name='__main__')
 
 # Exact original-asset logo swap only; all other pixels are preserved.
 runpy.run_path(str(root / 'scripts/visual-brand-pro.py'),run_name='__main__')
+
+# Studio 10 candidate is published only on an isolated PR/branch preview.
+runpy.run_path(str(root / 'scripts/apply-studio10.py'), run_name='__main__')
+
+# Studio 11 isolated public-only design, after immutable Studio 10 QA.
+runpy.run_path(str(root / 'scripts/apply-studio11.py'), run_name='__main__')
+
+# Studio 11.1: official FOTOPOLIS 15x10 cm / 300-DPI horizontal print collection.
+# Runs after the immutable 32-original Studio 10 / Studio 11 audit stages.
+# Only generated preview assets are replaced; source originals remain protected.
+runpy.run_path(str(root / 'scripts/build-photo-print-collection.py'), run_name='__main__')
+
+# Studio 12.0: public photo editor, client-only export and opt-in enquiry handoff.
+# New route is isolated to this branch's preview output, never the live site.
+runpy.run_path(str(root / 'scripts/apply-studio12.py'), run_name='__main__')

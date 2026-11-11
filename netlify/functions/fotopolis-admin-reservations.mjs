@@ -1,8 +1,7 @@
 // FOTOPOLIS Studio 4.0: isolated internal holds (NOT public customer bookings).
 // No customer PII, payments, prices, emails, or public availability promises.
 import {neon} from "@neondatabase/serverless";
-import {authorizeAdmin,response} from "./fotopolis-admin-session.mjs";
-const preview="https://deploy-preview-2--fotopolis-preview.netlify.app";
+import {authorizeAdmin,response,samePreviewOrigin} from "./fotopolis-admin-session.mjs";
 const uuid=/^[\da-f]{8}-[\da-f]{4}-[1-8][\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
 const utc=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
 const exact=(v,keys)=>Object.keys(v).every(k=>keys.includes(k));
@@ -14,7 +13,9 @@ function moment(x){
 export function validateHoldAction(value,method){
  if(!value||typeof value!=="object"||Array.isArray(value))return {error:"Invalid reservation payload"};
  if(method==="POST"){
-   if(!exact(value,["resourceId","eventStartUtc","eventEndUtc","occupiedFromUtc","occupiedUntilUtc"])||!uuid.test(value.resourceId||""))return {error:"Invalid device or hold fields"};
+   if(!exact(value,["resourceId","eventStartUtc","eventEndUtc","occupiedFromUtc","occupiedUntilUtc","inquiryId"])||!uuid.test(value.resourceId||""))return {error:"Invalid device or hold fields"};
+   const inquiryId=Object.hasOwn(value,"inquiryId")?value.inquiryId:null;
+   if(inquiryId!==null&&(typeof inquiryId!=="string"||!uuid.test(inquiryId)))return {error:"Invalid inquiry reference"};
    const dates=["eventStartUtc","eventEndUtc","occupiedFromUtc","occupiedUntilUtc"].map(k=>moment(value[k]));
    if(dates.some(d=>!d||!Number.isFinite(d.getTime())))return {error:"Valid UTC times required"};
    const [eventStart,eventEnd,from,until]=dates;
@@ -23,7 +24,7 @@ export function validateHoldAction(value,method){
        eventStart-from>24*3600000||until-eventEnd>24*3600000)return {error:"Invalid event window or logistics buffers"};
    return {value:{resourceId:value.resourceId,eventStartUtc:eventStart.toISOString(),
      eventEndUtc:eventEnd.toISOString(),occupiedFromUtc:from.toISOString(),
-     occupiedUntilUtc:until.toISOString()}};
+     occupiedUntilUtc:until.toISOString(),inquiryId}};
  }
  if(method==="PATCH"){
    if(!exact(value,["id","action"])||!uuid.test(value.id||"")||!["confirm","cancel"].includes(value.action))return {error:"Only booking confirmation or cancellation allowed"};
@@ -35,7 +36,7 @@ export default async function handler(request,context){
  const auth=await authorizeAdmin(request,context,{methods:["POST","PATCH"]});
  if(auth.denied)return auth.denied;
  if(!["owner","manager"].includes(auth.role))return response({error:"Admin permission required"},403);
- if(request.headers.get("origin")!==preview)return response({error:"Forbidden origin"},403);
+ if(!samePreviewOrigin(request))return response({error:"Forbidden origin"},403);
  if(!/^application\/json(?:\s*;|$)/i.test(request.headers.get("content-type")||""))return response({error:"JSON required"},415);
  let textValue;
  try{textValue=await request.text()}catch{return response({error:"Invalid request"},400)}
@@ -48,18 +49,18 @@ export default async function handler(request,context){
  try{
    const sql=neon(conn);let rows;
    if(request.method==="POST"){
-     const {resourceId,eventStartUtc,eventEndUtc,occupiedFromUtc,occupiedUntilUtc}=parsed.value;
+     const {resourceId,eventStartUtc,eventEndUtc,occupiedFromUtc,occupiedUntilUtc,inquiryId}=parsed.value;
      rows=await sql`
        WITH held AS (
          INSERT INTO fotopolis.allocations(resource_id,allocation_kind,allocation_state,
-           event_start_at,event_end_at,occupied_from,occupied_until)
+           event_start_at,event_end_at,occupied_from,occupied_until,inquiry_id)
          SELECT r.id,'booking','held',${eventStartUtc}::timestamptz,
            ${eventEndUtc}::timestamptz,${occupiedFromUtc}::timestamptz,
-           ${occupiedUntilUtc}::timestamptz
+           ${occupiedUntilUtc}::timestamptz,${inquiryId}::uuid
          FROM fotopolis.resources r
          WHERE r.id=${resourceId}::uuid AND r.enabled=true
          RETURNING id,resource_id,allocation_kind,allocation_state,
-           event_start_at,event_end_at,occupied_from,occupied_until
+           event_start_at,event_end_at,occupied_from,occupied_until,inquiry_id
        ), logged AS (
          INSERT INTO fotopolis.admin_activity(user_id,action,entity_id)
          SELECT ${auth.userId}::uuid,'create_booking',id FROM held
@@ -83,10 +84,11 @@ export default async function handler(request,context){
        ) SELECT * FROM updated
      `;
    }
-   if(!rows.length)return response({error:"Active device or reservation not found"},404);
+   if(!rows.length)return response({error:"Active device, inquiry or reservation not found"},404);
    return response({saved:true,allocation:rows[0],previewOnly:true},request.method==="POST"?201:200);
  }catch(e){
    if(e?.code==="23P01")return response({error:"Device is already occupied in this window"},409);
+   if(e?.code==="23503")return response({error:"Linked inquiry does not exist"},404);
    return response({error:"Internal reservation unavailable"},503);
  }
 }

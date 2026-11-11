@@ -27,3 +27,16 @@
 .link-button{font-size:11px;font-weight:760;color:#977445;border:0;background:none;text-decoration:underline;text-align:left;padding:0;line-height:1.6}
 .link-button:hover{color:#553a18}
 @media(max-width:400px){.mode-tabs button{font-size:9px;letter-spacing:-.015em;padding-inline:2px}.helper-actions{gap:7px}}
+
+/* Studio 15 account onboarding guidance: no unrestricted self-registration. */
+.fp15-access-note{
+  margin:-8px 0 17px;
+  padding:12px 15px;
+  border:1px solid #e1d1bd;
+  border-radius:8px;
+  background:#fffaf3;
+  color:#665447;
+  font-size:12px;
+  line-height:1.7;
+}
+.fp15-access-note strong{display:block;color:#38281d;font-weight:780;margin-bottom:3px}

@@ -1,9 +1,8 @@
 // FOTOPOLIS Studio 3.7 – future resource writer, locked until preview-scoped
 // least-privilege database grants and deployment secret are independently verified.
 import {neon} from "@neondatabase/serverless";
-import {authorizeAdmin,response} from "./fotopolis-admin-session.mjs";
+import {authorizeAdmin,response,samePreviewOrigin} from "./fotopolis-admin-session.mjs";
 const TYPES=new Set(["fotobox","fotospiegel","fotowohnwagen"]);
-const previewOrigin="https://deploy-preview-2--fotopolis-preview.netlify.app";
 const allowedKeys=["type","code","name"];
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export function validateResourceDraft(value,method){
@@ -38,7 +37,7 @@ export default async function handler(request,context){
   if(!["owner","manager"].includes(authorized.role))return response({error:"Manager permission required"},403);
   // Browsers always send Origin for JSON mutation requests. Cross-origin and
   // non-browser requests are blocked even when bearer authentication succeeded.
-  if(request.headers.get("origin")!==previewOrigin)return response({error:"Forbidden origin"},403);
+  if(!samePreviewOrigin(request))return response({error:"Forbidden origin"},403);
   if(!/^application\/json(?:\s*;|$)/i.test(request.headers.get("content-type")||"")){
     return response({error:"JSON content type required"},415);
   }
