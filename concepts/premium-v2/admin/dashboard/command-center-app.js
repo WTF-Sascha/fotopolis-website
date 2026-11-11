@@ -86,13 +86,23 @@ export function setupCommandCenter({getToken,role}){
  async function inquiries(){
   const p=panel("eventanfragen");if(!p)return;
   const toolbar=el("div",null,"cc-controls");
+  const productFilter=select(toolbar,"Produkt",[["all","Alle Produkte"],
+    ["Fotobox","Fotobox"],["Fotospiegel","Fotospiegel"],["Fotowohnwagen","Fotowohnwagen"],["Noch offen","Noch offen"]]);
+  const statusFilter=select(toolbar,"Status",[["all","Alle Status"],...Object.entries(statuses)]);
+  const startDate=field(toolbar,"Wunschtermin ab","input",{type:"date"});
+  const endDate=field(toolbar,"Wunschtermin bis","input",{type:"date"});
   button(toolbar,"Anfragen aktualisieren",draw);
   p.holder.append(toolbar);
+  for(const control of [productFilter,statusFilter,startDate,endDate])
+   control.addEventListener("change",()=>void draw());
   async function draw(){
    const old=p.holder.querySelector(".cc-records");old?.remove();
    try{
-    const data=await request("inquiries"),list=el("div",null,"cc-records");
-    setStatus(p,data.rows?.length?data.rows.length+" im Studio 13 erfasste Anfragen. Netlify Forms bei Bedarf separat kontrollieren.":"Noch keine mit Studio 13 synchronisierten Eventanfragen. Die bisherigen Netlify-Forms-Eingänge bleiben separat bestehen.");
+    const params=new URLSearchParams({product:productFilter.value,status:statusFilter.value,
+      from:startDate.value,to:endDate.value});
+    const data=await request("inquiries?"+params.toString()),list=el("div",null,"cc-records");
+    setStatus(p,(data.rows?.length||0)+" passende Neon-Verwaltungskopien"+(data.hasMore?" (weitere Ergebnisse vorhanden)":"")+
+      ". Netlify Forms ist die verbindliche Eingangsquelle; diese Übersicht ersetzt keinen Quellenabgleich.");
     for(const r of data.rows||[]){
      const row=el("article",null,"cc-record");
      row.append(el("strong",r.full_name+" · "+r.product+" · "+(r.event_date||"Termin offen")));
