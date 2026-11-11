@@ -48,10 +48,16 @@ for(const dir of ["","fotobox","fotospiegel","fotowohnwagen","designvorlagen","k
  assert.match(html,/href="\/admin\/">Interne Verwaltung/,
   "The internal access link is missing in "+(dir||"start"));
  assert.equal((html.match(/fp14-admin-entry/g)||[]).length,1,"Duplicate admin link in "+dir);
+ assert.match(html,/<nav[^>]*id="mainnav"[^>]*>[\\s\\S]*?class="fp15-staff-nav" href="\\/admin\\/"/,
+   "The team administration link must be visible in the primary navigation on "+(dir||"start"));
+ assert.equal((html.match(/class="fp15-staff-nav"/g)||[]).length,1,
+   "No duplicated team action in "+(dir||"start"));
  linked++;
 }
 const css=read("preview-build/studio13-unified-brand.css");
 assert.ok(css.includes(".fp14-admin-entry"),"Team entry must match the approved color system");
+assert.ok(css.includes(".studio-mainnav a.fp15-staff-nav"),
+ "Primary navigation team entry must match quiet-luxury design tokens");
 // Studio 15 contract: customer and employee routes share one installable ID.
 // The protected routes remain network-only and are never PWA cached.
 const publicManifest=JSON.parse(read("preview-build/manifest.webmanifest"));
