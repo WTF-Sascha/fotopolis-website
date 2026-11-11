@@ -181,7 +181,7 @@ for page in sorted(OUT.rglob("index.html")):
     assert "fp14-admin-entry" not in html, f"Duplicate management entry in {page}"
     # Studio 15 visibility fix: staff access must not be buried in the footer.
     # A navigation link only opens the restricted portal; it does not grant data rights.
-    nav=re.compile(r'(<nav\\b[^>]*\\bid=["\\\']mainnav["\\\'][^>]*>)(.*?)(</nav>)',re.S|re.I)
+    nav=re.compile(r'(<nav[^>]*id="mainnav"[^>]*>)(.*?)(</nav>)',re.S|re.I)
     access=('<a class="fp15-staff-nav" href="/admin/" '
             'aria-label="Interne FOTOPOLIS Verwaltung öffnen">Team · Verwaltung</a>')
     html,nav_count=nav.subn(lambda match:match.group(1)+match.group(2)+access+match.group(3),html,count=1)
