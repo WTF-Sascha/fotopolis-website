@@ -4,29 +4,48 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { neon } from "@neondatabase/serverless";
 
 const AUTH_BASE="https://ep-withered-hat-b930f72a.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
-// Only Netlify deploy-preview subdomains for THIS development site are accepted.
-// The origin must match the current request host, not a historic PR number.
+// Closed allowlist: PR previews or this site's exact persistent staging branch.
+// Never authorize the main/prod host, an arbitrary branch, or a similar hostname.
 const PREVIEW_HOST=/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app$/i;
+const STAGING_HOST="staging--fotopolis-preview.netlify.app";
 const jwks=createRemoteJWKSet(new URL(AUTH_BASE+"/.well-known/jwks.json"),{timeoutDuration:5000});
 export const noCache={"Cache-Control":"no-store, max-age=0","Content-Type":"application/json; charset=utf-8"};
 export const response=(data,status)=>new Response(JSON.stringify(data),{status,headers:noCache});
+// Independent per-environment checks enforce authenticated staging isolation.
+// Every database URL is the existing least-privileged Neon DEVELOPMENT branch role.
+export function validDevDeploy(request,context){
+ try{
+  const url=new URL(request.url);
+  const inPreview=context?.deploy?.context==="deploy-preview"&&PREVIEW_HOST.test(url.hostname);
+  const inStaging=context?.deploy?.context==="branch-deploy"&&url.hostname===STAGING_HOST;
+  return context?.deploy?.published!==true&&url.protocol==="https:"&&(inPreview||inStaging);
+ }catch{return false}
+}
+export function devDatabaseConnection(key,context){
+ if(context?.deploy?.context==="deploy-preview")return Netlify.env.get(key);
+ if(context?.deploy?.context==="branch-deploy"){
+  if(!key.startsWith("FOTOPOLIS_"))return null;
+  return Netlify.env.get(key.replace(/^FOTOPOLIS_/,"FOTOPOLIS_STAGING_"));
+ }
+ return null;
+}
 // Cross-site writes are denied even if the bearer token is otherwise valid.
-// The caller must use the identical origin of a valid, isolated Deploy Preview.
 export function samePreviewOrigin(request){
   try{
     const url=new URL(request.url);
-    return url.protocol==="https:"&&PREVIEW_HOST.test(url.hostname)&&
-      request.headers.get("origin")===url.origin;
+    const known=PREVIEW_HOST.test(url.hostname)||url.hostname===STAGING_HOST;
+    return url.protocol==="https:"&&known&&request.headers.get("origin")===url.origin;
   }catch{return false}
 }
 
 export async function authorizeAdmin(request,context,{methods=["GET"]}={}){
-  if(context?.deploy?.context!=="deploy-preview"||context?.deploy?.published===true){
+  if(context?.deploy?.context!=="deploy-preview"&&
+     context?.deploy?.context!=="branch-deploy"){
     return {denied:response({error:"Not found"},404)};
   }
+  if(!validDevDeploy(request,context))return {denied:response({error:"Not found"},404)};
   if(!methods.includes(request.method))return {denied:response({error:"Method not allowed"},405)};
   const url=new URL(request.url);
-  if(url.protocol!=="https:"||!PREVIEW_HOST.test(url.hostname))return {denied:response({error:"Not found"},404)};
   const origin=request.headers.get("origin");
   if(origin&&origin!==url.origin)return {denied:response({error:"Forbidden origin"},403)};
   const header=request.headers.get("authorization")||"";
@@ -48,7 +67,7 @@ export async function authorizeAdmin(request,context,{methods=["GET"]}={}){
   }catch{
     return {denied:response({authenticated:false,error:"Invalid session"},401)};
   }
-  const dbUrl=Netlify.env.get("FOTOPOLIS_NEON_DEV_AUTH_READER_URL");
+  const dbUrl=devDatabaseConnection("FOTOPOLIS_NEON_DEV_AUTH_READER_URL",context);
   if(!dbUrl)return {denied:response({error:"Authorization service not configured"},503)};
   try{
     const sql=neon(dbUrl);
