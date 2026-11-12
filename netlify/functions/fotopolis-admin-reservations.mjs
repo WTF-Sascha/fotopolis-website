@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 4.0: isolated internal holds (NOT public customer bookings).
 // No customer PII, payments, prices, emails, or public availability promises.
 import {neon} from "@neondatabase/serverless";
@@ -44,7 +45,7 @@ export default async function handler(request,context){
  let body;try{body=JSON.parse(textValue)}catch{return response({error:"Invalid JSON"},400)}
  const parsed=validateHoldAction(body,request.method);
  if(parsed.error)return response({error:parsed.error},400);
- const conn=Netlify.env.get("FOTOPOLIS_NEON_DEV_RESERVATION_WRITER_URL");
+ const conn=devDatabaseConnection("FOTOPOLIS_NEON_DEV_RESERVATION_WRITER_URL",context);
  if(!conn)return response({error:"Internal reservations not configured"},503);
  try{
    const sql=neon(conn);let rows;
