@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 3.7 – future resource writer, locked until preview-scoped
 // least-privilege database grants and deployment secret are independently verified.
 import {neon} from "@neondatabase/serverless";
@@ -49,7 +50,7 @@ export default async function handler(request,context){
   const parsed=validateResourceDraft(payload,request.method);
   if(parsed.error)return response({error:parsed.error},400);
   if(request.method==="PATCH"&&parsed.value.enabled!==null&&authorized.role!=="owner")return response({error:"Owner role required to change device activation"},403);
-  const connection=Netlify.env.get("FOTOPOLIS_NEON_DEV_INVENTORY_WRITER_URL");
+  const connection=devDatabaseConnection("FOTOPOLIS_NEON_DEV_INVENTORY_WRITER_URL",context);
   if(!connection)return response({error:"Resource changes are not enabled in this preview"},503);
   try{
     const sql=neon(connection);
