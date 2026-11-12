@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 13 – authenticated operational modules.
 // Every request rechecks Neon Auth/JWT AND active base membership; scoped roles add module rights only.
 import {neon} from "@neondatabase/serverless";
@@ -58,7 +59,7 @@ export default async function handler(req,context){
  const [module,id,...other]=suffix.split("/");
  if(!module||other.length||!capabilities.owner[module])return message("Not found",404);
  if(req.method!=="GET"&&!samePreviewOrigin(req))return message("Forbidden origin",403);
- const key=Netlify.env.get("FOTOPOLIS_STUDIO13_DEV_DB_URL");
+ const key=devDatabaseConnection("FOTOPOLIS_STUDIO13_DEV_DB_URL",context);
  if(!key)return message("Studio 13 database not configured",503);
  try{
   const sql=neon(key),role=await scope(sql,auth);
@@ -224,7 +225,7 @@ export default async function handler(req,context){
   }
   if(module==="roles"){
    if(req.method==="GET"){
-    const conn=Netlify.env.get("FOTOPOLIS_NEON_DEV_AUTH_READER_URL");
+    const conn=devDatabaseConnection("FOTOPOLIS_NEON_DEV_AUTH_READER_URL",context);
     if(!conn)return message("Mitgliederverzeichnis nicht erreichbar",503);
     const members=await neon(conn)`SELECT user_id,admin_role,enabled FROM fotopolis.admin_members ORDER BY created_at DESC LIMIT 50`;
     const scoped=await sql`SELECT user_id,role,active,updated_at FROM fotopolis_studio13.staff_roles`;
@@ -236,7 +237,7 @@ export default async function handler(req,context){
    if(!b||!idPattern.test(b.userId||"")||!roleSet.has(b.role)||typeof b.active!=="boolean")
      return message("Ungültige Rollenangaben");
    if(b.userId===auth.userId)return message("Eigene Rolle kann nicht überschrieben werden",403);
-   const connection=Netlify.env.get("FOTOPOLIS_NEON_DEV_AUTH_READER_URL");
+   const connection=devDatabaseConnection("FOTOPOLIS_NEON_DEV_AUTH_READER_URL",context);
    if(!connection)return message("Mitgliederprüfung fehlt",503);
    const member=await neon(connection)`SELECT admin_role,enabled FROM fotopolis.admin_members
       WHERE user_id=${b.userId}::uuid LIMIT 1`;
