@@ -52,3 +52,7 @@ Netlify erzeugt Branch Deploys **nicht automatisch**, solange sie nicht in den S
 - Owner-Login und Rollenrechte prüfen, auch negativen 403-Fall
 - Mögliche Staging-Formübernahme prüfen, ohne produktive Kundendaten zu verwenden
 - Keine neuen Dateien aus `private-design-assets` im öffentlichen CDN; PWA speichert private Routen nicht zwischen
+
+## Branch-Deploy-Freischaltung – neuer Build
+
+Nach der Freischaltung des Branch Deploys in Netlify am 12.11.2026 wird ein neuer Commit auf `staging` verwendet, um die automatische Bereitstellung auszulösen. Ein erfolgreicher GitHub-Test bedeutet **nicht** automatisch, dass Netlify die feste URL bereitgestellt hat. Die Netlify-Deployment-ID und der tatsächliche Zustand `ready` sind vor der Freigabemeldung zu prüfen.
