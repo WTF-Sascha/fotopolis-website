@@ -1,8 +1,8 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 13 / Preview-only public gateway.
 // Individual enquiries contain customer data; metrics contain no IP/UA/cookies.
 import {neon} from "@neondatabase/serverless";
-import {response,samePreviewOrigin} from "./fotopolis-admin-session.mjs";
-const previewHost=/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app$/i;
+import {response,samePreviewOrigin,validDevDeploy} from "./fotopolis-admin-session.mjs";
 const paths=new Set(["/","/fotobox/","/fotospiegel/","/fotowohnwagen/","/designvorlagen/","/kontakt/","/pakete/","/faq/","/anlaesse/","/ueber-uns/"]);
 const metricTypes=new Set(["seitenaufruf","produktinteresse","designauswahl","anfrage_gesendet"]);
 const sourceTypes=new Set(["website","product"]);
@@ -46,14 +46,13 @@ async function jsonBody(req,max){
 }
 export default async function handler(req,context){
  const uri=new URL(req.url),path=uri.pathname;
- if(context?.deploy?.context!=="deploy-preview"||context?.deploy?.published===true||
-    uri.protocol!=="https:"||!previewHost.test(uri.hostname))return response({error:"Not found"},404);
+ if(!validDevDeploy(req,context))return response({error:"Not found"},404);
  if(!["/api/fotopolis/studio13/enquiry","/api/fotopolis/studio13/metric","/api/fotopolis/studio13/content"].includes(path))
    return response({error:"Not found"},404);
  if((path.endsWith("/content")?req.method!=="GET":req.method!=="POST"))
    return response({error:"Method not allowed"},405);
  if(req.method==="POST"&&!samePreviewOrigin(req))return response({error:"Origin denied"},403);
- const connection=Netlify.env.get("FOTOPOLIS_STUDIO13_DEV_DB_URL");
+ const connection=devDatabaseConnection("FOTOPOLIS_STUDIO13_DEV_DB_URL",context);
  if(!connection)return response({error:"Studio 13 data connection unavailable"},503);
  try{
    const sql=neon(connection);
