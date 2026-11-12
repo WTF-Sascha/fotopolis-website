@@ -65,6 +65,7 @@ Keine der unvollständig getesteten Funktionen wird in diesem Bericht als abnahm
 | G0-07 | P1 | Das bisherige README beschreibt noch mailto, altes blaues Branding und nicht angebundene DB; damit irreführend. | README an tatsächlich geprüften Stage-Stand anpassen |
 | G0-08 | P1 | GitHub-Repository ist öffentlich, historische Deploy-Vorschauen können Vorgängerassets behalten. | Repository-/Asset-/Alt-Deploy-Risiken vor Realbetrieb separat freigeben |
 | G0-09 | P1 | Keine verbindliche Buchungsstatusmaschine und zentrale Kunden-Event-Akte. | Migrationsfähiges Schema mit Berechtigungen, FK, Offer/Event-Versionen planen |
+| G0-10 | P0 | In Neon DEV ist RLS für alle neun `fotopolis_studio13`-Tabellen deaktiviert. `PUBLIC` hat in der Metadatenprüfung keine Tabellen-Grants, aber `fotopolis_studio13_writer` besitzt umfassende `SELECT/INSERT/UPDATE/DELETE`-Rechte. Das serverseitig abgeschottete Schema macht dies nicht automatisch zu einem öffentlichen Datenleck; die Breite der Zugriffsrechte ist jedoch vor echtem Kundenbetrieb zu reduzieren. | Schema-/Rollenmatrix und tatsächliche Function-Verwendung prüfen; begrenzte Rechte und/oder RLS sorgfältig in einer isolierten Migration mit Positiv-/Negativtests entwerfen – kein blindes Einschalten |
 
 ## 5. Abhängigkeiten und Umsetzungsplan
 
@@ -91,6 +92,7 @@ Keine der unvollständig getesteten Funktionen wird in diesem Bericht als abnahm
 | T-05 | Hero/Brand auf 320–1920 px | Keine CTA-/Produktverlinkung, keine Logo-Änderung, Layout und Kontraste einwandfrei | Code/CI vorhanden, visuelle Endabnahme offen |
 | T-06 | Offline/PWA-Scope und Zugriff auf `/admin/`, `/api/` | Geschützte Daten nie aus Service-Worker-Cache | Contract vorhanden, Browser-E2E offen |
 | T-07 | Recovery und Rollback | Reproduzierbarer Build, belegbarer DB-Restore, keine produktiven Änderungen | offen |
+| T-08 | DB-Rollen/RLS und direkte DB/API-Zugriffe | `PUBLIC`/anonyme Rollen haben keine Kundendatenrechte; jede Service-Rolle nur explizit benötigte Operationen; versuchte Fremd-/Löschzugriffe abgewiesen | Rechte inventarisiert, Zugriffstests offen |
 
 ## 7. Kosten, Risiken und Umsetzungsvoraussetzungen
 
