@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS private, read-only admin calendar data. Preview only.
 // Each request validates signed Neon Auth JWT and active role BEFORE database access.
 import {neon} from "@neondatabase/serverless";
@@ -13,7 +14,7 @@ export default async function handler(request,context){
   const fromTime=new Date(from+"T00:00:00Z"),toTime=new Date(to+"T00:00:00Z");
   const days=(toTime-fromTime)/86400000;
   if(days<=0||days>45)return response({error:"Datumsbereich auf maximal 45 Tage begrenzen."},400);
-  const connection=Netlify.env.get("FOTOPOLIS_NEON_DEV_DASHBOARD_READER_URL");
+  const connection=devDatabaseConnection("FOTOPOLIS_NEON_DEV_DASHBOARD_READER_URL",context);
   if(!connection)return response({error:"Datenansicht derzeit nicht konfiguriert"},503);
   try{
     const db=neon(connection);
