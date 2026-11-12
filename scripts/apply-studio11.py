@@ -44,15 +44,14 @@ for page in pages:
 
 home = OUT / "index.html"
 homepage = home.read_text(encoding="utf-8")
-line = '<p>Fotobox, Foto Mirror und Fotowohnwagen – drei besondere Fotoerlebnisse für dein Event.</p>'
-assert homepage.count(line) == 1, "Hero copy changed: do not insert CTA in uncertain location"
-homepage = homepage.replace(
-    line,
-    line + '<a class="fp11-hero-link" href="/fotospiegel/">'
-    'Foto Mirror entdecken <span aria-hidden="true">↗</span></a>',
-    1
-)
-assert homepage.count('class="fp11-hero-link"') == 1
+# Studio 17: the homepage hero is a quiet greeting; all product navigation
+# stays in the cards below. Historical Studio 11 must never inject a Mirror CTA.
+hero = homepage.split('<section class="v4-hero v45-hero fp17-welcome-hero"',1)
+assert len(hero) == 2, "Approved standalone welcome hero missing"
+intro = hero[1].split("</section>",1)[0]
+assert 'WILLKOMMEN BEI FOTOPOLIS' in intro
+assert '<a ' not in intro and 'href=' not in intro
+assert 'fotospiegel' not in intro.lower() and 'mirror' not in intro.lower()
 home.write_text(homepage, encoding="utf-8")
 
 sw = OUT / "service-worker.js"
