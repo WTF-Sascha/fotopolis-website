@@ -12,6 +12,9 @@ on:
       - 'scripts/studio15-one-app-qa.mjs'
       - 'scripts/studio16-workspace-qa.mjs'
       - 'scripts/staging-secure-qa.mjs'
+      - 'scripts/hero-welcome-qa.mjs'
+      - 'concepts/premium-v2/home-premium-refinement.css'
+      - 'concepts/premium-v2/index.html'
       - 'scripts/studio14-form-event-qa.mjs'
       - 'scripts/build-photo-print-collection.py'
       - 'concepts/premium-v2/admin/index.html'
@@ -56,6 +59,7 @@ jobs:
           node --check scripts/studio14-print-admin-qa.mjs
           node --check scripts/studio15-one-app-qa.mjs
           node --check scripts/staging-secure-qa.mjs
+          node --check scripts/hero-welcome-qa.mjs
           node --check scripts/studio16-workspace-qa.mjs
           node --check concepts/premium-v2/admin/dashboard/dashboard.js
           node --check concepts/premium-v2/admin/dashboard/reservations-manager.js
@@ -104,6 +108,7 @@ jobs:
           node scripts/studio13-browser-qa.mjs
           node scripts/studio13-brand-browser-qa.mjs
           SITE_BASE_URL=http://127.0.0.1:8765/ node scripts/studio16-workspace-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8765/ node scripts/hero-welcome-qa.mjs
       - name: Probe real Netlify Deploy Preview API
         run: node scripts/studio13-live-qa.mjs
       - name: Archive brand-system visual screenshots
