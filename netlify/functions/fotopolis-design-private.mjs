@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // Private FOTOPOLIS Studio 13 design resources. No CORS, no cookies, preview-only.
 import {readFile} from "node:fs/promises";
 import {join} from "node:path";
@@ -18,7 +19,7 @@ export default async function handler(request,context){
  const auth=await authorizeAdmin(request,context);
  if(auth.denied)return auth.denied;
  if(!mayAccessDesign(auth.role,null,false)){
-  const key=Netlify.env.get("FOTOPOLIS_STUDIO13_DEV_DB_URL");
+  const key=devDatabaseConnection("FOTOPOLIS_STUDIO13_DEV_DB_URL",context);
   if(!key)return response({error:"Designberechtigung nicht prüfbar"},503);
   let scoped;
   try{
