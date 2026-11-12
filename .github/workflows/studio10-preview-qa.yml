@@ -39,6 +39,12 @@ jobs:
       - name: Check JS syntax and build current source
         run: |
           node --check scripts/studio15-release-browser-qa.mjs
+          node --check scripts/studio15-production-release-guard.mjs
+          CONTEXT=deploy-preview node scripts/studio15-production-release-guard.mjs
+          if CONTEXT=production node scripts/studio15-production-release-guard.mjs; then
+            echo "Release guard incorrectly accepted production context" >&2
+            exit 1
+          fi
           node --check netlify/functions/fotopolis-studio14-form-events.mjs
           node --check scripts/studio14-form-event-qa.mjs
           python3 scripts/build-premium-preview.py
