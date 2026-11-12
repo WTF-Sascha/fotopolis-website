@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 4.2 – preview-only read-only occupancy preflight.
 // This endpoint never writes allocations and never makes customer-facing
 // availability promises. The PostgreSQL exclusion constraint remains final.
@@ -26,7 +27,7 @@ export default async function handler(request,context){
  if(!["owner","manager"].includes(auth.role))return response({error:"Administrative permission required"},403);
  const parsed=validateOccupancyQuery(new URL(request.url).searchParams);
  if(parsed.error)return response({error:parsed.error},400);
- const connection=Netlify.env.get("FOTOPOLIS_NEON_DEV_DASHBOARD_READER_URL");
+ const connection=devDatabaseConnection("FOTOPOLIS_NEON_DEV_DASHBOARD_READER_URL",context);
  if(!connection)return response({error:"Occupancy check not configured"},503);
  try{
    const sql=neon(connection);
