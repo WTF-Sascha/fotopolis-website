@@ -184,8 +184,11 @@ if (studio11Enabled) {
         "Studio 11 design system tokens and reduced-motion support missing");
   check(!/#071b30|#102d45|#123b5c/i.test(css),
         "Studio 11 public theme reintroduces legacy Navy hex values");
-  check(read("index.html").includes('class="fp11-hero-link"'),
-        "Single flagship discovery CTA missing");
+  const homepage = read("index.html");
+  const welcome = homepage.split('<section class="v4-hero v45-hero fp17-welcome-hero"',2)[1]?.split("</section>",1)[0] || "";
+  check(welcome.includes("WILLKOMMEN BEI FOTOPOLIS") &&
+        !/<a\b|href=|fotospiegel|mirror/i.test(welcome),
+        "Hero must stay a link-free welcome; product navigation belongs below");
   const pwaManifest = JSON.parse(read("manifest.webmanifest"));
   check(pwaManifest.theme_color.toLowerCase() === "#181512" &&
         pwaManifest.background_color.toLowerCase() === "#f7f3ec",
