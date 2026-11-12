@@ -1,4 +1,4 @@
-name: FOTOPOLIS Studio 12 – Design-to-Print Preview QA
+name: FOTOPOLIS Studio 15 – Current Browser, Design and Print Release Gate
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
     paths:
       - 'concepts/premium-v2/**'
       - 'scripts/**'
+      - 'netlify/functions/**'
       - 'netlify.toml'
       - '.github/workflows/studio10-preview-qa.yml'
   workflow_dispatch:
@@ -14,74 +15,71 @@ permissions:
   contents: read
 
 jobs:
-  isolated-visual-and-functional-qa:
-    name: Studio 11 baseline vs Studio 12 / 105 browser viewports and synthetic print
+  current-release-regression:
+    name: 98 route/viewport checks, safe admin, gold branding and print contracts
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
-      - name: Checkout isolated Studio 11 candidate
+      - name: Checkout current candidate (never legacy Studio 11)
         uses: actions/checkout@v4
-      - name: Checkout immutable Studio 10 baseline
-        uses: actions/checkout@v4
-        with:
-          ref: f689a209929e25bdd6b6d8717675277d0ec52eb8
-          path: .studio10-baseline
-      - name: Python build runtime
+      - name: Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Node test runtime
+      - name: Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install image processor
-        run: python -m pip install --disable-pip-version-check "Pillow>=10,<12"
-      - name: Install pinned browser tooling
+      - name: Install pinned build and browser dependencies
         run: |
+          npm install --no-audit --no-fund
+          python -m pip install --disable-pip-version-check "Pillow>=10,<12"
           npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Build Studio 10 original baseline
-        run: python3 .studio10-baseline/scripts/build-premium-preview.py
-      - name: Validate Studio 12 code syntax before build
+      - name: Check JS syntax and build current source
         run: |
-          node --check concepts/premium-v2/studio12-editor.js
-          node --check concepts/premium-v2/studio12-contact-transfer.js
-          node --check scripts/studio12-browser-qa.mjs
-          python3 -m py_compile scripts/apply-studio12.py
-      - name: Build Studio 12 candidate from originals
-        run: python3 scripts/build-premium-preview.py
-      - name: Run source, artwork and static design quality gates
-        run: node scripts/visual-release-qa.mjs
-      - name: Compare 14 legacy routes, 7 widths, and run Studio 12 editor print/browser QA
+          node --check scripts/studio15-release-browser-qa.mjs
+          node --check scripts/studio15-production-release-guard.mjs
+          CONTEXT=deploy-preview node scripts/studio15-production-release-guard.mjs
+          if CONTEXT=production node scripts/studio15-production-release-guard.mjs; then
+            echo "Release guard incorrectly accepted production context" >&2
+            exit 1
+          fi
+          node --check netlify/functions/fotopolis-studio14-form-events.mjs
+          node --check scripts/studio14-form-event-qa.mjs
+          python3 scripts/build-premium-preview.py
+          node scripts/visual-release-qa.mjs
+          python3 scripts/harden-studio13.py
+          python3 scripts/apply-studio13-unified-brand.py
+          npm run build:auth
+      - name: Release security, print-source and form-contract gates
         run: |
-          python3 -m http.server 8764 --directory .studio10-baseline/preview-build >/tmp/studio10-baseline.log 2>&1 &
-          python3 -m http.server 8765 --directory preview-build >/tmp/studio11-candidate.log 2>&1 &
-          node scripts/studio11-browser-qa.mjs
-          node scripts/studio12-browser-qa.mjs
-      - name: Archive verifiable before/after screenshot evidence
+          node scripts/studio13-private-qa.mjs
+          node scripts/studio13-contract-qa.mjs
+          node scripts/studio14-print-admin-qa.mjs
+          node scripts/studio14-form-event-qa.mjs
+          node scripts/studio15-one-app-qa.mjs
+          node scripts/staging-secure-qa.mjs
+          node --test scripts/test-admin-auth.mjs
+      - name: Real browser – current public site and private boundaries
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory preview-build >/tmp/fotopolis-release-qa.log 2>&1 &
+          node scripts/studio15-release-browser-qa.mjs
+          node scripts/studio13-browser-qa.mjs
+          node scripts/studio13-brand-browser-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8765/ node scripts/hero-welcome-qa.mjs
+          SITE_BASE_URL=http://127.0.0.1:8765/ node scripts/studio16-workspace-qa.mjs
+      - name: Preserve reproducible screenshots and QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: studio11-browser-qa-${{ github.run_number }}
+          name: studio15-release-browser-evidence-${{ github.run_number }}
           path: |
-            studio11-browser-results/
-            studio12-browser-results/
+            studio15-release-browser-results/
+            studio13-browser-results/
+            studio13-brand-screenshots/
             preview-build/qa/studio12-build-audit.json
             preview-build/qa/studio11-build-audit.json
-            preview-build/qa/fotobox-logo-centering-before-after.webp
-            preview-build/qa/fotobox-device-branding-before-after.webp
-            preview-build/qa/fotobox-logo-centering.json
-            preview-build/qa/photoprint-44-contact-sheet.webp
-            preview-build/qa/classics-32-source-vs-restored.webp
-            preview-build/qa/classics-32-logo-closeups.webp
-            preview-build/qa/classics-logo-zoom/
-            preview-build/qa/FOTOPOLIS_Classics_32_Originalmotive_15x10_300dpi.zip
-            preview-build/qa/classics-32-source-fidelity.json
             preview-build/qa/photoprint-44-audit.json
-            preview-build/qa/FOTOPOLIS_PhotoPrint_44_15x10_300dpi.zip
-            preview-build/assets/design-gallery-data.json
-            preview-build/qa/studio10-before-after.webp
-            preview-build/qa/studio10-zoom-300pct.webp
-            preview-build/qa/studio10-report.json
           if-no-files-found: warn
           retention-days: 14
