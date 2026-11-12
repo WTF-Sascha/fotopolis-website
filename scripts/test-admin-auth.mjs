@@ -74,3 +74,26 @@ test("private design API rejects anonymous access and published contexts",async(
     assert.equal(production.status,404);
   }
 });
+
+
+const stageUrl="https://staging--fotopolis-preview.netlify.app/api/fotopolis/admin/session";
+const stageCtx={deploy:{context:"branch-deploy",published:false}};
+test("persistent staging host reaches JWT gate, not public access",async()=>{
+  const res=await handler(new Request(stageUrl,{headers:{Origin:new URL(stageUrl).origin}}),stageCtx);
+  assert.equal(res.status,401);
+  assert.equal(res.headers.get("cache-control"),"no-store, max-age=0");
+});
+test("staging is denied in the wrong deploy context and production remains closed",async()=>{
+  for(const context of ["production","deploy-preview"]){
+    const res=await handler(new Request(stageUrl),{deploy:{context,published:context==="production"}});
+    assert.equal(res.status,404);
+  }
+  const prod=await handler(new Request("https://fotopolis-preview.netlify.app/api/fotopolis/admin/session"),
+    {deploy:{context:"branch-deploy",published:false}});
+  assert.equal(prod.status,404);
+});
+test("staging refuses forged hostnames and cross-site origins",async()=>{
+  const badHost="https://staging--fotopolis-preview.netlify.app.attacker.invalid/api/fotopolis/admin/session";
+  assert.equal((await handler(new Request(badHost),stageCtx)).status,404);
+  assert.equal((await handler(new Request(stageUrl,{headers:{Origin:"https://example.invalid"}}),stageCtx)).status,403);
+});
