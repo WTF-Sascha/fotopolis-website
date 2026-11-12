@@ -1,8 +1,8 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 4.0 preview-only: private internal block persistence.
 // Server verified Neon Auth JWT, RBAC and least-privilege PostgreSQL role.
 import {neon} from "@neondatabase/serverless";
 import {authorizeAdmin,response,samePreviewOrigin} from "./fotopolis-admin-session.mjs";
-const origin="https://deploy-preview-2--fotopolis-preview.netlify.app";
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const kinds=new Set(["internal_block","maintenance"]);
 const iso=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
@@ -31,7 +31,7 @@ export default async function handler(request,context){
  const auth=await authorizeAdmin(request,context,{methods:["POST","PATCH"]});
  if(auth.denied)return auth.denied;
  if(!["owner","manager"].includes(auth.role))return response({error:"Admin permission required"},403);
- if(request.headers.get("origin")!==origin)return response({error:"Forbidden origin"},403);
+ if(!samePreviewOrigin(request))return response({error:"Forbidden origin"},403);
  if(!/^application\/json(?:\s*;|$)/i.test(request.headers.get("content-type")||""))return response({error:"JSON required"},415);
  let textValue;
  try{textValue=await request.text()}catch{return response({error:"Invalid request"},400)}
@@ -40,7 +40,7 @@ export default async function handler(request,context){
  try{body=JSON.parse(textValue)}catch{return response({error:"Invalid JSON"},400)}
  const parsed=validateCalendarChange(body,request.method);
  if(parsed.error)return response({error:parsed.error},400);
- const url=Netlify.env.get("FOTOPOLIS_NEON_DEV_CALENDAR_WRITER_URL");
+ const url=devDatabaseConnection("FOTOPOLIS_NEON_DEV_CALENDAR_WRITER_URL",context);
  if(!url)return response({error:"Calendar storage not configured"},503);
  try{
    const sql=neon(url);
