@@ -1,3 +1,4 @@
+import {devDatabaseConnection} from "./fotopolis-admin-session.mjs";
 // FOTOPOLIS Studio 4.3 – preview-only operational diagnostics.
 // Verifies real PostgreSQL grants, not only connectivity. Owner-only.
 import {neon} from "@neondatabase/serverless";
@@ -26,7 +27,7 @@ export default async function handler(request,context){
  if(auth.role!=="owner")return response({error:"Owner only"},403);
  const diagnostics={};
  await Promise.all(services.map(async ([name,key,expected])=>{
-   const conn=Netlify.env.get(key);
+   const conn=devDatabaseConnection(key,context);
    if(!conn){diagnostics[name]={configured:false,connected:false,permissionsReady:false};return}
    try{
      const sql=neon(conn);
