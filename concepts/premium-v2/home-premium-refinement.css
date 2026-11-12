@@ -35,3 +35,145 @@
   .v45-home .v45-final-cta{padding-block:33px 39px}
   .v45-home~.studio-footer.footer{padding-block:35px}
 }
+
+/* FOTOPOLIS welcome hero – decorative brand entrance, not a product promotion.
+   No imagery or link to the mirror; product detail navigation begins below. */
+.v45-home .fp17-welcome-hero{
+  min-height:clamp(500px,43vw,610px)!important;
+  position:relative;
+  display:grid;
+  align-items:center;
+  overflow:hidden;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 78% 47%,rgba(181,134,80,.21) 0%,rgba(181,134,80,.09) 20%,transparent 54%),
+    radial-gradient(ellipse at 15% 22%,rgba(142,106,69,.13),transparent 63%),
+    linear-gradient(117deg,#1f1916 0%,#30241d 49%,#211a15 100%)!important;
+  color:#faf3e8;
+}
+.v45-home .fp17-welcome-hero:after{display:none!important}
+.v45-home .fp17-welcome-hero .fp17-welcome-atmosphere{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  background:repeating-linear-gradient(134deg,transparent 0,transparent 118px,rgba(237,206,161,.024) 119px,transparent 120px);
+}
+.v45-home .fp17-welcome-hero .fp17-welcome-orbit{
+  position:absolute;
+  border:1px solid rgba(213,176,127,.30);
+  box-shadow:inset 0 0 90px rgba(211,163,107,.025);
+  width:min(49vw,660px);
+  aspect-ratio:1;
+  right:clamp(-180px,-5vw,0px);
+  top:50%;
+  transform:translateY(-50%);
+  border-radius:50%;
+}
+.v45-home .fp17-welcome-hero .fp17-welcome-orbit--inner{
+  width:min(34vw,460px);
+  right:clamp(-80px,4.1vw,90px);
+  border-color:rgba(227,195,146,.17);
+  transform:translateY(-50%) rotate(18deg);
+}
+.v45-home .fp17-welcome-hero .fp17-welcome-glow{
+  position:absolute;
+  width:min(34vw,460px);
+  aspect-ratio:1;
+  right:4%;
+  top:52%;
+  border-radius:50%;
+  transform:translateY(-50%);
+  background:radial-gradient(circle,rgba(215,170,108,.11),transparent 67%);
+}
+.v45-home .fp17-welcome-hero .fp17-welcome-accent{
+  position:absolute;
+  width:9px;height:9px;
+  border-radius:50%;
+  background:#dfbf90;
+  box-shadow:0 0 19px rgba(240,197,136,.42);
+  opacity:.67;
+}
+.v45-home .fp17-welcome-hero .fp17-welcome-accent--one{right:19%;top:23%}
+.v45-home .fp17-welcome-hero .fp17-welcome-accent--two{right:8%;bottom:26%;width:5px;height:5px;opacity:.47}
+.v45-home .fp17-welcome-hero .fp17-welcome-content{
+  position:relative;
+  z-index:1;
+  width:100%;
+  padding-block:clamp(92px,9vw,128px)!important;
+}
+.v45-home .fp17-welcome-hero .v4-hero-kicker{
+  color:#e9cda7!important;
+  font-size:clamp(10px,1vw,12px);
+  letter-spacing:.21em;
+}
+.v45-home .fp17-welcome-hero h1{
+  margin:clamp(20px,2.2vw,30px) 0 18px;
+  max-width:700px;
+  font:450 clamp(51px,6vw,88px)/1.07 Georgia,"Iowan Old Style",serif;
+  letter-spacing:-.053em;
+  color:#fffaf2;
+  text-shadow:0 7px 30px rgba(0,0,0,.18);
+  text-wrap:balance;
+}
+.v45-home .fp17-welcome-hero h1 strong{
+  color:#e7c395;
+  font-weight:450;
+}
+.v45-home .fp17-welcome-hero h1:after{display:none!important}
+.v45-home .fp17-welcome-hero p{
+  max-width:520px;
+  margin:0;
+  color:#e8ddd0;
+  font-size:clamp(16px,1.34vw,19px);
+  line-height:1.75;
+  text-shadow:none;
+}
+.v45-home .fp17-welcome-signature{
+  display:inline-flex;
+  align-items:center;
+  gap:14px;
+  margin-top:clamp(28px,3vw,37px);
+  font-size:10px;
+  font-weight:740;
+  letter-spacing:.19em;
+  color:#dbc3a3;
+}
+.v45-home .fp17-welcome-signature:before{
+  content:"";display:block;width:42px;height:1px;
+  background:linear-gradient(90deg,#ddb98c,rgba(221,185,140,.25));
+}
+@media(max-width:760px){
+  .v45-home .fp17-welcome-hero{
+    min-height:clamp(425px,115vw,520px)!important;
+    background:
+      radial-gradient(ellipse at 110% 55%,rgba(181,134,80,.18),transparent 65%),
+      linear-gradient(135deg,#231a15,#31241d 75%,#241b15)!important;
+  }
+  .v45-home .fp17-welcome-hero .fp17-welcome-content{
+    padding:clamp(72px,13vw,100px) 21px clamp(65px,11vw,90px)!important;
+  }
+  .v45-home .fp17-welcome-hero .fp17-welcome-orbit{
+    width:380px;right:-235px;top:54%;
+    border-color:rgba(220,184,136,.18);
+  }
+  .v45-home .fp17-welcome-hero .fp17-welcome-orbit--inner{
+    width:280px;right:-192px;border-color:rgba(220,184,136,.13);
+  }
+  .v45-home .fp17-welcome-hero .fp17-welcome-glow{width:360px;right:-205px}
+  .v45-home .fp17-welcome-hero .fp17-welcome-accent--one{right:8%;top:15%}
+  .v45-home .fp17-welcome-hero .fp17-welcome-accent--two{right:14%;bottom:17%}
+  .v45-home .fp17-welcome-hero h1{
+    font-size:clamp(42px,10vw,60px);
+    max-width:520px;
+    line-height:1.11;
+  }
+  .v45-home .fp17-welcome-hero p{font-size:15px;max-width:420px;line-height:1.66}
+  .v45-home .fp17-welcome-signature{font-size:9px;letter-spacing:.14em;margin-top:27px;gap:9px}
+  .v45-home .fp17-welcome-signature:before{width:26px}
+}
+@media(max-width:380px){
+  .v45-home .fp17-welcome-hero h1{font-size:clamp(37px,10.5vw,43px)}
+  .v45-home .fp17-welcome-hero .v4-hero-kicker{font-size:9px;letter-spacing:.16em}
+}
