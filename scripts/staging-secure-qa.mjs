@@ -49,4 +49,21 @@ const netlify=read("netlify.toml");
 assert.ok(netlify.includes("[context.branch-deploy]"),"Branch deploy build contract missing");
 assert.ok(netlify.includes('X-Robots-Tag = "noindex, nofollow"'),
   "Persistent test address must stay out of search indexes");
+// Regression: the same idempotent browser mirror must exist on the fixed staging URL,
+ // while arbitrary branch, main, and lookalike hosts remain excluded.
+ const {runInNewContext}=await import("node:vm");
+ const mirrorSource=read("concepts/premium-v2/studio13-enquiry-mirror.js");
+ for(const [mirrorHost,expected] of [
+   ["staging--fotopolis-preview.netlify.app",true],
+   ["deploy-preview-20--fotopolis-preview.netlify.app",true],
+   ["fotopolis-preview.netlify.app",false],
+   ["main--fotopolis-preview.netlify.app",false],
+   ["other--fotopolis-preview.netlify.app",false],
+   ["staging--fotopolis-preview.netlify.app.attacker.invalid",false]
+ ]){
+   const mock={location:{hostname:mirrorHost},window:{}};
+   runInNewContext(mirrorSource,mock,{timeout:500});
+   assert.equal(typeof mock.window.fp13MirrorEnquiry==="function",expected,
+     "Unexpected inquiry-mirror host exposure: "+mirrorHost);
+ }
 console.log("FOTOPOLIS STAGING SECURITY QA PASS: exact host, isolated secrets, non-production context and server roles.");
