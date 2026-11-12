@@ -1,5 +1,7 @@
 name: FOTOPOLIS Studio 13 – Foundation QA
 on:
+  push:
+    branches: [staging]
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
