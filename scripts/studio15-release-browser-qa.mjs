@@ -33,7 +33,7 @@ try{
      if(!["GET","HEAD"].includes(request.method()))writes.push(request.method()+" "+request.url());
     });
     try{
-     const response=await page.goto(new URL(path,base),{
+     const response=await page.goto(new URL(path,base).href,{
       waitUntil:"domcontentloaded",timeout:40000
      });
      assert.equal(response?.status(),200,path+" HTTP status");
