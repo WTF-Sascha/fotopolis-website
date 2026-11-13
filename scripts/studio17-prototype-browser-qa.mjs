@@ -50,13 +50,13 @@ try{
    await page.locator("#inquiry-search").fill("Fotospiegel");
    assert.equal(await page.locator("#inquiry-list .record-row").count(),1);checks++;
    await page.locator("#inquiry-search").fill("");
-   await page.locator('[data-inquiry="DEMO-1001"]').first().click();
+   await page.locator('#inquiry-list [data-inquiry="DEMO-1001"]').click();
    assert.equal(await page.locator("#detail-drawer").isVisible(),true);checks++;
    await page.locator("#request-stage").selectOption("In Prüfung");
    await page.locator("#save-request-stage").click();
    assert.equal(await page.locator("#detail-drawer").isVisible(),false);checks++;
    assert.equal(await page.locator("#metric-inquiries").textContent(),"2");checks++;
-   await page.locator('[data-inquiry="DEMO-1001"]').first().click();
+   await page.locator('#inquiry-list [data-inquiry="DEMO-1001"]').click();
    await page.locator("#handoff-request").click();
    assert.equal(await page.locator("#screen-termine").isVisible(),true);checks++;
    assert.match(await page.locator("#selected-day-label").innerText(),/21\. November 2026/);checks++;
