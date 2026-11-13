@@ -30,7 +30,7 @@ try{
    }
    await page.locator('[data-nav="'+name+'"]').click();
    await page.waitForFunction(route=>location.hash==="#"+route,name);
-   assert.equal(await page.locator('#screen-'+name).isVisible(),true);checks++;
+   await page.locator('#screen-'+name).waitFor({state:"visible",timeout:5000});checks++;
    assert.equal(await page.locator(".screen.active").count(),1);checks++;
   }
   try{
@@ -58,7 +58,7 @@ try{
    assert.equal(await page.locator("#metric-inquiries").textContent(),"2");checks++;
    await page.locator('#inquiry-list [data-inquiry="DEMO-1001"]').click();
    await page.locator("#handoff-request").click();
-   assert.equal(await page.locator("#screen-termine").isVisible(),true);checks++;
+   await page.locator("#screen-termine").waitFor({state:"visible",timeout:5000});checks++;
    assert.match(await page.locator("#selected-day-label").innerText(),/21\. November 2026/);checks++;
    await page.locator("#add-block").click();
    await page.locator("#block-reason").fill("Testwartung");
