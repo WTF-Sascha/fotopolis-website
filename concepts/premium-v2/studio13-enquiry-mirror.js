@@ -4,7 +4,10 @@
  */
 (()=>{
  "use strict";
- if(!/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app$/i.test(location.hostname))return;
+ // Accept only the numbered PR preview or the canonical staging hostname; never main or arbitrary branches.
+ const host=location.hostname.toLowerCase();
+ if(!(/^deploy-preview-[1-9][0-9]*--fotopolis-preview\.netlify\.app$/.test(host)||
+      host==="staging--fotopolis-preview.netlify.app"))return;
  const keys=new WeakMap();
  window.fp13MirrorEnquiry=async(form,source)=>{
   const signal=state=>window.dispatchEvent(new CustomEvent("fotopolis-studio14-sync",{detail:{state}}));

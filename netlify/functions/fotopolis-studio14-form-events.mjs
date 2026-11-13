@@ -34,13 +34,27 @@ export function normalizeVerifiedForm(data){
  return validateEnquiry(payload);
 }
 
+// Netlify exposes environment variables in the current deploy context.
+// The platform FormSubmittedEvent formally guarantees event.data only; do not
+// infer a deploy/branch from user-controlled form fields or undocumented metadata.
+// Context-specific Netlify Functions secrets select the existing isolated DEV DB.
+// Production has neither DEV alias and MUST NOT fall back to DEV.
+export function selectVerifiedFormDatabase(getEnv){
+ const preview=getEnv("FOTOPOLIS_STUDIO13_DEV_DB_URL");
+ const staging=getEnv("FOTOPOLIS_STAGING_STUDIO13_DEV_DB_URL");
+ if(preview&&staging)throw new Error("Ambiguous FOTOPOLIS form database context");
+ if(preview)return {connection:preview,context:"deploy-preview"};
+ if(staging)return {connection:staging,context:"branch-deploy"};
+ return null;
+}
+
 export async function formSubmitted(event){
  const submission=normalizeVerifiedForm(event?.data);
  // Silently ignore unrelated forms, honeypot spam, and invalid payloads.
  if(!submission||submission.honeypot)return;
- const connection=Netlify.env.get("FOTOPOLIS_STUDIO13_DEV_DB_URL");
- if(!connection)throw new Error("FOTOPOLIS verified-form intake: DEV database unavailable");
- const sql=neon(connection);
+ const database=selectVerifiedFormDatabase(name=>Netlify.env.get(name));
+ if(!database)throw new Error("FOTOPOLIS verified-form intake: no authorized database for deploy context");
+ const sql=neon(database.connection);
  // Idempotency: a browser-side mirror, a retried event, or a delayed delivery
  // must never create two inbox items. The unique request_key is shared.
  // Only the initial insert creates the audit entry.
