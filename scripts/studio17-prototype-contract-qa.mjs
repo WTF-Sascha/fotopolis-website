@@ -29,7 +29,7 @@ assert.ok(html.includes('data-screen="einstellungen"')&&html.includes('data-nav=
 assert.ok(!html.includes("name=\"password\""),"No sign-in/password fields in concept");
 assert.ok(!html.includes("service-worker")&&!html.includes('rel="manifest"'),
  "The demo must not install over the actual FOTOPOLIS PWA");
-assert.ok(js.includes("const requests=")&&js.includes("const devices="));
+assert.ok(js.includes("const requests=")&&js.includes("let devices="), "Synthetic demo arrays must remain local");
 assert.doesNotMatch(js,/\bfetch\s*\(|\bXMLHttpRequest\b|\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b|\bnavigator\.sendBeacon\b|\bWebSocket\b/,
  "The UX concept must never reach the network or persist actions");
 assert.doesNotMatch(html,/<a[^>]+href="https?:\/\/|<form[^>]+action=/i,
