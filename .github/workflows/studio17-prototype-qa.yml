@@ -1,0 +1,66 @@
+name: FOTOPOLIS Studio 17 – UX Concept Acceptance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "concepts/studio17-prototype/**"
+      - "scripts/studio17-prototype-*.py"
+      - "scripts/studio17-prototype-*.mjs"
+      - "netlify.toml"
+      - ".github/workflows/studio17-prototype-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  clickable-concept:
+    name: Isolated concept, four real viewports and simulated workflows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned build and Chromium dependencies
+        run: |
+          npm install --no-audit --no-fund
+          python -m pip install --disable-pip-version-check "Pillow>=10,<12"
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Validate script syntax and production guard
+        run: |
+          node --check concepts/studio17-prototype/studio17.js
+          node --check scripts/studio17-prototype-browser-qa.mjs
+          node --check scripts/studio17-prototype-contract-qa.mjs
+          python -m py_compile scripts/studio17-prototype-stage.py
+          CONTEXT=deploy-preview node scripts/studio15-production-release-guard.mjs
+          if CONTEXT=production node scripts/studio15-production-release-guard.mjs; then
+            echo "Production guard unexpectedly accepted production" >&2
+            exit 1
+          fi
+      - name: Build approved preview assets without altering the existing admin
+        run: |
+          python3 scripts/build-premium-preview.py
+          node scripts/visual-release-qa.mjs
+          python3 scripts/harden-studio13.py
+          python3 scripts/apply-studio13-unified-brand.py
+          CONTEXT=deploy-preview python3 scripts/studio17-prototype-stage.py
+          node scripts/studio17-prototype-contract-qa.mjs
+      - name: Exercise six screens and local-only demo actions in Chromium
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory preview-build >/tmp/studio17.log 2>&1 &
+          node scripts/studio17-prototype-browser-qa.mjs
+      - name: Archive actual concept screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio17-ux-concept-${{ github.run_number }}
+          path: studio17-prototype-browser-results/
+          if-no-files-found: warn
+          retention-days: 14
