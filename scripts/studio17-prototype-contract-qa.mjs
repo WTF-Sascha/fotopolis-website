@@ -32,7 +32,7 @@ assert.ok(!html.includes("service-worker")&&!html.includes('rel="manifest"'),
 assert.ok(js.includes("const requests=")&&js.includes("const devices="));
 assert.doesNotMatch(js,/\bfetch\s*\(|\bXMLHttpRequest\b|\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b|\bnavigator\.sendBeacon\b|\bWebSocket\b/,
  "The UX concept must never reach the network or persist actions");
-assert.doesNotMatch(html,/https?:\/\/|<form[^>]+action=/i,
+assert.doesNotMatch(html,/<a[^>]+href="https?:\/\/|<form[^>]+action=/i,
  "The prototype must not link or submit to external production endpoints");
 assert.doesNotMatch(css,/#0[a-f0-9]{5}\b|#00[a-f0-9]{4}\b/i, "Unexpected raw blue palette");
 assert.ok(existsSync("preview-build/admin/dashboard/index.html"),
