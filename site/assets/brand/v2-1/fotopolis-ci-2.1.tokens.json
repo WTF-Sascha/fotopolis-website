@@ -1,0 +1,96 @@
+{
+  "version": "2.1.0",
+  "brand": "FOTOPOLIS",
+  "status": "Design system; staged integration only",
+  "source": {
+    "approvedMaster": "01_LOGO/fotopolis_logo_master_ivory_1254.png",
+    "sourceType": "raster; no invented vector master",
+    "yellowSampling": "median RGB (254,225,88) from logo warm yellow regions"
+  },
+  "colors": {
+    "logo_yellow": "#FEE158",
+    "logo_yellow_hover": "#F8D543",
+    "logo_yellow_soft": "#FFF5CE",
+    "ivory": "#F7F3EC",
+    "warm_white": "#FFFCF8",
+    "obsidian": "#181512",
+    "espresso": "#30251D",
+    "muted_gold": "#B99862",
+    "sandstone": "#D8C8B3",
+    "text_muted": "#6D655C",
+    "border": "#DDD5CB",
+    "success": "#276749",
+    "warning": "#8B5E16",
+    "error": "#B42318",
+    "focus": "#AA7A00"
+  },
+  "semantic": {
+    "surface.default": "ivory",
+    "surface.card": "warm_white",
+    "surface.inverse": "espresso",
+    "text.default": "obsidian",
+    "text.muted": "text_muted",
+    "border.default": "border",
+    "action.primary.bg": "logo_yellow",
+    "action.primary.text": "obsidian",
+    "action.primary.hover": "logo_yellow_hover",
+    "action.secondary.bg": "obsidian",
+    "action.secondary.text": "warm_white",
+    "selection.bg": "logo_yellow_soft",
+    "focus.ring": "focus",
+    "status.success": "success",
+    "status.warning": "warning",
+    "status.error": "error"
+  },
+  "typography": {
+    "display": "Newsreader, Georgia, serif",
+    "body": "Manrope, Inter, system-ui, sans-serif",
+    "branding": "Original image only. Never recreate script using fonts.",
+    "bodyScalePx": [
+      12,
+      14,
+      16,
+      18,
+      20
+    ],
+    "headlinesPx": [
+      32,
+      40,
+      48,
+      64
+    ]
+  },
+  "layout": {
+    "spacingBasePx": 4,
+    "spacingScalePx": [
+      4,
+      8,
+      12,
+      16,
+      24,
+      32,
+      48,
+      64,
+      96
+    ],
+    "cardRadiusPx": 16,
+    "buttonRadiusPx": 999,
+    "focusRingWidthPx": 3,
+    "contentMaxWidthPx": 1200
+  },
+  "accessibility": {
+    "target": "WCAG 2.2 AA",
+    "minimumTextContrast": 4.5,
+    "minimumLargeTextContrast": 3.0,
+    "minTargetSizePx": 24,
+    "recommendedTouchTargetPx": 44
+  },
+  "constraints": [
+    "Do not alter approved raster logo artwork",
+    "Do not recolor logo elements via CSS filter",
+    "Logo yellow is NOT body text on ivory",
+    "Yellow is interaction/highlight, not semantic warning or success",
+    "Keep approved hero and 32 photo layouts until individually QA approved",
+    "Preview/staging only; production requires explicit approval"
+  ]
+}
