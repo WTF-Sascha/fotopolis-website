@@ -92,6 +92,10 @@ if offline.is_file():
     offline_html = offline_html.replace("#211a15", "#F7F3EC").replace("#f8ead7", "#181512")
     offline_html = offline_html.replace("#c7a776", "#FEE158").replace("#241b13", "#181512")
     offline_html = offline_html.replace("#dbc197", "#F8D543").replace("#e9c797", "#AA7A00")
+    offline_html = offline_html.replace("background:#30251d;", "background:#FFFCF8;")
+    offline_html = offline_html.replace("border:1px solid #6b5037;", "border:1px solid #DDD5CB;")
+    offline_html = offline_html.replace("p{color:#ddd0bc", "p{color:#6D655C")
+    offline_html = offline_html.replace("box-shadow:0 20px 50px #150d0940", "box-shadow:0 14px 40px #18151212")
     offline_html = offline_html.replace('src="/icons/brand-192.png"', 'src="/assets/brand/v2-1/fotopolis-logo-ci21-256.webp"')
     offline.write_text(offline_html, encoding="utf-8")
 
