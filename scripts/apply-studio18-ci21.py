@@ -133,7 +133,8 @@ assert "const CORE=[" in worker and "/admin/" in worker and "/api/" in worker
 worker = worker.replace("v15-one-app-secure-r1", "v18-ci21-foundation-r1", 1)
 worker = worker.replace(
     "const CORE=[",
-    "const CORE=['/assets/brand/v2-1/fotopolis-ci-2.1.css',"
+    "const CORE=['/assets/brand/v2-1/fotopolis-logo-ci21-256.webp',"
+    "'/assets/brand/v2-1/fotopolis-ci-2.1.css',"
     "'/studio18-ci21-compat.css',",
     1,
 )
