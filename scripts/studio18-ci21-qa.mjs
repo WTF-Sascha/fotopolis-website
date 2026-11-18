@@ -50,6 +50,17 @@ assert.ok(contrast(token.colors.logo_yellow,token.colors.obsidian)>=4.5,"Yellow/
 assert.ok(contrast(token.colors.ivory,token.colors.obsidian)>=4.5,"Ivory/Obsidian body contrast");
 assert.ok(contrast(token.colors.warm_white,token.colors.espresso)>=4.5,"Warm White/Espresso navigation contrast");
 
+// A successful CSS/logo build is not the same as removing a logo embedded in a photo.
+assert.equal(report.embedded_image_branding_status,"PENDING / NO-GO");
+assert.equal(report.embedded_old_logos_remaining,true);
+assert.ok(Array.isArray(report.embedded_logo_assets_to_remediate));
+assert.ok(report.embedded_logo_assets_to_remediate.length>=4);
+for(const asset of report.embedded_logo_assets_to_remediate){
+  assert.equal(asset.status,"PENDING");
+  if(asset.preview)assert.ok(fs.existsSync(path.join(OUT,asset.preview)),asset.preview);
+}
+assert.ok(report.blocking_gates.some(x=>x.includes("old logos baked into mirror/booth/video imagery")));
+
 assert.equal(report.classic_templates_inventory_count,32);
 assert.equal(report.classic_templates_print_qa_completed,0);
 assert.ok(report.blocking_gates.length>=5);
@@ -99,4 +110,4 @@ for(let n=1;n<=32;n++){
   const f="assets/designvorlagen/fp-"+String(n).padStart(3,"0")+".webp";
   assert.ok(fs.existsSync(path.join(OUT,f)),f);
 }
-console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; preview logo/icons integrated, full-resolution brand master, print, screenshots and E2E pending.");
+console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; logos baked into mirror/booth/video images, print, screenshots and E2E pending.");
