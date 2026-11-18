@@ -16,7 +16,9 @@ assert.equal(token.colors.ivory,"#F7F3EC");
 assert.match(read("assets/brand/v2-1/fotopolis-ci-2.1.css"),/--fp-logo-yellow:\s*#FEE158/);
 assert.match(read("studio18-ci21-compat.css"),/--fp-brand-accent:var\(--fp-logo-yellow\)/);
 assert.equal(report.status,"PARTIAL / NO PRODUCTION APPROVAL");
-assert.equal(report.approved_original_source_verified_against_ci21_pdf,true);\nassert.equal(report.approved_original_source_master_sha256,"3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24");\nassert.equal(report.approved_logo_switched,true);
+assert.equal(report.approved_original_source_verified_against_ci21_pdf,true);
+assert.equal(report.approved_original_source_master_sha256,"3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24");
+assert.equal(report.approved_logo_switched,true);
 assert.equal(report.old_icons_remaining,false);
 assert.equal(report.logo_web_derivative_sha256,"bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba");
 assert.ok(fs.existsSync(path.join(OUT,"assets/brand/v2-1/fotopolis-logo-ci21-256.webp")));
@@ -43,7 +45,7 @@ function walk(dir){
       const i1=text.indexOf("/assets/brand/v2-1/fotopolis-ci-2.1.css");
       const i2=text.indexOf("/studio18-ci21-compat.css");
       assert.ok(i0<i1 && i1<i2,label+": stylesheet cascade");
-      assert.equal((text.match(/<\\/head>/g)||[]).length,1,label);
+      assert.equal((text.match(/<\/head>/g)||[]).length,1,label);
       assert.ok(!text.includes("/assets/fotopolis-goldmark.webp"),label+": old logo reference");
       assert.ok(!text.includes("/assets/fotopolis-logo-original.png"),label+": old logo reference");
       checked++;
@@ -57,7 +59,7 @@ const manifest=JSON.parse(read("manifest.webmanifest"));
 assert.equal(manifest.id,"/");
 assert.equal(manifest.scope,"/");
 assert.equal(manifest.theme_color,"#F7F3EC");
-for(const icon of manifest.icons){assert.ok(fs.existsSync(path.join(OUT,icon.src.replace(/^\\//,""))),icon.src);}
+for(const icon of manifest.icons){assert.ok(fs.existsSync(path.join(OUT,icon.src.replace(/^\//,""))),icon.src);}
 assert.ok(fs.existsSync(path.join(OUT,"favicon.ico")));
 const sw=read("service-worker.js");
 assert.match(sw,/v18-ci21-foundation-r1/);
