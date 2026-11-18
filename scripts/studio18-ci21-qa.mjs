@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Studio 18 CI-2.1 foundation contract (not visual, functional or print approval). */
 import fs from "node:fs";
+import {createHash} from "node:crypto";
 import path from "node:path";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
@@ -22,6 +23,33 @@ assert.equal(report.approved_logo_switched,true);
 assert.equal(report.old_icons_remaining,false);
 assert.equal(report.logo_web_derivative_sha256,"bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba");
 assert.ok(fs.existsSync(path.join(OUT,"assets/brand/v2-1/fotopolis-logo-ci21-256.webp")));
+
+const raster=fs.readFileSync(path.join(OUT,"assets/brand/v2-1/fotopolis-logo-ci21-256.webp"));
+assert.equal(createHash("sha256").update(raster).digest("hex"),"bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba");
+assert.equal(raster.toString("ascii",0,4),"RIFF");
+assert.equal(raster.toString("ascii",8,12),"WEBP");
+for(const px of [16,32,48,64,180,192,512]){
+  const png=fs.readFileSync(path.join(OUT,"icons","brand-"+px+".png"));
+  assert.equal(png.toString("hex",0,8),"89504e470d0a1a0a");
+  assert.equal(png.readUInt32BE(16),px);
+  assert.equal(png.readUInt32BE(20),px);
+}
+for(const name of ["brand-maskable-512.png","icon-maskable-512.png"]){
+  const png=fs.readFileSync(path.join(OUT,"icons",name));
+  assert.equal(png.readUInt32BE(16),512);
+  assert.equal(png.readUInt32BE(20),512);
+}
+const relLum=(hex)=>{
+  const n=hex.replace("#","");
+  const values=[0,2,4].map(i=>parseInt(n.slice(i,i+2),16)/255);
+  return values.map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4)
+    .reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+};
+const contrast=(a,b)=>{const l=[relLum(a),relLum(b)].sort((x,y)=>y-x);return (l[0]+.05)/(l[1]+.05)};
+assert.ok(contrast(token.colors.logo_yellow,token.colors.obsidian)>=4.5,"Yellow/Obsidian primary CTA contrast");
+assert.ok(contrast(token.colors.ivory,token.colors.obsidian)>=4.5,"Ivory/Obsidian body contrast");
+assert.ok(contrast(token.colors.warm_white,token.colors.espresso)>=4.5,"Warm White/Espresso navigation contrast");
+
 assert.equal(report.classic_templates_inventory_count,32);
 assert.equal(report.classic_templates_print_qa_completed,0);
 assert.ok(report.blocking_gates.length>=5);
@@ -64,6 +92,7 @@ assert.ok(fs.existsSync(path.join(OUT,"favicon.ico")));
 const sw=read("service-worker.js");
 assert.match(sw,/v18-ci21-foundation-r1/);
 assert.match(sw,/\/assets\/brand\/v2-1\/fotopolis-ci-2\.1\.css/);
+assert.ok(sw.includes("/assets/brand/v2-1/fotopolis-logo-ci21-256.webp"),"PWA offline logo precache");
 assert.match(sw,/\/admin\//);
 assert.match(sw,/\/api\//);
 for(let n=1;n<=32;n++){
