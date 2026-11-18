@@ -6,6 +6,7 @@ Does not touch source photography, hero, print masters, passwords or database.
 CI-2.1 PDF validates the exact original graphics found in the user-provided 2.0\nlogo archive. Their binaries must still be transferred before activating logos.
 """
 from __future__ import annotations
+import base64
 import hashlib
 import json
 import os
@@ -51,6 +52,48 @@ if master_present:
     # No uncontrolled switch is performed by this foundation migration.
     hashes["logo_master"] = hashlib.sha256(master.read_bytes()).hexdigest()
 
+# User-approved CI 2.1 PDF confirms the original 2.0 logo raster. This is
+# a faithful *scaled image derivative*, NOT a redrawn or generated image.
+# The original 1254px source remains mandatory for high-resolution printing.
+approved_web_derivative = SOURCE / "fotopolis-logo-ci21-256.webp.b64"
+assert approved_web_derivative.is_file(), "Verified CI 2.1 logo source missing"
+derivative_bytes = base64.b64decode(approved_web_derivative.read_text().strip(), validate=True)
+derivative_digest = hashlib.sha256(derivative_bytes).hexdigest()
+assert derivative_digest == "bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba", "Source logo derivative altered"
+derived_logo = target / "fotopolis-logo-ci21-256.webp"
+derived_logo.write_bytes(derivative_bytes)
+with Image.open(derived_logo) as verified:
+    assert verified.format == "WEBP" and verified.size == (256, 256)
+    logo = verified.convert("RGB")
+hashes["ci21_web_derivative"] = derivative_digest
+icons_dir = OUT / "icons"
+icons_dir.mkdir(exist_ok=True)
+# Overwrite the build-output icons derived by Studio 13 from the old goldmark.
+ivory = (247, 243, 236)
+def make_icon(size, fraction=0.96):
+    side = round(size * fraction)
+    resized = logo.resize((side, side), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGB", (size, size), ivory)
+    canvas.paste(resized, ((size-side)//2, (size-side)//2))
+    return canvas
+for size in (16, 32, 48, 64, 180, 192, 512):
+    im = make_icon(size)
+    for name in (f"brand-{size}.png", f"icon-{size}.png"):
+        im.save(icons_dir / name, "PNG", optimize=True)
+make_icon(180).save(icons_dir / "apple-touch-icon-180.png", "PNG", optimize=True)
+for name in ("brand-maskable-512.png", "icon-maskable-512.png"):
+    make_icon(512, 0.72).save(icons_dir / name, "PNG", optimize=True)
+make_icon(48).save(OUT / "favicon.png", "PNG", optimize=True)
+make_icon(64).save(OUT / "favicon.ico", "ICO", sizes=[(16,16),(32,32),(48,48),(64,64)])
+offline = OUT / "offline.html"
+if offline.is_file():
+    offline_html = offline.read_text(encoding="utf-8")
+    offline_html = offline_html.replace("#211a15", "#F7F3EC").replace("#f8ead7", "#181512")
+    offline_html = offline_html.replace("#c7a776", "#FEE158").replace("#241b13", "#181512")
+    offline_html = offline_html.replace("#dbc197", "#F8D543").replace("#e9c797", "#AA7A00")
+    offline_html = offline_html.replace('src="/icons/brand-192.png"', 'src="/assets/brand/v2-1/fotopolis-logo-ci21-256.webp"')
+    offline.write_text(offline_html, encoding="utf-8")
+
 style_markup = (
     '<link rel="stylesheet" href="/assets/brand/v2-1/fotopolis-ci-2.1.css">'
     '<link rel="stylesheet" href="/studio18-ci21-compat.css">'
@@ -62,6 +105,8 @@ for path in html_files:
     assert html.count("</head>") == 1, path
     assert "studio13-unified-brand.css" in html, path
     assert "studio18-ci21-compat.css" not in html, path
+    for old_logo in ("/assets/fotopolis-goldmark.webp", "/assets/fotopolis-logo-original.png"):
+        html = html.replace(old_logo, "/assets/brand/v2-1/fotopolis-logo-ci21-256.webp")
     html, substitutions = re.subn(
         r'(<meta\s+name="theme-color"\s+content=")[^"]+',
         r'\g<1>#F7F3EC', html, flags=re.I
@@ -127,13 +172,16 @@ report = {
     "classic_preview_manifest": classic_assets,
     "product_web_derivatives_manifest": product_assets,
     "approved_original_source_verified_against_ci21_pdf": True,\n    "approved_original_source_zip_version": "2.0",\n    "approved_ci21_pdf_sha256": "f642fa35216761d78a1b2567de7cfcba2dfe5c85ee841a4d0c3ff0d704d29b86",\n    "approved_original_source_master_sha256": "3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24",\n    "approved_logo_master_available": master_present,
-    "approved_logo_switched": False,
-    "old_icons_remaining": True,
+    "approved_logo_switched": True,
+    "logo_derivative_quality": "256px original derivative; full print-resolution master pending repository import",
+    "logo_web_derivative_sha256": derivative_digest,
+    "brand_icon_build": "previous goldmark PWA icon set regenerated with CI 2.1 logo",
+    "old_icons_remaining": False,
     "auth_and_form_e2e": "NOT EXECUTED",
     "staging_visual_qa": "NOT EXECUTED",
     "source_sha256": hashes,
     "blocking_gates": [
-        "verified original-brand raster assets not yet imported and mapped across site",
+        "full-resolution original master not yet versioned in repository; preview uses source derivative",
         "per-screen visual regression and WCAG 2.2 AA",
         "32 per-template print-file inspections and real device proofs",
         "authenticated end-to-end tests of forms, roles and admin",
@@ -146,5 +194,5 @@ qa.mkdir(exist_ok=True)
     json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
 )
 print(f"STUDIO 18 CI 2.1: {len(html_files)} HTML routes integrated, "
-      f"{len(classics)} Classics inventoried, approved logo present={master_present}; "
+      f"{len(classics)} Classics inventoried, CI21 logo integrated=True; full master present={master_present}; "
       "NO-GO until image, functional and print QA.")
