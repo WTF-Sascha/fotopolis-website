@@ -109,3 +109,17 @@ Pflicht je Vorlage: Logovariante unten rechts; kein Logo-Overlay über Altlogo; 
 Vor jeder Prüfung den letzten unveränderten `staging`-Commit `032c3f1bd1ad0e95e06ad48c9c0c467fc9586046` sichern. Für eine reine CI-Vorschau kann der Studio-18-Feature-Branch verworfen oder seine isolierte Preview abgeschaltet werden; `main`, `staging`, Live-Domain, Neon-DB und echte Kundeninformationen wurden nicht geschrieben. Ein späterer Merge benötigt eine neue Baseline- und Konfliktprüfung und eine gesonderte Freigabe.
 
 **Keine Freigabe der alten Goldmark als Ersatz für die CI-2.1-Originalmarke.**
+
+
+## 8. Nachtrag – eingegangener Logoquellstand 2.0 (18.11.2026)
+
+**Prüfgegenstand:** vom Auftraggeber separat hochgeladenes `FOTOPOLIS_Logo_Paket_Brand_Identity_2_0(1).zip`.
+- ZIP-SHA256: `9babe8c0889d5a28a9cdcc85669bdaebf6274a3c47fc761b9397cca5e1d8c685`
+- Archivintegrität (ZIP-CRC): bestanden; 33 Einträge, davon 31 im integrierten Asset-Manifest mit SHA256 verifiziert.
+- `01_MASTER/fotopolis_logo_master_1254px_ivory.png`: 1254×1254 RGBA, SHA256 `3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24`
+- `01_MASTER/fotopolis_logo_badge_transparent.png`: 1254×1254 RGBA, SHA256 `142596acd0be1c589c5eb744ebe7b6d98794efe9ded3c48561cafdec94f2ee03`
+- Weitere echte Dateien: Icon/WebP, Favicons, PWA-Maskable, Social, Print und Vorlagen-Guide 2.0.
+- Sichtprüfung: geschwungene Fotopolis-Wortmarke, gestapelte gelbe Fotosymbole, SOCIAL EVENTS, elfenbeinfarbener Grund. Kein Vektormaster enthalten.
+- **Versionskonflikt:** Der gelieferte `MIGRATIONSPLAN.md` von **2.0** verbietet die Verwendung des Fotomotiv-Gelbs als primäre UI-Farbe, während die **CI 2.1** `#FEE158` explizit für primäre CTA-Elemente vorschreibt. Die Richtlinien sind daher **nicht** als identisch zu behandeln.
+- Der korrigierte CI-2.1-Master `01_LOGO/fotopolis_logo_master_ivory_1254.png` konnte bislang nicht bytegenau gegen das 2.0-Paket verglichen werden. Gleiche Motivbeschreibung beweist **keine** identischen Quelldateien.
+- **Konsequenz:** Dieser 2.0-Quellstand ist als überprüfte Referenz dokumentiert, nicht als CI-2.1-Freigabe eingespielt; keine automatische Änderung von Logo, PWA-Icons, Druckvorlagen oder Produktbildern. **CI-2.1-Quellpaket weiterhin blockierend.**
