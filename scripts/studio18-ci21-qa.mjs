@@ -16,7 +16,7 @@ assert.equal(token.colors.ivory,"#F7F3EC");
 assert.match(read("assets/brand/v2-1/fotopolis-ci-2.1.css"),/--fp-logo-yellow:\s*#FEE158/);
 assert.match(read("studio18-ci21-compat.css"),/--fp-brand-accent:var\(--fp-logo-yellow\)/);
 assert.equal(report.status,"PARTIAL / NO PRODUCTION APPROVAL");
-assert.equal(report.approved_logo_switched,false);
+assert.equal(report.approved_original_source_verified_against_ci21_pdf,true);\nassert.equal(report.approved_original_source_master_sha256,"3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24");\nassert.equal(report.approved_logo_switched,false);
 assert.equal(report.classic_templates_inventory_count,32);
 assert.equal(report.classic_templates_print_qa_completed,0);
 assert.ok(report.blocking_gates.length>=5);
@@ -61,4 +61,4 @@ for(let n=1;n<=32;n++){
   const f="assets/designvorlagen/fp-"+String(n).padStart(3,"0")+".webp";
   assert.ok(fs.existsSync(path.join(OUT,f)),f);
 }
-console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; original CI logo, screenshots, print and E2E pending.");
+console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; source-approved logo not yet integrated, screenshots, print and E2E pending.");
