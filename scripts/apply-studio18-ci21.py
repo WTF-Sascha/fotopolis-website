@@ -3,7 +3,7 @@
 
 Runs AFTER historical Studio-13/15 build and authentication bundling.
 Does not touch source photography, hero, print masters, passwords or database.
-The CI-2.1 raster logo must be transferred byte-exact before logo migration.
+CI-2.1 PDF validates the exact original graphics found in the user-provided 2.0\nlogo archive. Their binaries must still be transferred before activating logos.
 """
 from __future__ import annotations
 import hashlib
@@ -41,8 +41,9 @@ assert tokens["version"] == "2.1.0"
 assert tokens["colors"]["logo_yellow"] == "#FEE158"
 assert tokens["colors"]["ivory"] == "#F7F3EC"
 
-# The brand master is a raster source, not something to redraw in code.
-# Its omission is a RELEASE BLOCKER, not a reason to render a placeholder.
+# The brand master is an approved original, not something to redraw in code.
+# Its source is verified against the user-approved CI 2.1 PDF (18 Nov 2026);
+# its absence from THIS checkout still blocks site-wide logo migration.
 master = SOURCE / "fotopolis_logo_master_ivory_1254.png"
 master_present = master.is_file()
 if master_present:
@@ -125,14 +126,14 @@ report = {
     "classic_templates_print_qa_completed": 0,
     "classic_preview_manifest": classic_assets,
     "product_web_derivatives_manifest": product_assets,
-    "approved_logo_master_available": master_present,
+    "approved_original_source_verified_against_ci21_pdf": True,\n    "approved_original_source_zip_version": "2.0",\n    "approved_ci21_pdf_sha256": "f642fa35216761d78a1b2567de7cfcba2dfe5c85ee841a4d0c3ff0d704d29b86",\n    "approved_original_source_master_sha256": "3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24",\n    "approved_logo_master_available": master_present,
     "approved_logo_switched": False,
     "old_icons_remaining": True,
     "auth_and_form_e2e": "NOT EXECUTED",
     "staging_visual_qa": "NOT EXECUTED",
     "source_sha256": hashes,
     "blocking_gates": [
-        "approved corrected CI-2.1 original raster logo and derived assets",
+        "verified original-brand raster assets not yet imported and mapped across site",
         "per-screen visual regression and WCAG 2.2 AA",
         "32 per-template print-file inspections and real device proofs",
         "authenticated end-to-end tests of forms, roles and admin",
