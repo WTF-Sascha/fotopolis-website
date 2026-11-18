@@ -88,3 +88,49 @@ body:has(.shell) .form-shell{border-color:var(--fp-border)}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+/* Studio 18.1 — original logo integration: full artwork contains the original
+   handwritten wordmark. Do not overlay a second synthetic text wordmark. */
+.studio-header .studio-identity.identity>img,
+.studio-header .studio-identity img{
+  width:68px!important;height:68px!important;flex-basis:68px!important;
+  object-fit:contain!important;border-radius:0!important;
+  background:transparent!important;border:0!important;box-shadow:none!important
+}
+.studio-header .studio-identity .studio-wordmark{display:none!important}
+.studio-header .studio-identity{gap:0!important;min-width:68px}
+.studio-header .studio-header-shell{min-height:78px}
+.studio-footer .footer-brand>span{display:none}
+.studio-footer .footer-brand img{
+  width:86px;height:86px;object-fit:contain;border:0;box-shadow:none;
+}
+body:has(#dashboard-app) .brand img,
+body:has(.shell) .brand img{
+  background:var(--fp-ivory)!important;border:0!important;
+  width:58px!important;height:58px!important;object-fit:contain!important;
+  box-shadow:none!important
+}
+body:has(#dashboard-app) :is(.sidebar-nav a.active,.sidebar-nav a[aria-current="page"]){
+  border-left-color:var(--fp-logo-yellow)!important;
+  color:var(--fp-warm-white)!important;
+  background:var(--fp-espresso)!important
+}
+body:has(#dashboard-app) :is(.cc-control-button,.cc-primary-action,.primary-button){
+  min-height:44px;
+}
+body:has(#dashboard-app) :is(.primary-button,.cc-primary-action,.cc-control-button):hover{
+  background:var(--fp-logo-yellow-hover)!important;
+  border-color:var(--fp-logo-yellow-hover)!important;
+  color:var(--fp-obsidian)!important;
+}
+:where(.studio-header,.studio-mainnav,.page-body,.workspace,.login-panel) :is(button,a){
+  -webkit-tap-highlight-color:transparent;
+}
+@media(max-width:600px){
+  .studio-header .studio-identity.identity>img,
+  .studio-header .studio-identity img{
+    width:50px!important;height:50px!important;flex-basis:50px!important;
+  }
+  .studio-header .studio-identity{min-width:50px}
+  .studio-header .studio-header-shell{min-height:64px}
+}
