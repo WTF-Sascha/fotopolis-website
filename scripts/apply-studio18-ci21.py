@@ -177,6 +177,40 @@ report = {
     "classic_templates_print_qa_completed": 0,
     "classic_preview_manifest": classic_assets,
     "product_web_derivatives_manifest": product_assets,
+    # Explicitly distinguish UI logo migration from old logos baked into photos.
+    # User review (2026-11-18): Mirror + photo booth product screens still
+    # include old gold/blue Fotopolis logo pixels in the source image itself.
+    "embedded_image_branding_status": "PENDING / NO-GO",
+    "embedded_old_logos_remaining": True,
+    "embedded_logo_assets_to_remediate": [
+        {
+            "source": "concepts/premium-v2/assets/fotospiegel-hero-lossless.webp",
+            "preview": "assets/images/fotospiegel-hero-lossless.webp",
+            "issue": "old gold/blue badge baked into mirror screen",
+            "status": "PENDING",
+        },
+        {
+            "source": "concepts/premium-v2/assets/products/fotobox-event-1672.webp",
+            "preview": "assets/images/fotobox-event-1672.webp",
+            "issue": "old badge baked into photo booth screen",
+            "status": "PENDING",
+        },
+        {
+            "source": "concepts/premium-v2/assets/products/fotobox-event-800.webp",
+            "preview": "assets/images/fotobox-event-800.webp",
+            "issue": "same source and old badge in smaller responsive derivative",
+            "status": "PENDING",
+        },
+        {
+            "source": "concepts/premium-v2/assets/branding/fotopolis-video-still-source.webp",
+            "preview": None,
+            "issue": "old badge baked into video/device still; active references to verify",
+            "status": "PENDING",
+        },
+    ],
+    "trailer_branding_review": "PENDING - FOTOPOLIS letter bunting is not the same old round logo",
+    "embedded_logo_remediation_audit": "docs/FOTOPOLIS_STUDIO18_1_EMBEDDED_IMAGE_BRANDING_AUDIT_2026-11-18.md",
+
     "approved_original_source_verified_against_ci21_pdf": True,
     "approved_original_source_zip_version": "2.0",
     "approved_ci21_pdf_sha256": "f642fa35216761d78a1b2567de7cfcba2dfe5c85ee841a4d0c3ff0d704d29b86",
@@ -192,6 +226,7 @@ report = {
     "source_sha256": hashes,
     "blocking_gates": [
         "full-resolution original master not yet versioned in repository; preview uses source derivative",
+        "old logos baked into mirror/booth/video imagery must be retouched in actual source images",
         "per-screen visual regression and WCAG 2.2 AA",
         "32 per-template print-file inspections and real device proofs",
         "authenticated end-to-end tests of forms, roles and admin",
