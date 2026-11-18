@@ -11,6 +11,7 @@ import json
 import re
 import shutil
 from pathlib import Path
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "preview-build"
@@ -92,6 +93,25 @@ worker_path.write_text(worker, encoding="utf-8")
 classics = sorted((OUT / "assets/designvorlagen").glob("fp-0[0-3][0-9].webp"))
 classics = [p for p in classics if 1 <= int(p.stem[3:]) <= 32]
 assert len(classics) == 32 and len(set(p.name for p in classics)) == 32
+
+# Inspection manifest refers only to real deployed preview derivatives.
+# It is not a substitute for comparing private 300-DPI print source files.
+def describe_asset(path: Path, kind: str) -> dict:
+    with Image.open(path) as img:
+        width, height = img.size
+    return {
+        "path": str(path.relative_to(OUT)),
+        "type": kind,
+        "width_px": width,
+        "height_px": height,
+        "bytes": path.stat().st_size,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "original_print_qa": "PENDING",
+    }
+
+classic_assets = [describe_asset(p, "classic_web_preview") for p in classics]
+products = sorted((OUT / "assets/images").glob("*.webp"))
+product_assets = [describe_asset(p, "product_web_derivative") for p in products]
 report = {
     "version": "18.0-foundation",
     "ci": "2.1",
@@ -99,6 +119,8 @@ report = {
     "html_pages": len(html_files),
     "classic_templates_inventory_count": len(classics),
     "classic_templates_print_qa_completed": 0,
+    "classic_preview_manifest": classic_assets,
+    "product_web_derivatives_manifest": product_assets,
     "approved_logo_master_available": master_present,
     "approved_logo_switched": False,
     "old_icons_remaining": True,
