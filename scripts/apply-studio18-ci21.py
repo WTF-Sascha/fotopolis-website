@@ -8,12 +8,16 @@ The CI-2.1 raster logo must be transferred byte-exact before logo migration.
 from __future__ import annotations
 import hashlib
 import json
+import os
 import re
 import shutil
 from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
+# Explicit production tripwire: Studio 18 is not approved for live.
+if os.getenv("CONTEXT") == "production" or os.getenv("BRANCH") == "main":
+    raise RuntimeError("Studio 18 is staging-only: no production build authorized")
 OUT = ROOT / "preview-build"
 SOURCE = ROOT / "site/assets/brand/v2-1"
 STYLES = ROOT / "concepts/premium-v2/studio18-ci21-compat.css"
