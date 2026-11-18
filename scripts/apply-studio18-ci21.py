@@ -57,8 +57,8 @@ for path in html_files:
     assert "studio13-unified-brand.css" in html, path
     assert "studio18-ci21-compat.css" not in html, path
     html, substitutions = re.subn(
-        r'(<meta\\s+name=["\\']theme-color["\\']\\s+content=["\\'])[^"\\']+',
-        r'\\g<1>#F7F3EC', html, flags=re.I
+        r'(<meta\s+name="theme-color"\s+content=")[^"]+',
+        r'\g<1>#F7F3EC', html, flags=re.I
     )
     if substitutions == 0:
         html = html.replace("</head>", '<meta name="theme-color" content="#F7F3EC"></head>', 1)
