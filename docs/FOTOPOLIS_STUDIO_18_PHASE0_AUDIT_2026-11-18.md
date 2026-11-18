@@ -15,19 +15,19 @@ Stand: 18.11.2026 · **Staging-only · NO-GO für Produktion**
 
 Die freigegebenen Textquellen `fotopolis-ci-2.1.css` und `fotopolis-ci-2.1.tokens.json` wurden aus dem korrigierten CI-Kontext übernommen und liegen in `site/assets/brand/v2-1/`.
 
-Die korrigierte CI-ZIP `FOTOPOLIS_Corporate_Identity_2_1_KORRIGIERT.zip` und das korrigierte PDF sind im Projektkatalog nachweisbar, aber die ZIP-Originalbytes ließen sich in dieser Sitzung **nicht** materialisieren. Die im Token-Manifest benannte Raster-Masterdatei `01_LOGO/fotopolis_logo_master_ivory_1254.png` ist im aktuellen Repository nicht als freigegebene CI-2.1-Masterdatei nachgewiesen.
+**Aktualisierte Quellprüfung 18.11.2026:** Das nun direkt hochgeladene, 12-seitige `FOTOPOLIS_Corporate_Identity.pdf` weist die CI **2.1** ausdrücklich aus (SHA256 `f642fa35216761d78a1b2567de7cfcba2dfe5c85ee841a4d0c3ff0d704d29b86`). Vier Bildkomponenten aus dem vorher hochgeladenen, vollständig integritätsgeprüften **Logo-Paket 2.0** stimmen **RGB-pixelgenau** mit den eingebetteten CI-2.1-PDF-Bildobjekten überein: vollständiger Master (1254²), transparenter Badge (1254²; RGB geprüft), Fotozeichen (422²), Original-Wortmarke (922×414). In PDF Seite 5 ist exakt dieses Logodesign freigegeben. **Die 2.0-Bilddateien sind als Quelle für CI 2.1 gültig; die veralteten 2.0-Gestaltungsregeln sind nicht gültig.**
 
-**Konsequenz:** Studio 18.0 verwendet **kein** nachgezeichnetes, generiertes oder erratenes Logo. Die bisher gebauten Goldmark-Icons und Logo-Referenzen bleiben vorläufig aktiv. **Dies ist ein Release-Blocker.**
+**Konsequenz:** Ein zusätzliches korrigiertes CI-2.1-Logo-ZIP ist für die Bildfreigabe nicht erforderlich. Die bestätigten Binärdateien müssen jedoch vor der Aktivierung noch in das Studio-18-Repository übertragen und je Oberfläche korrekt eingebunden werden. Bis dahin bleiben alte Goldmark-Icons in der Feature-Preview sichtbar; **tatsächliche Asset-Migration und Release-QA bleiben offen**, nicht die Identität des Originals.
 
 ## 3. Bestandsmatrix / Migrationsstatus
 
 | Fundstelle/Funktionsgruppe | Derzeitiger Stand | CI-2.1-Abweichung / Risiko | Erforderliche Maßnahme | Status |
 |---|---|---|---|---|
-| `site/assets/fotopolis-goldmark.webp` | Bisherige Goldmark im Build | Falsches Markenzeichen | Erst nach bytegenauer Übernahme des CI-Masters ersetzen | **Blockiert** |
+| `site/assets/fotopolis-goldmark.webp` | Bisherige Goldmark im Build | Falsches Markenzeichen | Vom PDF bestätigte Originaldatei aus Logo-Paket 2.0 einbinden; anschließend alle Fundstellen prüfen | **Blockiert** |
 | `scripts/apply-studio13-unified-brand.py` | Baut Goldmark-Icons und aktiviertes Alt-Stylesheet | PWA-/Brand-Quelle ist Studio 13 | Kontrollierter CI-Asset-Switch mit Hash- und Größenprüfung | **Offen** |
 | `concepts/premium-v2/studio13-unified-brand.css` | Viele fest kodierte Espresso-/Goldfarben | Nicht vollständig CI 2.1 | Zentrale Variablen und komponentenweises Refactoring | **Teilweise** (kompatible Token-Ebene) |
 | Öffentliche HTML-Seiten | Aus `preview-build` generiert | Alte Markenressourcen | Neue Tokens/Style-Ebene nach Alt-CSS einbinden, danach Screenshots prüfen | **Staging-Code umgesetzt, Browser-QA offen** |
-| Header & Hero | Premium-Hero bereits freigegeben | Logo nicht CI 2.1 | Nur Logo/Kontrast/Responsive prüfen, Hero nicht ersetzen | **Logo blockiert** |
+| Header & Hero | Premium-Hero bereits freigegeben | Logo nicht CI 2.1 | Nur Logo/Kontrast/Responsive prüfen, Hero nicht ersetzen | **Logoquelle verifiziert; Einbindung offen** |
 | `/admin/login/` | Geschützte Anmeldung | Alte Farb- und Logo-Elemente | CI-Styling mit echter Auth-Regression absichern | **Teilweise** |
 | `/admin/dashboard/` | Kompakte Workspace-Navigation | Einzelne Altstile | CI-Styling ohne Rollen- oder UX-Regressionsfehler | **Teilweise** |
 | `/admin/designstudio/` | Internes geschütztes Design Studio | Logo-/Editor-Farben/Printvorschau offen | Rechteprüfung, Editor-/Druck-Farbtreue, Templates | **Offen** |
@@ -46,7 +46,7 @@ Die korrigierte CI-ZIP `FOTOPOLIS_Corporate_Identity_2_1_KORRIGIERT.zip` und das
 4. `scripts/studio18-ci21-qa.mjs`: statisches Build-Gate für Token-Werte, Seiten-Cascade, 32 Classics, PWA-Scope, Cache-Referenzen und nicht irreführenden Freigabestatus.
 5. `netlify.toml`: Stage-18-Build- und Testschritte nach den bisherigen Sicherheits- und Funktionsprüfungen in alle isolierten Preview-Kontexte integriert.
 
-**Nicht behauptet:** kein echter Browser-Screenshot, keine erfolgreiche Netlify-Deployment-Prüfung, kein Auth-/Anfrage-E2E, kein CI-2.1-Logo-Switch, kein echter Fotoausdruck, kein Gerätetest.
+**Nicht behauptet:** kein echter Browser-Screenshot, kein Auth-/Anfrage-E2E, kein CI-2.1-Logo-Switch, kein echter Fotoausdruck, kein Gerätetest. Die Netlify-Feature-Preview war zuletzt **ready**; das ist kein visueller oder funktionaler Freigabenachweis.
 
 ## 5. Einzelprüfregister – 32 bestehende Classic-Vorlagen
 
@@ -91,7 +91,7 @@ Pflicht je Vorlage: Logovariante unten rechts; kein Logo-Overlay über Altlogo; 
 
 ## 6. P0-Abnahme-Gates / Freigabeentscheidung
 
-- [ ] Bytegenaue Quelldateien des korrigierten CI-2.1-Pakets erhalten, Herkunft und Hash dokumentiert
+- [x] CI-2.1-PDF als aktuell verbindlich bestätigt und die vier Bildkomponenten der Logo-Quelle 2.0 RGB-pixelgenau verglichen; SHA-256 der PDF/des ZIP und PNG-Masters dokumentiert
 - [ ] Finale Logos (Header, Footer, PWA, Social, Kundenportal, Admin, Print) aus diesen Originalen abgeleitet
 - [ ] 32 Classic-Printlayouts einzeln geprüft, repariert und auf echter Hardware freigegeben
 - [ ] Alle aktiven Seiten auf 320/360/390/768/1024/1280/1440 px visuell geprüft; Vorher/Nachher
@@ -108,7 +108,7 @@ Pflicht je Vorlage: Logovariante unten rechts; kein Logo-Overlay über Altlogo; 
 
 Vor jeder Prüfung den letzten unveränderten `staging`-Commit `032c3f1bd1ad0e95e06ad48c9c0c467fc9586046` sichern. Für eine reine CI-Vorschau kann der Studio-18-Feature-Branch verworfen oder seine isolierte Preview abgeschaltet werden; `main`, `staging`, Live-Domain, Neon-DB und echte Kundeninformationen wurden nicht geschrieben. Ein späterer Merge benötigt eine neue Baseline- und Konfliktprüfung und eine gesonderte Freigabe.
 
-**Keine Freigabe der alten Goldmark als Ersatz für die CI-2.1-Originalmarke.**
+**Keine Freigabe der alten Goldmark als Ersatz für die CI-2.1-Originalmarke. Das freigegebene Original stammt nach Vergleich aus dem Logo-Quellpaket 2.0.**
 
 
 ## 8. Nachtrag – eingegangener Logoquellstand 2.0 (18.11.2026)
@@ -123,3 +123,19 @@ Vor jeder Prüfung den letzten unveränderten `staging`-Commit `032c3f1bd1ad0e95
 - **Versionskonflikt:** Der gelieferte `MIGRATIONSPLAN.md` von **2.0** verbietet die Verwendung des Fotomotiv-Gelbs als primäre UI-Farbe, während die **CI 2.1** `#FEE158` explizit für primäre CTA-Elemente vorschreibt. Die Richtlinien sind daher **nicht** als identisch zu behandeln.
 - Der korrigierte CI-2.1-Master `01_LOGO/fotopolis_logo_master_ivory_1254.png` konnte bislang nicht bytegenau gegen das 2.0-Paket verglichen werden. Gleiche Motivbeschreibung beweist **keine** identischen Quelldateien.
 - **Konsequenz:** Dieser 2.0-Quellstand ist als überprüfte Referenz dokumentiert, nicht als CI-2.1-Freigabe eingespielt; keine automatische Änderung von Logo, PWA-Icons, Druckvorlagen oder Produktbildern. **CI-2.1-Quellpaket weiterhin blockierend.**
+
+
+## 9. Abschließende Klärung der CI-2.1-Quelle (ersetzt abweichende Aussagen in § 8)
+
+Am 18.11.2026 bestätigte der Auftraggeber die hochgeladene Datei `FOTOPOLIS_Corporate_Identity.pdf` ausdrücklich als **aktuelle Corporate Identity**. Der Titel lautet „Corporate Identity 2.1“. Der im vorherigen § 8 genannte Versionskonflikt betrifft **ausschließlich die Regeln aus dem alten Brand Guide 2.0**, **nicht** die Logo-Originalbilder. Die PDF bestätigt genau dieselben RGB-Pixel des vollständigen Masters, des Badge-Motivs, des Fotosymbols und der Schriftmarke.
+
+| Prüfobjekt aus PDF CI 2.1, Seite 5 | ZIP-Quelle Brand Identity 2.0 | RGB-pixelgenau |
+|---|---|---|
+| Master · Ivory (1254×1254) | `01_MASTER/fotopolis_logo_master_1254px_ivory.png` | **Ja** |
+| Badge · dunkel (1254×1254) | `01_MASTER/fotopolis_logo_badge_transparent.png` | **Ja, RGB**; Alphakanal separat prüfen |
+| Foto-Symbol (422×422) | `02_WEB/fotopolis_logo_photo_icon_422px.png` | **Ja** |
+| Original-Wortmarke (922×414) | `02_WEB/fotopolis_wordmark_only_transparent.png` | **Ja, RGB**; Alphakanal separat prüfen |
+
+**Verbindliche CI-2.1-Regeln aus PDF:** Logo Yellow `#FEE158`, Ivory `#F7F3EC`, Obsidian `#181512`, Espresso `#30251D`, Muted Gold `#B99862`, Warm White `#FFFCF8`; Primäraktion Gelb mit dunkler Schrift (Hover `#F8D543`), 3-px-Fokusring, Newsreader/Manrope, keine neu gesetzte Wortmarke. Die Produkte bleiben originalgetreu, der freigegebene Hero wird nicht ersetzt; 32 Classic-Printlayouts sind einzeln zu prüfen, Logos unten rechts und keine Designnamen auf den Ausdrucken. Rollout nur Feature-Preview und Freigabe-Gates; **kein Merge, keine DB-Migration, keine Live-Domain-Änderung.**
+
+**QA-Entscheid:** Identität der Bildquelle **verifiziert**; Einbau, Druck, E2E, Screenshots sowie Barrierefreiheit **weiterhin NO-GO für Live**. Ein zusätzliches 2.1-ZIP zur Identitätsklärung muss nicht mehr angefordert werden.
