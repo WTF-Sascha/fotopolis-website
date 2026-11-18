@@ -1,0 +1,90 @@
+/* FOTOPOLIS Studio 18 — CI 2.1 compatibility layer, staging only.
+   This is an additive migration facade, NOT a replacement for the CI 2.1 master.
+   Legacy Studio 13 selectors remain until per-view regression checks are approved.
+   Missing CI-2.1 logo masters must not be synthesized or replaced. */
+:root {
+  --fp-brand-dark:var(--fp-obsidian);
+  --fp-brand-nav:var(--fp-espresso);
+  --fp-brand-surface:var(--fp-ivory);
+  --fp-brand-paper:var(--fp-warm-white);
+  --fp-brand-warm:var(--fp-sandstone);
+  --fp-brand-accent:var(--fp-logo-yellow);
+  --fp-brand-accent-hover:var(--fp-logo-yellow-hover);
+  --fp-brand-accent-ink:var(--fp-obsidian);
+  --fp-brand-ink:var(--fp-obsidian);
+  --fp-brand-muted:var(--fp-text-muted);
+  --fp-brand-border:var(--fp-border);
+  --fp-brand-focus:var(--fp-focus);
+  --fp-brand-display:var(--fp-font-display);
+  --fp-brand-body:var(--fp-font-body);
+  --navy:var(--fp-obsidian);
+  --navy2:var(--fp-espresso);
+  --blue:var(--fp-espresso);
+  --cream:var(--fp-ivory);
+  --paper:var(--fp-warm-white);
+  --ink:var(--fp-obsidian);
+  --muted:var(--fp-text-muted);
+  --line:var(--fp-border);
+  --gold:var(--fp-logo-yellow);
+  --champagne:var(--fp-muted-gold);
+}
+html{color-scheme:light}
+body{background:var(--fp-ivory);color:var(--fp-obsidian);font-family:var(--fp-font-body)}
+:where(h1,h2,h3,h4){font-family:var(--fp-font-display)}
+:where(a,button,input,select,textarea,summary,[role="button"]):focus-visible{
+  outline:3px solid var(--fp-focus)!important;
+  outline-offset:3px;
+}
+::selection{background:var(--fp-logo-yellow-soft);color:var(--fp-obsidian)}
+/* Retain approved hero positioning, photography and structure. */
+.studio-header.site-header{background:var(--fp-espresso)!important}
+.studio-mainnav .nav-panel{background:var(--fp-espresso)!important}
+.studio-mainnav .nav-trigger[aria-expanded="true"]{color:var(--fp-logo-yellow)!important}
+.studio-header .studio-identity img,.studio-header .studio-identity.identity>img{
+  object-fit:contain!important;filter:none!important;
+}
+.button.gold,.mainnav .nav-cta,.studio9-submit,.studio9-product-submit,
+.s7-next-button,.s7-primary-action,.product-request-submit,.fpv2-preview-cta {
+  background:var(--fp-logo-yellow)!important;
+  border-color:var(--fp-logo-yellow)!important;
+  color:var(--fp-obsidian)!important;
+}
+.button.gold:hover,.mainnav .nav-cta:hover,.studio9-submit:hover,.studio9-product-submit:hover,
+.s7-next-button:hover,.s7-primary-action:hover,.product-request-submit:hover,.fpv2-preview-cta:hover {
+  background:var(--fp-logo-yellow-hover)!important;
+  border-color:var(--fp-logo-yellow-hover)!important;
+  color:var(--fp-obsidian)!important;
+}
+.page-body,.v45-home .v45-products{background:var(--fp-ivory)!important}
+:where(.page-body,.package-planner,.contact-flow,.gl-gallery)
+:is(input,select,textarea):focus-visible{border-color:var(--fp-focus)!important}
+/* Admin UI: preserve existing access controls, state semantics and navigation. */
+body:has(#dashboard-app) .workspace main,
+body:has(.shell) .login-panel{background:var(--fp-ivory)!important}
+body:has(#dashboard-app) .sidebar{background:var(--fp-espresso)!important}
+body:has(#dashboard-app) .sidebar :is(a,button)[aria-current="page"],
+body:has(#dashboard-app) .mobile-menu :is(a,button)[aria-current="page"]{
+  box-shadow:inset 3px 0 0 var(--fp-logo-yellow);
+}
+body:has(#dashboard-app) :is(.primary-button,.cc-primary-action),
+body:has(.shell) .action:not(.secondary){
+  background:var(--fp-logo-yellow)!important;
+  border-color:var(--fp-logo-yellow)!important;
+  color:var(--fp-obsidian)!important;
+}
+body:has(#dashboard-app) :is(.primary-button,.cc-primary-action):hover,
+body:has(.shell) .action:not(.secondary):hover{
+  background:var(--fp-logo-yellow-hover)!important;
+  border-color:var(--fp-logo-yellow-hover)!important;
+  color:var(--fp-obsidian)!important;
+}
+body:has(.shell) .brand-panel{background:var(--fp-espresso)!important;background-image:none!important}
+body:has(.shell) .mode-tabs button[aria-pressed="true"]{
+  background:var(--fp-logo-yellow-soft)!important;
+  color:var(--fp-obsidian)!important;
+}
+body:has(#dashboard-app) :is(.metrics article,.panel,.card),
+body:has(.shell) .form-shell{border-color:var(--fp-border)}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
