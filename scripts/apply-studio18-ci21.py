@@ -3,7 +3,8 @@
 
 Runs AFTER historical Studio-13/15 build and authentication bundling.
 Does not touch source photography, hero, print masters, passwords or database.
-CI-2.1 PDF validates the exact original graphics found in the user-provided 2.0\nlogo archive. Their binaries must still be transferred before activating logos.
+CI-2.1 PDF validates the exact original graphics found in the user-provided 2.0
+logo archive. Their binaries must still be transferred before activating logos.
 """
 from __future__ import annotations
 import base64
@@ -116,8 +117,8 @@ for path in html_files:
     html = html.replace("</head>", style_markup + "</head>", 1)
     path.write_text(html, encoding="utf-8")
 
-# PWA identity/scope stays stable; existing icon files remain unchanged until
-# approved CI-2.1 logo source and maskable crop have passed source-level QA.
+# PWA identity/scope remains stable; the outdated icon payload is replaced
+# above with derived original-logo icons (print/hardware approval remains open).
 manifest_path = OUT / "manifest.webmanifest"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 assert manifest["id"] == "/" and manifest["scope"] == "/"
@@ -163,7 +164,7 @@ classic_assets = [describe_asset(p, "classic_web_preview") for p in classics]
 products = sorted((OUT / "assets/images").glob("*.webp"))
 product_assets = [describe_asset(p, "product_web_derivative") for p in products]
 report = {
-    "version": "18.0-foundation",
+    "version": "18.1-brand-preview",
     "ci": "2.1",
     "status": "PARTIAL / NO PRODUCTION APPROVAL",
     "html_pages": len(html_files),
@@ -171,7 +172,11 @@ report = {
     "classic_templates_print_qa_completed": 0,
     "classic_preview_manifest": classic_assets,
     "product_web_derivatives_manifest": product_assets,
-    "approved_original_source_verified_against_ci21_pdf": True,\n    "approved_original_source_zip_version": "2.0",\n    "approved_ci21_pdf_sha256": "f642fa35216761d78a1b2567de7cfcba2dfe5c85ee841a4d0c3ff0d704d29b86",\n    "approved_original_source_master_sha256": "3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24",\n    "approved_logo_master_available": master_present,
+    "approved_original_source_verified_against_ci21_pdf": True,
+    "approved_original_source_zip_version": "2.0",
+    "approved_ci21_pdf_sha256": "f642fa35216761d78a1b2567de7cfcba2dfe5c85ee841a4d0c3ff0d704d29b86",
+    "approved_original_source_master_sha256": "3aa473c6788beb52587a7c5c423cd83f05a44e356b51bcabbb5b6f7af6957a24",
+    "approved_logo_master_available": master_present,
     "approved_logo_switched": True,
     "logo_derivative_quality": "256px original derivative; full print-resolution master pending repository import",
     "logo_web_derivative_sha256": derivative_digest,
