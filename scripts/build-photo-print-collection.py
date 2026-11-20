@@ -394,7 +394,7 @@ report={
  "sourceToCandidateQA":"qa/classics-32-source-vs-restored.webp",
  "individuallyDetectedPhotoRegions":32,
  "newDesigns":12,"candidateCount":44,
- "masterGoldmarkSha256":master_hash,
+ "masterCi21LogoSha256":master_hash,
  "sourceOriginalSha256":source_hashes,
  "printOverlays":"alpha-cutout PNG, single master logo, exact photo masks",
  "generatedCatalogCount":len(catalogue),
