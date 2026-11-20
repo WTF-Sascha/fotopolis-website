@@ -28,6 +28,22 @@ const raster=fs.readFileSync(path.join(OUT,"assets/brand/v2-1/fotopolis-logo-ci2
 assert.equal(createHash("sha256").update(raster).digest("hex"),"bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba");
 assert.equal(raster.toString("ascii",0,4),"RIFF");
 assert.equal(raster.toString("ascii",8,12),"WEBP");
+
+const round=fs.readFileSync(path.join(OUT,"assets/brand/v2-1/fotopolis-logo-ci21-round.webp"));
+assert.equal(round.toString("ascii",0,4),"RIFF");
+assert.equal(round.toString("ascii",8,12),"WEBP");
+assert.equal(createHash("sha256").update(round).digest("hex"),report.round_logo_web_sha256);
+assert.equal(report.round_logo_header_and_hero,true);
+assert.equal(report.hero_still_greeting_only,true);
+const home=read("index.html");
+assert.equal((home.match(/class="fp18-hero-brand"/g)||[]).length,1);
+assert.ok(home.includes('src="/assets/brand/v2-1/fotopolis-logo-ci21-round.webp"'));
+const hook=home.indexOf('class="fp18-hero-brand"');
+const heroMarkup=home.slice(home.lastIndexOf('<section',hook),home.indexOf('</section>',hook)+10);
+assert.ok(heroMarkup.includes('fp17-welcome-hero'));
+assert.ok(!/<a\s/i.test(heroMarkup),"Welcome hero must remain a non-link greeting");
+assert.ok(read("service-worker.js").includes("fotopolis-logo-ci21-round.webp"));
+
 for(const px of [16,32,48,64,180,192,512]){
   const png=fs.readFileSync(path.join(OUT,"icons","brand-"+px+".png"));
   assert.equal(png.toString("hex",0,8),"89504e470d0a1a0a");
