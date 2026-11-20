@@ -2,12 +2,14 @@
 """FOTOPOLIS Studio 11 PhotoPrint Collection, isolated preview only.
 
 True 15 x 10 cm landscape photo templates at 300 DPI (1772 x 1181 px).
-Source 32 artworks and the approved goldmark are never overwritten. Every
+The 32 source artworks remain unchanged; the CI-2.1 original logo is stamped. Every
 print PNG has transparent photo openings; WebP thumbnails are display previews.
 """
 from __future__ import annotations
 
+import base64
 import hashlib
+import io
 import json
 import math
 import random
@@ -34,10 +36,18 @@ source_hashes = {
     f"fp-{i:03d}.webp": hashlib.sha256((ORIGINAL/f"fp-{i:03d}.webp").read_bytes()).hexdigest()
     for i in range(1,33)
 }
-MASTER = ROOT / "site/assets/fotopolis-goldmark.webp"
-master_hash = hashlib.sha256(MASTER.read_bytes()).hexdigest()
-logo = Image.open(MASTER).convert("RGB")
-assert logo.width >= 190 and logo.height >= 190
+# Studio 18.1: the CI 2.1 PDF approves this EXACT original Fotopolis mark,
+# delivered as a faithful 256px WebP derivative of the 1254px raster source.
+# Both Classics (32) and Signature (12) MUST use the same mark in the preview
+# and in the 300-DPI private print overlays. The old Studio-13 goldmark is
+# retained solely as a source-system rollback asset, never used here.
+MASTER = ROOT / "site/assets/brand/v2-1/fotopolis-logo-ci21-256.webp.b64"
+encoded_logo = MASTER.read_text(encoding="utf-8").strip()
+master_bytes = base64.b64decode(encoded_logo,validate=True)
+master_hash = hashlib.sha256(master_bytes).hexdigest()
+assert master_hash == "bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba", "Approved logo bytes changed"
+logo = Image.open(io.BytesIO(master_bytes)).convert("RGB")
+assert logo.size == (256,256)
 
 MORE = [
  ("Ivory Editorial", "elegant", "ivory", 1, "Ruhiges Editorial-Layout mit großem Einzelbild"),
@@ -209,8 +219,8 @@ def make(item):
     md=ImageDraw.Draw(mask)
     md.ellipse((1,1,logo_size-2,logo_size-2),fill=255)
     mask=mask.filter(ImageFilter.GaussianBlur(.45))
-    d.ellipse((logo_x-5,logo_y-5,logo_x+logo_size+5,logo_y+logo_size+5),
-              outline=(*gold,200),width=2)
+    # The original FOTOPOLIS badge already contains the approved circular rim.
+    # Do not add a second gold ring around it.
     paper.paste(badge,(logo_x,logo_y),mask)
     d=ImageDraw.Draw(paper)
     # A clean photo print must not contain stock template labels, demo dates
@@ -268,7 +278,7 @@ for item in catalogue:
     thumbs.append(make(item))
 for name,sha in source_hashes.items():
     assert hashlib.sha256((ORIGINAL/name).read_bytes()).hexdigest()==sha
-assert hashlib.sha256(MASTER.read_bytes()).hexdigest()==master_hash
+assert hashlib.sha256(base64.b64decode(MASTER.read_text(encoding="utf-8").strip(),validate=True)).hexdigest()==master_hash
 (OUT/"assets/design-gallery-data.json").write_text(
     json.dumps(catalogue,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 # Compact contact-sheet: physically generated assets, not AI mockups.
@@ -384,7 +394,7 @@ report={
  "sourceToCandidateQA":"qa/classics-32-source-vs-restored.webp",
  "individuallyDetectedPhotoRegions":32,
  "newDesigns":12,"candidateCount":44,
- "masterGoldmarkSha256":master_hash,
+ "masterCi21LogoSha256":master_hash,
  "sourceOriginalSha256":source_hashes,
  "printOverlays":"alpha-cutout PNG, single master logo, exact photo masks",
  "generatedCatalogCount":len(catalogue),
@@ -407,7 +417,7 @@ with ZipFile(bundle,"w",compression=ZIP_STORED) as archive:
         "FOTOPOLIS Studio 11.1 — 15x10 cm Querformat, 300 DPI.\\n"
         "Jede PNG-Datei ist ein Foto-Overlay mit transparenten Ausschnitten; "
         "noch kein fertiges Foto.\\n"
-        "Logo stammt aus der verbindlichen FOTOPOLIS-Goldmark-Masterdatei.\\n"
+        "Logo ist das original freigegebene FOTOPOLIS CI-2.1-Motiv.\\n"
         "Vor produktivem Druck Farbraum, Papiermass, Beschnitt und Farbprofil "
         "am Originaldrucker pruefen.\\n"
         "Nur Testvorschau; keine Live-Freigabe.\\n")
