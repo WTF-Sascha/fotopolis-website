@@ -219,8 +219,8 @@ def make(item):
     md=ImageDraw.Draw(mask)
     md.ellipse((1,1,logo_size-2,logo_size-2),fill=255)
     mask=mask.filter(ImageFilter.GaussianBlur(.45))
-    d.ellipse((logo_x-5,logo_y-5,logo_x+logo_size+5,logo_y+logo_size+5),
-              outline=(*gold,200),width=2)
+    # The original FOTOPOLIS badge already contains the approved circular rim.
+    # Do not add a second gold ring around it.
     paper.paste(badge,(logo_x,logo_y),mask)
     d=ImageDraw.Draw(paper)
     # A clean photo print must not contain stock template labels, demo dates
