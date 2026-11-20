@@ -6,6 +6,7 @@ on:
       - 'site/assets/brand/v2-1/**'
       - 'concepts/premium-v2/studio18-ci21-compat.css'
       - 'scripts/apply-studio18-ci21.py'
+      - 'scripts/studio18-retouch-product-screens.py'
       - 'scripts/studio18-ci21-qa.mjs'
       - 'scripts/studio18-brand-browser-qa.mjs'
       - 'netlify.toml'
@@ -32,7 +33,7 @@ jobs:
           python -m pip install --disable-pip-version-check "Pillow>=10,<12"
       - name: Verify Studio 18.1 source syntax
         run: |
-          python -m py_compile scripts/apply-studio18-ci21.py
+          python -m py_compile scripts/apply-studio18-ci21.py scripts/studio18-retouch-product-screens.py
           node --check scripts/studio18-ci21-qa.mjs
           node --check scripts/studio18-brand-browser-qa.mjs
       - name: Build actual protected app preview and verify source invariants
