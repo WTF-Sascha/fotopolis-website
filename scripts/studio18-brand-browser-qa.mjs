@@ -43,12 +43,28 @@ try{
             brandCount:brand.length,visibleLogo,
             logoComplete:brand.filter(img=>img.complete&&img.naturalWidth>0).length,
             oldBrandMarkup:document.documentElement.outerHTML.includes('src="/assets/fotopolis-goldmark.webp"'),
-            headerCenterDeltaPx:(()=>{
-              const h=document.querySelector(".studio-header .studio-identity");
-              const outer=document.querySelector(".studio-header .studio-header-shell");
-              if(!h||!outer)return null;
-              const a=h.getBoundingClientRect(),b=outer.getBoundingClientRect();
-              return Math.abs((a.left+a.width/2)-(b.left+b.width/2));
+            headerLayout:(()=>{
+              const header=document.querySelector(".studio-header");
+              if(!header)return null;
+              const outer=header.querySelector(".studio-header-shell");
+              const nav=header.querySelector(".studio-mainnav");
+              const toggle=header.querySelector(".studio-menu-toggle");
+              if(!outer)return {error:"header shell missing"};
+              const bounds=outer.getBoundingClientRect();
+              const midpoint=bounds.left+bounds.width/2;
+              const isDesktop=window.innerWidth>1100;
+              const control=isDesktop?nav:toggle;
+              const cs=control?getComputedStyle(control):null;
+              const rect=control?.getBoundingClientRect();
+              return {
+                visibleNavigation:!!rect && rect.width>0 && rect.height>0
+                  && cs?.display!=="none" && cs?.visibility!=="hidden",
+                menuCenterDeltaPx:rect?Math.abs((rect.left+rect.width/2)-midpoint):null,
+                headerBrandElements:header.querySelectorAll(".studio-identity,.brand-logo").length,
+                headerBrandSources:[...header.querySelectorAll("img")].map(x=>x.getAttribute("src")),
+                mobileMenuAccessible:!!toggle?.getAttribute("aria-controls"),
+                hasStartLink:!!nav?.querySelector('a[href="/"]')
+              };
             })(),
             heroBrand:(()=>{
               const el=document.querySelector(".fp18-hero-brand");
@@ -67,8 +83,15 @@ try{
         data.screens.push({id,path:route.path,width,filename:image,...detail});
         if(!detail.hasBrandStyles)data.issues.push(id+": CI 2.1 stylesheet missing");
         if(detail.oldBrandMarkup)data.issues.push(id+": old goldmark markup active");
-        if(detail.headerCenterDeltaPx!==null && detail.headerCenterDeltaPx>4)
-          data.issues.push(id+": header brand not centered, delta="+detail.headerCenterDeltaPx);
+        if(detail.headerLayout){
+          const h=detail.headerLayout;
+          if(h.error||h.headerBrandElements>0||h.headerBrandSources.length>0)
+            data.issues.push(id+": old header logo remains or header missing "+JSON.stringify(h));
+          if(!h.visibleNavigation || h.menuCenterDeltaPx===null || h.menuCenterDeltaPx>5)
+            data.issues.push(id+": navigation/menu not centered, delta="+h.menuCenterDeltaPx);
+          if(!h.hasStartLink||!h.mobileMenuAccessible)
+            data.issues.push(id+": navigation or accessible mobile menu missing");
+        }
         if(route.name==="home"&&(!detail.heroBrand||!detail.heroBrand.visible||!detail.heroBrand.loaded||detail.heroBrand.linked))
           data.issues.push(id+": visible unlinked round hero brand missing");
         if(detail.brandCount===0||detail.visibleLogo===0||detail.logoComplete===0)data.issues.push(id+": approved logo not visibly loaded");
