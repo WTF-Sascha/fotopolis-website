@@ -95,9 +95,27 @@ def compose(source, output, logo, mode):
     alpha=alpha.filter(ImageFilter.GaussianBlur(max(.6,sw*.004)))
     revised=original.copy()
     revised.paste(screen,(x0,y0),alpha)
-    # Before encoding the only changed pixels MUST lie within the device display.
+    permitted_rects=[(x0,y0,x1,y1)]
+    # The physical box has ANOTHER embedded legacy badge on the lower front
+    # panel. Keep the actual cabinet/hinges/fittings, but replace the circular
+    # brand seal itself using the same approved original CI 2.1 logo.
+    physical_badge_roi=None
+    if mode=="booth":
+        cx=round(w*.49)
+        cy=round(h*.856)
+        br=round(w*.0325)
+        assert br>=15 and cx-br>0 and cy+br<h
+        stamped=logo.convert("RGBA").resize((br*2,br*2),Image.Resampling.LANCZOS)
+        stamp_mask=Image.new("L",(br*2,br*2),0)
+        ImageDraw.Draw(stamp_mask).ellipse((1,1,br*2-2,br*2-2),fill=255)
+        stamp_mask=stamp_mask.filter(ImageFilter.GaussianBlur(.48))
+        revised.paste(stamped.convert("RGB"),(cx-br,cy-br),stamp_mask)
+        physical_badge_roi=(cx-br,cy-br,cx+br,cy+br)
+        permitted_rects.append(physical_badge_roi)
+    # No background or other device pixels may change in the source compositor.
     checkoutside=revised.copy()
-    checkoutside.paste(original.crop((x0,y0,x1,y1)),(x0,y0))
+    for region in permitted_rects:
+        checkoutside.paste(original.crop(region),region[:2])
     assert ImageChops.difference(checkoutside,original).getbbox() is None
     revised.save(output,"WEBP",quality=94,method=6,lossless=(mode=="mirror"))
     decoded=Image.open(output).convert("RGB")
@@ -110,8 +128,9 @@ def compose(source, output, logo, mode):
     return {"original":str(source.name),"corrected":str(output.name),
             "original_sha256":sha(source),"corrected_sha256":sha(output),
             "size":[w,h],"screen_roi":[x0,y0,x1,y1],
+            "physical_badge_roi":list(physical_badge_roi) if physical_badge_roi else None,
             "mean_screen_pixel_change_rgb":channel_differences,
-            "outside_display_unchanged_before_encoding":True}
+            "unrelated_pixels_unchanged_before_encoding":True}
 
 def main():
     args=argparse.ArgumentParser()
