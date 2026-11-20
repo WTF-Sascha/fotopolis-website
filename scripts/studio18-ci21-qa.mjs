@@ -67,6 +67,9 @@ for(const asset of corrected){
 assert.ok(report.blocking_gates.some(x=>x.includes("video/other embedded old logos")));
 const retouched=JSON.parse(read("qa/studio18-embedded-image-corrections.json"));
 assert.equal(retouched.length,3);
+assert.equal(retouched[0].physical_badge_roi,null,"Mirror has no cabinet logo");
+assert.ok(Array.isArray(retouched[1].physical_badge_roi),"Fotobox lower gold seal must also be replaced");
+assert.equal(retouched[1].physical_badge_roi.length,4);
 for(const item of retouched){
   const data=fs.readFileSync(path.join(OUT,"assets/images",item.corrected));
   assert.equal(data.toString("ascii",0,4),"RIFF",item.corrected);
