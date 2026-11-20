@@ -168,7 +168,10 @@ def faithful_original(item, original_dir:Path, master_logo:Image.Image,
     # The larger original Navy emblems FP-023–032 sit close to genuine
     # gilded frame ornaments. Keep the new stamp just above the legacy outer
     # circle to avoid swallowing adjacent gold geometry in those originals.
-    desired=round(w*old_rel*(1.08 if number>=23 else 1.22)+(3 if number>=23 else 4))
+    # Studio 18.2 precision stamp: enlarged just enough to erase ALL of the
+    # former golden outer-rim pixels under the one genuine original CI badge.
+    # Previous sizing left a visible double seal on navy/dark layouts.
+    desired=round(w*old_rel*(1.28 if number>=23 else 1.64)+4)
     safe_radius=min(cx,w-cx-1,cy,h-cy-1)-3
     radius=min(desired,safe_radius)
     assert radius>round(w*old_rel*1.07), (number,"legacy seal exceeds safe badge bounds",radius)
@@ -178,7 +181,8 @@ def faithful_original(item, original_dir:Path, master_logo:Image.Image,
     mask=Image.new("L",(dial,dial),0)
     md=ImageDraw.Draw(mask)
     md.ellipse((0,0,dial-1,dial-1),fill=255)
-    mask=mask.filter(ImageFilter.GaussianBlur(.55))
+    # Light anti-aliasing only; never a translucent ghost of the old seal.
+    mask=mask.filter(ImageFilter.GaussianBlur(.28))
     art.paste(logo,(cx-radius,cy-radius),mask)
 
     target_size=(width,height)
