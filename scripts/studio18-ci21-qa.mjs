@@ -33,7 +33,9 @@ const round=fs.readFileSync(path.join(OUT,"assets/brand/v2-1/fotopolis-logo-ci21
 assert.equal(round.toString("ascii",0,4),"RIFF");
 assert.equal(round.toString("ascii",8,12),"WEBP");
 assert.equal(createHash("sha256").update(round).digest("hex"),report.round_logo_web_sha256);
-assert.equal(report.round_logo_header_and_hero,true);
+assert.equal(report.round_logo_header_and_hero,false);
+assert.equal(report.header_logo_removed,true);
+assert.equal(report.centered_navigation_only,true);
 assert.equal(report.hero_still_greeting_only,true);
 const home=read("index.html");
 assert.equal((home.match(/class="fp18-hero-brand"/g)||[]).length,1);
@@ -149,6 +151,12 @@ function walk(dir){
       assert.equal((text.match(/<\/head>/g)||[]).length,1,label);
       assert.ok(!text.includes("/assets/fotopolis-goldmark.webp"),label+": old logo reference");
       assert.ok(!text.includes("/assets/fotopolis-logo-original.png"),label+": old logo reference");
+      if(text.includes('class="site-header studio-header"')){
+        const beforeHeaderEnd=text.split("</header>",1)[0];
+        assert.ok(!beforeHeaderEnd.includes("studio-identity"),label+": redundant header logo remains");
+        assert.ok(beforeHeaderEnd.includes("studio-mainnav"),label+": primary navigation missing");
+        assert.ok(beforeHeaderEnd.includes("studio-menu-toggle"),label+": mobile menu toggle missing");
+      }
       checked++;
     }
   }
