@@ -50,16 +50,49 @@ assert.ok(contrast(token.colors.logo_yellow,token.colors.obsidian)>=4.5,"Yellow/
 assert.ok(contrast(token.colors.ivory,token.colors.obsidian)>=4.5,"Ivory/Obsidian body contrast");
 assert.ok(contrast(token.colors.warm_white,token.colors.espresso)>=4.5,"Warm White/Espresso navigation contrast");
 
-// A successful CSS/logo build is not the same as removing a logo embedded in a photo.
-assert.equal(report.embedded_image_branding_status,"PENDING / NO-GO");
-assert.equal(report.embedded_old_logos_remaining,true);
-assert.ok(Array.isArray(report.embedded_logo_assets_to_remediate));
+// HTML/icon migration alone is not an embedded-logo migration. Require real
+// corrected WebP binaries, exact checksums, and elimination of stale image URLs.
+assert.equal(report.embedded_image_branding_status,"PARTIAL / NO-GO");
+assert.equal(report.embedded_old_logos_remaining,true,"video/device originals still need a source check");
 assert.ok(report.embedded_logo_assets_to_remediate.length>=4);
-for(const asset of report.embedded_logo_assets_to_remediate){
-  assert.equal(asset.status,"PENDING");
-  if(asset.preview)assert.ok(fs.existsSync(path.join(OUT,asset.preview)),asset.preview);
+const pending=report.embedded_logo_assets_to_remediate.filter(x=>x.status==="PENDING");
+const corrected=report.embedded_logo_assets_to_remediate.filter(x=>x.status.startsWith("BUILD_CORRECTED"));
+assert.equal(corrected.length,3);
+assert.ok(pending.length>=1);
+for(const asset of corrected){
+  assert.ok(fs.existsSync(path.join(OUT,asset.preview)),asset.preview);
+  assert.ok(!fs.existsSync(path.join(OUT,asset.preview.replace("-ci21.webp",".webp"))),
+    asset.preview+": stale image still publicly shipped");
 }
-assert.ok(report.blocking_gates.some(x=>x.includes("old logos baked into mirror/booth/video imagery")));
+assert.ok(report.blocking_gates.some(x=>x.includes("video/other embedded old logos")));
+const retouched=JSON.parse(read("qa/studio18-embedded-image-corrections.json"));
+assert.equal(retouched.length,3);
+for(const item of retouched){
+  const data=fs.readFileSync(path.join(OUT,"assets/images",item.corrected));
+  assert.equal(data.toString("ascii",0,4),"RIFF",item.corrected);
+  assert.equal(data.toString("ascii",8,12),"WEBP",item.corrected);
+  assert.equal(createHash("sha256").update(data).digest("hex"),item.corrected_sha256);
+}
+assert.ok(Object.values(report.corrected_image_references).reduce((a,b)=>a+b,0)>=3);
+const oldImageNames=[
+ "fotospiegel-hero-lossless.webp",
+ "fotobox-event-1672.webp",
+ "fotobox-event-800.webp"
+];
+function assertNoStaleImages(dir){
+ for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+   const p=path.join(dir,entry.name);
+   if(entry.isDirectory()){
+     if(!["qa","node_modules"].includes(entry.name))assertNoStaleImages(p);
+   }else if(/\.(html|css|js|json|webmanifest)$/.test(entry.name)){
+     const source=fs.readFileSync(p,"utf8");
+     for(const old of oldImageNames){
+       assert.ok(!source.includes(old),path.relative(OUT,p)+": embedded old image path "+old);
+     }
+   }
+ }
+}
+assertNoStaleImages(OUT);
 
 assert.equal(report.classic_templates_inventory_count,32);
 assert.equal(report.classic_templates_print_qa_completed,0);
@@ -110,4 +143,4 @@ for(let n=1;n<=32;n++){
   const f="assets/designvorlagen/fp-"+String(n).padStart(3,"0")+".webp";
   assert.ok(fs.existsSync(path.join(OUT,f)),f);
 }
-console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; logos baked into mirror/booth/video images, print, screenshots and E2E pending.");
+console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; corrected mirror/booth rasters generated; video, visual review, print and E2E pending.");
