@@ -94,7 +94,9 @@ function assertNoStaleImages(dir){
 }
 assertNoStaleImages(OUT);
 
-// The private-print provenance hash is validated by visual-release-qa BEFORE hardening\n// (harden-studio13 removes its temporary audit artifact from the public deploy).\nfor(let number=1;number<=44;number++){
+// Print provenance hash is checked by visual-release-qa before hardening.
+// The private print files remain outside the public preview-build tree.
+for(let number=1;number<=44;number++){
   const name="fp-"+String(number).padStart(3,"0");
   assert.ok(fs.existsSync(path.join(OUT,"assets/designvorlagen",name+".webp")),name+": gallery");
   assert.ok(fs.existsSync(path.join(ROOT,"private-design-assets/print",name+".png")),name+": protected print");
