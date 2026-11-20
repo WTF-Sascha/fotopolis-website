@@ -86,8 +86,14 @@ assert.ok(report.blocking_gates.some(x=>x.includes("video/other embedded old log
 const retouched=JSON.parse(read("qa/studio18-embedded-image-corrections.json"));
 assert.equal(retouched.length,3);
 assert.equal(retouched[0].physical_badge_roi,null,"Mirror has no cabinet logo");
-assert.ok(Array.isArray(retouched[1].physical_badge_roi),"Fotobox lower gold seal must also be replaced");
+assert.ok(Array.isArray(retouched[1].physical_badge_roi),"Fotobox lower badge location must be audited");
 assert.equal(retouched[1].physical_badge_roi.length,4);
+assert.equal(retouched[1].physical_badge_action,"REMOVED / UNBRANDED CABINET RETOUCH",
+  "The lower Fotopolis badge must be removed, not swapped for a second logo");
+assert.ok(retouched[1].lower_cabinet_mean_luminance<90,
+  "The lower cabinet should be dark and unbranded");
+assert.equal(retouched[1].upper_screen_logo_preserved,true);
+assert.equal(retouched[2].derived_from_corrected_high_resolution,true);
 for(const item of retouched){
   const data=fs.readFileSync(path.join(OUT,"assets/images",item.corrected));
   assert.equal(data.toString("ascii",0,4),"RIFF",item.corrected);
@@ -180,4 +186,4 @@ for(let n=1;n<=32;n++){
   const f="assets/designvorlagen/fp-"+String(n).padStart(3,"0")+".webp";
   assert.ok(fs.existsSync(path.join(OUT,f)),f);
 }
-console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; corrected mirror/booth rasters generated; video, visual review, print and E2E pending.");
+console.log("STUDIO 18 FOUNDATION QA PASS: "+checked+" pages, 32 Classics, tokens and PWA references. RELEASE: NO-GO; single-booth-logo image generated and verified; visual review, print and E2E pending.");
