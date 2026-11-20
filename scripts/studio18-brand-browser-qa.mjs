@@ -34,7 +34,7 @@ try{
         await page.waitForTimeout(200);
         const detail=await page.evaluate(()=>{
           const imgs=[...document.querySelectorAll("img")];
-          const brand=imgs.filter(img=>img.getAttribute("src")?.includes("/assets/brand/v2-1/fotopolis-logo-ci21-256.webp"));
+          const brand=imgs.filter(img=>img.getAttribute("src")?.includes("/assets/brand/v2-1/fotopolis-logo-ci21-round.webp"));
           const css=[...document.querySelectorAll('link[rel="stylesheet"]')].map(el=>el.getAttribute("href"));
           const visibleLogo=brand.filter(img=>{const r=img.getBoundingClientRect(),s=getComputedStyle(img);return r.width>0&&r.height>0&&s.visibility!=="hidden"&&s.display!=="none"}).length;
           return {
@@ -43,6 +43,21 @@ try{
             brandCount:brand.length,visibleLogo,
             logoComplete:brand.filter(img=>img.complete&&img.naturalWidth>0).length,
             oldBrandMarkup:document.documentElement.outerHTML.includes('src="/assets/fotopolis-goldmark.webp"'),
+            headerCenterDeltaPx:(()=>{
+              const h=document.querySelector(".studio-header .studio-identity");
+              const outer=document.querySelector(".studio-header .studio-header-shell");
+              if(!h||!outer)return null;
+              const a=h.getBoundingClientRect(),b=outer.getBoundingClientRect();
+              return Math.abs((a.left+a.width/2)-(b.left+b.width/2));
+            })(),
+            heroBrand:(()=>{
+              const el=document.querySelector(".fp18-hero-brand");
+              if(!el)return null;
+              const box=el.getBoundingClientRect(),cs=getComputedStyle(el);
+              return {src:el.getAttribute("src"),width:box.width,
+                visible:box.width>100&&box.height>100&&cs.visibility!=="hidden"&&cs.display!=="none",
+                loaded:el.complete&&el.naturalWidth>0,linked:!!el.closest("a")};
+            })(),
             overflowPx:Math.max(0,document.documentElement.scrollWidth-window.innerWidth),
             background:getComputedStyle(document.body).backgroundColor
           };
@@ -52,6 +67,10 @@ try{
         data.screens.push({id,path:route.path,width,filename:image,...detail});
         if(!detail.hasBrandStyles)data.issues.push(id+": CI 2.1 stylesheet missing");
         if(detail.oldBrandMarkup)data.issues.push(id+": old goldmark markup active");
+        if(detail.headerCenterDeltaPx!==null && detail.headerCenterDeltaPx>4)
+          data.issues.push(id+": header brand not centered, delta="+detail.headerCenterDeltaPx);
+        if(route.name==="home"&&(!detail.heroBrand||!detail.heroBrand.visible||!detail.heroBrand.loaded||detail.heroBrand.linked))
+          data.issues.push(id+": visible unlinked round hero brand missing");
         if(detail.brandCount===0||detail.visibleLogo===0||detail.logoComplete===0)data.issues.push(id+": approved logo not visibly loaded");
         if(detail.overflowPx>2)data.issues.push(id+": horizontal overflow "+detail.overflowPx+"px");
       }catch(error){
