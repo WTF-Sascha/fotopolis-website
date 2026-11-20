@@ -16,7 +16,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
 # Explicit production tripwire: Studio 18 is not approved for live.
@@ -69,6 +69,24 @@ with Image.open(derived_logo) as verified:
     assert verified.format == "WEBP" and verified.size == (256, 256)
     logo = verified.convert("RGB")
 hashes["ci21_web_derivative"] = derivative_digest
+
+# Logo for header, footer and hero: a true transparent ROUND file, never
+# the original ivory SQUARE canvas. The approved logo illustration is unchanged.
+# Alpha only removes the outer corners beyond the existing original badge rim.
+round_logo = logo.convert("RGBA")
+mask_hi = Image.new("L", (logo.width * 3, logo.height * 3), 0)
+d = ImageDraw.Draw(mask_hi)
+d.ellipse((14*3,14*3,(logo.width-14)*3-1,(logo.height-14)*3-1),fill=255)
+round_alpha = mask_hi.resize(logo.size, Image.Resampling.LANCZOS)
+round_alpha = round_alpha.filter(ImageFilter.GaussianBlur(.35))
+round_logo.putalpha(round_alpha)
+round_asset = target / "fotopolis-logo-ci21-round.webp"
+round_logo.save(round_asset,"WEBP",quality=97,method=6,exact=True)
+with Image.open(round_asset) as im:
+    assert im.size == (256,256) and im.mode == "RGBA"
+    assert im.getpixel((0,0))[3] == 0 and im.getpixel((128,128))[3] == 255
+hashes["ci21_round_web_derivative"] = hashlib.sha256(round_asset.read_bytes()).hexdigest()
+
 icons_dir = OUT / "icons"
 icons_dir.mkdir(exist_ok=True)
 # Overwrite the build-output icons derived by Studio 13 from the old goldmark.
@@ -131,7 +149,7 @@ for path in html_files:
     assert "studio13-unified-brand.css" in html, path
     assert "studio18-ci21-compat.css" not in html, path
     for old_logo in ("/assets/fotopolis-goldmark.webp", "/assets/fotopolis-logo-original.png"):
-        html = html.replace(old_logo, "/assets/brand/v2-1/fotopolis-logo-ci21-256.webp")
+        html = html.replace(old_logo, "/assets/brand/v2-1/fotopolis-logo-ci21-round.webp")
     html, substitutions = re.subn(
         r'(<meta\s+name="theme-color"\s+content=")[^"]+',
         r'\g<1>#F7F3EC', html, flags=re.I
@@ -167,6 +185,23 @@ for source_name in PHOTO_REWRITES:
     old_file.unlink()
 for corrected_name in PHOTO_REWRITES.values():
     assert (OUT/"assets/images"/corrected_name).is_file()
+
+
+# High-visibility, static mark in the already-approved welcome-only hero.
+# The hero is NOT linked to any product, and its text, decor and image choices
+# remain unchanged. Desktop positions mark inside the existing right-side orbit;
+# responsive CSS stacks it above the headline on small screens.
+home_path = OUT / "index.html"
+home_html = home_path.read_text(encoding="utf-8")
+hero_hook = '<div class="inner v4-hero-content fp17-welcome-content">'
+hero_brand = ('<img class="fp18-hero-brand" '
+              'src="/assets/brand/v2-1/fotopolis-logo-ci21-round.webp" '
+              'width="256" height="256" '
+              'alt="FOTOPOLIS Social Events – Originalmarke" '
+              'decoding="async" fetchpriority="high">')
+assert home_html.count(hero_hook) == 1 and 'fp18-hero-brand' not in home_html, "Approved welcome hero changed"
+home_html = home_html.replace(hero_hook,hero_hook+hero_brand,1)
+home_path.write_text(home_html,encoding="utf-8")
 
 # PWA identity/scope remains stable; the outdated icon payload is replaced
 # above with derived original-logo icons (print/hardware approval remains open).
@@ -268,6 +303,10 @@ report = {
     "approved_logo_switched": True,
     "logo_derivative_quality": "256px original derivative; full print-resolution master pending repository import",
     "logo_web_derivative_sha256": derivative_digest,
+    "round_logo_web_sha256": hashes["ci21_round_web_derivative"],
+    "round_logo_header_and_hero": True,
+    "hero_logo_source": "/assets/brand/v2-1/fotopolis-logo-ci21-round.webp",
+    "hero_still_greeting_only": True,
     "brand_icon_build": "previous goldmark PWA icon set regenerated with CI 2.1 logo",
     "old_icons_remaining": False,
     "auth_and_form_e2e": "NOT EXECUTED",
