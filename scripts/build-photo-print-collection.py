@@ -278,7 +278,7 @@ for item in catalogue:
     thumbs.append(make(item))
 for name,sha in source_hashes.items():
     assert hashlib.sha256((ORIGINAL/name).read_bytes()).hexdigest()==sha
-assert hashlib.sha256(MASTER.read_bytes()).hexdigest()==master_hash
+assert hashlib.sha256(base64.b64decode(MASTER.read_text(encoding="utf-8").strip(),validate=True)).hexdigest()==master_hash
 (OUT/"assets/design-gallery-data.json").write_text(
     json.dumps(catalogue,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 # Compact contact-sheet: physically generated assets, not AI mockups.
