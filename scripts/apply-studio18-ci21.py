@@ -148,6 +148,17 @@ for path in html_files:
     assert html.count("</head>") == 1, path
     assert "studio13-unified-brand.css" in html, path
     assert "studio18-ci21-compat.css" not in html, path
+    # Studio 18.3: the large, original CI-2.1 logo is already prominently
+    # visible inside the welcome hero. The user explicitly wants NO redundant
+    # logo in the header; center the navigation itself instead. Physically
+    # remove the old anchor in all public route HTML, not merely hide its pixels.
+    if 'class="site-header studio-header"' in html:
+        html, removed_header_brand = re.subn(
+            r'<a\\b(?=[^>]*\\bclass="[^"]*\\bstudio-identity\\b[^"]*")[^>]*>.*?</a>',
+            '', html, count=1, flags=re.S | re.I
+        )
+        assert removed_header_brand == 1, f"Missing unique legacy header brand on {path}"
+        assert 'studio-identity' not in html.split('</header>',1)[0], path
     for old_logo in ("/assets/fotopolis-goldmark.webp", "/assets/fotopolis-logo-original.png"):
         html = html.replace(old_logo, "/assets/brand/v2-1/fotopolis-logo-ci21-round.webp")
     html, substitutions = re.subn(
@@ -305,7 +316,9 @@ report = {
     "logo_derivative_quality": "256px original derivative; full print-resolution master pending repository import",
     "logo_web_derivative_sha256": derivative_digest,
     "round_logo_web_sha256": hashes["ci21_round_web_derivative"],
-    "round_logo_header_and_hero": True,
+    "round_logo_header_and_hero": False,
+    "header_logo_removed": True,
+    "centered_navigation_only": True,
     "hero_logo_source": "/assets/brand/v2-1/fotopolis-logo-ci21-round.webp",
     "hero_still_greeting_only": True,
     "brand_icon_build": "previous goldmark PWA icon set regenerated with CI 2.1 logo",
