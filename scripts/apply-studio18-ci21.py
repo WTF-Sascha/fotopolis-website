@@ -154,7 +154,7 @@ for path in html_files:
     # remove the old anchor in all public route HTML, not merely hide its pixels.
     if 'class="site-header studio-header"' in html:
         html, removed_header_brand = re.subn(
-            r'<a\\b(?=[^>]*\\bclass="[^"]*\\bstudio-identity\\b[^"]*")[^>]*>.*?</a>',
+            r'<a\b(?=[^>]*\bclass="[^"]*\bstudio-identity\b[^"]*")[^>]*>.*?</a>',
             '', html, count=1, flags=re.S | re.I
         )
         assert removed_header_brand == 1, f"Missing unique legacy header brand on {path}"
