@@ -74,6 +74,47 @@ def make_screen(size, logo, mode):
         centered(d,w//2,int(h*.83),"START",font(max(7,w//12)),IVORY+(240,))
     return panel.convert("RGB")
 
+
+def remove_lower_cabinet_badge(image, cx, cy, radius):
+    """Reconstruct the plain dark cabinet panel, without synthetic brand graphics.
+
+    Interpolate nearby unbranded panel pixels in each scanline with a feathered
+    circular edge, preserving the real cabinet, hardware and upper screen.
+    """
+    w,h=image.size
+    r=radius*1.12
+    feather=max(2.5,radius*.10)
+    assert cx-r-feather-12>=0 and cx+r+feather+12<w
+    assert cy-r-feather-3>=0 and cy+r+feather+3<h
+    px=image.load()
+    original=image.copy()
+    orig=original.load()
+    left_x=int(cx-r-10)
+    right_x=int(cx+r+10)
+    bbox=(max(0,int(cx-r-feather-2)),
+          max(0,int(cy-r-feather-2)),
+          min(w,int(cx+r+feather+3)),
+          min(h,int(cy+r+feather+3)))
+    for y in range(bbox[1],bbox[3]):
+        ys=range(max(0,y-2),min(h,y+3))
+        count=len(ys)
+        left=tuple(sum(orig[left_x,j][k] for j in ys)/count for k in range(3))
+        right=tuple(sum(orig[right_x,j][k] for j in ys)/count for k in range(3))
+        for x in range(bbox[0],bbox[2]):
+            d=math.hypot(x-cx,y-cy)
+            if d>r+feather:
+                continue
+            t=max(0.0,min(1.0,(x-(cx-r))/(2*r)))
+            restored=tuple(int(left[k]*(1-t)+right[k]*t) for k in range(3))
+            weight=1.0 if d<=r else max(0.0,(r+feather-d)/feather)
+            old=orig[x,y]
+            px[x,y]=tuple(round(old[k]*(1-weight)+restored[k]*weight) for k in range(3))
+    inner=image.crop((round(cx-radius*.68),round(cy-radius*.68),
+                      round(cx+radius*.68),round(cy+radius*.68)))
+    mean=sum(ImageStat.Stat(inner).mean)/3
+    assert mean<90, f"Lower booth logo still visible/overbright: {mean:.1f}"
+    return bbox,round(mean,2)
+
 def compose(source, output, logo, mode):
     original=Image.open(source).convert("RGB")
     w,h=original.size
@@ -96,21 +137,18 @@ def compose(source, output, logo, mode):
     revised=original.copy()
     revised.paste(screen,(x0,y0),alpha)
     permitted_rects=[(x0,y0,x1,y1)]
-    # The physical box has ANOTHER embedded legacy badge on the lower front
-    # panel. Keep the actual cabinet/hinges/fittings, but replace the circular
-    # brand seal itself using the same approved original CI 2.1 logo.
+    # Studio 18.4: only ONE Fotopolis logo remains on the upper touchscreen.
+    # Remove the lower brand seal and restore the unbranded cabinet surface.
     physical_badge_roi=None
+    cabinet_center_luminance=None
     if mode=="booth":
         cx=round(w*.49)
         cy=round(h*.856)
         br=round(w*.0325)
         assert br>=15 and cx-br>0 and cy+br<h
-        stamped=logo.convert("RGBA").resize((br*2,br*2),Image.Resampling.LANCZOS)
-        stamp_mask=Image.new("L",(br*2,br*2),0)
-        ImageDraw.Draw(stamp_mask).ellipse((1,1,br*2-2,br*2-2),fill=255)
-        stamp_mask=stamp_mask.filter(ImageFilter.GaussianBlur(.48))
-        revised.paste(stamped.convert("RGB"),(cx-br,cy-br),stamp_mask)
-        physical_badge_roi=(cx-br,cy-br,cx+br,cy+br)
+        physical_badge_roi,cabinet_center_luminance=remove_lower_cabinet_badge(
+            revised,cx,cy,br
+        )
         permitted_rects.append(physical_badge_roi)
     # No background or other device pixels may change in the source compositor.
     checkoutside=revised.copy()
@@ -129,6 +167,9 @@ def compose(source, output, logo, mode):
             "original_sha256":sha(source),"corrected_sha256":sha(output),
             "size":[w,h],"screen_roi":[x0,y0,x1,y1],
             "physical_badge_roi":list(physical_badge_roi) if physical_badge_roi else None,
+            "physical_badge_action":"REMOVED / UNBRANDED CABINET RETOUCH" if mode=="booth" else "NOT_APPLICABLE",
+            "lower_cabinet_mean_luminance":cabinet_center_luminance,
+            "upper_screen_logo_preserved":True,
             "mean_screen_pixel_change_rgb":channel_differences,
             "unrelated_pixels_unchanged_before_encoding":True}
 
@@ -159,7 +200,7 @@ def main():
     (root/"qa").mkdir(exist_ok=True)
     (root/"qa/studio18-embedded-image-corrections.json").write_text(
         json.dumps(reports,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    print("STUDIO18 photo QA: mirror + both booth derivatives corrected; original sources retained")
+    print("STUDIO18.4 QA: upper touchscreen logo retained; lower cabinet logo removed; originals preserved")
 
 if __name__=="__main__":
     main()
