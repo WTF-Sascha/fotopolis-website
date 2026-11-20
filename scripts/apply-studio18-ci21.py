@@ -13,6 +13,8 @@ import json
 import os
 import re
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 from PIL import Image
 
@@ -99,6 +101,24 @@ if offline.is_file():
     offline_html = offline_html.replace('src="/icons/brand-192.png"', 'src="/assets/brand/v2-1/fotopolis-logo-ci21-256.webp"')
     offline.write_text(offline_html, encoding="utf-8")
 
+
+# Replace logos *baked into actual product photographs*, not merely CSS logos.
+# This deterministic compositor modifies only the device's inner screen region.
+# Existing source originals in the repository are deliberately untouched.
+retouch_script = ROOT / "scripts/studio18-retouch-product-screens.py"
+assert retouch_script.is_file()
+subprocess.run([
+    sys.executable, str(retouch_script),
+    "--root", str(OUT), "--logo", str(derived_logo)
+], check=True)
+retouch_report = json.loads((OUT / "qa/studio18-embedded-image-corrections.json").read_text())
+assert len(retouch_report) == 3
+PHOTO_REWRITES = {
+    "fotospiegel-hero-lossless.webp": "fotospiegel-hero-lossless-ci21.webp",
+    "fotobox-event-1672.webp": "fotobox-event-1672-ci21.webp",
+    "fotobox-event-800.webp": "fotobox-event-800-ci21.webp",
+}
+
 style_markup = (
     '<link rel="stylesheet" href="/assets/brand/v2-1/fotopolis-ci-2.1.css">'
     '<link rel="stylesheet" href="/studio18-ci21-compat.css">'
@@ -120,6 +140,33 @@ for path in html_files:
         html = html.replace("</head>", '<meta name="theme-color" content="#F7F3EC"></head>', 1)
     html = html.replace("</head>", style_markup + "</head>", 1)
     path.write_text(html, encoding="utf-8")
+
+
+# Rewrite all actual built textual references (HTML, CSS, JS, JSON) so the
+# corrected raster source is shown in hero cards, product routes and srcsets.
+# Do this in the deploy output AFTER historical build passes original SHA checks.
+rewritten_counts={source_name:0 for source_name in PHOTO_REWRITES}
+for candidate in OUT.rglob("*"):
+    if not candidate.is_file() or candidate.suffix.lower() not in (".html",".css",".js",".json",".webmanifest"):
+        continue
+    if "qa" in candidate.relative_to(OUT).parts:
+        continue
+    before=candidate.read_text(encoding="utf-8")
+    after=before
+    for source_name,corrected_name in PHOTO_REWRITES.items():
+        rewritten_counts[source_name]+=after.count(source_name)
+        after=after.replace(source_name,corrected_name)
+    if after!=before:
+        candidate.write_text(after,encoding="utf-8")
+assert sum(rewritten_counts.values())>=3, f"Expected active product image references missing: {rewritten_counts}"
+# Do not deliver stale image binaries alongside newly corrected variants.
+# The old originals remain permanently preserved in Git for audit and rollback.
+for source_name in PHOTO_REWRITES:
+    old_file=OUT/"assets/images"/source_name
+    assert old_file.is_file()
+    old_file.unlink()
+for corrected_name in PHOTO_REWRITES.values():
+    assert (OUT/"assets/images"/corrected_name).is_file()
 
 # PWA identity/scope remains stable; the outdated icon payload is replaced
 # above with derived original-logo icons (print/hardware approval remains open).
@@ -180,26 +227,26 @@ report = {
     # Explicitly distinguish UI logo migration from old logos baked into photos.
     # User review (2026-11-18): Mirror + photo booth product screens still
     # include old gold/blue Fotopolis logo pixels in the source image itself.
-    "embedded_image_branding_status": "PENDING / NO-GO",
+    "embedded_image_branding_status": "PARTIAL / NO-GO",
     "embedded_old_logos_remaining": True,
     "embedded_logo_assets_to_remediate": [
         {
             "source": "concepts/premium-v2/assets/fotospiegel-hero-lossless.webp",
-            "preview": "assets/images/fotospiegel-hero-lossless.webp",
+            "preview": "assets/images/fotospiegel-hero-lossless-ci21.webp",
             "issue": "old gold/blue badge baked into mirror screen",
-            "status": "PENDING",
+            "status": "BUILD_CORRECTED / VISUAL_QA_PENDING",
         },
         {
             "source": "concepts/premium-v2/assets/products/fotobox-event-1672.webp",
-            "preview": "assets/images/fotobox-event-1672.webp",
+            "preview": "assets/images/fotobox-event-1672-ci21.webp",
             "issue": "old badge baked into photo booth screen",
-            "status": "PENDING",
+            "status": "BUILD_CORRECTED / VISUAL_QA_PENDING",
         },
         {
             "source": "concepts/premium-v2/assets/products/fotobox-event-800.webp",
-            "preview": "assets/images/fotobox-event-800.webp",
+            "preview": "assets/images/fotobox-event-800-ci21.webp",
             "issue": "same source and old badge in smaller responsive derivative",
-            "status": "PENDING",
+            "status": "BUILD_CORRECTED / VISUAL_QA_PENDING",
         },
         {
             "source": "concepts/premium-v2/assets/branding/fotopolis-video-still-source.webp",
@@ -208,6 +255,8 @@ report = {
             "status": "PENDING",
         },
     ],
+    "retouched_screen_image_manifest": retouch_report,
+    "corrected_image_references": rewritten_counts,
     "trailer_branding_review": "PENDING - FOTOPOLIS letter bunting is not the same old round logo",
     "embedded_logo_remediation_audit": "docs/FOTOPOLIS_STUDIO18_1_EMBEDDED_IMAGE_BRANDING_AUDIT_2026-11-18.md",
 
@@ -226,7 +275,7 @@ report = {
     "source_sha256": hashes,
     "blocking_gates": [
         "full-resolution original master not yet versioned in repository; preview uses source derivative",
-        "old logos baked into mirror/booth/video imagery must be retouched in actual source images",
+        "mirror/booth image derivatives generated but true screenshot and device QA are pending; video/other embedded old logos remain",
         "per-screen visual regression and WCAG 2.2 AA",
         "32 per-template print-file inspections and real device proofs",
         "authenticated end-to-end tests of forms, roles and admin",
