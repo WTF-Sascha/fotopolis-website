@@ -49,6 +49,11 @@ for(const item of catalogue){
  check(has(item.printOverlay.slice(1))&&statSync(join(base,item.printOverlay.slice(1))).size>1000,item.id+": missing alpha PNG print overlay");
 }
 const printReport=JSON.parse(read("qa/photoprint-44-audit.json"));
+// Assert CI 2.1 logo provenance at this stage: hardening will later remove
+// the transient print generator audit from public preview-build/qa.
+check(printReport.masterCi21LogoSha256===
+  "bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba",
+  "Print generator must stamp the approved original CI 2.1 logo across all 44 designs");
 check(printReport.candidateCount===44 && printReport.originalSourceDesignsPreserved===32 &&
       printReport.newDesigns===12 &&
       printReport.pixelSize[0]===1772 && printReport.pixelSize[1]===1181 &&
