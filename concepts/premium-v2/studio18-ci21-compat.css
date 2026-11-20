@@ -268,3 +268,82 @@ body:has(.shell) .brand img{
     margin-top:26px;
   }
 }
+
+
+/* Studio 18.3 — User-approved simplification, 20 Nov 2026.
+   Only navigation in the header, no duplicate brand logo: the original
+   badge remains prominent in the welcome hero and the footer. */
+.studio-header .studio-identity.identity,
+.studio-header .studio-identity{
+  display:none!important;
+}
+.studio-header .studio-header-location{display:none!important}
+@media(min-width:1101px){
+  .studio-header .studio-header-shell.nav-shell{
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%;
+    min-height:74px!important;
+    height:74px!important;
+    padding:9px clamp(16px,3vw,42px)!important;
+    gap:0!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    position:static!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    justify-self:center!important;
+    flex:0 1 auto!important;
+    width:max-content!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    gap:clamp(9px,1.15vw,23px)!important;
+    grid-row:auto!important;
+    grid-column:auto!important;
+    white-space:nowrap;
+  }
+  .studio-header .studio-header-curve{height:20px!important}
+}
+@media(max-width:1100px){
+  .studio-header .studio-header-shell.nav-shell{
+    min-height:66px!important;
+    height:66px!important;
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    padding:0 16px!important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle{
+    display:flex!important;
+    position:absolute!important;
+    top:50%!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translate(-50%,-50%)!important;
+    margin:0!important;
+    min-width:48px!important;
+    width:48px!important;
+    height:48px!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    left:0!important;
+    right:0!important;
+    top:100%!important;
+    max-height:calc(100dvh - 66px)!important;
+  }
+  .studio-header .studio-header-curve{height:19px!important}
+}
+@media(max-width:380px){
+  .studio-header .studio-header-shell.nav-shell{
+    height:62px!important;
+    min-height:62px!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    max-height:calc(100dvh - 62px)!important;
+  }
+}
+/* Give the hero enough calm breathing room below the more compact header. */
