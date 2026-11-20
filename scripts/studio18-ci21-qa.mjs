@@ -94,14 +94,7 @@ function assertNoStaleImages(dir){
 }
 assertNoStaleImages(OUT);
 
-const approvedPrintLogo="bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba";
-const printAudit=JSON.parse(read("qa/photoprint-44-audit.json"));
-assert.equal(printAudit.masterCi21LogoSha256,approvedPrintLogo,
-  "The 44 print originals must be built with CI 2.1, not the legacy goldmark");
-assert.equal(printAudit.candidateCount,44);
-assert.equal(printAudit.originalSourceDesignsPreserved,32);
-assert.equal(printAudit.newDesigns,12);
-for(let number=1;number<=44;number++){
+// The private-print provenance hash is validated by visual-release-qa BEFORE hardening\n// (harden-studio13 removes its temporary audit artifact from the public deploy).\nfor(let number=1;number<=44;number++){
   const name="fp-"+String(number).padStart(3,"0");
   assert.ok(fs.existsSync(path.join(OUT,"assets/designvorlagen",name+".webp")),name+": gallery");
   assert.ok(fs.existsSync(path.join(ROOT,"private-design-assets/print",name+".png")),name+": protected print");
