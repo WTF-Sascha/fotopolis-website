@@ -33,3 +33,21 @@ Stand: 18. November 2026 · Branch `feature/studio18-ci21-complete-brand-integra
 - [ ] Finalen Feature-Commit und Netlify-Status zusammen mit Checklisten vor einer gesonderten Freigabe nachweisen.
 
 **RELEASE-ENTSCHEID: NO-GO.** Der sichtbare Logo-/CI-Migrationsstand ist auf einem getrennten Preview implementiert; eine vollständige Qualitätsabnahme oder produktive Veröffentlichung ist nicht erteilt.
+
+
+## Nachtrag 20.11.2026 – eingebrannte Logos und echte Produktbild-Derivate
+
+**Hintergrund:** Der Auftraggeber wies anhand einer mobilen Preview darauf hin, dass bisherige Logos innerhalb der Gerätefotografien nicht allein durch einen Header-/PWA-Logotausch verschwinden.
+
+**Tatsächlich implementiert im isolierten Studio-18-Feature-Branch:**
+
+1. `scripts/studio18-retouch-product-screens.py` verarbeitet ausschließlich den inneren **Displaybereich** der vorhandenen Fotospiegel- und Fotobox-Quellen. Das alte, innerhalb der Pixel gespeicherte Display-Branding wird dort ersetzt; eine Original-CI-2.1-Bildmarke wird als echtes Pixelbild mit Ivory, Obsidian und gezieltem Logo Yellow eingebettet. Gehäuse, Licht, übrige Dekoration, Kamerarahmen und Fotokomposition werden außerhalb des Bildausschnitts nicht manipuliert.
+2. Das Script erzeugt im Netlify-Deploy **drei neue WebP-Bildderivate**: `fotospiegel-hero-lossless-ci21.webp`, `fotobox-event-1672-ci21.webp` sowie die aus dem korrigierten hochauflösenden Fotoboxbild hergeleitete `fotobox-event-800-ci21.webp`.
+3. Die Post-Build-Migration `scripts/apply-studio18-ci21.py` ersetzt die Referenzen auf diese Bilder in allen generierten HTML-, CSS-, JS-, JSON- und Manifest-Dateien. Alte Bildderivate werden **nur aus dem isolierten Public-Build** entfernt. Die fotografischen Originaldateien in Git bleiben unverändert.
+4. `qa/studio18-embedded-image-corrections.json` protokolliert Eingangs-/Ausgangs-SHA-256, Auflösung, Pixel-Austauschbereich und Vergleich der bearbeiteten Bildschirmflächen. Static-QA kontrolliert die korrigierten Bilddateien und verbietet alte Bildreferenzen in den aktiven Ausgabedateien.
+5. Die **44 gebauten Drucklayouts (32 Classic + 12 Signature)** werden nun vom gemeinsamen Generator `scripts/build-photo-print-collection.py` mit der geprüften **CI-2.1-Originalmarke** statt der Studio-13-Goldmark erzeugt. Die vorhandenen Motive und Fotofenster bleiben erhalten; die geschützten Druckdateien sind nicht öffentlich als CDN-Dateien zugänglich. Die zugehörige QA prüft das Logo-Masterhash und die Anzahl der Print- und Preview-Dateien.
+6. Der neue Bildalgorithmus wurde vor Integration lokal auf synthetischen Quellgrößen ausgeführt und auf echte Rasteränderung innerhalb der Zielregion geprüft. **Das ersetzt ausdrücklich keinen Vorher-/Nachher-Review der realen Bilddateien.**
+
+**Weiter offene Abnahme-Gates:** Browser-Screenshots des neuesten Commitstands, PWA-Gerätetests, echte Druckproofs der 44 geschützten Vorlagen, mögliche Altmarken in nicht aktiven Video-/Marketingquellen, vollständige WCAG- und Auth-/Anfrage-End-to-End-Tests. Blaue Elemente in erhaltenen **Originalmotiven** der Classic-Collection sind gesondert mit dem Auftraggeber abzustimmen; bloße Logo-Migration ist noch kein CI-Redesign aller Motive.
+
+**Sicherheit:** Es gab keinen Merge, keinen produktiven Deploy und keine DB-Migration. Der PR bleibt Draft und die Releaseentscheidung **NO-GO**, bis sämtliche Pflichtnachweise vorliegen.
