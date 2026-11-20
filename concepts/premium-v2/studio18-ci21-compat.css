@@ -134,3 +134,137 @@ body:has(#dashboard-app) :is(.primary-button,.cc-primary-action,.cc-control-butt
   .studio-header .studio-identity{min-width:50px}
   .studio-header .studio-header-shell{min-height:64px}
 }
+
+
+/* Studio 18.2 — centered header and true circular source-verified badge.
+   Original square canvas must NEVER be visible in the header again. */
+.studio-header .studio-identity.identity>img,
+.studio-header .studio-identity img,
+.studio-footer .footer-brand img,
+body:has(#dashboard-app) .brand img,
+body:has(.shell) .brand img{
+  border-radius:50%!important;
+  clip-path:circle(49.3% at 50% 50%)!important;
+  background:transparent!important;
+  object-fit:contain!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+@media(min-width:1101px){
+  .studio-header .studio-header-shell.nav-shell{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:73px 43px!important;
+    justify-items:center!important;
+    min-height:122px!important;
+    gap:0!important;
+    padding:4px clamp(14px,3vw,35px) 9px!important;
+  }
+  .studio-header .studio-identity.identity{
+    position:static!important;
+    grid-row:1!important;grid-column:1!important;
+    justify-self:center!important;
+    transform:none!important;left:auto!important;
+    margin:0!important;
+    width:max-content;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    grid-row:2!important;grid-column:1!important;
+    justify-self:center!important;
+    justify-content:center!important;
+    align-items:center!important;
+  }
+}
+@media(max-width:1100px){
+  .studio-header .studio-header-shell.nav-shell{
+    position:relative!important;
+    display:flex!important;align-items:center!important;
+    justify-content:center!important;
+    min-height:90px!important;height:90px!important;
+  }
+  .studio-header .studio-identity.identity{
+    position:absolute!important;
+    left:50%!important;top:50%!important;
+    transform:translate(-50%,-50%)!important;
+    margin:0!important;
+    z-index:6!important;
+  }
+  .studio-header .studio-identity.identity>img,
+  .studio-header .studio-identity img{
+    width:68px!important;height:68px!important;flex:0 0 68px!important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle{
+    top:20px!important;right:clamp(12px,3.4vw,28px)!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    max-height:calc(100dvh - 90px)!important;
+  }
+  .studio-header-curve{height:25px!important}
+}
+@media(max-width:380px){
+  .studio-header .studio-header-shell.nav-shell{min-height:84px!important;height:84px!important}
+  .studio-header .studio-identity.identity>img,
+  .studio-header .studio-identity img{width:60px!important;height:60px!important;flex:0 0 60px!important}
+  .studio-header .studio-menu-toggle.mobile-toggle{top:17px!important}
+  .studio-header .studio-mainnav.mainnav{max-height:calc(100dvh - 84px)!important}
+}
+
+/* Freigegebener Welcome-Hero: brand mark deliberately visible, never a link.
+   On desktop it inhabits the pre-existing ornamental orbit; on mobile the
+   exact same mark precedes the text without creating horizontal overflow. */
+.v45-home .v45-hero.fp17-welcome-hero .fp18-hero-brand{
+  position:absolute;
+  z-index:3;
+  right:clamp(28px,11vw,210px);
+  top:49%;
+  transform:translateY(-50%);
+  display:block;
+  width:clamp(164px,18vw,232px);
+  height:auto;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  border-radius:50%;
+  clip-path:circle(49.3% at 50% 50%);
+  background:transparent;
+  box-shadow:none;
+  filter:drop-shadow(0 18px 35px rgba(10,8,6,.22));
+}
+@media(min-width:761px){
+  .v45-home .v45-hero.fp17-welcome-hero h1{
+    max-width:min(700px,62%)!important;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero p{
+    max-width:min(520px,62%)!important;
+  }
+}
+@media(max-width:760px){
+  .v45-home .v45-hero.fp17-welcome-hero .fp17-welcome-content{
+    display:flex;flex-direction:column;
+    align-items:center;text-align:center;
+    padding:58px 20px 69px!important;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero .fp18-hero-brand{
+    position:static;
+    transform:none;
+    width:clamp(112px,29vw,150px);
+    height:auto;
+    margin:0 auto 24px;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero .v4-hero-kicker{
+    justify-content:center;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero h1{
+    max-width:560px!important;
+    margin:17px 0 18px!important;
+    text-align:center;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero p{
+    max-width:440px!important;
+    margin-inline:auto!important;
+    text-align:center;
+  }
+  .v45-home .fp17-welcome-signature{
+    justify-content:center;text-align:center;
+    margin-top:26px;
+  }
+}
