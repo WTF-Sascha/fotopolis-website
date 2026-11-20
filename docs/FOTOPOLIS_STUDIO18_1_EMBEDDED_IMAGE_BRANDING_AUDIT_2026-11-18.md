@@ -31,3 +31,17 @@ Quellbilder aus dem GitHub-Feature-Branch wurden einzeln visuell geprüft. Betro
 Dieses Register ist ein **nachgewiesener Befund und konkreter Bildkorrektur-Arbeitsauftrag, keine Bestätigung bereits retuschierter Bilder**. Die aktuell commiteten Quellbilder sind noch unverändert. Das automatisierte Studio-18.1-Release-Manifest kennzeichnet die Bildkorrektur ausdrücklich als `PENDING`.
 
 **Release-Gate: NO-GO.** `staging`, `main`, produktive Webseite, Kundendaten und Studio-17-Prototyp bleiben unverändert.
+
+
+## Nachtrag 20.11.2026 – Produktkarte Fotobox: genau ein Logo
+
+**Nutzerabnahmevorgabe:** Auf dem Bild der Fotobox-Produktkarte darf ausschließlich das **obere CI-2.1-Fotopolis-Logo im Gerätedisplay** zu sehen sein. Die bisherige zweite runde Wort-/Bildmarke auf der **unteren Gehäuseklappe muss vollständig entfernt** werden.
+
+Umsetzung im Studio-18-Feature-Branch:
+- In `scripts/studio18-retouch-product-screens.py` wurde der bisherige zweite Logo-Stempel am unteren Fotobox-Gehäuse ersatzlos entfernt.
+- Ein begrenzter, weich auslaufender Retuschieralgorithmus rekonstruiert die dunkle Gehäusefläche aus unmittelbar benachbarten Originalpixeln, statt eine pauschale schwarze Kreisfläche einzusetzen. Das reale Gehäuse, die Verschlüsse, die Partydekoration und der obere Bildschirm bleiben außerhalb der definierten Bearbeitungsflächen unverändert.
+- Die **1672-px-Originaldarstellung im Build** wird aus dem originalen hochauflösenden Foto retuschiert; die 800-px-Variante wird **aus dieser korrigierten großen Ausgabe** abgeleitet.
+- `qa/studio18-embedded-image-corrections.json` dokumentiert die bearbeiteten Koordinaten, `physical_badge_action = REMOVED / UNBRANDED CABINET RETOUCH`, die durchschnittliche Dunkelheit der unteren Klappe und die Bildhashes.
+- Das Studio-18-QA-Skript bricht den Build ab, wenn die untere Klappe nicht dunkel/unbranded ist, die Statusprüfung fehlt oder die kleinere Variante nicht von der großen korrigierten Quelle stammt.
+
+**Nicht mit Live-Freigabe verwechseln:** `fotopolis-mieten.de` zeigt weiterhin den ursprünglichen, von diesem Netlify-Projekt getrennten Webauftritt. Die Korrektur wird nur auf der tatsächlich verbundenen Netlify-Deploy-Preview veröffentlicht; ohne legitimierten Zugriff auf den Host der Live-Domain ist dort kein echter Live-Rollout nachgewiesen.
