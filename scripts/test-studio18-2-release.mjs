@@ -72,4 +72,5 @@ test("manifest exposes provenance only in local fixture; no real admin or deploy
 test("provenance build script refuses production even with valid fixtures",()=>{
   const r=run(provenance,{CONTEXT:"production"});
   assert.notEqual(r.status,0);
+  assert.match(r.stderr,/Refusing to generate Studio 18.2 production provenance/);
 });
