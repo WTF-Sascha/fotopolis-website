@@ -10,7 +10,7 @@ import {chromium} from "playwright";
 const BASE=process.env.SITE_BASE_URL||"http://127.0.0.1:8765";
 const SHOTS=path.resolve("studio18-brand-screenshots");
 fs.mkdirSync(SHOTS,{recursive:true});
-const widths=[320,360,390,430,768,1024,1440,1920];
+const widths=[320,360,375,390,430,768,1024,1280,1440,1920];
 const routes=[
   {name:"home",path:"/"},
   {name:"fotobox",path:"/fotobox/"},
@@ -74,6 +74,20 @@ try{
                 visible:box.width>100&&box.height>100&&cs.visibility!=="hidden"&&cs.display!=="none",
                 loaded:el.complete&&el.naturalWidth>0,linked:!!el.closest("a")};
             })(),
+            loginModes:(()=>{
+              const group=document.querySelector('.mode-tabs[role="group"]');
+              if(!group)return null;
+              const buttons=[...group.querySelectorAll('button[data-mode]')].map(button=>{
+                const r=button.getBoundingClientRect(),style=getComputedStyle(button);
+                return {name:button.dataset.mode,fontPx:parseFloat(style.fontSize),
+                  width:r.width,height:r.height,left:r.left,right:r.right,
+                  top:r.top,bottom:r.bottom,visible:style.display!=="none"};
+              });
+              const overlapping=buttons.some((a,i)=>buttons.slice(i+1).some(b=>
+                Math.min(a.right,b.right)-Math.max(a.left,b.left)>1 &&
+                Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1));
+              return {buttons,overlapping,groupOverflowPx:Math.max(0,group.scrollWidth-group.clientWidth)};
+            })(),
             overflowPx:Math.max(0,document.documentElement.scrollWidth-window.innerWidth),
             background:getComputedStyle(document.body).backgroundColor
           };
@@ -95,6 +109,15 @@ try{
         if(route.name==="home"&&(!detail.heroBrand||!detail.heroBrand.visible||!detail.heroBrand.loaded||detail.heroBrand.linked))
           data.issues.push(id+": visible unlinked round hero brand missing");
         if(detail.brandCount===0||detail.visibleLogo===0||detail.logoComplete===0)data.issues.push(id+": approved logo not visibly loaded");
+        if(route.name==="login"){
+          const tabs=detail.loginModes;
+          if(!tabs||tabs.buttons.length!==3||tabs.overlapping||tabs.groupOverflowPx>2)
+            data.issues.push(id+": login modes missing, overlapping or overflowing");
+          if(tabs&&tabs.buttons.some(b=>!b.visible||b.height<43||b.left<0||b.right>width+1))
+            data.issues.push(id+": login mode controls clipped or too small");
+          if(width<=400&&tabs&&tabs.buttons.some(b=>b.fontPx<12))
+            data.issues.push(id+": login mode typography below 12px on narrow screen");
+        }
         if(detail.overflowPx>2)data.issues.push(id+": horizontal overflow "+detail.overflowPx+"px");
       }catch(error){
         data.issues.push(id+": "+(error?.message||String(error)));
