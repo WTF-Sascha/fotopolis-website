@@ -1,0 +1,40 @@
+name: FOTOPOLIS Studio 18.2 - Preview Isolation and Provenance QA
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "scripts/studio11-browser-qa.mjs"
+      - "scripts/studio18-2-preview-guard.mjs"
+      - "scripts/studio18-2-build-provenance.mjs"
+      - "scripts/test-studio18-2-release.mjs"
+      - "netlify.toml"
+      - ".github/workflows/studio18-2-release-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview-provenance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax checks
+        run: |
+          node --check scripts/studio11-browser-qa.mjs
+          node --check scripts/studio18-2-preview-guard.mjs
+          node --check scripts/studio18-2-build-provenance.mjs
+          node --check scripts/test-studio18-2-release.mjs
+      - name: Offline release isolation and build provenance tests
+        run: node --test scripts/test-studio18-2-release.mjs
+      - name: Verify all Netlify contexts enforce preview interlock
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          p=pathlib.Path("netlify.toml").read_text()
+          assert p.count("node scripts/studio18-2-preview-guard.mjs") == 3, "Missing release guard in a build context"
+          assert p.count("node scripts/studio18-2-build-provenance.mjs") == 3, "Missing provenance in a build context"
+          print("PASS: all configured build contexts guarded and traceable.")
+          PY
