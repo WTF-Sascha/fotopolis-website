@@ -3,11 +3,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
+const context=process.env.CONTEXT||"local";
+if(context==="production")throw Error("Refusing to generate Studio 18.2 production provenance");
 const out=path.resolve("preview-build");
 if(!fs.statSync(out,{throwIfNoEntry:false})?.isDirectory())
   throw Error("Missing preview-build; provenance requires a completed preview build");
-const context=process.env.CONTEXT||"local";
-if(context==="production")throw Error("Refusing to generate Studio 18.2 production provenance");
 
 const sha=/^[0-9a-f]{40}$/i.test(process.env.COMMIT_REF||"")
   ?process.env.COMMIT_REF.toLowerCase():null;
