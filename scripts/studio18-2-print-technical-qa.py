@@ -14,18 +14,26 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE = ROOT / "private-design-assets" / "print"
 PREVIEWS = ROOT / "preview-build" / "assets" / "designvorlagen"
-CATALOGUE = ROOT / "preview-build" / "assets" / "design-gallery-data.json"
+# The public catalog intentionally strips private cutout geometry. Use the
+# protected full catalog for print QA; check the public inventory separately.
+CATALOGUE = ROOT / "private-design-assets" / "catalogue.json"
+PUBLIC_CATALOGUE = ROOT / "preview-build" / "assets" / "design-gallery-data.json"
 REPORT = ROOT / "preview-build" / "qa"
 EXPECTED = [f"FP-{i:03d}" for i in range(1, 45)]
 W, H = 1772, 1181
 rows = []
 errors = []
 
-if not PRIVATE.is_dir() or not CATALOGUE.is_file():
+if not PRIVATE.is_dir() or not CATALOGUE.is_file() or not PUBLIC_CATALOGUE.is_file():
     raise SystemExit("FOTOPOLIS PRINT NO-GO: private print assets or catalogue absent")
 catalogue = json.loads(CATALOGUE.read_text(encoding="utf-8"))
 if [x.get("id") for x in catalogue] != EXPECTED:
-    raise SystemExit("FOTOPOLIS PRINT NO-GO: 44 uniquely ordered design identifiers absent")
+    raise SystemExit("FOTOPOLIS PRINT NO-GO: 44 uniquely ordered protected design identifiers absent")
+public_catalogue = json.loads(PUBLIC_CATALOGUE.read_text(encoding="utf-8"))
+if [x.get("id") for x in public_catalogue] != EXPECTED:
+    raise SystemExit("FOTOPOLIS PRINT NO-GO: 44 uniquely ordered public design identifiers absent")
+if any("photoRegions" in entry or "printOverlay" in entry for entry in public_catalogue):
+    raise SystemExit("FOTOPOLIS PRINT NO-GO: private print geometry leaked to public gallery")
 
 for item in catalogue:
     ident = item["id"]
