@@ -92,7 +92,7 @@ try{
               const modes=document.querySelector(".mode-tabs");
               if(!modes)return null;
               const rgb=value=>{
-                const m=value.match(/^rgba?\\(([^)]+)\\)$/);
+                const m=value.match(/^rgba?\(([^)]+)\)$/);
                 if(!m)return null;
                 const v=m[1].split(",").map(Number);
                 return v.length>=3?v:null;
