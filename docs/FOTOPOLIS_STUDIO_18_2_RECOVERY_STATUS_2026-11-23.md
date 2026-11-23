@@ -23,6 +23,7 @@ Stand: 23.11.2026 · Arbeit ausschließlich im Feature-Branch · **NO-GO für Pr
 4. `netlify.toml`: In allen drei vorhandenen Build-Kontexten wird zuerst der Preview-Guard aufgerufen und nach den bestehenden Qualitätsprüfungen die Buildprovenienz erzeugt. Der neue Branch unterscheidet damit zulässige Preview-Deployments explizit von nicht erlaubten Produktivdeployments.
 5. `scripts/test-studio18-2-release.mjs` und `.github/workflows/studio18-2-release-qa.yml`: isolierte Node-Tests für erlaubte und verbotene Deploy-Kontexte, falsche Site-ID, Manifest-Inhalt, Admin-Banner, doppelte Injektion und Build-Konfigurationsvollständigkeit. Tests laufen ohne Kundendaten, Auth und Netzverkehr.
 6. `README.md`: neue aktuelle Architektur-/Umgebungsbeschreibung; alte Website-Design-1.0-Dokumentation als historisch gekennzeichnet, nicht fälschlich gelöscht.
+7. `scripts/studio18-2-print-technical-qa.py`: automatisierte **Einzelprüfung aller 44** generierten geschützten Print-PNGs und öffentlichen WebP-Vorschauen: Größe, DPI, echte Alphafenster, Zahl und Geometrie der Fotofelder, Prüfsummen, Schutz der Printdateien vor öffentlicher Auslieferung. Liefert 44 Zeilen als `preview-build/qa/studio18-2-print-technical-matrix.json` und `.md`. Das Brand-QA-Workflow-Artifact bewahrt diese Matrix auf. Logo-Sichtabnahme, Katalogtext-Pixelprüfung, ICC-Farbproof und physischer Druck bleiben ausdrücklich `NOT_TESTED`.
 
 Alle Änderungen sind vorerst **Entwicklungs-Code**. Ein Commit allein ist **kein** bestandener Test.
 
@@ -38,7 +39,7 @@ Ein abweichender älterer CI-Status gilt **nicht** als Testnachweis für den neu
 | FOTO-003 | P1 | **BLOCKIERT** | Fehlende Trusted Origin der neueren Preview bestätigte Konfigurationslücke | Gesonderte Freigabe für DEV-Auth-Origin und positive/negative Login-/OTP-E2E |
 | FOTO-004 | P1 | **BLOCKIERT** | Netlify Forms→Neon-CRM nicht mit synthetischer End-to-End-Anfrage bestätigt | Testdatensatz-Freigabe; ID-/Persistenz-/Wiederholungsnachweis |
 | FOTO-005 | P1 | **BLOCKIERT** | Kein nachgewiesener aktiver DEV-Testgeräte-/Reservierungsfluss | Freigabe für synthetische Ressourcen/Reservierungen und Race-/DST-Tests |
-| FOTO-006 | P1 | **OFFEN** | 44 Drucklayouts im Generator; keine individuelle Hardwarefreigabe | 44 Raster-/Einzelprüfprotokolle, Geräteproofs, keine Katalognamen auf Prints |
+| FOTO-006 | P1 | **IMPLEMENTIERT (nur technischer Prüflauf)** | 44 individuelle Rasterprüfungen im isolierten Build mit JSON/Markdown-Matrix ergänzt; noch kein bestandener Testlauf und keine optische oder physische Druckfreigabe | 44 erfolgreich verifizierte Artefakte am exakten Commit, echte Motiv-/Logo-/Katalognamen-Prüfung und anschließend Druckerproof je Vorlage |
 | FOTO-007 | P1 | **BLOCKIERT** | 5×15-cm-Unterstützung hardwareabhängig und nicht nachgewiesen | Reale Drucker-/Papier-/Beschnittspezifikation, danach Implementierung |
 | FOTO-008 | P1 | **BLOCKIERT** | Production-Neon-Auth mit offener Sign-up-Option, fehlender obligatorischer Verifikation und localhost | Zweck des Endpoints klären; separate Auth-Härtungsfreigabe und Rollback |
 | FOTO-009 | P2 | **IN ANALYSE** | RLS auf neun DEV-Studio-13-Tabellen aus; Schutz hängt an serverseitigen Rollen/Grants | Read-only Grant-/API-Exposure-Review; least-privilege-Plan ohne automatische Mutation |
