@@ -209,7 +209,7 @@ try {
               src:el.currentSrc||el.getAttribute("src")||"",
               loaded:el.complete&&el.naturalWidth>0
             }));
-            if(!image.loaded||!image.src.includes("fotospiegel-hero-lossless.webp"))
+            if(!image.loaded||!/\/fotospiegel-hero-lossless(?:-ci21)?\.webp(?:\?|$)/.test(image.src))
               problems.push("Approved Mirror product image failed to load");
           }
           if(await page.locator(".v4-product-card").count()!==3)
