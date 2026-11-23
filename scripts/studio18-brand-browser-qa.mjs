@@ -87,6 +87,42 @@ try{
               return images.length?{count:images.length,
                 loaded:images.filter(img=>img.complete&&img.naturalWidth>0).length}:null;
             })(),
+
+            loginTextContrast:(()=>{
+              const modes=document.querySelector(".mode-tabs");
+              if(!modes)return null;
+              const rgb=value=>{
+                const m=value.match(/^rgba?\\(([^)]+)\\)$/);
+                if(!m)return null;
+                const v=m[1].split(",").map(Number);
+                return v.length>=3?v:null;
+              };
+              const luminance=channels=>channels.slice(0,3).map(value=>{
+                const v=value/255;
+                return v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4;
+              }).reduce((sum,value,index)=>sum+value*[0.2126,0.7152,0.0722][index],0);
+              const background=element=>{
+                for(let current=element;current;current=current.parentElement){
+                  const v=rgb(getComputedStyle(current).backgroundColor);
+                  if(v && (v.length<4 || v[3]>=0.999))return v;
+                }
+                return [255,255,255];
+              };
+              return [
+                ["eyebrow",".form-shell > .eyebrow"],
+                ["inactive-mode",".mode-tabs button[data-mode='otp']"],
+                ["helper-action","#forgot"],
+                ["footnote",".footnote"]
+              ].map(([name,selector])=>{
+                const element=document.querySelector(selector);
+                if(!element)return {name,error:"missing target"};
+                const foreground=rgb(getComputedStyle(element).color);
+                const bg=background(element);
+                if(!foreground)return {name,error:"unreadable color"};
+                const a=luminance(foreground),b=luminance(bg);
+                return {name,ratio:Math.round((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)*100)/100};
+              });
+            })(),
             loginModes:(()=>{
               const group=document.querySelector('.mode-tabs[role="group"]');
               if(!group)return null;
@@ -126,6 +162,9 @@ try{
           detail.galleryTeasers.count!==3||detail.galleryTeasers.loaded!==3))
           data.issues.push(id+": design preview images are missing or have not loaded");
         if(route.name==="login"){
+          const contrast=detail.loginTextContrast;
+          if(!contrast||contrast.length!==4||contrast.some(item=>item.error||item.ratio<4.5))
+            data.issues.push(id+": small-text contrast below WCAG AA 4.5:1 "+JSON.stringify(contrast));
           const tabs=detail.loginModes;
           if(!tabs||tabs.buttons.length!==3||tabs.overlapping||tabs.groupOverflowPx>2)
             data.issues.push(id+": login modes missing, overlapping or overflowing");
