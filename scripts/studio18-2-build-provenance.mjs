@@ -32,19 +32,30 @@ const escapeHtml=value=>String(value).replace(/[&<>"']/g,c=>({
 }[c]));
 const badgeText="FOTOPOLIS Studio 18.2 · "+(sha?sha.slice(0,12):"lokaler Build")+
   " · "+context+" · NICHT FREIGEGEBEN";
+// Protected admin routes enforce style-src 'self': never inject inline CSS.
+fs.writeFileSync(path.join(out,"studio18-build-provenance.css"),[
+  "#fp18-build-provenance {",
+  "position:fixed; bottom:0; left:0; z-index:9999; max-width:100%; box-sizing:border-box;",
+  "padding:6px 10px; background:#181512; color:#F7F3EC;",
+  "font:11px Manrope,Arial,sans-serif; border-top:2px solid #FEE158;",
+  "pointer-events:none;",
+  "}",
+  ""
+].join("\n"),"utf8");
 const targets=["admin/dashboard/index.html","admin/login/index.html"];
 let updated=0;
 for(const relative of targets){
   const file=path.join(out,relative);
   if(!fs.existsSync(file))throw Error("Expected internal test route missing: "+relative);
   let html=fs.readFileSync(file,"utf8");
-  if(!/<\/body>/i.test(html))throw Error("Invalid HTML: "+relative);
-  if(html.includes('id="fp18-build-provenance"'))
+  if(!/<\/head>/i.test(html)||!/<\/body>/i.test(html))
+    throw Error("Invalid HTML: "+relative);
+  if(html.includes('id="fp18-build-provenance"') ||
+     html.includes('href="/studio18-build-provenance.css"'))
     throw Error("Duplicate provenance marker: "+relative);
-  const element='<aside id="fp18-build-provenance" aria-label="Entwicklungsversion" '+
-    'style="position:fixed;bottom:0;left:0;z-index:9999;max-width:100%;'+
-    'padding:6px 10px;background:#181512;color:#F7F3EC;font:11px Manrope,Arial,sans-serif;'+
-    'border-top:2px solid #FEE158;pointer-events:none">'+
+  html=html.replace(/<\/head>/i,
+    '<link rel="stylesheet" href="/studio18-build-provenance.css"></head>');
+  const element='<aside id="fp18-build-provenance" aria-label="Entwicklungsversion">'+
     escapeHtml(badgeText)+'</aside>';
   html=html.replace(/<\/body>/i,element+"</body>");
   fs.writeFileSync(file,html);
