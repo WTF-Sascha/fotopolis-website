@@ -8,6 +8,7 @@ on:
       - 'scripts/apply-studio18-ci21.py'
       - 'scripts/studio18-retouch-product-screens.py'
       - 'scripts/studio18-ci21-qa.mjs'
+      - 'scripts/studio18-2-print-technical-qa.py'
       - 'scripts/studio18-brand-browser-qa.mjs'
       - 'netlify.toml'
       - '.github/workflows/studio18-ci21-qa.yml'
@@ -33,7 +34,7 @@ jobs:
           python -m pip install --disable-pip-version-check "Pillow>=10,<12"
       - name: Verify Studio 18.1 source syntax
         run: |
-          python -m py_compile scripts/apply-studio18-ci21.py scripts/studio18-retouch-product-screens.py
+          python -m py_compile scripts/apply-studio18-ci21.py scripts/studio18-retouch-product-screens.py scripts/studio18-2-print-technical-qa.py
           node --check scripts/studio18-ci21-qa.mjs
           node --check scripts/studio18-brand-browser-qa.mjs
       - name: Build actual protected app preview and verify source invariants
@@ -51,6 +52,7 @@ jobs:
           node scripts/staging-secure-qa.mjs
           python3 scripts/apply-studio18-ci21.py
           node scripts/studio18-ci21-qa.mjs
+          python3 scripts/studio18-2-print-technical-qa.py
       - name: Install Chromium browser test runner
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
