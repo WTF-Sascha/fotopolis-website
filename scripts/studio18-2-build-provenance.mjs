@@ -2,7 +2,6 @@
 /** FOTOPOLIS Studio 18.2 — non-sensitive preview provenance. */
 import fs from "node:fs";
 import path from "node:path";
-import {execFileSync} from "node:child_process";
 
 const out=path.resolve("preview-build");
 if(!fs.statSync(out,{throwIfNoEntry:false})?.isDirectory())
