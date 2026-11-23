@@ -10,7 +10,7 @@ import {chromium} from "playwright";
 const BASE=process.env.SITE_BASE_URL||"http://127.0.0.1:8765";
 const SHOTS=path.resolve("studio18-brand-screenshots");
 fs.mkdirSync(SHOTS,{recursive:true});
-const widths=[320,360,390,768,1024,1280,1440];
+const widths=[320,360,390,430,768,1024,1440,1920];
 const routes=[
   {name:"home",path:"/"},
   {name:"fotobox",path:"/fotobox/"},
