@@ -66,6 +66,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: studio18-ci21-brand-review-${{ github.run_number }}
-          path: studio18-brand-screenshots/
+          path: |
+            studio18-brand-screenshots/
+            preview-build/qa/studio18-2-print-technical-matrix.json
+            preview-build/qa/studio18-2-print-technical-matrix.md
           if-no-files-found: warn
           retention-days: 14
