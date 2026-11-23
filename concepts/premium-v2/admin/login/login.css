@@ -26,7 +26,28 @@
 .helper-actions{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px}
 .link-button{font-size:11px;font-weight:760;color:#977445;border:0;background:none;text-decoration:underline;text-align:left;padding:0;line-height:1.6}
 .link-button:hover{color:#553a18}
-@media(max-width:400px){.mode-tabs button{font-size:9px;letter-spacing:-.015em;padding-inline:2px}.helper-actions{gap:7px}}
+/* Studio 18.5: the three login modes must stay legible and individually
+   reachable on 320–400px screens and at increased text zoom. */
+@media(max-width:400px){
+  .mode-tabs{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+    padding:6px;
+  }
+  .mode-tabs button{
+    min-width:0;
+    min-height:44px;
+    padding:10px 8px;
+    font-size:13px;
+    line-height:1.4;
+    letter-spacing:0;
+    white-space:normal;
+    overflow-wrap:normal;
+  }
+  .mode-tabs button:last-child{grid-column:1/-1}
+  .helper-actions{gap:9px}
+}
 
 /* Studio 15 account onboarding guidance: no unrestricted self-registration. */
 .fp15-access-note{
