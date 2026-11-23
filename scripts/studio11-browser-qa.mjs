@@ -182,15 +182,38 @@ try {
         if(httpErrors.length)problems.push("HTTP errors: "+httpErrors.join(" | "));
 
         if(route==="/"){
-          const hero=await page.locator(".v45-hero .v4-hero-visual img").evaluate(
-            el=>({src:el.getAttribute("src"),loaded:el.naturalWidth>0})
-          );
-          if(!hero.loaded||!hero.src.includes("fotospiegel-hero-lossless.webp"))
-            problems.push("Approved Mirror hero photo missing");
+          // The approved Studio 17 welcome hero is product-neutral. The original
+          // Studio 11 selector targeted a product image removed from the hero.
+          // Test the approved greeting AND its separate product imagery instead.
+          const welcome=page.locator("#start.fp17-welcome-hero");
+          if(await welcome.count()!==1){
+            problems.push("Approved welcome-only hero missing");
+          }else{
+            const hero=await welcome.evaluate(el=>({
+              title:(el.querySelector("h1")?.textContent||"").trim(),
+              greeting:(el.textContent||"").includes("WILLKOMMEN BEI FOTOPOLIS"),
+              atmosphere:!!el.querySelector(".fp17-welcome-atmosphere"),
+              productLinks:el.querySelectorAll("a,button,[role='button']").length,
+              productMentions:/fotospiegel|fotobox|fotowohnwagen|mirror/i.test(el.textContent||"")
+            }));
+            if(!hero.title||!hero.greeting||!hero.atmosphere)
+              problems.push("Welcome hero content or decorative atmosphere missing");
+            if(hero.productLinks||hero.productMentions)
+              problems.push("Welcome hero must not link to or promote a product");
+          }
+          const mirror=page.locator('.v4-product-card[data-product="fotospiegel"] .v4-product-photo img');
+          if(await mirror.count()!==1){
+            problems.push("Approved Mirror product image missing");
+          }else{
+            const image=await mirror.evaluate(el=>({
+              src:el.currentSrc||el.getAttribute("src")||"",
+              loaded:el.complete&&el.naturalWidth>0
+            }));
+            if(!image.loaded||!image.src.includes("fotospiegel-hero-lossless.webp"))
+              problems.push("Approved Mirror product image failed to load");
+          }
           if(await page.locator(".v4-product-card").count()!==3)
             problems.push("Product rail not exactly three items");
-          if(await page.locator(".fp11-hero-link").count()!==1)
-            problems.push("Single Mirror hero action missing");
         }
         if(route==="/kontakt/"&&width===390){
           const actions=await page.locator(".contact-recap .contact-actions > *").evaluateAll(nodes=>
