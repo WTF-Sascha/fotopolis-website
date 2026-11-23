@@ -1,0 +1,43 @@
+/* FOTOPOLIS Corporate Identity 2.1 — shared design tokens
+   SAFE: tokens only, not a deployment. Does NOT replace the logo or override existing UI globally.
+   Logo artwork remains unchanged. Yellow is an interaction accent, not accessible body text on ivory. */
+:root {
+  --fp-logo-yellow: #FEE158;
+  --fp-logo-yellow-hover: #F8D543;
+  --fp-logo-yellow-soft: #FFF5CE;
+  --fp-ivory: #F7F3EC;
+  --fp-warm-white: #FFFCF8;
+  --fp-obsidian: #181512;
+  --fp-espresso: #30251D;
+  --fp-muted-gold: #B99862;
+  --fp-sandstone: #D8C8B3;
+  --fp-text-muted: #6D655C;
+  --fp-border: #DDD5CB;
+  --fp-success: #276749;
+  --fp-warning: #8B5E16;
+  --fp-error: #B42318;
+  --fp-focus: #AA7A00;
+
+  --fp-color-bg: var(--fp-ivory);
+  --fp-color-surface: var(--fp-warm-white);
+  --fp-color-text: var(--fp-obsidian);
+  --fp-color-text-secondary: var(--fp-text-muted);
+  --fp-color-border: var(--fp-border);
+  --fp-color-action: var(--fp-logo-yellow);
+  --fp-color-action-hover: var(--fp-logo-yellow-hover);
+  --fp-color-action-text: var(--fp-obsidian);
+  --fp-color-focus: var(--fp-focus);
+  --fp-font-display: "Newsreader", Georgia, serif;
+  --fp-font-body: "Manrope", Inter, system-ui, sans-serif;
+  --fp-radius-card: 16px;
+  --fp-radius-button: 999px;
+  --fp-content-width: 1200px;
+}
+/* Opt-in component primitives: add .fp-ci21 to a container, no automatic cascade to legacy site. */
+.fp-ci21 { background: var(--fp-color-bg); color: var(--fp-color-text); font-family: var(--fp-font-body); }
+.fp-ci21 .fp-primary-action { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:11px 24px; border:1px solid var(--fp-logo-yellow); border-radius:var(--fp-radius-button); background:var(--fp-color-action); color:var(--fp-obsidian); font-weight:700; text-decoration:none; cursor:pointer; }
+.fp-ci21 .fp-primary-action:hover { background:var(--fp-logo-yellow-hover); border-color:var(--fp-logo-yellow-hover); }
+.fp-ci21 .fp-secondary-action {display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:11px 24px; border-radius:var(--fp-radius-button); background:var(--fp-obsidian); color:var(--fp-warm-white); border:1px solid var(--fp-obsidian); text-decoration:none; font-weight:700; }
+.fp-ci21 .fp-chip-active { background:var(--fp-logo-yellow-soft); color:var(--fp-obsidian); box-shadow: inset 0 -2px 0 var(--fp-logo-yellow); }
+.fp-ci21 :is(a,button,input,select,textarea):focus-visible { outline:3px solid var(--fp-focus); outline-offset:3px; }
+@media (prefers-reduced-motion: reduce){.fp-ci21 *, .fp-ci21 *::before, .fp-ci21 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

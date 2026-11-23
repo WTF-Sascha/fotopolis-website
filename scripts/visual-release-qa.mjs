@@ -49,6 +49,11 @@ for(const item of catalogue){
  check(has(item.printOverlay.slice(1))&&statSync(join(base,item.printOverlay.slice(1))).size>1000,item.id+": missing alpha PNG print overlay");
 }
 const printReport=JSON.parse(read("qa/photoprint-44-audit.json"));
+// Assert CI 2.1 logo provenance at this stage: hardening will later remove
+// the transient print generator audit from public preview-build/qa.
+check(printReport.masterCi21LogoSha256===
+  "bd75b191893afdf60ce51ccf5a7ad0298ecca9660603dbd2ce1f1b2755501fba",
+  "Print generator must stamp the approved original CI 2.1 logo across all 44 designs");
 check(printReport.candidateCount===44 && printReport.originalSourceDesignsPreserved===32 &&
       printReport.newDesigns===12 &&
       printReport.pixelSize[0]===1772 && printReport.pixelSize[1]===1181 &&
@@ -63,8 +68,8 @@ const classicItems=catalogue.slice(0,32);
 const signatureItems=catalogue.slice(32);
 check(classicItems.length===32&&classicItems.every(x=>
   x.collection==="classics"&&x.originalMotifPreserved===true&&
-  x.legacyLogoReplaced===true&&x.logoMaster==="site/assets/fotopolis-goldmark.webp"),
-  "FP-001–FP-032 must preserve every authentic design motif with a single master Goldmark");
+  x.legacyLogoReplaced===true&&x.logoMaster==="site/assets/brand/v2-1/fotopolis-logo-ci21-256.webp.b64"),
+  "FP-001–FP-032 must preserve every authentic design motif with a single approved CI 2.1 original logo");
 check(signatureItems.length===12&&signatureItems.every(x=>x.collection==="signature"),
   "FP-033–FP-044 must remain separate Signature candidates");
 const originalCatalog=JSON.parse(readFileSync("concepts/premium-v2/design-gallery-data.json","utf8"));

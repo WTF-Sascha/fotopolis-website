@@ -1,0 +1,32 @@
+name: FOTOPOLIS Studio 18.3 - Auth Token Recovery QA
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'concepts/premium-v2/admin/session-token.js'
+      - 'scripts/test-admin-token.mjs'
+      - 'scripts/test-admin-auth.mjs'
+      - '.github/workflows/studio18-3-auth-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auth-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned application dependencies
+        run: npm install --no-audit --no-fund
+      - name: Syntax guard
+        run: |
+          node --check concepts/premium-v2/admin/session-token.js
+          node --check scripts/test-admin-token.mjs
+          node --check netlify/functions/fotopolis-admin-session.mjs
+      - name: JWT recovery and fail-closed API test matrix (no real accounts)
+        run: |
+          node --test scripts/test-admin-token.mjs
+          node --test scripts/test-admin-auth.mjs

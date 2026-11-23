@@ -1,0 +1,349 @@
+/* FOTOPOLIS Studio 18 — CI 2.1 compatibility layer, staging only.
+   This is an additive migration facade, NOT a replacement for the CI 2.1 master.
+   Legacy Studio 13 selectors remain until per-view regression checks are approved.
+   Missing CI-2.1 logo masters must not be synthesized or replaced. */
+:root {
+  --fp-brand-dark:var(--fp-obsidian);
+  --fp-brand-nav:var(--fp-espresso);
+  --fp-brand-surface:var(--fp-ivory);
+  --fp-brand-paper:var(--fp-warm-white);
+  --fp-brand-warm:var(--fp-sandstone);
+  --fp-brand-accent:var(--fp-logo-yellow);
+  --fp-brand-accent-hover:var(--fp-logo-yellow-hover);
+  --fp-brand-accent-ink:var(--fp-obsidian);
+  --fp-brand-ink:var(--fp-obsidian);
+  --fp-brand-muted:var(--fp-text-muted);
+  --fp-brand-border:var(--fp-border);
+  --fp-brand-focus:var(--fp-focus);
+  --fp-brand-display:var(--fp-font-display);
+  --fp-brand-body:var(--fp-font-body);
+  --navy:var(--fp-obsidian);
+  --navy2:var(--fp-espresso);
+  --blue:var(--fp-espresso);
+  --cream:var(--fp-ivory);
+  --paper:var(--fp-warm-white);
+  --ink:var(--fp-obsidian);
+  --muted:var(--fp-text-muted);
+  --line:var(--fp-border);
+  --gold:var(--fp-logo-yellow);
+  --champagne:var(--fp-muted-gold);
+}
+html{color-scheme:light}
+body{background:var(--fp-ivory);color:var(--fp-obsidian);font-family:var(--fp-font-body)}
+:where(h1,h2,h3,h4){font-family:var(--fp-font-display)}
+:where(a,button,input,select,textarea,summary,[role="button"]):focus-visible{
+  outline:3px solid var(--fp-focus)!important;
+  outline-offset:3px;
+}
+::selection{background:var(--fp-logo-yellow-soft);color:var(--fp-obsidian)}
+/* Retain approved hero positioning, photography and structure. */
+.studio-header.site-header{background:var(--fp-espresso)!important}
+.studio-mainnav .nav-panel{background:var(--fp-espresso)!important}
+.studio-mainnav .nav-trigger[aria-expanded="true"]{color:var(--fp-logo-yellow)!important}
+.studio-header .studio-identity img,.studio-header .studio-identity.identity>img{
+  object-fit:contain!important;filter:none!important;
+}
+.button.gold,.mainnav .nav-cta,.studio9-submit,.studio9-product-submit,
+.s7-next-button,.s7-primary-action,.product-request-submit,.fpv2-preview-cta {
+  background:var(--fp-logo-yellow)!important;
+  border-color:var(--fp-logo-yellow)!important;
+  color:var(--fp-obsidian)!important;
+}
+.button.gold:hover,.mainnav .nav-cta:hover,.studio9-submit:hover,.studio9-product-submit:hover,
+.s7-next-button:hover,.s7-primary-action:hover,.product-request-submit:hover,.fpv2-preview-cta:hover {
+  background:var(--fp-logo-yellow-hover)!important;
+  border-color:var(--fp-logo-yellow-hover)!important;
+  color:var(--fp-obsidian)!important;
+}
+.page-body,.v45-home .v45-products{background:var(--fp-ivory)!important}
+:where(.page-body,.package-planner,.contact-flow,.gl-gallery)
+:is(input,select,textarea):focus-visible{border-color:var(--fp-focus)!important}
+/* Admin UI: preserve existing access controls, state semantics and navigation. */
+body:has(#dashboard-app) .workspace main,
+body:has(.shell) .login-panel{background:var(--fp-ivory)!important}
+body:has(#dashboard-app) .sidebar{background:var(--fp-espresso)!important}
+body:has(#dashboard-app) .sidebar :is(a,button)[aria-current="page"],
+body:has(#dashboard-app) .mobile-menu :is(a,button)[aria-current="page"]{
+  box-shadow:inset 3px 0 0 var(--fp-logo-yellow);
+}
+body:has(#dashboard-app) :is(.primary-button,.cc-primary-action),
+body:has(.shell) .action:not(.secondary){
+  background:var(--fp-logo-yellow)!important;
+  border-color:var(--fp-logo-yellow)!important;
+  color:var(--fp-obsidian)!important;
+}
+body:has(#dashboard-app) :is(.primary-button,.cc-primary-action):hover,
+body:has(.shell) .action:not(.secondary):hover{
+  background:var(--fp-logo-yellow-hover)!important;
+  border-color:var(--fp-logo-yellow-hover)!important;
+  color:var(--fp-obsidian)!important;
+}
+body:has(.shell) .brand-panel{background:var(--fp-espresso)!important;background-image:none!important}
+body:has(.shell) .mode-tabs button[aria-pressed="true"]{
+  background:var(--fp-logo-yellow-soft)!important;
+  color:var(--fp-obsidian)!important;
+}
+body:has(#dashboard-app) :is(.metrics article,.panel,.card),
+body:has(.shell) .form-shell{border-color:var(--fp-border)}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* Studio 18.1 — original logo integration: full artwork contains the original
+   handwritten wordmark. Do not overlay a second synthetic text wordmark. */
+.studio-header .studio-identity.identity>img,
+.studio-header .studio-identity img{
+  width:68px!important;height:68px!important;flex-basis:68px!important;
+  object-fit:contain!important;border-radius:0!important;
+  background:transparent!important;border:0!important;box-shadow:none!important
+}
+.studio-header .studio-identity .studio-wordmark{display:none!important}
+.studio-header .studio-identity{gap:0!important;min-width:68px}
+.studio-header .studio-header-shell{min-height:78px}
+.studio-footer .footer-brand>span{display:none}
+.studio-footer .footer-brand img{
+  width:86px;height:86px;object-fit:contain;border:0;box-shadow:none;
+}
+body:has(#dashboard-app) .brand img,
+body:has(.shell) .brand img{
+  background:var(--fp-ivory)!important;border:0!important;
+  width:58px!important;height:58px!important;object-fit:contain!important;
+  box-shadow:none!important
+}
+body:has(#dashboard-app) :is(.sidebar-nav a.active,.sidebar-nav a[aria-current="page"]){
+  border-left-color:var(--fp-logo-yellow)!important;
+  color:var(--fp-warm-white)!important;
+  background:var(--fp-espresso)!important
+}
+body:has(#dashboard-app) :is(.cc-control-button,.cc-primary-action,.primary-button){
+  min-height:44px;
+}
+body:has(#dashboard-app) :is(.primary-button,.cc-primary-action,.cc-control-button):hover{
+  background:var(--fp-logo-yellow-hover)!important;
+  border-color:var(--fp-logo-yellow-hover)!important;
+  color:var(--fp-obsidian)!important;
+}
+:where(.studio-header,.studio-mainnav,.page-body,.workspace,.login-panel) :is(button,a){
+  -webkit-tap-highlight-color:transparent;
+}
+@media(max-width:600px){
+  .studio-header .studio-identity.identity>img,
+  .studio-header .studio-identity img{
+    width:50px!important;height:50px!important;flex-basis:50px!important;
+  }
+  .studio-header .studio-identity{min-width:50px}
+  .studio-header .studio-header-shell{min-height:64px}
+}
+
+
+/* Studio 18.2 — centered header and true circular source-verified badge.
+   Original square canvas must NEVER be visible in the header again. */
+.studio-header .studio-identity.identity>img,
+.studio-header .studio-identity img,
+.studio-footer .footer-brand img,
+body:has(#dashboard-app) .brand img,
+body:has(.shell) .brand img{
+  border-radius:50%!important;
+  clip-path:circle(49.3% at 50% 50%)!important;
+  background:transparent!important;
+  object-fit:contain!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+@media(min-width:1101px){
+  .studio-header .studio-header-shell.nav-shell{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:73px 43px!important;
+    justify-items:center!important;
+    min-height:122px!important;
+    gap:0!important;
+    padding:4px clamp(14px,3vw,35px) 9px!important;
+  }
+  .studio-header .studio-identity.identity{
+    position:static!important;
+    grid-row:1!important;grid-column:1!important;
+    justify-self:center!important;
+    transform:none!important;left:auto!important;
+    margin:0!important;
+    width:max-content;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    grid-row:2!important;grid-column:1!important;
+    justify-self:center!important;
+    justify-content:center!important;
+    align-items:center!important;
+  }
+}
+@media(max-width:1100px){
+  .studio-header .studio-header-shell.nav-shell{
+    position:relative!important;
+    display:flex!important;align-items:center!important;
+    justify-content:center!important;
+    min-height:90px!important;height:90px!important;
+  }
+  .studio-header .studio-identity.identity{
+    position:absolute!important;
+    left:50%!important;top:50%!important;
+    transform:translate(-50%,-50%)!important;
+    margin:0!important;
+    z-index:6!important;
+  }
+  .studio-header .studio-identity.identity>img,
+  .studio-header .studio-identity img{
+    width:68px!important;height:68px!important;flex:0 0 68px!important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle{
+    top:20px!important;right:clamp(12px,3.4vw,28px)!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    max-height:calc(100dvh - 90px)!important;
+  }
+  .studio-header-curve{height:25px!important}
+}
+@media(max-width:380px){
+  .studio-header .studio-header-shell.nav-shell{min-height:84px!important;height:84px!important}
+  .studio-header .studio-identity.identity>img,
+  .studio-header .studio-identity img{width:60px!important;height:60px!important;flex:0 0 60px!important}
+  .studio-header .studio-menu-toggle.mobile-toggle{top:17px!important}
+  .studio-header .studio-mainnav.mainnav{max-height:calc(100dvh - 84px)!important}
+}
+
+/* Freigegebener Welcome-Hero: brand mark deliberately visible, never a link.
+   On desktop it inhabits the pre-existing ornamental orbit; on mobile the
+   exact same mark precedes the text without creating horizontal overflow. */
+.v45-home .v45-hero.fp17-welcome-hero .fp18-hero-brand{
+  position:absolute;
+  z-index:3;
+  right:clamp(28px,11vw,210px);
+  top:49%;
+  transform:translateY(-50%);
+  display:block;
+  width:clamp(164px,18vw,232px);
+  height:auto;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  border-radius:50%;
+  clip-path:circle(49.3% at 50% 50%);
+  background:transparent;
+  box-shadow:none;
+  filter:drop-shadow(0 18px 35px rgba(10,8,6,.22));
+}
+@media(min-width:761px){
+  .v45-home .v45-hero.fp17-welcome-hero h1{
+    max-width:min(700px,62%)!important;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero p{
+    max-width:min(520px,62%)!important;
+  }
+}
+@media(max-width:760px){
+  .v45-home .v45-hero.fp17-welcome-hero .fp17-welcome-content{
+    display:flex;flex-direction:column;
+    align-items:center;text-align:center;
+    padding:58px 20px 69px!important;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero .fp18-hero-brand{
+    position:static;
+    transform:none;
+    width:clamp(112px,29vw,150px);
+    height:auto;
+    margin:0 auto 24px;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero .v4-hero-kicker{
+    justify-content:center;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero h1{
+    max-width:560px!important;
+    margin:17px 0 18px!important;
+    text-align:center;
+  }
+  .v45-home .v45-hero.fp17-welcome-hero p{
+    max-width:440px!important;
+    margin-inline:auto!important;
+    text-align:center;
+  }
+  .v45-home .fp17-welcome-signature{
+    justify-content:center;text-align:center;
+    margin-top:26px;
+  }
+}
+
+
+/* Studio 18.3 — User-approved simplification, 20 Nov 2026.
+   Only navigation in the header, no duplicate brand logo: the original
+   badge remains prominent in the welcome hero and the footer. */
+.studio-header .studio-identity.identity,
+.studio-header .studio-identity{
+  display:none!important;
+}
+.studio-header .studio-header-location{display:none!important}
+@media(min-width:1101px){
+  .studio-header .studio-header-shell.nav-shell{
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%;
+    min-height:74px!important;
+    height:74px!important;
+    padding:9px clamp(16px,3vw,42px)!important;
+    gap:0!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    position:static!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    justify-self:center!important;
+    flex:0 1 auto!important;
+    width:max-content!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    gap:clamp(9px,1.15vw,23px)!important;
+    grid-row:auto!important;
+    grid-column:auto!important;
+    white-space:nowrap;
+  }
+  .studio-header .studio-header-curve{height:20px!important}
+}
+@media(max-width:1100px){
+  .studio-header .studio-header-shell.nav-shell{
+    min-height:66px!important;
+    height:66px!important;
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    padding:0 16px!important;
+  }
+  .studio-header .studio-menu-toggle.mobile-toggle{
+    display:flex!important;
+    position:absolute!important;
+    top:50%!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translate(-50%,-50%)!important;
+    margin:0!important;
+    min-width:48px!important;
+    width:48px!important;
+    height:48px!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    left:0!important;
+    right:0!important;
+    top:100%!important;
+    max-height:calc(100dvh - 66px)!important;
+  }
+  .studio-header .studio-header-curve{height:19px!important}
+}
+@media(max-width:380px){
+  .studio-header .studio-header-shell.nav-shell{
+    height:62px!important;
+    min-height:62px!important;
+  }
+  .studio-header .studio-mainnav.mainnav{
+    max-height:calc(100dvh - 62px)!important;
+  }
+}
+/* Give the hero enough calm breathing room below the more compact header. */

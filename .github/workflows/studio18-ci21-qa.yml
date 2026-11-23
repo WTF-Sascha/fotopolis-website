@@ -1,0 +1,74 @@
+name: FOTOPOLIS Studio 18.1 – CI 2.1 Brand Browser QA
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'site/assets/brand/v2-1/**'
+      - 'concepts/premium-v2/studio18-ci21-compat.css'
+      - 'scripts/apply-studio18-ci21.py'
+      - 'scripts/studio18-retouch-product-screens.py'
+      - 'scripts/studio18-ci21-qa.mjs'
+      - 'scripts/studio18-2-print-technical-qa.py'
+      - 'scripts/studio18-brand-browser-qa.mjs'
+      - 'netlify.toml'
+      - '.github/workflows/studio18-ci21-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ci21-visual:
+    name: CI-2.1 artifact + Chromium seven-viewport review
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned build prerequisites
+        run: |
+          npm install --no-audit --no-fund
+          python -m pip install --disable-pip-version-check "Pillow>=10,<12"
+      - name: Verify Studio 18.1 source syntax
+        run: |
+          python -m py_compile scripts/apply-studio18-ci21.py scripts/studio18-retouch-product-screens.py scripts/studio18-2-print-technical-qa.py
+          node --check scripts/studio18-ci21-qa.mjs
+          node --check scripts/studio18-brand-browser-qa.mjs
+      - name: Build actual protected app preview and verify source invariants
+        run: |
+          python3 scripts/build-premium-preview.py
+          node scripts/visual-release-qa.mjs
+          python3 scripts/harden-studio13.py
+          python3 scripts/apply-studio13-unified-brand.py
+          npm run build:auth
+          node scripts/studio13-private-qa.mjs
+          node scripts/studio13-contract-qa.mjs
+          node scripts/studio14-print-admin-qa.mjs
+          node scripts/studio14-form-event-qa.mjs
+          node scripts/studio15-one-app-qa.mjs
+          node scripts/staging-secure-qa.mjs
+          python3 scripts/apply-studio18-ci21.py
+          node scripts/studio18-ci21-qa.mjs
+          python3 scripts/studio18-2-print-technical-qa.py
+      - name: Install Chromium browser test runner
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture CI 2.1 brand on seven responsive widths
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory preview-build > /tmp/studio18-local.log 2>&1 &
+          SITE_BASE_URL=http://127.0.0.1:8765 node scripts/studio18-brand-browser-qa.mjs
+      - name: Archive screenshot and findings for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio18-ci21-brand-review-${{ github.run_number }}
+          path: |
+            studio18-brand-screenshots/
+            preview-build/qa/studio18-2-print-technical-matrix.json
+            preview-build/qa/studio18-2-print-technical-matrix.md
+          if-no-files-found: warn
+          retention-days: 14
