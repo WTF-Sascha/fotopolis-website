@@ -32,6 +32,14 @@ try{
         const response=await page.goto(BASE+route.path,{waitUntil:"domcontentloaded",timeout:30000});
         if(!response||response.status()>=400)throw Error("HTTP "+(response?.status()??"NO_RESPONSE"));
         await page.waitForTimeout(200);
+        // Capture a true visual baseline: Chromium full-page screenshots do not
+        // reliably trigger offscreen lazy image downloads by themselves.
+        if(route.name==="home"){
+          await page.locator(".fpv2-preview-grid img").evaluateAll(async images=>{
+            images.forEach(img=>{img.loading="eager"});
+            await Promise.all(images.map(img=>img.decode().catch(()=>null)));
+          });
+        }
         const detail=await page.evaluate(()=>{
           const imgs=[...document.querySelectorAll("img")];
           const brand=imgs.filter(img=>img.getAttribute("src")?.includes("/assets/brand/v2-1/fotopolis-logo-ci21-round.webp"));
@@ -74,6 +82,11 @@ try{
                 visible:box.width>100&&box.height>100&&cs.visibility!=="hidden"&&cs.display!=="none",
                 loaded:el.complete&&el.naturalWidth>0,linked:!!el.closest("a")};
             })(),
+            galleryTeasers:(()=>{
+              const images=[...document.querySelectorAll(".fpv2-preview-grid img")];
+              return images.length?{count:images.length,
+                loaded:images.filter(img=>img.complete&&img.naturalWidth>0).length}:null;
+            })(),
             loginModes:(()=>{
               const group=document.querySelector('.mode-tabs[role="group"]');
               if(!group)return null;
@@ -109,6 +122,9 @@ try{
         if(route.name==="home"&&(!detail.heroBrand||!detail.heroBrand.visible||!detail.heroBrand.loaded||detail.heroBrand.linked))
           data.issues.push(id+": visible unlinked round hero brand missing");
         if(detail.brandCount===0||detail.visibleLogo===0||detail.logoComplete===0)data.issues.push(id+": approved logo not visibly loaded");
+        if(route.name==="home"&&(!detail.galleryTeasers||
+          detail.galleryTeasers.count!==3||detail.galleryTeasers.loaded!==3))
+          data.issues.push(id+": design preview images are missing or have not loaded");
         if(route.name==="login"){
           const tabs=detail.loginModes;
           if(!tabs||tabs.buttons.length!==3||tabs.overlapping||tabs.groupOverflowPx>2)
